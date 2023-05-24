@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic.edit import CreateView, UpdateView
 from django_filters.views import FilterView
-from .models import Fornitore
-from .forms import FormFornitore
+from .models import Fornitore, Facility
+from .forms import FormFornitore, FormFacility
 from .filters import FornitoreFilter
 
 # Create your views here.
@@ -50,5 +50,28 @@ class ListaFornitoriView(FilterView):
         filterset_class = FornitoreFilter
         paginate_by = 30
         # ordering = ['-iddettordine']
+        
+def aggiungi_facility_details(request, pk):
+    facility = get_object_or_404(Facility, pk=pk)
+    if request.method == "POST":
+        form = FormFacility(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+            form.instance.facility = facility
+        else:
+            form = FormFacility()
+        context = {'facility': facility, 'form': form}
+        
+        return render(request, "anagrafiche/facility.html", context)
+    
+    
+class FacilityCreateView(CreateView):
+    template_name = 'anagrafiche/facility.html'
+    form_class = FormFacility
+    
+class FacilityUpdateView(UpdateView):
+    template_name = 'anagrafiche/facility.html'
+    form_class = FormFacility
+
     
     
