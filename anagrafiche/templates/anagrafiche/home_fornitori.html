@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Anagrafiche - Fornitori {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_base.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item active" aria-current="page">Fornitori</li>
+    </ol>
+</nav>
+
+    <div class="container">
+        
+        <h3>Anagrafiche Fornitori</h3>
+        <!-- Inizio filtro -->
+        <div class="row">
+          <div class="col">
+            <div class="card card-body">
+        
+              
+              <form method="get">
+        
+                <div class="table-responsive-sm">
+                  <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                      <tr>     
+                        <th>Ragione Sociale</th>
+                        <th>Categoria</th>
+                        
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                      <td style="width: 20%">                
+                        {% render_field filter.form.ragionesociale class="form-control" %}
+                      </td>
+                      
+                      <td style="width: 20%">
+                        {% render_field filter.form.categoria class="form-control" %}
+                      </td>
+                      
+                    </tr>
+              
+                    
+                    
+                  </tbody>
+                  </table>
+                </div>
+                  
+        
+                
+        
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+                
+                
+              </form>
+              
+              
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fine filtro -->
+
+        <hr>
+        <div class="d-flex flex-row-reverse bd-highlight">
+        <a href="{% url 'anagrafiche:aggiungi_fornitore' %}" class="btn btn-info p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Fornitore</a>
+        </div>  
+        <br>
+
+
+        <div class="container-fluid">
+            <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+              <thead class="thead-dark">
+              <tr>        
+                <th>Ragione Sociale</th>
+                <th>Indirizzo</th>
+                <th>Paese</th>
+                <th>Categoria</th>
+                
+                
+                            
+              </tr>
+            </thead>
+              
+              <tbody>
+                {% for fornitore in initial_fornitori %}
+                    
+                    <td class="col-md-1"><a href="{{ fornitore.get_absolute_url }}">{{ fornitore.ragionesociale }}</a></td>
+                    <td class="col-md-2">{{ fornitore.indirizzo }}</td>  
+                    <td class="col-md-2">{{ fornitore.country  }} <img class="country-select-flag" id="{ flag_id }" style="max-height: 24px;" src="{{ fornitore.country.flag  }}"></td>
+                    <td class="col-md-2">{{ fornitore.categoria }}</td> 
+                  </tr>
+                
+                {% endfor %}
+                
+              </tbody>
+            </table>
+             
+          </div>
+    </div>
+    </div>
+
+
+
+{% endblock %}

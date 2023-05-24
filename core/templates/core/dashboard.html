@@ -1,0 +1,140 @@
+{% extends 'core/base.html' %}
+
+{% block title %}QMS {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_dashboard.html" %}
+{% endblock %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <div class="row">
+        <div class="col-6">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                  <h5 class="card-title">Chart 1</h5>
+                  
+                  <canvas id="acquisitions-bar"></canvas>
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div>
+              </div>
+        </div>
+        <div class="col-6">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                  <h5 class="card-title">Chart 2</h5>
+                  
+                  <canvas id="acquisitions-pie"></canvas>
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div>
+              </div>
+        </div>
+        
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col">
+            <div class="card" style="width: 100%;">
+                <div class="card-body">
+                  <h5 class="card-title">Chart 3</h5>
+                  
+                  <canvas id="acquisitions-doughnut"></canvas>
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div>
+              </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+(async function() {
+    const data = [
+        { year: 2010, count: 10 },
+        { year: 2011, count: 20 },
+        { year: 2012, count: 15 },
+        { year: 2013, count: 25 },
+        { year: 2014, count: 22 },
+        { year: 2015, count: 30 },
+        { year: 2016, count: 28 },
+    ];
+    
+    new Chart(
+        document.getElementById('acquisitions-bar'),
+        {
+        type: 'bar',
+        data: {
+            labels: data.map(row => row.year),
+            datasets: [
+            {
+                label: 'Acquisitions by year',
+                data: data.map(row => row.count)
+            }
+            ]
+        }
+        }
+    );
+    })();
+
+    (async function() {
+        const data = [
+            { year: 2010, count: 10 },
+            { year: 2011, count: 20 },
+            { year: 2012, count: 15 },
+            { year: 2013, count: 25 },
+            { year: 2014, count: 22 },
+            { year: 2015, count: 30 },
+            { year: 2016, count: 28 },
+        ];
+        
+        new Chart(
+            document.getElementById('acquisitions-pie'),
+            {
+            type: 'pie',
+            data: {
+                labels: data.map(row => row.year),
+                datasets: [
+                {
+                    label: 'Acquisitions by year',
+                    data: data.map(row => row.count)
+                }
+                ]
+            }
+            }
+        );
+        })();
+
+        (async function() {
+            const data = [
+                { year: 2010, count: 10 },
+                { year: 2011, count: 20 },
+                { year: 2012, count: 15 },
+                { year: 2013, count: 25 },
+                { year: 2014, count: 22 },
+                { year: 2015, count: 30 },
+                { year: 2016, count: 28 },
+            ];
+            
+            new Chart(
+                document.getElementById('acquisitions-doughnut'),
+                {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(row => row.year),
+                    datasets: [
+                    {
+                        label: 'Acquisitions by year',
+                        data: data.map(row => row.count)
+                    }
+                    ]
+                }
+                }
+            );
+            })();
+</script>
+{% endblock %}

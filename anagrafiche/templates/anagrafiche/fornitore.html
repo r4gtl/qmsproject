@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Anagrafiche - Fornitori {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_base.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Nuovo Fornitore</li>
+    </ol>
+</nav>
+
+    <div class="container">
+        
+        <h3>Aggiungi Fornitore</h3>
+        <hr>
+        
+        <br>
+
+
+        <form method="post">{% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+    </div>
+
+
+
+{% endblock %}
