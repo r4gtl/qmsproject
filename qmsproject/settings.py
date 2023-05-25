@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+from django.contrib.messages import constants as messages
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -47,9 +48,15 @@ INSTALLED_APPS = [
     "django_countries",
     "django_filters",
     'widget_tweaks',
+    
 ]
 
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyABpaqJWTsy7WGjWckbKcjYHJ3sk2AI-Hw'
+
+
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+# La prossima variabile serve per fare in modo che Crispy avvisi in caso di errore
+CRISPY_FAIL_SILENTLY = not DEBUG
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -140,6 +147,15 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'alert-secondary',
+        messages.INFO: 'alert-info',
+        messages.SUCCESS: 'alert-success',
+        messages.WARNING: 'alert-warning',
+        messages.ERROR: 'alert-danger',
+ }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

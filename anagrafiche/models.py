@@ -42,7 +42,7 @@ class Facility(models.Model):
     secondary_cat = models.CharField(max_length=50, choices=CHOICES_PRODUCTION_CATEGORY, default=CAT0)
     tertiary_cat = models.CharField(max_length=50, choices=CHOICES_PRODUCTION_CATEGORY, default=CAT0)
     latitude = models.FloatField(blank=True, null=True)
-    longitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)    
     site_area = models.FloatField(blank=True, null=True)
     facility_description= models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -51,7 +51,7 @@ class Facility(models.Model):
         return self.nome_sito
     
     def get_absolute_url(self):
-        return reverse("anagrafiche:facility_detail", kwargs={"pk": self.pk})
+        return reverse("anagrafiche:edit_facility_details", kwargs={"pk": self.pk})
     
 class FacilityContact(models.Model):
     #

@@ -24,8 +24,145 @@
         <br>
 
 
-        <form method="post">{% csrf_token %}
-            {{ form|crispy }}
+        <form method="post">
+
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-sm-6">
+                    
+                    {{ form.nome_sito|as_crispy_field}}
+                </div>
+                <div class="col-sm-6">
+                    {{ form.urn|as_crispy_field}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6">
+                    {{ form.piva|as_crispy_field}}
+                </div>
+                <div class="col-3">
+                    {{ form.phone|as_crispy_field}}
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    {{ form.indirizzo|as_crispy_field}}
+                </div>
+                <div class="col-1">
+                    {{ form.cap|as_crispy_field}}
+                </div>
+                <div class="col-3">
+                    {{ form.city|as_crispy_field}}
+                </div>
+                <div class="col-1">
+                    {{ form.provincia|as_crispy_field}}
+                </div>
+                <div class="col-3">
+                    {{ form.country|as_crispy_field}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                          <h6 class="card-title">Categorie</h6>
+                          
+                            <div class="col">
+                                {{ form.primary_cat|as_crispy_field}}
+                            </div>
+                            <div class="col">
+                                {{ form.secondary_cat|as_crispy_field}}
+                            </div>
+                            <div class="col">
+                                {{ form.tertiary_cat|as_crispy_field}}
+                            </div>
+                          
+                          
+                        </div>
+                      </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="card">
+                        <div class="card-body">
+                          <h6 class="card-title">Geo-dati</h6>
+                          
+                            <div class="col">
+                                {{ form.site_area|as_crispy_field}}
+                            </div>
+                            <div class="col">
+                                {{ form.latitude|as_crispy_field}}
+                            </div>
+                            <div class="col">
+                                {{ form.longitude|as_crispy_field}}
+                            </div>
+                          
+                          
+                        </div>
+                      </div>
+                </div>
+
+                <div class="col-5">
+                    <div class="card">
+                        <div class="card-body">
+                          <h6 class="card-title">Contatti</h6>
+                          
+                          <div class="table-responsive-sm">
+                            <table class="table table-hover table-striped table-bordered">
+                              <thead class="thead-dark">
+                                <tr>   
+                                    <th>Nome e Cognome</th>
+                                    <th>Tipo contatto</th>                                    
+                                    <th>Posizione</th>
+                                    <th>Azione</th>
+                                  
+                                </tr>
+                              </thead>
+                              
+                              <tbody>
+                              <tr>
+                                {% for facility_contact in facility_contacts %}
+                                <td >                
+                                    <p>{{ facility_contact.name }}</p>
+                                </td>
+                                <td >       
+                                    <p>{{ facility_contact.contact_type }}</p>
+                                  </td>
+                                  <td >                
+                                    <p>{{ facility_contact.position }}</p>
+                                  </td>
+                                  <td >                
+                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
+                                    <a href="#" class="btn btn-sm btn-info"><i class="bi bi-x-square"></i></a>
+                                  </td>
+                                
+                                {% endfor %}
+                                
+                              </tr>
+                        
+                              
+                              
+                            </tbody>
+                            
+                            </table>
+
+                          </div>
+                          <tfoot>
+                            <a href="{% url 'anagrafiche:add_facility_contact' facility.pk %}" class="btn btn-sm btn-success">Aggiungi Contatto</a>
+                        </tfoot>
+                          
+                          
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <div class="row">
+                {{ form.facility_description|as_crispy_field}}
+            </div>
+
+            
             <input type="submit" class="btn btn-success" value="Salva">
         </form>
     </div>
