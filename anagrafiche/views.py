@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django_filters.views import FilterView
 from .models import Fornitore, Facility, FacilityContact
@@ -19,8 +21,26 @@ def home_fornitori(request):
 
 def vedi_fornitore(request, pk):
     fornitore = get_object_or_404(Fornitore, pk=pk)
-    context = {'fornitore': fornitore}
-    return render(request, "anagrafiche/fornitore.html", context)
+    form = FormFornitore(request.POST)
+    print("Sono qui: " + str(fornitore) + str(fornitore.pk))
+    print("Request method:" + str(request.method))
+    if request.method == "POST":
+        print("Sono qui sul post")
+        if form.is_valid():
+            fornitore_salvato = form.save(commit=False)
+            fornitore_salvato.save()
+            #url_match= reverse_lazy('anagrafiche:home_fornitori')
+            #return redirect(url_match)
+            return HttpResponseRedirect(reverse_lazy('anagrafiche:home_fornitori'))
+            #return render(request, "anagrafiche/home_fornitori.html")
+    else:
+        print("Sono qui sul get")
+        print("Fornitore: " + str(fornitore))
+        form = FormFornitore(instance=fornitore)
+            
+        print("Sono qui sul fondo")    
+        context = {'fornitore': fornitore, 'form': form}
+        return render(request, "anagrafiche/fornitore.html", context)
 
 
 
@@ -77,10 +97,10 @@ class FacilityUpdateView(UpdateView):
 
 def edit_facility_details(request, pk):
     facility = get_object_or_404(Facility, pk=pk)
-    print("Facility:" + str(facility))
+    # print("Facility:" + str(facility))
     facility_contacts = FacilityContact.objects.filter(fk_facility=pk)
     form = FormFacility()
-    print("Facility contacts:" + str(facility_contacts))
+    # print("Facility contacts:" + str(facility_contacts))
     if request.method == "POST":
         form = FormFacility(request.POST)
         if form.is_valid():
@@ -108,11 +128,13 @@ def add_facility_contact(request, pk):
         position = request.POST.get("position")
         facility_contact = FacilityContact.objects.create(name=nome_cognome, 
                                                             contact_type=contact_type,
-                                                            position=request.user,
+                                                            position=position,
                                                             fk_facility=fk_facility
                                                             )
-        messages.info(request, 'The project was added!')
-        return redirect('anagrafiche:facility')
+        messages.info(request, 'Il contatto è stato aggiunto!')
+        return redirect('anagrafiche:edit_facility_details', pk=pk)
+    else:
+        form = FormFacilityContact()
 
     return render(request, 'anagrafiche/facility_contacts.html', {'facility': facility, 'form': form})
     

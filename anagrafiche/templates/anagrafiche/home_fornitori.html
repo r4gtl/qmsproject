@@ -60,7 +60,7 @@
                 
         
                 <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                
+                <a class="btn btn-success" href="{% url 'anagrafiche:home_fornitori' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
                 
               </form>
               
@@ -73,7 +73,7 @@
 
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="{% url 'anagrafiche:aggiungi_fornitore' %}" class="btn btn-info p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Fornitore</a>
+        <a href="{% url 'anagrafiche:aggiungi_fornitore' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Fornitore</a>
         </div>  
         <br>
 

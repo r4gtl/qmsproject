@@ -20,6 +20,7 @@
         
         <h3>Facility Details</h3>
         <hr>
+        {% include "core/partials/_messages.html" %}
         
         <br>
 
@@ -64,11 +65,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     <div class="card">
                         <div class="card-body">
-                          <h6 class="card-title">Categorie</h6>
-                          
+                            <h6 class="card-title">Categorie</h6>
+                            
                             <div class="col">
                                 {{ form.primary_cat|as_crispy_field}}
                             </div>
@@ -78,17 +79,15 @@
                             <div class="col">
                                 {{ form.tertiary_cat|as_crispy_field}}
                             </div>
-                          
-                          
                         </div>
-                      </div>
+                    </div>
                 </div>
 
                 <div class="col-3">
                     <div class="card">
                         <div class="card-body">
-                          <h6 class="card-title">Geo-dati</h6>
-                          
+                            <h6 class="card-title">Geo-dati</h6>
+                            
                             <div class="col">
                                 {{ form.site_area|as_crispy_field}}
                             </div>
@@ -98,13 +97,11 @@
                             <div class="col">
                                 {{ form.longitude|as_crispy_field}}
                             </div>
-                          
-                          
                         </div>
-                      </div>
+                    </div>
                 </div>
 
-                <div class="col-5">
+                <div class="col-6">
                     <div class="card">
                         <div class="card-body">
                           <h6 class="card-title">Contatti</h6>
@@ -122,8 +119,9 @@
                               </thead>
                               
                               <tbody>
-                              <tr>
+                              
                                 {% for facility_contact in facility_contacts %}
+                                <tr>
                                 <td >                
                                     <p>{{ facility_contact.name }}</p>
                                 </td>
@@ -137,10 +135,10 @@
                                     <a href="#" class="btn btn-sm btn-info"><i class="bi bi-pencil"></i></a>
                                     <a href="#" class="btn btn-sm btn-info"><i class="bi bi-x-square"></i></a>
                                   </td>
-                                
+                                </tr>
                                 {% endfor %}
                                 
-                              </tr>
+                              
                         
                               
                               
