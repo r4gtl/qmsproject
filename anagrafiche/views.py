@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django_filters.views import FilterView
-from .models import Fornitore, Facility, FacilityContact
+from .models import Fornitore, Facility, FacilityContact, LwgFornitore
 from .forms import FormFornitore, FormFacility, FormFacilityContact
 from .filters import FornitoreFilter
 
@@ -57,12 +57,21 @@ def aggiungi_fornitore(request):
         context = {'form': form}
         return render(request, "anagrafiche/fornitore.html", context)
 
+
 class CreateSupplier(CreateView):
     model = Fornitore
     form_class = FormFornitore
     #fields = "__all__"
+    success_url = 'anagrafiche/home_fornitori'
     
     template_name = "anagrafiche/fornitore.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #supplier = self.request.pk
+        context["lwg_certs"] = LwgFornitore.objects.all()
+        #print("LWG: " + str(context))
+        return context
     
 
 class ListaFornitoriView(FilterView):

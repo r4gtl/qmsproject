@@ -63,6 +63,40 @@
             
             <input type="submit" class="btn btn-success" value="Salva">
         </form>
+
+        <!-- sezione certificati LWG -->
+        <div class="container-fluid" id="hideme">
+            <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+              <thead class="thead-dark">
+              <tr>        
+                <th>URN</th>
+                <th>Punteggio</th>
+                <th>LWG Range</th>
+                <th>Data Certificato</th>
+                
+                
+                            
+              </tr>
+            </thead>
+              
+              <tbody>
+                {% for lwg_cert in lwg_certs %}
+                    
+                    <td class="col-md-1"><a href="#">{{ lwg_cert.lwg_urn }}</a></td>
+                    <td class="col-md-2">{{ lwg_cert.lwg_score }}</td>  
+                    <td class="col-md-2">{{ lwg_cert.lwg_range  }} </td>
+                    <td class="col-md-2">{{ lwg_cert.lwg_date }}</td> 
+                  </tr>
+                
+                {% endfor %}
+                
+              </tbody>
+            </table>
+             
+          </div>
+    </div>
+        <!-- fine sezione certificati LWG -->
         <button onclick="myFunction()">Click Me</button>
         <div class="container" id="hideme">
             <p>ora mi vedi</p>
@@ -77,13 +111,11 @@
 <script>
 const isLwg = document.getElementById("id_is_lwg");
 
-console.log(isLwg.checked)
-console.log("Checked:" + isLwg.checked)
 isLwg.addEventListener('click', myFunction)
 
 
 function myFunction() {
-    console.log("Premuto") 
+    
     var x = document.getElementById("hideme");
     if (x.style.display === "none") {
       x.style.display = "block";
