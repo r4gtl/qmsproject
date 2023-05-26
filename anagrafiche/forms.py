@@ -6,9 +6,30 @@ from .models import Fornitore, Facility, FacilityContact
 class FormFornitore(forms.ModelForm):
     class Meta:
         model = Fornitore
-        fields='__all__'
-        widgets = {'country': CountrySelectWidget()}
-        
+        exclude=()
+        #fields='__all__'
+        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
+        indirizzo = forms.CharField()
+        cap = forms.CharField()
+        city = forms.CharField()
+        provincia = forms.CharField()
+        country = CountryField().formfield()
+        categoria = forms.CharField()
+        is_lwg = forms.BooleanField(widget=forms.CheckboxInput(attrs={'onClick': 'myFunction();'}))
+        created_by = forms.CharField()
+        created_at = forms.DateTimeField()
+        widgets = {'country': CountrySelectWidget(),
+                   #'is_lwg': forms.CheckboxInput(attrs={'onClick': 'myFunction();'})
+                   }
+        labels = {
+            'ragionesociale': 'Ragione Sociale',
+            'country': 'Paese',
+            'city': 'Città',
+            'is_lwg': 'LWG'
+            
+        }
+
+
 class FormFacility(forms.ModelForm):
     class Meta:
         model = Facility

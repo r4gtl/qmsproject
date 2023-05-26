@@ -99,6 +99,7 @@ class Fornitore(models.Model):
     provincia = models.CharField(max_length=50, blank=True, null=True)
     country = CountryField(blank_label='(seleziona Paese)')
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
+    is_lwg = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, related_name='fornitori', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -111,5 +112,32 @@ class Fornitore(models.Model):
     def get_absolute_url(self):
         return reverse("anagrafiche:vedi_fornitore", kwargs={"pk": self.pk})
     
+class LwgFornitore(models.Model):
+    lwg_urn = models.CharField(max_length=50)
+    lwg_score = models.CharField(max_length=50, blank=True, null=True)
+    lwg_range = models.CharField(max_length=100, blank=True, null=True)
+    lwg_date = models.DateField(blank=True, null=True)
+    lwg_expiry = models.DateField(blank=True, null=True)
+    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+
     
     
+    
+class Cliente(models.Model):    
+    ragionesociale = models.CharField(max_length=50, blank=False, null=False)
+    indirizzo = models.CharField(max_length=100, blank=True, null=True)
+    cap = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    provincia = models.CharField(max_length=50, blank=True, null=True)
+    country = CountryField(blank_label='(seleziona Paese)')    
+    created_by = models.ForeignKey(User, related_name='clienti', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering =['ragionesociale']
+        
+    def __str__(self):
+        return self.ragionesociale
+    
+    def get_absolute_url(self):
+        return reverse("anagrafiche:vedi_cliente", kwargs={"pk": self.pk})

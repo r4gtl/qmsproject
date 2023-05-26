@@ -44,21 +44,23 @@ def vedi_fornitore(request, pk):
 
 
 
-def aggiungi_fornitore(request, pk):
-    fornitore = get_object_or_404(Fornitore, pk=pk)
+def aggiungi_fornitore(request):
+    #fornitore = get_object_or_404(Fornitore, pk=pk)
+    print(request.is_lwg)
     if request.method == "POST":
         form = FormFornitore(request.POST)
         if form.is_valid():
             form.save(commit=False)
-            form.instance.fornitore = fornitore
+            #form.instance.fornitore = fornitore
         else:
             form = FormFornitore()
-        context = {'fornitore': fornitore, 'form': form}
+        context = {'form': form}
         return render(request, "anagrafiche/fornitore.html", context)
 
 class CreateSupplier(CreateView):
     model = Fornitore
-    fields = "__all__"
+    form_class = FormFornitore
+    #fields = "__all__"
     
     template_name = "anagrafiche/fornitore.html"
     

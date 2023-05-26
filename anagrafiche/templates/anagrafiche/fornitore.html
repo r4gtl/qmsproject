@@ -24,15 +24,72 @@
         <h3>Aggiungi Fornitore</h3>
         <hr>
         
+        {% include "core/partials/_messages.html" %}
+        
+        
         <br>
 
 
-        <form method="post">{% csrf_token %}
-            {{ form|crispy }}
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    {{ form.ragionesociale|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{ form.indirizzo|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.cap|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.city|as_crispy_field }}
+                </div>
+                <div class="col-1">
+                    {{ form.provincia|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.country|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    {{ form.is_lwg|as_crispy_field }}
+                </div>
+            </div>
+
+            
             <input type="submit" class="btn btn-success" value="Salva">
         </form>
+        <button onclick="myFunction()">Click Me</button>
+        <div class="container" id="hideme">
+            <p>ora mi vedi</p>
+        </div>
     </div>
 
 
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+const isLwg = document.getElementById("id_is_lwg");
+
+console.log(isLwg.checked)
+console.log("Checked:" + isLwg.checked)
+isLwg.addEventListener('change', myFunction())
+
+
+function myFunction() {
+    console.log("Premuto") 
+    var x = document.getElementById("hideme");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  } 
+</script>
 {% endblock %}
