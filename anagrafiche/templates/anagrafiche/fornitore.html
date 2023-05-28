@@ -55,6 +55,17 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-3">
+                    {{ form.categoria|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_at }}
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-2">
                     {{ form.is_lwg|as_crispy_field }}
                 </div>
@@ -63,9 +74,20 @@
             
             <input type="submit" class="btn btn-success" value="Salva">
         </form>
-
+        <hr>
         <!-- sezione certificati LWG -->
-        <div class="container-fluid" id="hideme">
+        <div class="container-fluid" id="lwg-section">
+            <div class="container">
+                <div class="row justify-content-end">
+                    <div class="col-10">
+
+                    </div>
+                    <div class="col">
+                        <a href="#" class="btn btn-success">Aggiungi Certificato</a>
+                    </div>
+                </div>
+            </div>
+            <br>
             <div class="table-responsive">
             <table class="table table-hover table-striped table-bordered">
               <thead class="thead-dark">
@@ -97,10 +119,7 @@
           </div>
     </div>
         <!-- fine sezione certificati LWG -->
-        <button onclick="myFunction()">Click Me</button>
-        <div class="container" id="hideme">
-            <p>ora mi vedi</p>
-        </div>
+        
     </div>
 
 
@@ -110,13 +129,24 @@
 {% block scripts %}
 <script>
 const isLwg = document.getElementById("id_is_lwg");
+const lwgSection = document.getElementById("lwg-section");
+window.onload = hideLwgSection;
 
-isLwg.addEventListener('click', myFunction)
+function hideLwgSection(){
+    if (isLwg.checked){         
+        lwgSection.style.display = "block";
+        }else {
+            lwgSection.style.display = "none";
+        }
+    }
+
+
+isLwg.addEventListener('click', hideLwgSection)
 
 
 function myFunction() {
     
-    var x = document.getElementById("hideme");
+    var x = document.getElementById("lwg-section");
     if (x.style.display === "none") {
       x.style.display = "block";
     } else {

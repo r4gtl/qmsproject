@@ -19,8 +19,9 @@ class FormFornitore(forms.ModelForm):
         created_by = forms.CharField()
         created_at = forms.DateTimeField()
         widgets = {'country': CountrySelectWidget(),
-                   #'is_lwg': forms.CheckboxInput(attrs={'onClick': 'myFunction();'})
-                   }
+                # 'created_at': forms.HiddenInput(),
+                # 'created_by': forms.HiddenInput()
+                }
         labels = {
             'ragionesociale': 'Ragione Sociale',
             'country': 'Paese',

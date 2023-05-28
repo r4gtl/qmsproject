@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
@@ -19,60 +21,84 @@ def home_fornitori(request):
     }
     return render(request, 'anagrafiche/home_fornitori.html', context)
 
-def vedi_fornitore(request, pk):
-    fornitore = get_object_or_404(Fornitore, pk=pk)
-    form = FormFornitore(request.POST)
-    print("Sono qui: " + str(fornitore) + str(fornitore.pk))
-    print("Request method:" + str(request.method))
-    if request.method == "POST":
-        print("Sono qui sul post")
-        if form.is_valid():
-            fornitore_salvato = form.save(commit=False)
-            fornitore_salvato.save()
-            #url_match= reverse_lazy('anagrafiche:home_fornitori')
-            #return redirect(url_match)
-            return HttpResponseRedirect(reverse_lazy('anagrafiche:home_fornitori'))
-            #return render(request, "anagrafiche/home_fornitori.html")
-    else:
-        print("Sono qui sul get")
-        print("Fornitore: " + str(fornitore))
-        form = FormFornitore(instance=fornitore)
+# def vedi_fornitore(request, pk):
+#     fornitore = get_object_or_404(Fornitore, pk=pk)
+#     form = FormFornitore(request.POST)
+#     print("Sono qui: " + str(fornitore) + str(fornitore.pk))
+#     print("Request method:" + str(request.method))
+#     if request.method == "POST":
+#         print("Sono qui sul post")
+#         if form.is_valid():
+#             fornitore_salvato = form.save(commit=False)
+#             fornitore_salvato.save()
+#             #url_match= reverse_lazy('anagrafiche:home_fornitori')
+#             #return redirect(url_match)
+#             return HttpResponseRedirect(reverse_lazy('anagrafiche:home_fornitori'))
+#             #return render(request, "anagrafiche/home_fornitori.html")
+#     else:
+#         print("Sono qui sul get")
+#         print("Fornitore: " + str(fornitore))
+#         form = FormFornitore(instance=fornitore)
             
-        print("Sono qui sul fondo")    
-        context = {'fornitore': fornitore, 'form': form}
-        return render(request, "anagrafiche/fornitore.html", context)
+#         print("Sono qui sul fondo")    
+#         context = {'fornitore': fornitore, 'form': form}
+#         return render(request, "anagrafiche/fornitore.html", context)
 
 
 
-def aggiungi_fornitore(request):
-    #fornitore = get_object_or_404(Fornitore, pk=pk)
-    print(request.is_lwg)
-    if request.method == "POST":
-        form = FormFornitore(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            #form.instance.fornitore = fornitore
-        else:
-            form = FormFornitore()
-        context = {'form': form}
-        return render(request, "anagrafiche/fornitore.html", context)
+# def aggiungi_fornitore(request):
+#     #fornitore = get_object_or_404(Fornitore, pk=pk)
+#     print(request.is_lwg)
+#     if request.method == "POST":
+#         form = FormFornitore(request.POST)
+#         if form.is_valid():
+#             form.save(commit=False)
+#             #form.instance.fornitore = fornitore
+#         else:
+#             form = FormFornitore()
+#         context = {'form': form}
+#         return render(request, "anagrafiche/fornitore.html", context)
 
-
-class CreateSupplier(CreateView):
+class UpdateSupplier(LoginRequiredMixin, UpdateView):
+    model = Fornitore
+    template_name = 'anagrafiche/fornitore.html'
+    form_class = FormFornitore
+    success_url = reverse_lazy('anagrafiche:home_fornitori')
+    
+class CreateSupplier(LoginRequiredMixin, CreateView):
+    
     model = Fornitore
     form_class = FormFornitore
+    success_message = 'Fornitore aggiunto correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
     #fields = "__all__"
-    success_url = 'anagrafiche/home_fornitori'
+    success_url = reverse_lazy('anagrafiche:home_fornitori')
     
     template_name = "anagrafiche/fornitore.html"
 
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+            'created_at': datetime.datetime.now() 
+        }
+        
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #supplier = self.request.pk
+        
         context["lwg_certs"] = LwgFornitore.objects.all()
-        #print("LWG: " + str(context))
+        
         return context
     
+    def form_valid(self, form):        
+        messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+        return super().form_invalid(form)
 
 class ListaFornitoriView(FilterView):
 
