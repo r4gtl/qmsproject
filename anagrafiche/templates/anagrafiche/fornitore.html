@@ -83,7 +83,7 @@
 
                     </div>
                     <div class="col">
-                        <a href="#" class="btn btn-success">Aggiungi Certificato</a>
+                        <a href="{% url 'anagrafiche:aggiungi_lwg' fk_fornitore=fornitore.pk %}" class="btn btn-success">Aggiungi Certificato</a>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
               <tbody>
                 {% for lwg_cert in lwg_certs %}
                     
-                    <td class="col-md-1"><a href="#">{{ lwg_cert.lwg_urn }}</a></td>
+                    <td class="col-md-1"><a href="{% url 'anagrafiche:modifica_lwg' pk=lwg_cert.pk %}">{{ lwg_cert.lwg_urn }}</a></td>
                     <td class="col-md-2">{{ lwg_cert.lwg_score }}</td>  
                     <td class="col-md-2">{{ lwg_cert.lwg_range  }} </td>
                     <td class="col-md-2">{{ lwg_cert.lwg_date }}</td> 

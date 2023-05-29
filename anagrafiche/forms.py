@@ -1,7 +1,10 @@
 from django import forms
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-from .models import Fornitore, Facility, FacilityContact
+from .models import (Fornitore, Facility,
+                      FacilityContact, LwgFornitore,
+                      XrTransferValueLwgFornitore
+)
 
 class FormFornitore(forms.ModelForm):
     class Meta:
@@ -29,6 +32,30 @@ class FormFornitore(forms.ModelForm):
             'is_lwg': 'LWG'
             
         }
+
+class FormLwgFornitore(forms.ModelForm):
+    class Meta:
+        model = LwgFornitore
+        fields= '__all__'
+        widgets = {
+            'lwg_date': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'lwg_expiry': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'fk_fornitore': forms.HiddenInput()
+        }
+        labels = {
+            'lwg_urn': 'URN',
+            'lwg_score': 'Punteggio',
+            'lwg_range': 'Fase',
+            'lwg_date': 'Data Certificato',
+            'lwg_expiry': 'Scadenza Certificato'
+
+        }
+
+class FormXrTransferValueLwgFornitore(forms.ModelForm):
+    class Meta:
+        model = XrTransferValueLwgFornitore
+        fields = '__all__'
+
 
 
 class FormFacility(forms.ModelForm):

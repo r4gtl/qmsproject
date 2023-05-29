@@ -120,7 +120,15 @@ class LwgFornitore(models.Model):
     lwg_expiry = models.DateField(blank=True, null=True)
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
 
-    
+
+class TransferValue(models.Model):
+    description = models.CharField(max_length=50)
+    unit = models.CharField(max_length=20)
+
+class XrTransferValueLwgFornitore(models.Model):
+    fk_lwgfornitore = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
+    fk_transfervalue = models.ForeignKey(TransferValue, on_delete=models.CASCADE)
+    quantity = models.FloatField()
     
     
 class Cliente(models.Model):    
@@ -141,3 +149,5 @@ class Cliente(models.Model):
     
     def get_absolute_url(self):
         return reverse("anagrafiche:vedi_cliente", kwargs={"pk": self.pk})
+    
+

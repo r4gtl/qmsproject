@@ -6,9 +6,19 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
 from django_filters.views import FilterView
-from .models import Fornitore, Facility, FacilityContact, LwgFornitore
-from .forms import FormFornitore, FormFacility, FormFacilityContact
+
+
 from .filters import FornitoreFilter
+
+from .models import (Fornitore, Facility, 
+                     FacilityContact, LwgFornitore, 
+                     TransferValue, XrTransferValueLwgFornitore
+)
+
+from .forms import (FormFornitore, FormFacility,
+                    FormFacilityContact, FormLwgFornitore,
+                    FormXrTransferValueLwgFornitore,
+)
 
 # Create your views here.
 
@@ -64,6 +74,17 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
     template_name = 'anagrafiche/fornitore.html'
     form_class = FormFornitore
     success_url = reverse_lazy('anagrafiche:home_fornitori')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
+        
+        return context
+    
+    def form_valid(self, form):        
+        messages.info(self.request, 'Il fornitore è stato modificato!') # Compare sul success_url
+        return super().form_valid(form)
     
 class CreateSupplier(LoginRequiredMixin, CreateView):
     
@@ -88,8 +109,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        context["lwg_certs"] = LwgFornitore.objects.all()
-        
+        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.fornitore_id) 
         return context
     
     def form_valid(self, form):        
@@ -99,6 +119,104 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
     def form_invalid(self, form):
         messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
         return super().form_invalid(form)
+
+
+class AddLwgCertificate(CreateView):
+    
+    model = LwgFornitore
+    form_class = FormLwgFornitore
+    success_message = 'Certificato aggiunto correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
+    #fields = "__all__"
+    #success_url = reverse_lazy('anagrafiche:vedi_fornitore')
+    
+    template_name = "anagrafiche/lwg.html"
+
+
+    def get_success_url(self):
+          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+          fornitore=self.object.fk_fornitore.pk
+          return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+    def get_initial(self):
+        fk_fornitore = self.kwargs['fk_fornitore']
+        return {
+            'fk_fornitore': fk_fornitore,
+            
+        }
+    
+    #def get_context_data(self, **kwargs):        
+    #    context = super().get_context_data(**kwargs)
+    #    pk = self.object.pk
+    #    print("PK: " + str(pk))
+    #    context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
+    #    return context
+
+class UpdateLwgCertificate(UpdateView):
+    
+    model = LwgFornitore
+    form_class = FormLwgFornitore
+    success_message = 'Certificato modificato correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
+    #fields = "__all__"
+    #success_url = reverse_lazy('anagrafiche:vedi_fornitore')
+    
+    template_name = "anagrafiche/lwg.html"
+
+
+    def get_success_url(self):
+          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+          fornitore=self.object.fk_fornitore.pk
+          return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.object.pk
+        print("PK: " + str(pk))
+        context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
+        context['fornitore'] = self.object.fk_fornitore.pk
+        context['ragionesociale'] = Fornitore.objects.get(pk=self.object.fk_fornitore.pk)
+        print("Context: " + str(context['ragionesociale']))
+        return context
+
+
+class AddXrTranferValue(CreateView):
+    model = XrTransferValueLwgFornitore
+    form_class = FormXrTransferValueLwgFornitore
+    success_message = 'Certificato modificato correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    template_name = "anagrafiche/lwg_transfer_values.html"
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        print("kwargs: " + str(self.kwargs))  
+        #context['fornitore'] = self.object.fornitore.pk
+        
+        context['lwg_cert'] = self.kwargs['pk']
+        #context['certificato'] = LwgFornitore.objects.get(pk=self.object.pk)
+        
+        return context
+
+    #def get_initial(self):
+    #    fk_fornitore = self.kwargs['fk_fornitore']
+    #    return {
+    #        'fk_fornitore': fk_fornitore,
+    #        
+    #    }
+    
+
+    def get_success_url(self):
+          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+          lwgcertificate=self.object.fk_lwgfornitore.pk
+          return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
+    
+    
+
 
 class ListaFornitoriView(FilterView):
 

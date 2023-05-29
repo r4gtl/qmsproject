@@ -1,0 +1,128 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Anagrafiche - Fornitori {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_base.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore %}">{{ ragionesociale }}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Certificato LWG</li>
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica Certificato</h3>
+        {% else %}
+            <h3> Aggiungi Certificato</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        {% include "core/partials/_messages.html" %}
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.lwg_urn|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.lwg_score|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.lwg_date|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.lwg_expiry|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                
+                <div class="col-2">
+                    {{ form.lwg_range|as_crispy_field }}
+                </div>
+                
+                <div class="col-3">
+                    {{ form.fk_fornitore|as_crispy_field }}
+                </div>
+            </div>
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        <!-- sezione Transfer Values -->
+        <div class="container-fluid" id="lwg-section">
+            <div class="container">
+                <div class="row justify-content-end">
+                    <div class="col-10">
+
+                    </div>
+                    <div class="col">
+                        {% if form.instance.id  %}
+                        <a class="btn btn-sm btn-outline-success mb-2" href="{% url 'anagrafiche:add_transf_value' pk=form.instance.id %}">Aggiungi</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-outline-success mb-2" disabled>Salvare per inserire</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+              <thead class="thead-dark">
+              <tr>        
+                <th>Transfer Value</th>
+                <th>Quantità</th>
+                
+                
+                
+                            
+              </tr>
+            </thead>
+              
+              <tbody>
+                {% for transfer_value in transfer_values %}
+                    
+                    <td class="col-md-1"><a href="#">{{ transfer_value.fk_transfervalue.description }}</a></td>
+                    <td class="col-md-2">{{ transfer_value.quantity }}</td>  
+                    
+                  </tr>
+                
+                {% endfor %}
+                
+              </tbody>
+            </table>
+             
+          </div>
+    </div>
+        <!-- fine sezione Transfer Values -->
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 
