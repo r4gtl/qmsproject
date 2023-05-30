@@ -13,8 +13,12 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>
-        
-            <li class="breadcrumb-item active" aria-current="page">Nuovo Fornitore</li>
+        {% if form.instance.id  %}
+        <li class="breadcrumb-item active" aria-current="page">{{ fornitore.ragionesociale }}</li>
+        {% else %}
+        <li class="breadcrumb-item active" aria-current="page">Nuovo Fornitore</li>
+        {% endif %}
+            
         
     </ol>
 </nav>
@@ -22,7 +26,7 @@
     <div class="container">
         
         {% if form.instance.id  %}
-            <h3>Modifica Fornitore</h3>
+            <h3>Modifica {{ fornitore.ragionesociale }}</h3>
         {% else %}
             <h3> Aggiungi Fornitore</h3>
         {% endif %}

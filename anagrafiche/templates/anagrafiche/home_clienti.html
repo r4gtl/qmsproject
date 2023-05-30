@@ -99,8 +99,7 @@
                     
                     <td class="col-md-1"><a href="{{ cliente.get_absolute_url }}">{{ cliente.ragionesociale }}</a></td>
                     <td class="col-md-2">{{ cliente.indirizzo }}</td>  
-                    <td class="col-md-2">{{ cliente.country  }} <img class="country-select-flag" id="{ flag_id }" style="max-height: 24px;" src="{{ cliente.country.flag  }}"></td>
-                    <td class="col-md-2">{{ cliente.categoria }}</td> 
+                    <td class="col-md-2">{{ cliente.country  }} <img class="country-select-flag" id="{ flag_id }" style="max-height: 24px;" src="{{ cliente.country.flag  }}"></td>                    
                   </tr>
                 
                 {% endfor %}

@@ -337,6 +337,18 @@ class ClienteCreateView(LoginRequiredMixin,CreateView):
     template_name = 'anagrafiche/cliente.html'
     success_message = 'Cliente aggiunto correttamente!'
     success_url = reverse_lazy('anagrafiche:home_clienti')
+    
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+            'created_at': datetime.datetime.now() 
+        }
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
 
 class ClienteUpdateView(LoginRequiredMixin,UpdateView):
     model = Cliente

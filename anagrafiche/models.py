@@ -155,6 +155,6 @@ class Cliente(models.Model):
         return self.ragionesociale
     
     def get_absolute_url(self):
-        return reverse("anagrafiche:vedi_cliente", kwargs={"pk": self.pk})
+        return reverse("anagrafiche:modifica_cliente", kwargs={"pk": self.pk})
     
 
