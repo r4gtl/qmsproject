@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Generiche - Transfer Values {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_base.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>                
+        <li class="breadcrumb-item active" aria-current="page">Transfer Values</li>
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        <h3>Elenco Transfer Values</h3>  
+        <hr>
+        {% include "core/partials/_messages.html" %}
+        <br>
+        <div class="d-flex flex-row-reverse bd-highlight">
+            <a href="{% url 'anagrafiche:add_transfer_values' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-folder-plus"></i> Aggiungi transfer value</a>
+        </div>  
+        <hr>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+              <thead class="thead-dark">
+              <tr>        
+                <th>Transfer Value</th>
+                <th>Unità di misura</th>
+              </tr>
+            </thead>
+              
+              <tbody>
+                {% for transfervalue in object_list %}
+                    
+                    <td class="col-md-1"><a href="{% url 'anagrafiche:edit_transfer_values' pk=transfervalue.id %}">{{ transfervalue.description }}</a></td>
+                    <td class="col-md-2">{{ transfervalue.unit }}</td>  
+                    
+                  </tr>
+                  {% empty %}
+                  <p>Non ci sono Transfer values inserite.</p>
+                {% endfor %}
+                
+              </tbody>
+            </table>
+            <hr>
+          </div>
+    </div>
+
+
+
+{% endblock %}
+

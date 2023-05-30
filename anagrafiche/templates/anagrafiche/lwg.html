@@ -8,12 +8,13 @@
 
 {% block content %}
 
+{% include 'core/modals/delConfirm.html' %}
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        
-        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore %}">{{ ragionesociale }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore.pk %}">{{ fornitore.ragionesociale }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">Certificato LWG</li>
         
     </ol>
@@ -93,6 +94,7 @@
               <tr>        
                 <th>Transfer Value</th>
                 <th>Quantità</th>
+                <th>Azione</th>
                 
                 
                 
@@ -103,8 +105,9 @@
               <tbody>
                 {% for transfer_value in transfer_values %}
                     
-                    <td class="col-md-1"><a href="#">{{ transfer_value.fk_transfervalue.description }}</a></td>
+                    <td class="col-md-1"><a href="{% url 'anagrafiche:edit_transf_value' pk=transfer_value.id  %}">{{ transfer_value.fk_transfervalue.description }}</a></td>
                     <td class="col-md-2">{{ transfer_value.quantity }}</td>  
+                    <td> <a href="{% url 'anagrafiche:delete_transf_value' pk=transfer_value.id %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatori_attivi.pk}}"><i class="bi bi-trash"></i> Elimina</a></td>
                     
                   </tr>
                 

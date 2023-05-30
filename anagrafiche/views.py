@@ -4,20 +4,24 @@ import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 from django_filters.views import FilterView
 
 
-from .filters import FornitoreFilter
+from .filters import FornitoreFilter, ClienteFilter
 
 from .models import (Fornitore, Facility, 
                      FacilityContact, LwgFornitore, 
-                     TransferValue, XrTransferValueLwgFornitore
+                     TransferValue, XrTransferValueLwgFornitore,
+                     Cliente
+                     
 )
 
 from .forms import (FormFornitore, FormFacility,
                     FormFacilityContact, FormLwgFornitore,
-                    FormXrTransferValueLwgFornitore,
+                    FormXrTransferValueLwgFornitore, FormTransferValue,
+                    FormCliente
 )
 
 # Create your views here.
@@ -106,11 +110,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         }
         
         
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.fornitore_id) 
-        return context
+    
     
     def form_valid(self, form):        
         messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
@@ -134,10 +134,9 @@ class AddLwgCertificate(CreateView):
     template_name = "anagrafiche/lwg.html"
 
 
-    def get_success_url(self):
-          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-          fornitore=self.object.fk_fornitore.pk
+    def get_success_url(self):          
+          fornitore=self.object.fk_fornitore
+          print("Fornitore: " + str(fornitore))
           return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
 
     def get_initial(self):
@@ -147,12 +146,12 @@ class AddLwgCertificate(CreateView):
             
         }
     
-    #def get_context_data(self, **kwargs):        
-    #    context = super().get_context_data(**kwargs)
-    #    pk = self.object.pk
-    #    print("PK: " + str(pk))
-    #    context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
-    #    return context
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fornitore=self.kwargs['fk_fornitore']
+        print("Fornitore: " + str(fornitore))
+        context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
+        return context
 
 class UpdateLwgCertificate(UpdateView):
     
@@ -184,30 +183,53 @@ class UpdateLwgCertificate(UpdateView):
         return context
 
 
-class AddXrTranferValue(CreateView):
+
+def delete_certificato(request, pk): 
+        deleteobject = get_object_or_404(LwgFornitore, pk = pk)
+        fornitore=deleteobject.fk_fornitore.pk   
+        #dettaglio=deleteobject.iddettordine           
+        #linea = deleteobject.id_linea  
+        #tempomaster=deleteobject.idtempomaster      
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+        return redirect(url_match)
+
+class XrTransferValueCreateView(CreateView):
     model = XrTransferValueLwgFornitore
     form_class = FormXrTransferValueLwgFornitore
-    success_message = 'Certificato modificato correttamente!'
-    error_message = 'Error saving the Doc, check fields below.'
+    success_message = 'Transfer Value modificata correttamente!'
+    success_url = reverse_lazy('anagrafiche:modifica_lwg')
     template_name = "anagrafiche/lwg_transfer_values.html"
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        print("kwargs: " + str(self.kwargs))  
-        #context['fornitore'] = self.object.fornitore.pk
         
-        context['lwg_cert'] = self.kwargs['pk']
-        #context['certificato'] = LwgFornitore.objects.get(pk=self.object.pk)
-        
+        context['fornitore'] = self.kwargs['pk']
         return context
 
-    #def get_initial(self):
-    #    fk_fornitore = self.kwargs['fk_fornitore']
-    #    return {
-    #        'fk_fornitore': fk_fornitore,
-    #        
-    #    }
+    def get_initial(self):
+        fk_fornitore = self.kwargs['pk']
+        return {
+            'fk_lwgfornitore': self.kwargs['pk']
+            
+        }
     
+class XrTransferValueUpdateView(LoginRequiredMixin,UpdateView):
+    model = XrTransferValueLwgFornitore
+    form_class = FormXrTransferValueLwgFornitore
+    template_name = 'anagrafiche/lwg_transfer_values.html'
+    success_message = 'Transfer Value modificata correttamente!'
+    success_url = reverse_lazy('anagrafiche:modifica_lwg')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+
 
     def get_success_url(self):
           # if you are passing 'pk' from 'urls' to 'DeleteView' for company
@@ -215,7 +237,21 @@ class AddXrTranferValue(CreateView):
           lwgcertificate=self.object.fk_lwgfornitore.pk
           return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
     
-    
+
+class XrTransferValueDeleteView(LoginRequiredMixin, DeleteView):
+    # specify the model you want to use
+    model = XrTransferValueLwgFornitore
+     
+    # can specify success url
+    # url to redirect after successfully
+    # deleting object
+    def get_success_url(self):
+          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+          lwgcertificate=self.object.fk_lwgfornitore.pk
+          return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
+     
+    #template_name = "geeks/geeksmodel_confirm_delete.html"
 
 
 class ListaFornitoriView(FilterView):
@@ -293,8 +329,75 @@ def add_facility_contact(request, pk):
 
     return render(request, 'anagrafiche/facility_contacts.html', {'facility': facility, 'form': form})
     
-    
 
+# Creazione, Vista e Update Clienti
+class ClienteCreateView(LoginRequiredMixin,CreateView):
+    model = Cliente
+    form_class = FormCliente
+    template_name = 'anagrafiche/cliente.html'
+    success_message = 'Cliente aggiunto correttamente!'
+    success_url = reverse_lazy('anagrafiche:home_clienti')
+
+class ClienteUpdateView(LoginRequiredMixin,UpdateView):
+    model = Cliente
+    form_class = FormCliente
+    template_name = 'anagrafiche/cliente.html'
+    success_message = 'Cliente modificato correttamente!'
+    success_url = reverse_lazy('anagrafiche:home_clienti')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+class ClienteListView(LoginRequiredMixin, ListView):
+    model = Cliente
+    template_name = 'anagrafiche/home_clienti.html'
+    paginate_by = 10
+
+
+class ListaClienteView(FilterView):
+
+        model = Cliente
+        context_object_name = 'initial_clienti'
+        template_name = "anagrafiche/home_clienti.html"
+        filterset_class = ClienteFilter
+        paginate_by = 30
+
+
+
+
+
+'''SEZIONE TABELLE GENERICHE'''
+
+# Creazione, Vista e Update Transfer Values
+class TransferValueCreateView(LoginRequiredMixin,CreateView):
+    model = TransferValue
+    form_class = FormTransferValue
+    template_name = 'anagrafiche/transfer_value.html'
+    success_message = 'Transfer Value aggiunta correttamente!'
+    success_url = reverse_lazy('anagrafiche:transfer_values_list')
+
+class TransferValueUpdateView(LoginRequiredMixin,UpdateView):
+    model = TransferValue
+    form_class = FormTransferValue
+    template_name = 'anagrafiche/transfer_value.html'
+    success_message = 'Transfer Value modificata correttamente!'
+    success_url = reverse_lazy('anagrafiche:transfer_values_list')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+class TransferValueListView(LoginRequiredMixin, ListView):
+    model = TransferValue
+    template_name = 'anagrafiche/transfer_values_list.html'
+    paginate_by = 10
+
+
+
+'''FINE SEZIONE TABELLE GENERICHE'''
     
 
     

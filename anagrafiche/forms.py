@@ -3,7 +3,8 @@ from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
 from .models import (Fornitore, Facility,
                       FacilityContact, LwgFornitore,
-                      XrTransferValueLwgFornitore
+                      XrTransferValueLwgFornitore, TransferValue,
+                      Cliente
 )
 
 class FormFornitore(forms.ModelForm):
@@ -54,6 +55,18 @@ class FormLwgFornitore(forms.ModelForm):
 class FormXrTransferValueLwgFornitore(forms.ModelForm):
     class Meta:
         model = XrTransferValueLwgFornitore
+        fields = '__all__'
+        # widgets = {'fk_lwgfornitore': forms.HiddenInput(),} # Sospeso per vedere se si compila
+        labels = {
+            'fk_transfervalue': 'Descrizione',
+            'quantity': 'Quantità',
+            
+
+        }
+
+class FormTransferValue(forms.ModelForm):
+    class Meta:
+        model = TransferValue
         fields = '__all__'
 
 
@@ -112,3 +125,29 @@ class FormFacilityContact(forms.ModelForm):
                    'position': forms.TextInput(attrs={'placeholder': 'posizione'}),
                    
                    }
+
+class FormCliente(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        exclude=()
+        #fields='__all__'
+        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
+        indirizzo = forms.CharField()
+        cap = forms.CharField()
+        city = forms.CharField()
+        provincia = forms.CharField()
+        country = CountryField().formfield()
+        
+        created_by = forms.CharField()
+        created_at = forms.DateTimeField()
+        widgets = {'country': CountrySelectWidget(),
+                # 'created_at': forms.HiddenInput(),
+                # 'created_by': forms.HiddenInput()
+                }
+        labels = {
+            'ragionesociale': 'Ragione Sociale',
+            'country': 'Paese',
+            'city': 'Città',
+            
+            
+        }

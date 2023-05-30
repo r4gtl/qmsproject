@@ -1,6 +1,6 @@
 import django_filters
 from django import forms
-from .models import Fornitore
+from .models import Fornitore, Cliente
 
 
 
@@ -28,4 +28,13 @@ class FornitoreFilter(django_filters.FilterSet):
     class Meta:
         model = Fornitore
         fields = ['ragionesociale', 'categoria']
-        
+
+
+
+class ClienteFilter(django_filters.FilterSet):   
+   
+    ragionesociale=django_filters.CharFilter(field_name='ragionesociale', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    
+    class Meta:
+        model = Cliente
+        fields = ['ragionesociale']

@@ -125,7 +125,14 @@ class TransferValue(models.Model):
     description = models.CharField(max_length=50)
     unit = models.CharField(max_length=20)
 
+    class Meta:
+        ordering =['description']
+
+    def __str__(self):
+        return self.description
+
 class XrTransferValueLwgFornitore(models.Model):
+    
     fk_lwgfornitore = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
     fk_transfervalue = models.ForeignKey(TransferValue, on_delete=models.CASCADE)
     quantity = models.FloatField()
