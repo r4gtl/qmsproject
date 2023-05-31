@@ -12,6 +12,10 @@ class Ward(models.Model):
         ordering = ["description"]
         verbose_name_plural = "wards"
         db_table = "reparti"
+    
+    def __str__(self):
+        return self.description
+        
 
 class Role(models.Model):
     
@@ -24,6 +28,10 @@ class Role(models.Model):
         ordering = ["description"]
         verbose_name_plural = "roles"
         db_table = "mansioni"
+        
+        
+    def __str__(self):
+        return self.description
 
 class HumanResource(models.Model):
     GENDER_CHOICES = (

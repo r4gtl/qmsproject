@@ -15,9 +15,9 @@
         <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Fornitori</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ward.description }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ role.description }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Reparto</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Mansione</li>
         {% endif %}             
         
         
@@ -26,9 +26,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica Reparto</h3>
+            <h3>Modifica mansione</h3>
         {% else %}
-            <h3> Aggiungi Reparto</h3>
+            <h3> Aggiungi mansione</h3>
         {% endif %}
         
         

@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block content %}
+{% include 'core/modals/delConfirm.html' %}
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
@@ -22,7 +23,9 @@
   <h3>Tabelle Generiche</h3>
   <hr>
 
-  
+  {% include "core/partials/_messages.html" %}
+
+
   <div class="row">
     <div class="col-6">
       <div class="row">
@@ -30,7 +33,7 @@
           <h5>Reparti</h5>          
         </div>
         <div class="col-6 text-end">
-          <a href="#" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Reparto</a>
+          <a href="{% url 'human_resources:create_ward' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Reparto</a>
         </div>
       </div>
       
@@ -46,9 +49,9 @@
           {% for ward in wards %}
           <tr>        
             
-            <td><a href="#"></a>{{ ward.description }}</td>
+            <td><a href="{% url 'human_resources:update_ward' pk=ward.pk %}">{{ ward.description }}</a></td>
             
-            <td><a href="#" class="btn btn-sm btn-danger">Elimina</a></td>
+            <td class="text-center"><a href="{% url 'human_resources:delete_ward' pk=ward.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ward.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>
@@ -61,7 +64,7 @@
           <h5>Mansioni</h5>
         </div>
         <div class="col-6 text-end">
-          <a href="#" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Mansione</a>
+          <a href="{% url 'human_resources:create_role' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Mansione</a>
         </div>
       </div>
       <table class="table table-bordered table-striped mt-2">
@@ -76,9 +79,9 @@
           {% for role in roles %}
           <tr>        
             
-            <td><a href="#"></a>{{ role.description }}</td>
+            <td><a href="{% url 'human_resources:update_role' pk=role.pk %}">{{ role.description }}</a></td>
             
-            <td><a href="#" class="btn btn-sm btn-danger">Elimina</a></td>
+            <td class="text-center"><a href="{% url 'human_resources:delete_role' pk=role.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{role.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>

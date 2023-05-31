@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -85,13 +85,13 @@ def tabelle_generiche(request):
     return render(request, "human_resources/tabelle_generiche_hr.html", context)
 
 
-# Creazione, Vista e Update Ward
+# Creazione, Update e Delete Ward
 class WardCreateView(LoginRequiredMixin,CreateView):
     model = Ward
     form_class = WardModelForm
     template_name = 'human_resources/ward.html'
     success_message = 'Reparto aggiunto correttamente!'
-    success_url = reverse_lazy('human_resource:human_resources')
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -100,18 +100,50 @@ class WardCreateView(LoginRequiredMixin,CreateView):
 class WardUpdateView(LoginRequiredMixin,UpdateView):
     model = Ward
     form_class = WardModelForm
-    template_name = 'human_resource/ward.html'
+    template_name = 'human_resources/ward.html'
     success_message = 'Reparto modificato correttamente!'
-    success_url = reverse_lazy('human_resources:human_resources')
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
-    
-    
-class WardDeleteView(LoginRequiredMixin, DeleteView):
-    model = Ward
-    success_url = reverse_lazy('human_resources:human_resources')
-    
 
+    
+def delete_ward(request, pk): 
+        deleteobject = get_object_or_404(Ward, pk = pk)          
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:tabelle_generiche')
+        return redirect(url_match)
+
+# Creazione, Update e Delete Role
+class RoleCreateView(LoginRequiredMixin,CreateView):
+    model = Role
+    form_class = RoleModelForm
+    template_name = 'human_resources/role.html'
+    success_message = 'Mansione aggiunta correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+class RoleUpdateView(LoginRequiredMixin,UpdateView):
+    model = Role
+    form_class = RoleModelForm
+    template_name = 'human_resources/role.html'
+    success_message = 'mansione modificata correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    
+def delete_role(request, pk): 
+        deleteobject = get_object_or_404(Role, pk = pk)          
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:tabelle_generiche')
+        return redirect(url_match)
+    
+    
 '''FINE SEZIONE TABELLE GENERICHE'''

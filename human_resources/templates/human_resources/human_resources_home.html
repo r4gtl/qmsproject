@@ -12,7 +12,7 @@
 
 <div class="container">
   <br>
-  <h3>Lista dipendenti</h3>
+  <h3>Lista operatori</h3>
   <hr>
   
   <!-- filtro -->
@@ -25,19 +25,25 @@
                     <table class="table table-hover table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr>     
-                                <th>Ordine</th>
-                                <th>Fornitore</th>                                    
+                                <th>Cognome</th>
+                                <th>Nome</th>                                    
+                                <th>Reparto</th>                                    
+                                <th>Mansione</th>                                    
+
                             </tr>
                         </thead>                            
                         <tbody>
                             <tr>                                    
                                 <td style="width: 20%">{{ filter.form.cognomedipendente|as_crispy_field }}</td>                                    
                                 <td style="width: 20%">{{ filter.form.nomedipendente|as_crispy_field }}</td>                                
+                                <td style="width: 20%">{{ filter.form.fk_reparto|as_crispy_field }}</td>                                
+                                <td style="width: 20%">{{ filter.form.fk_mansione|as_crispy_field }}</td>                                
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <button class="btn btn-primary" type="submit">Cerca</button>
+                <a class="btn btn-success" href="{% url 'human_resources:human_resources' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
             </form>        
         </div>
     </div>        
@@ -49,11 +55,13 @@
     <table class="table table-bordered table-striped">
         <thead>
           <tr>
-            <th>Selezione</th>
-            <th>Cognome</th>
-            <th>Nome</th>
+            
+            <th>Cognome Nome</th>            
             <th>Data Assunzione</th>
             <th>Data Dimissioni</th>
+            <th>Reparto</th>
+            <th>Mansione</th>
+
             
           </tr>
         </thead>
@@ -61,11 +69,13 @@
           {% for hr in filter.qs %}
           <tr>        
             
-            <td><a href="#"></a></td>
-            <td>{{ hr.cognomedipendente }}</td>
-            <td>{{ hr.nomedipendente }}</td>
+            
+            <td>{{ hr.cognomedipendente }} {{ hr.nomedipendente }}</td>
+            
             <td>{{ hr.dataassunzione|date:'d/m/Y' }}</td>
             <td>{{ hr.datadimissioni|date:'d/m/Y' }}</td>
+            <td>{{ hr.fk_reparto.description }}</td>
+            <td>{{ hr.fk_mansione.description }}</td>
           </tr>  
           {% endfor %}
         </tbody>
