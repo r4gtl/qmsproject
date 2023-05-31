@@ -1,6 +1,6 @@
 from cProfile import label
 from django import forms
-from .models import HumanResource
+from .models import HumanResource, Ward, Role
 
 
 class HumanResourceModelForm(forms.ModelForm):
@@ -36,3 +36,13 @@ class HumanResourceModelForm(forms.ModelForm):
             'commenti': 'Commenti',
 
         }
+
+class WardModelForm(forms.ModelForm):
+    class Meta:
+        model = Ward
+        fields = '__all__'
+
+class RoleModelForm(forms.ModelForm):
+    class Meta:
+        model = Role
+        fields = '__all__'

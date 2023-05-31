@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 
-from django.views.generic.edit import CreateView, UpdateView
-from .models import HumanResource
-from .forms import HumanResourceModelForm
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .models import HumanResource, Ward, Role
+from .forms import HumanResourceModelForm, WardModelForm, RoleModelForm
 from .filters import HRFilter
 
 # Create your views here.
@@ -66,3 +68,50 @@ def update_human_resource(request, pk):
         #         form = SupplierModelForm(instance=supplier)
         # context = {"supplier": supplier, "contacts": contacts, 'form':form}        
         # return render(request, "master_data/create_supplier.html", context)
+
+
+
+'''SEZIONE TABELLE GENERICHE'''
+
+def tabelle_generiche(request):
+    wards = Ward.objects.all()
+    roles = Role.objects.all()
+    
+
+    context = {'wards': wards, 
+                'roles': roles,                
+                }
+    
+    return render(request, "human_resources/tabelle_generiche_hr.html", context)
+
+
+# Creazione, Vista e Update Ward
+class WardCreateView(LoginRequiredMixin,CreateView):
+    model = Ward
+    form_class = WardModelForm
+    template_name = 'human_resources/ward.html'
+    success_message = 'Reparto aggiunto correttamente!'
+    success_url = reverse_lazy('human_resource:human_resources')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+class WardUpdateView(LoginRequiredMixin,UpdateView):
+    model = Ward
+    form_class = WardModelForm
+    template_name = 'human_resource/ward.html'
+    success_message = 'Reparto modificato correttamente!'
+    success_url = reverse_lazy('human_resources:human_resources')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+class WardDeleteView(LoginRequiredMixin, DeleteView):
+    model = Ward
+    success_url = reverse_lazy('human_resources:human_resources')
+    
+
+'''FINE SEZIONE TABELLE GENERICHE'''
