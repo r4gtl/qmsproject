@@ -40,12 +40,15 @@
                             <div class="col-md-3">
                               {{ form.nomedipendente|as_crispy_field }} 
                             </div> 
+                            
                             <div class="col-md-2">
                               {{ form.gender|as_crispy_field }}
                             </div>    
                         </div>
                         <div class="row">                          
-                            
+                          <div class="col-3">
+                            {{ form.country|as_crispy_field }}
+                        </div>
                             <div class="col-md-3">
                               {{ form.dataassunzione|as_crispy_field }}
                             </div>
@@ -53,7 +56,7 @@
                               {{ form.datadimissioni|as_crispy_field }} 
                             </div>     
                         </div>
-                        <div class="row">                          
+                        <div class="row mt-4">                          
                             
                             <div class="col-md-5">
                               {{ form.fk_mansione|as_crispy_field }}

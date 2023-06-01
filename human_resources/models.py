@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django_countries.fields import CountryField # Field from django countries app
 
 
 class Ward(models.Model):
@@ -35,12 +36,13 @@ class Role(models.Model):
 
 class HumanResource(models.Model):
     GENDER_CHOICES = (
-        ('M', 'Male'),
-        ('F', 'Female'),
+        ('M', 'Maschio'),
+        ('F', 'Femmina'),
     )
     
     cognomedipendente = models.CharField(max_length=50, null=False, blank=False)
     nomedipendente = models.CharField(max_length=50, null=False, blank=False)
+    country = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
     immagine = models.ImageField(upload_to='operator_pictures/', default= 'avataaars.png',null=True, blank=True)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
     dataassunzione = models.DateField(null=False, blank=False)

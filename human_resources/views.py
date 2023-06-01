@@ -45,14 +45,16 @@ def update_human_resource(request, pk):
     form = HumanResourceModelForm(request.POST or None, instance = obj) 
     if form.is_valid():
         form.save()
-        return reverse("human_resources:human_resources")
+        #return reverse("human_resources:human_resources")
+        url_match= reverse_lazy('human_resources:human_resources')
+        return redirect(url_match)
         
  
     # add form dictionary to context
     context["form"] = form
     context["obj"] = obj
  
-    return render(request, "update_view.html", context)
+    return render(request, "human_resources/single_operator.html", context)
 
 
 # if request.method == 'POST':
