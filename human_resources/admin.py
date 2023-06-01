@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import (
-    HumanResource,
+    HumanResource, AreaFormazione, CorsoFormazione
     )
 
 
@@ -16,3 +16,5 @@ class HumanResourceModelAdmin(admin.ModelAdmin):
 
 
 admin.site.register(HumanResource, HumanResourceModelAdmin)
+admin.site.register(AreaFormazione)
+admin.site.register(CorsoFormazione)

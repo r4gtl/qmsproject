@@ -12,10 +12,9 @@ from django_filters.views import FilterView
 from .filters import FornitoreFilter, ClienteFilter
 
 from .models import (Fornitore, Facility, 
-                     FacilityContact, LwgFornitore, 
-                     TransferValue, XrTransferValueLwgFornitore,
-                     Cliente
-                     
+                    FacilityContact, LwgFornitore, 
+                    TransferValue, XrTransferValueLwgFornitore,
+                    Cliente
 )
 
 from .forms import (FormFornitore, FormFacility,

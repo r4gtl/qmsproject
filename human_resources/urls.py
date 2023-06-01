@@ -4,19 +4,25 @@ from .views import (human_resources_home,
                     update_human_resource,
                     add_new_operator,
                     tabelle_generiche,
+                    tabelle_generiche_formazione,
                     WardCreateView, WardUpdateView, delete_ward,
                     RoleCreateView, RoleUpdateView, delete_role,
+                    AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
+                    CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
                     )
 
 app_name = 'human_resources'
 
 urlpatterns = [
+    
+    # Tabelle generiche
+    path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),  
+    path('tabelle_generiche_formazione/', tabelle_generiche_formazione, name="tabelle_generiche_formazione"),  
+    
+    # Human Resources
     path('', human_resources_home, name="human_resources"),
     path('update_human_resource/<int:pk>/', update_human_resource, name="update-human-resource"),
     path('create_human_resource/', add_new_operator, name="create-human-resource"),  
-
-    # Tabelle generiche
-    path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),  
 
 
     # Ward 
@@ -27,7 +33,17 @@ urlpatterns = [
     # Role
     path('create_role/', RoleCreateView.as_view(), name="create_role"),  
     path('update_role/<int:pk>', RoleUpdateView.as_view(), name="update_role"),  
-    path('delete_role/<int:pk>', delete_role, name="delete_role"),  
+    path('delete_role/<int:pk>', delete_role, name="delete_role"),
+    
+    # Area Formazione
+    path('crea_area_formazione/', AreaFormazioneCreateView.as_view(), name="crea_area_formazione"),  
+    path('modifica_area_formazione/<int:pk>', AreaFormazioneUpdateView.as_view(), name="modifica_area_formazione"),  
+    path('delete_area_formazione/<int:pk>', delete_area_formazione, name="delete_area_formazione"),
+    
+    # Corso Formazione
+    path('crea_corso_formazione/', CorsoFormazioneCreateView.as_view(), name="crea_corso_formazione"),  
+    path('modifica_corso_formazione/<int:pk>', CorsoFormazioneUpdateView.as_view(), name="modifica_corso_formazione"),  
+    path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
     
     
 ]
