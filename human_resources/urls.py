@@ -5,10 +5,13 @@ from .views import (human_resources_home,
                     add_new_operator,
                     tabelle_generiche,
                     tabelle_generiche_formazione,
+                    dashboard_formazione,
                     WardCreateView, WardUpdateView, delete_ward,
                     RoleCreateView, RoleUpdateView, delete_role,
                     AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
                     CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
+                    RegistroFormazioneCreateView,
+                    
                     )
 
 app_name = 'human_resources'
@@ -22,7 +25,9 @@ urlpatterns = [
     # Human Resources
     path('', human_resources_home, name="human_resources"),
     path('update_human_resource/<int:pk>/', update_human_resource, name="update-human-resource"),
-    path('create_human_resource/', add_new_operator, name="create-human-resource"),  
+    path('create_human_resource/', add_new_operator, name="create-human-resource"), 
+    
+    path('dashboard_formazione/', dashboard_formazione, name="dashboard_formazione"), 
 
 
     # Ward 
@@ -44,6 +49,11 @@ urlpatterns = [
     path('crea_corso_formazione/', CorsoFormazioneCreateView.as_view(), name="crea_corso_formazione"),  
     path('modifica_corso_formazione/<int:pk>', CorsoFormazioneUpdateView.as_view(), name="modifica_corso_formazione"),  
     path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
+    
+    # Registro Formazione
+    path('crea_registro_formazione/', RegistroFormazioneCreateView.as_view(), name="crea_registro_formazione"),  
+    # path('modifica_corso_formazione/<int:pk>', CorsoFormazioneUpdateView.as_view(), name="modifica_corso_formazione"),  
+    # path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
     
     
 ]

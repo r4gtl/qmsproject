@@ -4,7 +4,9 @@ from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
 from .models import (HumanResource, Ward, Role,
                     AreaFormazione, CorsoFormazione,
+                    RegistroFormazione, DettaglioRegistroFormazione,
                     )
+from anagrafiche.models import Fornitore
 
 
 class HumanResourceModelForm(forms.ModelForm):
@@ -53,7 +55,10 @@ class RoleModelForm(forms.ModelForm):
     class Meta:
         model = Role
         fields = '__all__'
-        
+
+
+'''SEZIONE FORMAZIONE'''        
+# Area formazione
 class AreaFormazioneModelForm(forms.ModelForm):
     class Meta:
         model = AreaFormazione
@@ -63,6 +68,8 @@ class AreaFormazioneModelForm(forms.ModelForm):
             'created_by': forms.HiddenInput()
         }
         
+        
+# Corso Formazione        
 class CorsoFormazioneModelForm(forms.ModelForm):
     class Meta:
         model = CorsoFormazione
@@ -78,5 +85,50 @@ class CorsoFormazioneModelForm(forms.ModelForm):
             'fk_areaformazione': 'Area Formazione',
             
 
+        }
+
+# Registro Formazione
+class RegistroFormazioneModelForm(forms.ModelForm):
+    class Meta:
+        model = RegistroFormazione
+        fields = '__all__'
+        fk_corso = forms.ModelChoiceField(queryset=CorsoFormazione.objects.all())
+        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        widgets = {
+            'data_formazione': forms.DateInput(),            
+            'fk_corso': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'ore': forms.IntegerField(),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            'data_formazione': 'Data Formazione',
+            'fk_corso': 'Corso/Attività',
+            'fk_fornitore': 'Ente che ha fornito il servizio',
+            'ore': 'Ore totali di formazione',
+            'note': 'Annotazioni'
+        }
+        
+# Dettaglio Registro Formazione
+class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
+    class Meta:
+        model = DettaglioRegistroFormazione
+        fields = '__all__'
+        fk_hr = forms.ModelChoiceField(queryset=HumanResource.objects.all())
+        widgets = {
+            'fk_registro_formazione': forms.HiddenInput(),            
+            'fk_hr': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'efficace': forms.BooleanField(),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
+            
+        }
+        labels = {
+            'fk_hr': 'Operatore',
+            'fk_corso': 'Corso/Attività',
+            'certificato': 'Certificato',
+            'presenza': 'Presenza',
+            'efficace': 'Efficace',
+            'note': 'Annotazioni'
         }
         

@@ -7,9 +7,11 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import (HumanResource, Ward, Role, 
                     AreaFormazione, CorsoFormazione,
+                    RegistroFormazione, DettaglioRegistroFormazione,
                     )
 from .forms import (HumanResourceModelForm, WardModelForm, RoleModelForm,
-                    AreaFormazioneModelForm, CorsoFormazioneModelForm
+                    AreaFormazioneModelForm, CorsoFormazioneModelForm,
+                    RegistroFormazioneModelForm, DettaglioRegistroFormazioneModelForm,
                     )
 from .filters import HRFilter
 
@@ -156,8 +158,23 @@ def delete_role(request, pk):
 
 
 '''SEZIONE FORMAZIONE'''
-# Creazione delle tabelle generiche necessarie
+# Prevedere una dashboard con grafici per area formazione, ore formazione fornita
+# prossime scadenze
+def dashboard_formazione(request):
+    aree_formazione = AreaFormazione.objects.all()
+    corsi_formazione = CorsoFormazione.objects.all()
+    registri_formazione = RegistroFormazione.objects.all()
+    
 
+    context = {'aree_formazione': aree_formazione, 
+                'corsi_formazione': corsi_formazione, 
+                'registri_formazione': registri_formazione,               
+                }
+    
+    return render(request, "human_resources/dashboard_formazione.html", context)
+
+
+# Creazione delle tabelle generiche necessarie
 def tabelle_generiche_formazione(request):
     aree_formazione = AreaFormazione.objects.all()
     corsi_formazione = CorsoFormazione.objects.all()
@@ -250,3 +267,21 @@ def delete_corso_formazione(request, pk):
         deleteobject.delete()
         url_match= reverse_lazy('human_resources:tabelle_generiche_formazione')
         return redirect(url_match)
+    
+# Registro Formazione
+class RegistroFormazioneCreateView(LoginRequiredMixin,CreateView):
+    model = RegistroFormazione
+    form_class = RegistroFormazioneModelForm
+    template_name = 'human_resources/registro_formazione.html'
+    success_message = 'Formazione aggiunta correttamente!'
+    success_url = reverse_lazy('human_resources:dashboard_formazione')
+    
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
