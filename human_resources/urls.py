@@ -10,7 +10,8 @@ from .views import (human_resources_home,
                     RoleCreateView, RoleUpdateView, delete_role,
                     AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
                     CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
-                    RegistroFormazioneCreateView,
+                    RegistroFormazioneCreateView, RegistroFormazioneUpdateView, 
+                    DettaglioRegistroFormazioneCreateView, 
                     
                     )
 
@@ -52,7 +53,12 @@ urlpatterns = [
     
     # Registro Formazione
     path('crea_registro_formazione/', RegistroFormazioneCreateView.as_view(), name="crea_registro_formazione"),  
-    # path('modifica_corso_formazione/<int:pk>', CorsoFormazioneUpdateView.as_view(), name="modifica_corso_formazione"),  
+    path('modifica_registro_formazione/<int:pk>', RegistroFormazioneUpdateView.as_view(), name="modifica_registro_formazione"),  
+    # path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
+    
+    # Dettaglio Registro Formazione
+    path('<int:pk>/crea_dettaglio_registro_formazione/', DettaglioRegistroFormazioneCreateView.as_view(), name="crea_dettaglio_registro_formazione"),  
+    # path('modifica_registro_formazione/<int:pk>', RegistroFormazioneUpdateView.as_view(), name="modifica_registro_formazione"),  
     # path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
     
     

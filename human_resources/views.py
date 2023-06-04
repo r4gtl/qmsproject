@@ -186,7 +186,7 @@ def tabelle_generiche_formazione(request):
     
     return render(request, "human_resources/tabelle_generiche_formazione.html", context)
 
-class AreaFormazioneCreateView(LoginRequiredMixin,CreateView):
+class AreaFormazioneCreateView(LoginRequiredMixin, CreateView):
     model = AreaFormazione
     form_class = AreaFormazioneModelForm
     template_name = 'human_resources/area_formazione.html'
@@ -203,7 +203,7 @@ class AreaFormazioneCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
 
-class AreaFormazioneUpdateView(LoginRequiredMixin,UpdateView):
+class AreaFormazioneUpdateView(LoginRequiredMixin, UpdateView):
     model = AreaFormazione
     form_class = AreaFormazioneModelForm
     template_name = 'human_resources/area_formazione.html'
@@ -230,7 +230,7 @@ def delete_area_formazione(request, pk):
         url_match= reverse_lazy('human_resources:tabelle_generiche_formazione')
         return redirect(url_match)
     
-class CorsoFormazioneCreateView(LoginRequiredMixin,CreateView):
+class CorsoFormazioneCreateView(LoginRequiredMixin, CreateView):
     model = CorsoFormazione
     form_class = CorsoFormazioneModelForm
     template_name = 'human_resources/corso_formazione.html'
@@ -248,7 +248,7 @@ class CorsoFormazioneCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
 
-class CorsoFormazioneUpdateView(LoginRequiredMixin,UpdateView):
+class CorsoFormazioneUpdateView(LoginRequiredMixin, UpdateView):
     model = CorsoFormazione
     form_class = CorsoFormazioneModelForm
     template_name = 'human_resources/corso_formazione.html'
@@ -269,7 +269,7 @@ def delete_corso_formazione(request, pk):
         return redirect(url_match)
     
 # Registro Formazione
-class RegistroFormazioneCreateView(LoginRequiredMixin,CreateView):
+class RegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
     model = RegistroFormazione
     form_class = RegistroFormazioneModelForm
     template_name = 'human_resources/registro_formazione.html'
@@ -280,6 +280,46 @@ class RegistroFormazioneCreateView(LoginRequiredMixin,CreateView):
         created_by = self.request.user
         return {
             'created_by': created_by,
+        }
+
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+class RegistroFormazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = RegistroFormazione
+    form_class = RegistroFormazioneModelForm
+    template_name = 'human_resources/registro_formazione.html'
+    success_message = 'Formazione modificata correttamente!'
+    success_url = reverse_lazy('human_resources:dashboard_formazione')
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.object.pk
+        print("PK: " + str(pk))
+        context['operatori_associati'] = DettaglioRegistroFormazione.objects.filter(fk_registro_formazione=self.object.id) # FILTRARE        
+        return context
+    
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+
+# Dettaglio Registro Formazione
+class DettaglioRegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
+    model = DettaglioRegistroFormazione
+    form_class = DettaglioRegistroFormazioneModelForm
+    template_name = 'human_resources/dettaglio_registro_formazione.html'
+    success_message = 'Operatore aggiunto correttamente!'
+    success_url = reverse_lazy('human_resources:crea_registro_formazione')
+    
+    def get_initial(self):
+        print(self.kwargs)
+        fk_registro_formazione = self.kwargs['pk']
+        
+        return {
+            'fk_registro_formazione': fk_registro_formazione,
         }
 
     def form_valid(self, form):                

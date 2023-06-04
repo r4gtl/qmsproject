@@ -1,0 +1,104 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Operatore{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <h5 class="text-end">Registro Formazione</h5>
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    
+    <!-- Form nuovo registro -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            <input type="submit" class="btn btn-info mb-2 me-1" value="Salva ed Esci">
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row">
+                            <div class = "col-md-3">
+                              {{ form.data_formazione|as_crispy_field }}
+                            </div>
+                            
+                            <div class="col-md-3">
+                              {{ form.fk_corso|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                              {{ form.fk_fornitore|as_crispy_field }} 
+                            </div> 
+                            
+                            <div class="col-md-2">
+                              {{ form.ore|as_crispy_field }}
+                            </div>    
+                        </div>
+                        <div class="row">                          
+                          <div class="col-3">
+                            {{ form.note|as_crispy_field }}
+                        </div>
+                            <div class="col-md-3">
+                              {{ form.created_by|as_crispy_field }}
+                            </div>
+                              
+                        </div>
+                        
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    <!-- Tabella dettaglio registro -->
+    <div class="row">
+      <div class="col-6">
+        <h5>Operatori formati</h5>
+                  
+      </div>
+      <div class="col-6 text-end">
+        <a href="{% url 'human_resources:crea_dettaglio_registro_formazione' pk=registroformazione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi operatore</a>
+      </div>
+    </div>
+    <table class="table table-bordered table-striped mt-2">
+      <thead>
+        <tr>
+          <th>Operatore</th>            
+          <th>Azione</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for operatore_associato in operatori_associati %}
+        <tr>        
+          
+          <td><a href="#">{{ operatore_associato.fk_hr }}</a></td>
+          
+          <td class="text-center"><a href="" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatore_associato.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+        </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+{% endblock content %}

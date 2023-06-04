@@ -98,7 +98,7 @@ class RegistroFormazioneModelForm(forms.ModelForm):
             'data_formazione': forms.DateInput(),            
             'fk_corso': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
-            'ore': forms.IntegerField(),
+            'ore': forms.NumberInput(attrs={'class': 'form-control'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
             'created_by': forms.HiddenInput()
         }
@@ -119,13 +119,12 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
         widgets = {
             'fk_registro_formazione': forms.HiddenInput(),            
             'fk_hr': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
-            'efficace': forms.BooleanField(),
+            'efficace': forms.CheckboxInput(),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
             
         }
         labels = {
             'fk_hr': 'Operatore',
-            'fk_corso': 'Corso/Attività',
             'certificato': 'Certificato',
             'presenza': 'Presenza',
             'efficace': 'Efficace',

@@ -30,7 +30,7 @@
                 
     </div>
     <div class="col-6 text-end">
-      <a href="#" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Registra Formazione</a>
+      <a href="{% url 'human_resources:crea_registro_formazione' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Registra Formazione</a>
     </div>
   </div>
   <table class="table table-bordered table-striped mt-2">
@@ -47,7 +47,7 @@
       {% for registro_formazione in registri_formazione %}
       <tr>        
         
-        <td><a href="#">{{ registro_formazione.data_formazione }}</a></td>
+        <td><a href="{% url 'human_resources:modifica_registro_formazione' pk=registro_formazione.pk %}">{{ registro_formazione.data_formazione }}</a></td>
         <td>{{ registro_formazione.fk_corso }}</td>
         <td>{{ registro_formazione.ore }}</td>
         <td class="text-center"><a href="" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro_formazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
