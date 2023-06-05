@@ -39,30 +39,61 @@ def human_resources_home(request):
 
 def add_new_operator(request):    
     context ={}    
-    form = HumanResourceModelForm(request.POST or None)
-    
+    form = HumanResourceModelForm(request.POST or None, request.FILES)
+    operatori = HumanResource.objects.all()
     if form.is_valid():
         form.save()
-          
+    else:
+        messages.error(request, 'Errore!')          
+    messages.info(request, 'Operatore aggiunto correttamente!')      
     context['form']= form
+    context['operatori']= operatori
     return render(request, "human_resources/single_operator.html", context)
 
+
+
+class HRUpdateView(LoginRequiredMixin,UpdateView):
+    model = HumanResource
+    form_class = HumanResourceModelForm
+    template_name = 'human_resources/single_operator.html'
+    success_message = 'Operatore modificato correttamente!'
+    success_url = reverse_lazy('human_resources:human_resources')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        if self.object.immagine:
+            context['immagine'] = self.object.immagine.url
+        else:
+            context['immagine'] = False
+        
+        return context
+    
 def update_human_resource(request, pk):    
     context ={}    
-    obj = get_object_or_404(HumanResource, pk = pk)    
-    form = HumanResourceModelForm(request.POST or None, instance = obj) 
-    if form.is_valid():
-        form.save()
-        #return reverse("human_resources:human_resources")
-        url_match= reverse_lazy('human_resources:human_resources')
-        return redirect(url_match)
-        
- 
-    # add form dictionary to context
+    obj = get_object_or_404(HumanResource, pk = pk) 
+    form=HumanResourceModelForm(instance = obj)
+    
+    if request == 'POST':   
+        form = HumanResourceModelForm(request.POST or None, request.FILES, instance = obj)
+        if form.is_valid():
+            messages.info(request, 'Operatore modificato correttamente!')      
+            form.save()
+                #return reverse("human_resources:human_resources")
+            url_match= reverse_lazy('human_resources:human_resources')
+            return redirect(url_match)
+    
+
     context["form"] = form
     context["obj"] = obj
- 
-    return render(request, "human_resources/single_operator.html", context)
+    print("Obj: " + str(obj))
+    print("request: " + str(request))
+    return render(request, "human_resources/single_operator.html", context)    
+    # add form dictionary to context
+    
 
 
 # if request.method == 'POST':

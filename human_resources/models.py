@@ -45,7 +45,7 @@ class HumanResource(models.Model):
     cognomedipendente = models.CharField(max_length=50, null=False, blank=False)
     nomedipendente = models.CharField(max_length=50, null=False, blank=False)
     country = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
-    immagine = models.ImageField(upload_to='operator_pictures/', default= 'avatar.png',null=True, blank=True)
+    immagine = models.ImageField(upload_to='operator_pictures', default= 'avatar.png',null=True, blank=True)        
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)
     dataassunzione = models.DateField(null=False, blank=False)
     datadimissioni = models.DateField(null=True, blank=True)
@@ -59,6 +59,7 @@ class HumanResource(models.Model):
     def __str__(self):
         return self.cognomedipendente + " " + self.nomedipendente
 
+    
     def get_absolute_url(self):
         return reverse("human_resources:update-human-resource", kwargs={"pk": self.pk})
 

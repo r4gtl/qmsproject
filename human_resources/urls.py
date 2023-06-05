@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (human_resources_home,
-                    update_human_resource,
+                    update_human_resource, HRUpdateView,
                     add_new_operator,
                     tabelle_generiche,
                     tabelle_generiche_formazione,
@@ -26,7 +26,7 @@ urlpatterns = [
     
     # Human Resources
     path('', human_resources_home, name="human_resources"),
-    path('update_human_resource/<int:pk>/', update_human_resource, name="update-human-resource"),
+    path('update_human_resource/<int:pk>/', HRUpdateView.as_view(), name="update-human-resource"),
     path('create_human_resource/', add_new_operator, name="create-human-resource"), 
     
     # Dashboard formazione 
