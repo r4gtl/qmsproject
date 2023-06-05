@@ -24,6 +24,15 @@
   <hr>
 
   {% include "core/partials/_messages.html" %}
+
+  <div class="container">
+    <div class="row">
+      <div class="col-4">
+    <canvas id="ore_formazione" data-url="{% url 'human_resources:ore_formazione' %}"></canvas>
+  </div>
+  </div>
+  </div>
+ <hr>
   <div class="row">
     <div class="col-6">
       <h5>Ultima Formazione Fornita</h5>
@@ -59,3 +68,59 @@
 </div>
 
 {% endblock content %}
+
+{% block scripts %}
+<script>
+  function getRandomColor() { //generates random colours and puts them in string
+    var colors = [];
+    for (var i = 0; i < 3; i++) {
+      var letters = '0123456789ABCDEF'.split('');
+      var color = '#';
+      for (var x = 0; x < 6; x++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      colors.push(color);
+    }
+    return colors;
+  }
+
+
+  $(function () {
+
+    var $oreformazione = $("#ore_formazione");
+    $.ajax({
+      url: $oreformazione.data("url"),
+      success: function (data) {
+
+        var ctx = $oreformazione[0].getContext("2d");
+        Chart.defaults.font.size = 16;
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: 'Population',
+              backgroundColor: getRandomColor(),
+              data: data.data
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Ore Formazione fornita'
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  });
+
+</script>
+{% endblock %}

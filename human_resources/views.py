@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
+from django.http import JsonResponse
+from django.db.models import Sum
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -312,7 +314,7 @@ class DettaglioRegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
     form_class = DettaglioRegistroFormazioneModelForm
     template_name = 'human_resources/dettaglio_registro_formazione.html'
     success_message = 'Operatore aggiunto correttamente!'
-    success_url = reverse_lazy('human_resources:crea_registro_formazione')
+    #success_url = reverse_lazy('human_resources:crea_registro_formazione', kwargs={"pk": pk})
     
     def get_initial(self):
         print(self.kwargs)
@@ -322,6 +324,50 @@ class DettaglioRegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
             'fk_registro_formazione': fk_registro_formazione,
         }
 
+    def get_success_url(self):          
+        fk_registro_formazione=self.object.fk_registro_formazione.pk
+        print("fk_registro_formazione: " + str(fk_registro_formazione))
+        return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
+    
     def form_valid(self, form):                
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    
+class DettaglioRegistroFormazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioRegistroFormazione
+    form_class = DettaglioRegistroFormazioneModelForm
+    template_name = 'human_resources/dettaglio_registro_formazione.html'
+    success_message = 'Operatore modificato correttamente!'
+    #success_url = reverse_lazy('human_resources:crea_registro_formazione', kwargs={"pk": pk})
+    
+    def get_success_url(self):          
+        fk_registro_formazione=self.object.fk_registro_formazione.pk
+        print("fk_registro_formazione: " + str(fk_registro_formazione))
+        return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
+    
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+def delete_dettaglio_registro_formazione(request, pk): 
+        deleteobject = get_object_or_404(DettaglioRegistroFormazione, pk = pk)   
+        fk_registro_formazione = deleteobject.fk_registro_formazione.pk      
+        deleteobject.delete()
+        url_match = reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
+        return redirect(url_match)
+    
+    
+def ore_formazione(request):
+    labels = []
+    data = []
+
+    queryset = RegistroFormazione.objects.values('fk_corso__fk_areaformazione__descrizione').annotate(ore_formazione=Sum('ore'))
+    for entry in queryset:
+        labels.append(entry['fk_corso__fk_areaformazione__descrizione'])
+        data.append(entry['ore_formazione'])
+    
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+    })

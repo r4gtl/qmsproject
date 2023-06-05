@@ -121,7 +121,7 @@ class DettaglioRegistroFormazione(models.Model):
         (PRESENTE, 'Presente'),
         (ASSENTE, 'Assente'),        
     )
-    fk_registro_formazione = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+    fk_registro_formazione = models.ForeignKey(RegistroFormazione, on_delete=models.CASCADE)
     fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
     note = models.TextField(null=True, blank=True)  
     certificato = models.FileField(upload_to=corso_directory_path)  

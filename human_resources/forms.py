@@ -94,12 +94,13 @@ class RegistroFormazioneModelForm(forms.ModelForm):
         fields = '__all__'
         fk_corso = forms.ModelChoiceField(queryset=CorsoFormazione.objects.all())
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        
         widgets = {
-            'data_formazione': forms.DateInput(),            
+            'data_formazione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),         
             'fk_corso': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'ore': forms.NumberInput(attrs={'class': 'form-control'}),
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput()
         }
         labels = {
