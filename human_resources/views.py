@@ -270,14 +270,14 @@ def delete_corso_formazione(request, pk):
         url_match= reverse_lazy('human_resources:tabelle_generiche_formazione')
         return redirect(url_match)
     
+
 # Registro Formazione
 class RegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
     model = RegistroFormazione
     form_class = RegistroFormazioneModelForm
     template_name = 'human_resources/registro_formazione.html'
     success_message = 'Formazione aggiunta correttamente!'
-    success_url = reverse_lazy('human_resources:dashboard_formazione')
-    
+        
     def get_initial(self):
         created_by = self.request.user
         return {
@@ -287,13 +287,20 @@ class RegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):                
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('human_resources:dashboard_formazione')
+        
+        pk_registro_formazione=self.object.pk
+        return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':pk_registro_formazione})
+
 
 class RegistroFormazioneUpdateView(LoginRequiredMixin, UpdateView):
     model = RegistroFormazione
     form_class = RegistroFormazioneModelForm
     template_name = 'human_resources/registro_formazione.html'
-    success_message = 'Formazione modificata correttamente!'
-    success_url = reverse_lazy('human_resources:dashboard_formazione')
+    success_message = 'Formazione modificata correttamente!'    
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
@@ -306,6 +313,21 @@ class RegistroFormazioneUpdateView(LoginRequiredMixin, UpdateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('human_resources:dashboard_formazione')
+        
+        pk_registro_formazione=self.object.pk
+        return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':pk_registro_formazione})
+    
+
+    
+def delete_registro_formazione(request, pk): 
+        deleteobject = get_object_or_404(RegistroFormazione, pk = pk)   
+            
+        deleteobject.delete()
+        url_match = reverse_lazy('human_resources:dashboard_formazione')
+        return redirect(url_match)
 
 
 # Dettaglio Registro Formazione
@@ -357,7 +379,7 @@ def delete_dettaglio_registro_formazione(request, pk):
         url_match = reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
         return redirect(url_match)
     
-    
+# Charts Formazione    
 def ore_formazione(request):
     labels = []
     data = []
@@ -366,6 +388,8 @@ def ore_formazione(request):
     for entry in queryset:
         labels.append(entry['fk_corso__fk_areaformazione__descrizione'])
         data.append(entry['ore_formazione'])
+        print("label: " + str(labels))
+        print("dati: " +str(data))
     
     return JsonResponse(data={
         'labels': labels,

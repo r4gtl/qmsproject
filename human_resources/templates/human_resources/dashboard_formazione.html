@@ -27,7 +27,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-4">
+      <div class="col-4">        
     <canvas id="ore_formazione" data-url="{% url 'human_resources:ore_formazione' %}"></canvas>
   </div>
   </div>
@@ -47,7 +47,7 @@
       <tr>
         <th>Data</th>            
         <th>Corso</th>
-        <th>Ore Totali</th>
+        <th>Ore Totali</th>        
         <th>Azione</th>
         
       </tr>
@@ -58,8 +58,8 @@
         
         <td><a href="{% url 'human_resources:modifica_registro_formazione' pk=registro_formazione.pk %}">{{ registro_formazione.data_formazione }}</a></td>
         <td>{{ registro_formazione.fk_corso }}</td>
-        <td>{{ registro_formazione.ore }}</td>
-        <td class="text-center"><a href="" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro_formazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+        <td>{{ registro_formazione.ore }}</td>        
+        <td class="text-center"><a href="{% url 'human_resources:delete_registro_formazione' pk=registro_formazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro_formazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
       </tr>  
       {% endfor %}
     </tbody>
@@ -72,6 +72,7 @@
 {% block scripts %}
 <script>
   function getRandomColor() { //generates random colours and puts them in string
+    console.log("Arrivato");
     var colors = [];
     for (var i = 0; i < 3; i++) {
       var letters = '0123456789ABCDEF'.split('');
@@ -92,8 +93,7 @@
       url: $oreformazione.data("url"),
       success: function (data) {
 
-        var ctx = $oreformazione[0].getContext("2d");
-        Chart.defaults.font.size = 16;
+        var ctx = $oreformazione[0].getContext("2d");        
         new Chart(ctx, {
           type: 'doughnut',
           data: {

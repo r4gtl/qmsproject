@@ -28,7 +28,7 @@ class HumanResourceModelForm(forms.ModelForm):
             'fk_mansione': forms.ChoiceField(),
             'fk_reparto': forms.ChoiceField(),
             'qualifica': forms.TextInput(attrs={'class': 'form-control'}),
-            'commenti': forms.Textarea(attrs={'class': 'form-control'}),
+            'commenti': forms.Textarea(attrs={'class': 'form-control', 'rows':'3'}),
             
         },
         labels = {

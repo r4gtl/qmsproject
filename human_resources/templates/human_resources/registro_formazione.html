@@ -24,12 +24,13 @@
             {% csrf_token %}
             <input type="hidden" id="previous_page" name="previous_page"
             value="/previous/page/url">
-            <input type="submit" class="btn btn-info mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             
                     <div class="row mb-4">
                       
                       <div class="col-md-12 border rounded shadow-sm">
-                        <div class="row">
+                        <div class="row mt-3">
                             <div class = "col-md-3">
                               {{ form.data_formazione|as_crispy_field }}
                             </div>
@@ -90,7 +91,8 @@
     <table class="table table-bordered table-striped mt-2">
       <thead>
         <tr>
-          <th>Operatore</th>            
+          <th>Operatore</th>   
+          <th>Certificato</th>
           <th>Azione</th>
           
         </tr>
@@ -100,7 +102,7 @@
         <tr>        
           
           <td><a href="{% url 'human_resources:modifica_dettaglio_registro_formazione' pk=registroformazione.pk id=operatore_associato.id %}">{{ operatore_associato.fk_hr }}</a></td>
-          
+          <td><a href="{{ operatore_associato.certificato.url }}" download>{{ operatore_associato.certificato }}</a></td>
           <td class="text-center"><a href="{% url 'human_resources:delete_dettaglio_registro_formazione' pk=operatore_associato.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatore_associato.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  
         {% endfor %}

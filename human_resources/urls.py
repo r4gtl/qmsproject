@@ -10,7 +10,7 @@ from .views import (human_resources_home,
                     RoleCreateView, RoleUpdateView, delete_role,
                     AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
                     CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
-                    RegistroFormazioneCreateView, RegistroFormazioneUpdateView, 
+                    RegistroFormazioneCreateView, RegistroFormazioneUpdateView, delete_registro_formazione,
                     DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
                     ore_formazione
                     
@@ -29,7 +29,10 @@ urlpatterns = [
     path('update_human_resource/<int:pk>/', update_human_resource, name="update-human-resource"),
     path('create_human_resource/', add_new_operator, name="create-human-resource"), 
     
+    # Dashboard formazione 
     path('dashboard_formazione/', dashboard_formazione, name="dashboard_formazione"), 
+    # Charts
+    path('ore_formazione/', ore_formazione, name='ore_formazione'),
 
 
     # Ward 
@@ -55,14 +58,13 @@ urlpatterns = [
     # Registro Formazione
     path('crea_registro_formazione/', RegistroFormazioneCreateView.as_view(), name="crea_registro_formazione"),  
     path('modifica_registro_formazione/<int:pk>', RegistroFormazioneUpdateView.as_view(), name="modifica_registro_formazione"),  
-    # path('delete_corso_formazione/<int:pk>', delete_corso_formazione, name="delete_corso_formazione"),
+    path('delete_registro_formazione/<int:pk>', delete_registro_formazione, name="delete_registro_formazione"),
     
     # Dettaglio Registro Formazione
     path('<int:pk>/crea_dettaglio_registro_formazione/', DettaglioRegistroFormazioneCreateView.as_view(), name="crea_dettaglio_registro_formazione"),  
     path('<int:pk>/modifica_dettaglio_registro_formazione/<int:id>', DettaglioRegistroFormazioneUpdateView.as_view(), name="modifica_dettaglio_registro_formazione"),  
     path('delete_dettaglio_registro_formazione/<int:pk>', delete_dettaglio_registro_formazione, name="delete_dettaglio_registro_formazione"),
     
-    # Charts
-    path('ore_formazione/', ore_formazione, name='ore_formazione'),
+    
     
 ]
