@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -10,10 +10,12 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import (HumanResource, Ward, Role, 
                     AreaFormazione, CorsoFormazione,
                     RegistroFormazione, DettaglioRegistroFormazione,
+                    RegistroOreLavoro,
                     )
 from .forms import (HumanResourceModelForm, WardModelForm, RoleModelForm,
                     AreaFormazioneModelForm, CorsoFormazioneModelForm,
                     RegistroFormazioneModelForm, DettaglioRegistroFormazioneModelForm,
+                    RegistroOreLavoroModelForm,
                     )
 from .filters import HRFilter
 
@@ -409,20 +411,7 @@ def delete_dettaglio_registro_formazione(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
         return redirect(url_match)
-    
-# Charts Formazione    
-def ore_formazione(request):
-    labels = []
-    data = []
 
-    queryset = RegistroFormazione.objects.values('fk_corso__fk_areaformazione__descrizione').annotate(ore_formazione=Sum('ore'))
-    for entry in queryset:
-        labels.append(entry['fk_corso__fk_areaformazione__descrizione'])
-        data.append(entry['ore_formazione'])
-        print("label: " + str(labels))
-        print("dati: " +str(data))
-    
-    return JsonResponse(data={
-        'labels': labels,
-        'data': data,
-    })
+
+
+

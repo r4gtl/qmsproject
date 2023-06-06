@@ -11,6 +11,14 @@
 {% block content %}
 
 <div class="container">
+  <div class="row">
+    <div class="col-4">        
+  <canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
+</div>
+</div>
+</div>
+
+<div class="container">
   <br>
   <h3>Lista operatori</h3>
   <hr>
@@ -126,3 +134,58 @@
 </div>
 
 {% endblock content %}
+{% block scripts %}
+<script>
+  function getRandomColor() { //generates random colours and puts them in string
+    console.log("Arrivato");
+    var colors = [];
+    for (var i = 0; i < 3; i++) {
+      var letters = '0123456789ABCDEF'.split('');
+      var color = '#';
+      for (var x = 0; x < 6; x++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      colors.push(color);
+    }
+    return colors;
+  }
+
+
+  $(function () {
+
+    var $hrcount = $("#hr_count");
+    $.ajax({
+      url: $hrcount.data("url"),
+      success: function (data) {
+
+        var ctx = $hrcount[0].getContext("2d");        
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: 'Operatori per Reparto',
+              backgroundColor: getRandomColor(),
+              data: data.data
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Operatori per Reparto'
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  });
+
+</script>
+{% endblock %}

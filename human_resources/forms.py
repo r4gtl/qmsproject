@@ -5,6 +5,7 @@ from django_countries.fields import CountryField
 from .models import (HumanResource, Ward, Role,
                     AreaFormazione, CorsoFormazione,
                     RegistroFormazione, DettaglioRegistroFormazione,
+                    RegistroOreLavoro,
                     )
 from anagrafiche.models import Fornitore
 
@@ -132,3 +133,54 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
             'note': 'Annotazioni'
         }
         
+# Registro Ore Lavoro
+class RegistroOreLavoroModelForm(forms.ModelForm):
+    class Meta:
+        model = RegistroOreLavoro
+        fields = '__all__'
+        
+        
+        widgets = {
+            'entry_year': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'entry_month': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'ore_lavorabili': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ore_lavorate': forms.NumberInput(attrs={'class': 'form-control'}),
+            'straordinari': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ferie_permessi': forms.NumberInput(attrs={'class': 'form-control'}),
+            'permessi_speciali': forms.NumberInput(attrs={'class': 'form-control'}),
+            'maternità': forms.NumberInput(attrs={'class': 'form-control'}),
+            'infortunio': forms.NumberInput(attrs={'class': 'form-control'}),
+            'formazione': forms.NumberInput(attrs={'class': 'form-control'}),
+            'formazione_neoassunti': forms.NumberInput(attrs={'class': 'form-control'}),
+            'malattia': forms.NumberInput(attrs={'class': 'form-control'}),
+            'n_infortuni': forms.NumberInput(attrs={'class': 'form-control'}),
+            'n_infortuni_itinere': forms.NumberInput(attrs={'class': 'form-control'}),
+            'n_malattie_professionali': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ore_malattie_professionali': forms.NumberInput(attrs={'class': 'form-control'}),
+            'permessi_non_retribuiti': forms.NumberInput(attrs={'class': 'form-control'}),
+            'assenze_ingiustificate': forms.NumberInput(attrs={'class': 'form-control'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            'entry_year': 'Anno',
+            'entry_month': 'Mese',
+            'ore_lavorabili': 'Ore Lavorabili',
+            'ore_lavorate': 'Ore Lavorate',
+            'straordinari': 'Straordinari',
+            'ferie_permessi': 'Ferie/Permessi',
+            'permessi_speciali': 'Permessi Speciali',
+            'maternità': 'Maternità',
+            'infortunio': 'Infortunio',
+            'formazione': 'Formazione',
+            'formazione_neoassunti': 'Formazione Neo-assunti',
+            'malattia': 'Malattia',
+            'n_infortuni': 'N. Infortuni',
+            'n_infortuni_itinere': 'N. Infortuni in Itinere',
+            'n_malattie_professionali': 'N. Malattie Professionali',
+            'ore_malattie_professionali': 'Ore Malattie Professionali',
+            'permessi_non_retribuiti': 'Permessi non Retribuiti',
+            'assenze_ingiustificate': 'Assenze Ingiustificate',
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput()
+        }

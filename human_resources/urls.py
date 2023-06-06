@@ -12,9 +12,10 @@ from .views import (human_resources_home,
                     CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
                     RegistroFormazioneCreateView, RegistroFormazioneUpdateView, delete_registro_formazione,
                     DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
-                    ore_formazione
-                    
                     )
+from .charts import ore_formazione, operatori_per_reparto
+
+
 
 app_name = 'human_resources'
 
@@ -33,6 +34,7 @@ urlpatterns = [
     path('dashboard_formazione/', dashboard_formazione, name="dashboard_formazione"), 
     # Charts
     path('ore_formazione/', ore_formazione, name='ore_formazione'),
+    path('hr_count/', operatori_per_reparto, name='hr_count'),
 
 
     # Ward 

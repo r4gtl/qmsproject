@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+import datetime
 from django_countries.fields import CountryField # Field from django countries app
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
@@ -129,4 +130,42 @@ class DettaglioRegistroFormazione(models.Model):
     presenza =  models.CharField(max_length=10, choices=CHOICES_PRESENCE)
     efficace = models.BooleanField(default=True)
     
+
+class RegistroOreLavoro(models.Model):
+    YEAR_CHOICES = [(y,y) for y in range(2000, datetime.date.today().year+1)]
+    MONTH_CHOICE = [(m,m) for m in range(1,13)]
+
+    entry_year = models.IntegerField(choices=YEAR_CHOICES,
+                 default=datetime.datetime.now().year,)
+    entry_month = models.IntegerField(choices=MONTH_CHOICE,
+                  default=datetime.datetime.now().month,)
+    ore_lavorabili = models.IntegerField(null=True, blank=True)
+    ore_lavorate = models.IntegerField(null=True, blank=True)
+    straordinari = models.IntegerField(null=True, blank=True)
+    ferie_permessi = models.IntegerField(null=True, blank=True)
+    permessi_speciali = models.IntegerField(null=True, blank=True)
+    maternità = models.IntegerField(null=True, blank=True)
+    infortunio = models.IntegerField(null=True, blank=True)
+    formazione = models.IntegerField(null=True, blank=True)
+    formazione_neoassunti = models.IntegerField(null=True, blank=True)
+    malattia = models.IntegerField(null=True, blank=True)
+    n_infortuni = models.IntegerField(null=True, blank=True)
+    n_infortuni_itinere = models.IntegerField(null=True, blank=True)
+    n_malattie_professionali = models.IntegerField(null=True, blank=True)
+    ore_malattie_professionali = models.IntegerField(null=True, blank=True)
+    permessi_non_retribuiti = models.IntegerField(null=True, blank=True)
+    assenze_ingiustificate = models.IntegerField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='registro_ore_lavorazione', null=True, blank=True, on_delete=models.SET_NULL)
+    
+
+    def entry_date(self):
+        if self.entry_year and self.entry_month:
+            return datetime.date(self.entry_year, self.entry_month, 1)
+        elif self.entry_year:
+            # return Jan 1st
+            return datetime.date(self.entry_year, 1, 1)
+        else:
+            return None
         
+    
