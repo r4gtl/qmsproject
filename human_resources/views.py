@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
-from django.http import JsonResponse
 from django.db.models import Sum, Count
+import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -15,7 +15,7 @@ from .models import (HumanResource, CentrodiLavoro, Ward, Role,
 from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelForm, RoleModelForm,
                     AreaFormazioneModelForm, CorsoFormazioneModelForm,
                     RegistroFormazioneModelForm, DettaglioRegistroFormazioneModelForm,
-                    RegistroOreLavoroModelForm,
+                    RegistroOreLavoroModelForm, ValutazioneOperatoreModelForm,
                     )
 from .filters import HRFilter
 
@@ -39,6 +39,25 @@ def human_resources_home(request):
     }
     return render(request, "human_resources/human_resources_home.html", context)
 
+class HumanResourceCreateView(LoginRequiredMixin,CreateView):
+    model = HumanResource
+    form_class = HumanResourceModelForm
+    template_name = 'human_resources/single_operator.html'
+    success_message = 'Operatore aggiunto correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('human_resources:human_resources')
+        
+        pk_hr=self.object.pk
+        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+
 def add_new_operator(request):    
     context ={}    
     form = HumanResourceModelForm(request.POST or None, request.FILES)
@@ -59,11 +78,18 @@ class HRUpdateView(LoginRequiredMixin,UpdateView):
     form_class = HumanResourceModelForm
     template_name = 'human_resources/single_operator.html'
     success_message = 'Operatore modificato correttamente!'
-    success_url = reverse_lazy('human_resources:human_resources')
+    #success_url = reverse_lazy('human_resources:human_resources')
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('human_resources:human_resources')
+        
+        pk_hr=self.object.pk
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
@@ -73,48 +99,61 @@ class HRUpdateView(LoginRequiredMixin,UpdateView):
             context['immagine'] = False
         context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
         context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
-        
-        
         return context
-    
-def update_human_resource(request, pk):    
-    context ={}    
-    obj = get_object_or_404(HumanResource, pk = pk) 
-    form=HumanResourceModelForm(instance = obj)
-    
-    if request == 'POST':   
-        form = HumanResourceModelForm(request.POST or None, request.FILES, instance = obj)
-        if form.is_valid():
-            messages.info(request, 'Operatore modificato correttamente!')      
-            form.save()
-                #return reverse("human_resources:human_resources")
-            url_match= reverse_lazy('human_resources:human_resources')
-            return redirect(url_match)
-    
-
-    context["form"] = form
-    context["obj"] = obj
-    print("Obj: " + str(obj))
-    print("request: " + str(request))
-    return render(request, "human_resources/single_operator.html", context)    
-    # add form dictionary to context
-    
 
 
-# if request.method == 'POST':
-                
-        #         if form.is_valid():
-        #                 supplier_saved = form.save(commit=False)
-        #                 supplier_saved.save()
-        #                 #Non funziona
-                        
-        #                 return HttpResponseRedirect(reverse('master_data:search-supplier'))
-        # else:
-                
-        #         form = SupplierModelForm(instance=supplier)
-        # context = {"supplier": supplier, "contacts": contacts, 'form':form}        
-        # return render(request, "master_data/create_supplier.html", context)
+class ValutazioneOperatoreCreateView(LoginRequiredMixin,CreateView):
+    model = ValutazioneOperatore
+    form_class = ValutazioneOperatoreModelForm
+    template_name = 'human_resources/valutazione_operatore.html'
+    success_message = 'Valutazione aggiunta correttamente!'
+    #success_url = reverse_lazy('human_resources:update_human_resource')
 
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)    
+    
+    def get_initial(self):        
+        fk_hr = self.kwargs['pk']  
+        created_by = self.request.user      
+        return {
+            'fk_hr': fk_hr,
+            'created_by': created_by,
+            'created_at': datetime.datetime.now()
+        }
+    
+    def get_success_url(self):        
+        pk_hr=self.object.fk_hr.pk
+        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+class ValutazioneOperatoreUpdateView(LoginRequiredMixin, UpdateView):
+    model = ValutazioneOperatore
+    form_class = ValutazioneOperatoreModelForm
+    template_name = 'human_resources/valutazione_operatore.html'
+    success_message = 'Valutazione modificata correttamente!'
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)    
+    
+    def get_success_url(self):        
+        pk_hr=self.object.fk_hr.pk
+        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        
+        context['fk_hr'] = self.object.fk_hr.pk  
+        context['operatore'] = HumanResource.objects.get(pk=self.object.fk_hr.pk)     
+        return context
+
+def delete_valutazione_operatore(request, pk): 
+        deleteobject = get_object_or_404(ValutazioneOperatore, pk = pk)         
+        pk_hr=deleteobject.fk_hr.pk       
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return redirect(url_match)    
 
 
 '''SEZIONE TABELLE GENERICHE'''
@@ -312,8 +351,7 @@ class CorsoFormazioneCreateView(LoginRequiredMixin, CreateView):
             'created_by': created_by,
         }
 
-    def form_valid(self, form):  
-        print("Eccomi")      
+    def form_valid(self, form):               
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
 
@@ -403,19 +441,15 @@ class DettaglioRegistroFormazioneCreateView(LoginRequiredMixin, CreateView):
     form_class = DettaglioRegistroFormazioneModelForm
     template_name = 'human_resources/dettaglio_registro_formazione.html'
     success_message = 'Operatore aggiunto correttamente!'
-    #success_url = reverse_lazy('human_resources:crea_registro_formazione', kwargs={"pk": pk})
     
-    def get_initial(self):
-        print(self.kwargs)
-        fk_registro_formazione = self.kwargs['pk']
-        
+    def get_initial(self):        
+        fk_registro_formazione = self.kwargs['pk']        
         return {
             'fk_registro_formazione': fk_registro_formazione,
         }
 
     def get_success_url(self):          
-        fk_registro_formazione=self.object.fk_registro_formazione.pk
-        print("fk_registro_formazione: " + str(fk_registro_formazione))
+        fk_registro_formazione=self.object.fk_registro_formazione.pk        
         return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
     
     def form_valid(self, form):                
@@ -447,5 +481,23 @@ def delete_dettaglio_registro_formazione(request, pk):
         return redirect(url_match)
 
 
+'''FINE SEZIONE FORMAZIONE'''
 
+'''SEZIONE REGISTRO ORE'''
+
+def dashboard_registro_ore(request):
+    registri_ore = RegistroOreLavoro.objects.all()
+    somma_ore_lavorate = RegistroOreLavoro.objects.annotate(sum_ore_lavorate=Sum('ore_lavorate'))
+    #queryset = RegistroFormazione.objects.values('fk_corso__fk_areaformazione__descrizione').annotate(ore_lavorate=Sum('ore_lavorate'))
+
+    context = {'registri_ore': registri_ore, 
+                'somma_ore_lavorate': somma_ore_lavorate, 
+                
+                }
+    
+    return render(request, "human_resources/dashboard_registro_ore.html", context)
+
+
+
+'''FINE SEZIONE REGISTRO ORE'''
 

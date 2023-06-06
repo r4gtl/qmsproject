@@ -9,12 +9,27 @@
 {% endblock %}
 
 {% block content %}
+{% include 'core/modals/delConfirm.html' %}
 
 <div class="container">
     <br>
-    <h5 class="text-end">Operatore</h5>
-    <hr>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+          <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Risorse Umane</a></li>        
+  
+          {% if form.instance.id  %}
+              <li class="breadcrumb-item active" aria-current="page">{{ humanresource.cognomedipendente }} {{ humanresource.nomedipendente }}</li>
+          {% else %}
+              <li class="breadcrumb-item active" aria-current="page">Aggiungi operatore</li>
+          {% endif %}             
+          
+          
+      </ol>
+  </nav>
     
+    <hr>
+    {% include "core/partials/_messages.html" %}
     <!-- Form nuovo operatore -->
     {% if immagine %}
       <img src="{{ object.immagine.url }}" 
@@ -27,6 +42,10 @@
       <p>Nessuna immagine</p>
     {% endif %}
     <hr>
+
+    
+
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
       <li class="nav-item" role="presentation">
         <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Generalità</button>
@@ -41,14 +60,18 @@
         <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
       </li>
     </ul>
+
+    
+
     <div class="tab-content" id="myTabContent">
       <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
         
-    <div class="form-group mt-3">
-      <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
-          {% csrf_token %}
-          
-          <input type="submit" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+        <div class="form-group mt-3">
+          <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+              <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
           
                   <div class="row mb-4 mt-3">
                     
@@ -142,7 +165,41 @@
       </div>
       
       <div class="tab-pane fade" id="valutazione-tab-pane" role="tabpanel" aria-labelledby="valutazione-tab" tabindex="0">
-        <p>Valutazioni</p>
+        <div class="row">
+          <div class="col text-end">
+            {% if form.instance.id  %}
+              <a href="{% url 'human_resources:crea_valutazione_operatore' pk=humanresource.pk %}" class="btn btn-success mt-2 "><i class="bi bi-file-earmark-plus"></i> Aggiungi Valutazione</a>
+            {% else %}
+              <button class="btn btn-outline-success">Salvare per aggiungere</button>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="row">
+          
+        </div>
+        {% if form.instance.id  %}
+          <table class="table table-bordered table-striped mt-2">
+            <thead>
+              <tr>
+                <th>Centro di Lavoro</th>            
+                <th>Valutazione</th>
+                <th>Azione</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              {% for valutazione in elenco_valutazioni %}
+              <tr>        
+                
+                <td><a href="{% url 'human_resources:modifica_valutazione_operatore' pk=humanresource.pk id=valutazione.pk %}">{{ valutazione.fk_centro_di_lavoro.description }}</a></td>
+                <td>{{ valutazione.valutazione }}</td>                           
+                <td class="text-center"><a href="{% url 'human_resources:delete_valutazione_operatore' pk=valutazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{valutazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
+              </tr>  
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
       </div>
       <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
     </div>
@@ -152,7 +209,7 @@
 
         
 
-    
+
 </div>
 
 {% endblock content %}

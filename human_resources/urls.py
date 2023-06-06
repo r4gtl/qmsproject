@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views import (human_resources_home,
-                    update_human_resource, HRUpdateView,
+                    HumanResourceCreateView, HRUpdateView,
                     add_new_operator,
                     tabelle_generiche,
                     tabelle_generiche_formazione,
@@ -13,6 +13,8 @@ from .views import (human_resources_home,
                     CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
                     RegistroFormazioneCreateView, RegistroFormazioneUpdateView, delete_registro_formazione,
                     DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
+                    ValutazioneOperatoreCreateView, ValutazioneOperatoreUpdateView, delete_valutazione_operatore, 
+                    dashboard_registro_ore, 
                     )
 from .charts import ore_formazione, operatori_per_reparto
 
@@ -29,10 +31,14 @@ urlpatterns = [
     # Human Resources
     path('', human_resources_home, name="human_resources"),
     path('update_human_resource/<int:pk>/', HRUpdateView.as_view(), name="update-human-resource"),
-    path('create_human_resource/', add_new_operator, name="create-human-resource"), 
+    path('create_human_resource/', HumanResourceCreateView.as_view(), name="create-human-resource"), 
     
     # Dashboard formazione 
     path('dashboard_formazione/', dashboard_formazione, name="dashboard_formazione"), 
+    
+    # Dashboard registro ore
+    path('dashboard_registro_ore/', dashboard_registro_ore, name="dashboard_registro_ore"), 
+    
     # Charts
     path('ore_formazione/', ore_formazione, name='ore_formazione'),
     path('hr_count/', operatori_per_reparto, name='hr_count'),
@@ -73,6 +79,9 @@ urlpatterns = [
     path('<int:pk>/modifica_dettaglio_registro_formazione/<int:id>', DettaglioRegistroFormazioneUpdateView.as_view(), name="modifica_dettaglio_registro_formazione"),  
     path('delete_dettaglio_registro_formazione/<int:pk>', delete_dettaglio_registro_formazione, name="delete_dettaglio_registro_formazione"),
     
-    
+    # Valutazione operatori
+    path('<int:pk>/crea_valutazione_operatore/', ValutazioneOperatoreCreateView.as_view(), name="crea_valutazione_operatore"),  
+    path('<int:pk>/modifica_valutazione_operatore/<int:id>', ValutazioneOperatoreUpdateView.as_view(), name="modifica_valutazione_operatore"),  
+    path('delete_valutazione_operatore/<int:pk>', delete_valutazione_operatore, name="delete_valutazione_operatore"),
     
 ]

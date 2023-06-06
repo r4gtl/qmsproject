@@ -14,8 +14,6 @@
     <br>
     <h5 class="text-end">Operatore</h5>
     <hr>
-    <br>
-    
     
     <!-- Form nuovo operatore -->
     {% if immagine %}
@@ -28,76 +26,150 @@
     {% else %}
       <p>Nessuna immagine</p>
     {% endif %}
-    
+    <hr>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Generalità</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#formazione-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Formazione</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="valutazione-tab" data-bs-toggle="tab" data-bs-target="#valutazione-tab-pane" type="button" role="tab" aria-controls="valutazione-tab-pane" aria-selected="false">Valutazione</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" disabled>Disabled</button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        
     <div class="form-group mt-3">
-        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
-            {% csrf_token %}
-            
-            <input type="submit" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
-            
-                    <div class="row mb-4 mt-3">
-                      
-                      <div class="col-md-12 border rounded shadow-sm">
-                        <div class="row mt-3">
-                            <div class = "col-md-3">
-                              {{ form.immagine|as_crispy_field }}
-                            </div>
-                            
-                            <div class="col-md-3">
-                              {{ form.cognomedipendente|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                              {{ form.nomedipendente|as_crispy_field }} 
-                            </div> 
-                            
-                            <div class="col-md-2">
-                              {{ form.gender|as_crispy_field }}
-                            </div>    
-                        </div>
-                        <div class="row">                          
-                          <div class="col-3">
-                            {{ form.country|as_crispy_field }}
-                        </div>
-                            <div class="col-md-3">
-                              {{ form.dataassunzione|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                              {{ form.datadimissioni|as_crispy_field }} 
-                            </div>     
-                        </div>
-                        <div class="row mt-4">                          
-                            
-                            <div class="col-md-5">
-                              {{ form.fk_mansione|as_crispy_field }}
-                            </div>
-                            <div class="col-md-5">
-                              {{ form.fk_reparto|as_crispy_field }} 
-                            </div> 
-                            <div class="col-md-5">
-                                {{ form.qualifica|as_crispy_field }} 
-                            </div>        
-                        </div>
-                        <div class="row">                          
-                            
-                            <div class="col">
-                              {{ form.commenti|as_crispy_field }}
-                            </div>
-                              
-                        </div>
-                        <hr>
-                        
-
-                        
-
-                    </div>
+      <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+          <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
+          
+                  <div class="row mb-4 mt-3">
+                    
+                    <div class="col-md-12 border rounded shadow-sm">
+                      <div class="row mt-3">
+                          <div class = "col-md-3">
+                            {{ form.immagine|as_crispy_field }}
+                          </div>
+                          
+                          <div class="col-md-3">
+                            {{ form.cognomedipendente|as_crispy_field }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.nomedipendente|as_crispy_field }} 
+                          </div> 
+                          
+                          <div class="col-md-2">
+                            {{ form.gender|as_crispy_field }}
+                          </div>    
                       </div>
+                      <div class="row">                          
+                        <div class="col-3">
+                          {{ form.country|as_crispy_field }}
+                      </div>
+                          <div class="col-md-3">
+                            {{ form.dataassunzione|as_crispy_field }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.datadimissioni|as_crispy_field }} 
+                          </div>     
+                      </div>
+                      <div class="row mt-4">                          
+                          
+                          <div class="col-md-5">
+                            {{ form.fk_mansione|as_crispy_field }}
+                          </div>
+                          <div class="col-md-5">
+                            {{ form.fk_reparto|as_crispy_field }} 
+                          </div> 
+                          <div class="col-md-5">
+                              {{ form.qualifica|as_crispy_field }} 
+                          </div>        
+                      </div>
+                      <div class="row">                          
+                          
+                          <div class="col">
+                            {{ form.commenti|as_crispy_field }}
+                          </div>
+                            
+                      </div>
+                      <hr>
+                      
 
-        <!-- fine form -->
-        </form>
+                      
+
+                  </div>
+                    </div>
+
+      <!-- fine form -->
+      </form>
+      </div>
+      </div>
+
+      <div class="tab-pane fade" id="formazione-tab-pane" role="tabpanel" aria-labelledby="formazione-tab" tabindex="0">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Data</th>            
+              <th>Corso</th>
+              <th>Ore Totali</th>        
+              <th>Area Formazione</th>
+              <th>Prossima Scadenza</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for formazione in elenco_formazione %}
+            <tr>        
+              
+              <td>{{ formazione.fk_registro_formazione.data_formazione }}</td>
+              <td>{{ formazione.fk_registro_formazione.fk_corso.descrizione }}</td>
+              <td>{{ formazione.fk_registro_formazione.ore }}</td>        
+              <td>{{ formazione.fk_registro_formazione.fk_corso.fk_areaformazione }}</td>
+              <td>{{ formazione.prossima_scadenza }}</td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      
+      
+      </div>
+      
+      <div class="tab-pane fade" id="valutazione-tab-pane" role="tabpanel" aria-labelledby="valutazione-tab" tabindex="0">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Centro di Lavoro</th>            
+              <th>Valutazione</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for valutazione in elenco_valutazioni %}
+            <tr>        
+              
+              <td>{{ valutazione.fk_centro_di_lavoro.description }}</td>
+              <td>{{ valutazione.valutazione }}</td>             
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
+    </div>
+    
+
+    
 
         
 
-    </div>
+    
 </div>
 
 {% endblock content %}

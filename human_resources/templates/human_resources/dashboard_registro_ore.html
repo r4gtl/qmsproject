@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Formazione {% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Operatori</a></li>     
+        <li class="breadcrumb-item active" aria-current="page">Tabelle Generiche Formazione</li>        
+    </ol>
+
+</nav>
+<div class="container">
+  <br>
+  <h3>Dashboard Registro Ore</h3>
+  <hr>
+
+  {% include "core/partials/_messages.html" %}
+
+
+  
+</div>
+
+{% endblock content %}
