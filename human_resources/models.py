@@ -6,6 +6,24 @@ from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 
 
+class CentrodiLavoro(models.Model):
+    '''
+    In questa tabella si inseriscono i centri di lavoro.
+    Da usare anche nella valutazione degli operatori.
+    '''
+    description = models.CharField(max_length=50, null=False, blank=False, help_text="Nome centro di lavoro", db_column="descrizionecentrodilavoro")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["description"]
+        verbose_name_plural = "centridilavoro"
+        db_table = "centrodilavoro"
+    
+    def __str__(self):
+        return self.description
+
+
 class Ward(models.Model):
     
     description = models.CharField(max_length=50, null=False, blank=False, help_text="Nome reparto", db_column="descrizionereparto")
@@ -125,10 +143,12 @@ class DettaglioRegistroFormazione(models.Model):
     )
     fk_registro_formazione = models.ForeignKey(RegistroFormazione, on_delete=models.CASCADE)
     fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
+    ore = models.IntegerField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)  
     certificato = models.FileField(upload_to=corso_directory_path)  
     presenza =  models.CharField(max_length=10, choices=CHOICES_PRESENCE)
     efficace = models.BooleanField(default=True)
+    prossima_scadenza = models.DateField(null=True, blank=True)
     
 
 class RegistroOreLavoro(models.Model):
@@ -167,5 +187,30 @@ class RegistroOreLavoro(models.Model):
             return datetime.date(self.entry_year, 1, 1)
         else:
             return None
-        
+
+
+
+class ValutazioneOperatore(models.Model):
+    # Categoria
+    NESSUNA = 'nessuna'
+    MINIMO = 'minimo'
+    MEDIO = 'medio'
+    MIGLIORE = 'migliore'
+    MASSIMO = 'massimo'
+    
+    CHOICES_CATEGORY = (
+        (NESSUNA, 'Nessuna Valutazione'),
+        (MINIMO, 'Minimo. L\'operatore richiede approfondita formazione.'),
+        (MEDIO, 'Medio. L\'operatore è competente ma richiede affiancamento a persona di competenza superiore'),
+        (MIGLIORE, 'Migliore. L\'operatore è sufficientemente competente.'),
+        (MASSIMO, 'Massimo. L\'operatore può fornire formazione ad altri operatori.')
+    )
+    
+    fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
+    fk_centro_di_lavoro = models.ForeignKey(CentrodiLavoro, on_delete=models.CASCADE)      
+    valutazione =  models.CharField(max_length=100, choices=CHOICES_CATEGORY)
+    note = models.TextField(null=True, blank=True) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
     

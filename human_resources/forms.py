@@ -2,10 +2,10 @@ from cProfile import label
 from django import forms
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-from .models import (HumanResource, Ward, Role,
+from .models import (HumanResource, CentrodiLavoro, Ward, Role,
                     AreaFormazione, CorsoFormazione,
                     RegistroFormazione, DettaglioRegistroFormazione,
-                    RegistroOreLavoro,
+                    RegistroOreLavoro, ValutazioneOperatore, 
                     )
 from anagrafiche.models import Fornitore
 
@@ -46,6 +46,11 @@ class HumanResourceModelForm(forms.ModelForm):
             'commenti': 'Commenti',
 
         }
+
+class CentrodiLavoroModelForm(forms.ModelForm):
+    class Meta:
+        model = CentrodiLavoro
+        fields = '__all__'
 
 class WardModelForm(forms.ModelForm):
     class Meta:
@@ -183,4 +188,24 @@ class RegistroOreLavoroModelForm(forms.ModelForm):
             'assenze_ingiustificate': 'Assenze Ingiustificate',
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput()
+        }
+
+# Valutazione
+class ValutazioneOperatoreModelForm(forms.ModelForm):
+    class Meta:
+        model = ValutazioneOperatore
+        fields = '__all__' 
+        fk_centro_di_lavoro = forms.ModelChoiceField(queryset=CentrodiLavoro.objects.all())     
+        widgets = {
+            'fk_hr': forms.HiddenInput(),
+            'fk_centro_di_lavoro': forms.Select(attrs={'style':'background_color:#F5F8EC'}), 
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),                     
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'fk_centro_di_lavoro': 'Centro di Lavoro',
+            'valutazione': 'Valutazione',
+            'note': 'Annotazioni'
+            
         }

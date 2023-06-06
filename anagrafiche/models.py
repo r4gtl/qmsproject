@@ -158,3 +158,5 @@ class Cliente(models.Model):
         return reverse("anagrafiche:modifica_cliente", kwargs={"pk": self.pk})
     
 
+    
+

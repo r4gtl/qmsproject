@@ -67,12 +67,17 @@
   
 </div>
 
-{% endblock content %}
 
-{% block scripts %}
+
+{% endblock content %}
+{% block extra_scripts %}
+
 <script>
-  function getRandomColor() { //generates random colours and puts them in string
-    console.log("Arrivato");
+
+
+
+function getRandomColor() { //generates random colours and puts them in string
+    
     var colors = [];
     for (var i = 0; i < 3; i++) {
       var letters = '0123456789ABCDEF'.split('');
@@ -83,44 +88,46 @@
       colors.push(color);
     }
     return colors;
-  }
+  };
+
+
+
 
 
   $(function () {
-
-    var $oreformazione = $("#ore_formazione");
-    $.ajax({
-      url: $oreformazione.data("url"),
-      success: function (data) {
-
-        var ctx = $oreformazione[0].getContext("2d");        
-        new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: data.labels,
-            datasets: [{
-              label: 'Population',
-              backgroundColor: getRandomColor(),
-              data: data.data
-            }]          
+  
+  var $oreformazione = $("#ore_formazione");
+  $.ajax({
+    url: $oreformazione.data("url"),
+    success: function (data) {
+  
+      var ctx = $oreformazione[0].getContext("2d");        
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Population',
+            backgroundColor: getRandomColor(),
+            data: data.data
+          }]          
+        },
+        options: {
+          responsive: true,
+          legend: {
+            position: 'top',
           },
-          options: {
-            responsive: true,
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Ore Formazione fornita'
-            },
-            
-          }
-        });
-
-      }
-    });
-
+          title: {
+            display: true,
+            text: 'Ore Formazione fornita'
+          },
+          
+        }
+      });
+  
+    }
   });
-
+  
+  });
 </script>
 {% endblock %}

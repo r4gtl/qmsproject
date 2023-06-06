@@ -6,6 +6,7 @@ from .views import (human_resources_home,
                     tabelle_generiche,
                     tabelle_generiche_formazione,
                     dashboard_formazione,
+                    CentrodiLavoroCreateView, CentrodiLavoroUpdateView, delete_centro_di_lavoro,
                     WardCreateView, WardUpdateView, delete_ward,
                     RoleCreateView, RoleUpdateView, delete_role,
                     AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
@@ -36,6 +37,11 @@ urlpatterns = [
     path('ore_formazione/', ore_formazione, name='ore_formazione'),
     path('hr_count/', operatori_per_reparto, name='hr_count'),
 
+
+    # Centro di Lavoro 
+    path('crea_centro_di_lavoro/', CentrodiLavoroCreateView.as_view(), name="crea_centro_di_lavoro"),  
+    path('modifica_centro_di_lavoro/<int:pk>', CentrodiLavoroUpdateView.as_view(), name="modifica_centro_di_lavoro"),  
+    path('delete_centro_di_lavoro/<int:pk>', delete_centro_di_lavoro, name="delete_centro_di_lavoro"),
 
     # Ward 
     path('create_ward/', WardCreateView.as_view(), name="create_ward"),  

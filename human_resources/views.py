@@ -7,12 +7,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (HumanResource, Ward, Role, 
+from .models import (HumanResource, CentrodiLavoro, Ward, Role, 
                     AreaFormazione, CorsoFormazione,
                     RegistroFormazione, DettaglioRegistroFormazione,
-                    RegistroOreLavoro,
+                    RegistroOreLavoro, ValutazioneOperatore
                     )
-from .forms import (HumanResourceModelForm, WardModelForm, RoleModelForm,
+from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelForm, RoleModelForm,
                     AreaFormazioneModelForm, CorsoFormazioneModelForm,
                     RegistroFormazioneModelForm, DettaglioRegistroFormazioneModelForm,
                     RegistroOreLavoroModelForm,
@@ -71,6 +71,9 @@ class HRUpdateView(LoginRequiredMixin,UpdateView):
             context['immagine'] = self.object.immagine.url
         else:
             context['immagine'] = False
+        context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
+        
         
         return context
     
@@ -119,14 +122,45 @@ def update_human_resource(request, pk):
 def tabelle_generiche(request):
     wards = Ward.objects.all()
     roles = Role.objects.all()
+    centridilavoro = CentrodiLavoro.objects.all()
     
 
     context = {'wards': wards, 
-                'roles': roles,                
+                'roles': roles,  
+                'centridilavoro': centridilavoro              
                 }
     
     return render(request, "human_resources/tabelle_generiche_hr.html", context)
 
+# Creazione, Update e Delete Centro di Lavoro
+class CentrodiLavoroCreateView(LoginRequiredMixin,CreateView):
+    model = CentrodiLavoro
+    form_class = CentrodiLavoroModelForm
+    template_name = 'human_resources/centro_di_lavoro.html'
+    success_message = 'Centro di Lavoro aggiunto correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+class CentrodiLavoroUpdateView(LoginRequiredMixin,UpdateView):
+    model = CentrodiLavoro
+    form_class = CentrodiLavoroModelForm
+    template_name = 'human_resources/centro_di_lavoro.html'
+    success_message = 'Reparto modificato correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    
+def delete_centro_di_lavoro(request, pk): 
+        deleteobject = get_object_or_404(CentrodiLavoro, pk = pk)          
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:tabelle_generiche')
+        return redirect(url_match)
 
 # Creazione, Update e Delete Ward
 class WardCreateView(LoginRequiredMixin,CreateView):
