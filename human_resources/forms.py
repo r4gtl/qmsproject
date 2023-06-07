@@ -186,8 +186,8 @@ class RegistroOreLavoroModelForm(forms.ModelForm):
             'ore_malattie_professionali': 'Ore Malattie Professionali',
             'permessi_non_retribuiti': 'Permessi non Retribuiti',
             'assenze_ingiustificate': 'Assenze Ingiustificate',
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
-            'created_by': forms.HiddenInput()
+            'note': 'Annotazioni',
+            
         }
 
 # Valutazione

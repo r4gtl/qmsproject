@@ -1,0 +1,165 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Generiche - Reparto {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Dashboard Registro Ore</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Registro Ore</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Registro Ore</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica Registro Ore</h3>
+        {% else %}
+            <h3> Aggiungi Registro Ore</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-3">
+
+                    {{ form.entry_year|as_crispy_field }}
+                </div>
+                <div class="col-3">
+
+                    {{ form.entry_month|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.ore_lavorabili|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.ore_lavorate|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.straordinari|as_crispy_field }}
+                </div>
+                
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-2">
+
+                    {{ form.ferie_permessi|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.permessi_speciali|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.permessi_non_retribuiti|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.assenze_ingiustificate|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.maternità|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.malattia|as_crispy_field }}
+                </div>
+                
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-2">
+
+                    {{ form.n_infortuni|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.n_infortuni_itinere|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.infortunio|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.n_malattie_professionali|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.ore_malattie_professionali|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-2">
+
+                    {{ form.formazione|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.formazione_neoassunti|as_crispy_field }}
+                </div>
+                
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-2">
+
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-2">
+
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+                
+            </div>
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

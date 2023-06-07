@@ -5,13 +5,17 @@
         <ul>
             <li class="border-top my-3"></li>
             <li class="mb-1">
+                <li><a href="{% url 'human_resources:tabelle_generiche' %}">Tabelle Generiche</a></li>
+                <li><a href="{% url 'human_resources:tabelle_generiche_formazione' %}">Tabelle Formazione</a></li>
                 <li><a href="{% url 'human_resources:human_resources' %}">Lista Operatori</a></li>
+                <li><a href="{% url 'human_resources:dashboard_registro_ore' %}">Registro Ore</a></li>
+                <li><a href="{% url 'human_resources:dashboard_formazione' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Formazione</a></li>
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#anagrafiche-collapse" aria-expanded="false">
                     Tabelle
                 </button>
                 <div class="collapse" id="anagrafiche-collapse">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                    <li><a href="{% url 'human_resources:dashboard_formazione' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Formazione</a></li>
+                    
                     <li><a href="{% url 'human_resources:create_ward' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Mansioni</a></li>
                     <li><a href="{% url 'human_resources:create_ward' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Formazione</a></li>
                     
@@ -59,8 +63,7 @@
                     </ul>
                 </div>
                 </li>
-                <li><a href="{% url 'human_resources:tabelle_generiche' %}">Tabelle Generiche</a></li>
-                <li><a href="{% url 'human_resources:tabelle_generiche_formazione' %}">Tabelle Generiche</a></li>
+                
                 <li><a href="{% url 'human_resources:dashboard_registro_ore' %}">Registro Ore</a></li>
                 <li><a href="#">ISO-14001</a></li>
                 <li><a href="#">LWG</a></li>

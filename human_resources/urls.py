@@ -14,7 +14,7 @@ from .views import (human_resources_home,
                     RegistroFormazioneCreateView, RegistroFormazioneUpdateView, delete_registro_formazione,
                     DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
                     ValutazioneOperatoreCreateView, ValutazioneOperatoreUpdateView, delete_valutazione_operatore, 
-                    dashboard_registro_ore, 
+                    dashboard_registro_ore, RegistroOreLavoroCreateView, RegistroOreLavoroUpdateView, delete_registro_ore,
                     )
 from .charts import ore_formazione, operatori_per_reparto
 
@@ -38,6 +38,9 @@ urlpatterns = [
     
     # Dashboard registro ore
     path('dashboard_registro_ore/', dashboard_registro_ore, name="dashboard_registro_ore"), 
+    path('crea_registro_ore/', RegistroOreLavoroCreateView.as_view(), name="crea_registro_ore"), 
+    path('modifica_registro_ore/<int:pk>/', RegistroOreLavoroUpdateView.as_view(), name="modifica_registro_ore"), 
+    path('delete_registro_ore/<int:pk>', delete_registro_ore, name="delete_registro_ore"),
     
     # Charts
     path('ore_formazione/', ore_formazione, name='ore_formazione'),

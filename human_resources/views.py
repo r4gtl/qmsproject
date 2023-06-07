@@ -487,17 +487,62 @@ def delete_dettaglio_registro_formazione(request, pk):
 
 def dashboard_registro_ore(request):
     registri_ore = RegistroOreLavoro.objects.all()
-    somma_ore_lavorate = RegistroOreLavoro.objects.annotate(sum_ore_lavorate=Sum('ore_lavorate'))
+    somma_ore_lavorate = RegistroOreLavoro.objects.aggregate(Sum('ore_lavorate'))
+    somma_ore_lavorabili = RegistroOreLavoro.objects.aggregate(Sum('ore_lavorabili'))
+    somma_ore_ferie = RegistroOreLavoro.objects.aggregate(Sum('ferie_permessi'))
+    
     #queryset = RegistroFormazione.objects.values('fk_corso__fk_areaformazione__descrizione').annotate(ore_lavorate=Sum('ore_lavorate'))
+    if somma_ore_ferie:
+        print("Ore lavorare: " + str(somma_ore_ferie))
+    else:
+        print("Vuoto")
 
     context = {'registri_ore': registri_ore, 
                 'somma_ore_lavorate': somma_ore_lavorate, 
+                'somma_ore_lavorabili': somma_ore_lavorabili,
+                'somma_ore_ferie': somma_ore_ferie,
+
                 
                 }
     
     return render(request, "human_resources/dashboard_registro_ore.html", context)
 
 
+class RegistroOreLavoroCreateView(LoginRequiredMixin, CreateView):
+    model = RegistroOreLavoro
+    form_class = RegistroOreLavoroModelForm
+    template_name = 'human_resources/registro_ore.html'
+    success_message = 'Mese aggiunto correttamente!'
+    success_url = reverse_lazy('human_resources:dashboard_registro_ore')
+
+    def get_initial(self):        
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+    
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+
+class RegistroOreLavoroUpdateView(LoginRequiredMixin, UpdateView):
+    model = RegistroOreLavoro
+    form_class = RegistroOreLavoroModelForm
+    template_name = 'human_resources/registro_ore.html'
+    success_message = 'Mese modificato correttamente!'
+    success_url = reverse_lazy('human_resources:dashboard_registro_ore')
+
+    def form_valid(self, form):                
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+def delete_registro_ore(request, pk): 
+        deleteobject = get_object_or_404(RegistroOreLavoro, pk = pk)                 
+        deleteobject.delete()
+        url_match = reverse_lazy('human_resources:delete_registro_ore')
+        return redirect(url_match)
 
 '''FINE SEZIONE REGISTRO ORE'''
 

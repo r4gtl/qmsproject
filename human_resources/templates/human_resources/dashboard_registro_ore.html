@@ -14,7 +14,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Operatori</a></li>     
-        <li class="breadcrumb-item active" aria-current="page">Tabelle Generiche Formazione</li>        
+        <li class="breadcrumb-item active" aria-current="page">Dashboard Registro Ore</li>        
     </ol>
 
 </nav>
@@ -25,7 +25,88 @@
 
   {% include "core/partials/_messages.html" %}
 
+  <div class="row">
+    <!-- Totale ore lavorabili -->
+    <div class="col-4">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Totale ore lavorabili anno in corso</h5>
+          
 
+          {% if somma_ore_lavorabili %}          
+            <h1 class="card-text text-center">{{ somma_ore_lavorabili.ore_lavorabili__sum }}</h1>
+          {% else %}
+            <h1 class="card-text text-center">0</h1>
+          {% endif %}
+
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+      </div>
+    </div>
+    <!-- Totale ore lavorate -->
+    <div class="col-4">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Totale ore lavorate anno in corso</h5>
+          {% if somma_ore_lavorate %}          
+            <h1 class="card-text text-center">{{ somma_ore_lavorate.ore_lavorate__sum }}</h1>
+          {% else %}
+            <h1 class="card-text text-center">0</h1>
+          {% endif %}
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+      </div>
+    </div>
+    <!-- Totale ore ferie -->
+    <div class="col-4">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Totale ore ferie anno in corso</h5>
+          
+          {% if somma_ore_ferie %}          
+            <h1 class="card-text text-center">{{ somma_ore_ferie.ferie_permessi__sum }}</h1>
+          {% else %}
+            <h1 class="card-text text-center">0</h1>
+          {% endif %}
+          <a href="#" class="card-link">Card link</a>
+          <a href="#" class="card-link">Another link</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <a href="{% url 'human_resources:crea_registro_ore'  %}" class="btn btn-success mt-2 "><i class="bi bi-file-earmark-plus"></i> Aggiungi Registro</a>
+
+  <hr>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        
+        <th>Anno/Mese</th>
+        <th>Ore Lavorabili</th>
+        <th>Ore Lavorate</th>
+        <th>Azioni</th>
+
+        
+      </tr>
+    </thead>
+    <tbody>
+      {% for registro_ore in registri_ore %}
+      <tr>        
+        
+        
+        <td><a href="{% url 'human_resources:modifica_registro_ore' pk=registro_ore.pk %}">{{ registro_ore.entry_year }} {{ registro_ore.entry_month }}</a></td>
+        
+        <td>{{ registro_ore.ore_lavorabili }}</td>
+        <td>{{ registro_ore.ore_lavorate }}</td>
+        <td class="text-center"><a href="{% url 'human_resources:delete_registro_ore' pk=registro_ore.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro_ore.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+        
+      </tr>  
+      {% endfor %}
+    </tbody>
+  </table>
   
 </div>
 
