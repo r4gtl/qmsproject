@@ -12,7 +12,7 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Dashboard Registro Ore</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:dashboard_registro_ore' %}">Dashboard Registro Ore</a></li>        
 
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica Registro Ore</li>
@@ -37,6 +37,16 @@
         
         
         
+        
+        <div class="row">
+            <div class="col-8 text-end">
+
+                <button class="btn btn-warning" id="btnCheck">Check Conteggio</button>
+            </div>
+            <div class="col-4 text-end">
+                <p id="verificaTesto"></p>
+            </div>
+        </div>
         <br>
 
 
@@ -140,10 +150,12 @@
 
                     {{ form.note|as_crispy_field }}
                 </div>
+                
                 <div class="col-2">
 
                     {{ form.created_by|as_crispy_field }}
                 </div>
+                
                 
             </div>
             
@@ -151,6 +163,7 @@
             
             <input type="submit" class="btn btn-success" value="Salva">
         </form>
+        
         <hr>
         
         
@@ -160,6 +173,30 @@
 
 {% endblock %}
 
-{% block scripts %}
+{% block extra_scripts %}
+<script>
+const checkConteggioButton = document.getElementById('btnCheck');
+const oreLavorabili = parseInt(document.getElementById("id_ore_lavorabili").value);
+const oreLavorate = parseInt(document.getElementById("id_ore_lavorate").value);
+const verificaTesto = document.getElementById("verificaTesto");
 
-{% endblock %} 
+function checkConteggio(){
+    var oreLavorabili = parseInt(document.getElementById("id_ore_lavorabili").value)||0;
+    var oreLavorate = parseInt(document.getElementById("id_ore_lavorate").value)||0;
+    return oreLavorabili-oreLavorate
+}
+const checkConteggio1 = () => {
+    if (checkConteggio()==0){
+        verificaTesto.innerHTML= "Conteggio esatto!";
+    }else if(checkConteggio()<0){
+        verificaTesto.innerHTML= "Errore! il conteggio supera le ore lavorabili per " + checkConteggio() + " ore!";
+    }else{
+        verificaTesto.innerHTML= "Mancano " + checkConteggio() + " ore!";
+    }
+    
+};
+checkConteggioButton.addEventListener('click', checkConteggio1);
+
+
+</script>
+{% endblock %}

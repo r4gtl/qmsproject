@@ -11,11 +11,24 @@
 {% block content %}
 
 <div class="container">
-  <div class="row">
+  <div class="row mt-3">
     <div class="col-4">        
-  <canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
-</div>
-</div>
+      <canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
+    </div>
+    <div class="col-3">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-center">Operatori attivi</h5>
+          {% if hr_active %}          
+            <h1 class="card-text text-center">{{ hr_active }}</h1>
+          {% else %}
+            <h1 class="card-text text-center">0</h1>
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="container">

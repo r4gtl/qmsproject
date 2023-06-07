@@ -92,7 +92,10 @@
                             {{ form.gender|as_crispy_field }}
                           </div>    
                       </div>
-                      <div class="row">                          
+                      <div class="row"> 
+                        <div class="col-3">
+                          {{ form.data_nascita|as_crispy_field }}
+                      </div>                         
                         <div class="col-3">
                           {{ form.country|as_crispy_field }}
                       </div>

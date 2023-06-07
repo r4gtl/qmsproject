@@ -22,11 +22,11 @@ from .filters import HRFilter
 # Create your views here.
 def human_resources_home(request):
     hr = HumanResource.objects.all().order_by('cognomedipendente')
-    
+    hr_active = HumanResource.objects.filter(datadimissioni__isnull=True).count()
     hr_filter = HRFilter(request.GET, queryset=hr)
     page = request.GET.get('page', 1)
     paginator = Paginator(hr, 50)
-
+    
     try:
         human_resources = paginator.page(page)
     except PageNotAnInteger:
@@ -35,7 +35,8 @@ def human_resources_home(request):
         human_resources = paginator.page(paginator.num_pages)
     context={
         'human_resources': human_resources,
-        'filter': hr_filter
+        'filter': hr_filter,
+        'hr_active': hr_active
     }
     return render(request, "human_resources/human_resources_home.html", context)
 
