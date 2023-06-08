@@ -16,7 +16,7 @@ from .views import (human_resources_home,
                     ValutazioneOperatoreCreateView, ValutazioneOperatoreUpdateView, delete_valutazione_operatore, 
                     dashboard_registro_ore, RegistroOreLavoroCreateView, RegistroOreLavoroUpdateView, delete_registro_ore,
                     )
-from .charts import ore_formazione, operatori_per_reparto
+from .charts import ore_formazione, operatori_per_reparto, age_groups
 
 
 
@@ -45,6 +45,7 @@ urlpatterns = [
     # Charts
     path('ore_formazione/', ore_formazione, name='ore_formazione'),
     path('hr_count/', operatori_per_reparto, name='hr_count'),
+    path('age_groups/', age_groups, name='age_groups'),
 
 
     # Centro di Lavoro 

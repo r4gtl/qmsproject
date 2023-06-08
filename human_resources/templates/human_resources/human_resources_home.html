@@ -12,10 +12,8 @@
 
 <div class="container">
   <div class="row mt-3">
-    <div class="col-4">        
-      <canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
-    </div>
-    <div class="col-3">
+
+    <div class="col-2 d-flex justify-content-center text-center">
       <div class="text-white bg-primary mb-3">
         <div class="card-body">
           <h5 class="card-title text-center">Operatori attivi</h5>
@@ -24,10 +22,49 @@
           {% else %}
             <h1 class="card-text text-center">0</h1>
           {% endif %}
-          
+          <h5 class="card-title text-center">Età media</h5>
+          {% if hr_average_age %}          
+            <h1 class="card-text text-center">{{ hr_average_age|floatformat:2 }}</h1>
+          {% else %}
+            <h1 class="card-text text-center">0</h1>
+          {% endif %}
         </div>
       </div>
     </div>
+
+    <div class="col-4">        
+      <canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
+    </div>
+    
+
+    <div class="col-2 d-flex justify-content-center text-center">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-text text-center">Maschi/Femmine</h5>
+          {% if hr_female %}          
+            <h4 class="card-text text-center">F: {{ hr_female|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">F: 0</h4>
+          {% endif %}
+          {% if hr_male %}          
+            <h4 class="card-text text-center">M: {{ hr_male|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">M: 0</h4>
+          {% endif %}
+          <h5 class="card-text text-center">Origine</h5>
+          {% if hr_ita %}          
+            <h4 class="card-text text-center">Ita: {{ hr_ita|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">Ita: 0</h4>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">        
+      <canvas id="age_groups" data-url="{% url 'human_resources:age_groups' %}"></canvas>
+    </div>
+
   </div>
 </div>
 
@@ -199,6 +236,41 @@
     });
 
   });
+
+$(function () {
+
+var $agegroups = $("#age_groups");
+$.ajax({
+  url: $agegroups.data("url"),
+  success: function (data) {
+
+    var ctx = $agegroups[0].getContext("2d");        
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Età media',
+          backgroundColor: data.backgroundColor,
+          borderColor: data.borderColor,
+          data: data.data
+        }]          
+      },
+      options: {
+        responsive: true,
+        
+        title: {
+          display: true,
+          text: 'Età media'
+        },
+        
+      }
+    });
+
+  }
+});
+
+});
 
 </script>
 {% endblock %}

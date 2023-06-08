@@ -8,10 +8,6 @@ from .models import (HumanResource,
                     )
 
 
-def get_years_from_delta(d):
-    days_in_year = 365
-    return int(d.days / days_in_year)
-
 
 def get_average_age():
     hrs = HumanResource.objects.filter(datadimissioni__isnull=True).filter(data_nascita__isnull=False)
@@ -25,10 +21,48 @@ def get_average_age():
         in_years = int(in_days.days / days_in_year)
         ages.append(in_years)
 
-        print("Anni:" + str(in_years))
-    avg_age = sum(ages) / len(ages)
-    print("Media:" + str(avg_age))
+        
+    avg_age = sum(ages) / len(ages)    
     return avg_age
+
+def get_gender_perc(gender):
+    hrs = HumanResource.objects.filter(datadimissioni__isnull=True)
+    hrs_count = hrs.count()
+    print("Conto: " + str(hrs_count))
+    my_gender = 0
+
+    for hr in hrs:
+        gender_choice = hr.gender
+        print("Nome: " + str(hr.cognomedipendente) + " " + str(hr.nomedipendente))
+        print("Genere: " + str(gender_choice))
+        if gender_choice==gender:
+            my_gender+=1
+
+    if my_gender==0:
+        return 0
+    else:
+        return (my_gender /hrs_count )*100
+
+
+def get_ita_perc():
+    hrs = HumanResource.objects.filter(datadimissioni__isnull=True)
+    hrs_count = hrs.count()
+    
+    it = 0
+    not_it = 0
+
+    for hr in hrs:
+        country_choice = hr.country
+        
+        if country_choice=="IT":
+            it+=1
+        else:
+            not_it+=1
+
+    if it==0:
+        return 0
+    else:
+        return (it / hrs_count )*100
 
 
 # Charts
@@ -61,4 +95,51 @@ def operatori_per_reparto(request):
     return JsonResponse(data={
         'labels': labels,
         'data': data,
+    })
+
+def age_groups(request):
+
+    hrs = HumanResource.objects.filter(datadimissioni__isnull=True).filter(data_nascita__isnull=False)
+    days_in_year = 365
+    
+    labels = ['18-30', '31-40', '41-50', '51-60', '>60']
+    data = [0,0,0,0,0]
+    backgroundColor = [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(255, 159, 64, 0.2)',
+      'rgba(255, 205, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(54, 162, 235, 0.2)'
+    ]
+
+    borderColor = [
+      'rgb(255, 99, 132)',
+      'rgb(255, 159, 64)',
+      'rgb(255, 205, 86)',
+      'rgb(75, 192, 192)',
+      'rgb(54, 162, 235)'
+    ]
+
+    for hr in hrs:
+        data_nascita=str(hr.data_nascita)
+        dt = datetime.strptime(data_nascita, '%Y-%m-%d')         
+        in_days = datetime.now() - dt
+        in_years = int(in_days.days / days_in_year)
+        if in_years>=18 and in_years<=30:
+            data[0]+=1
+        elif in_years>=31 and in_years<=40:
+            data[1]+=1
+        elif in_years>=41 and in_years<=50:
+            data[2]+=1
+        elif in_years>=51 and in_years<=60:
+            data[3]+=1
+        elif in_years>60:
+            data[4]+=1
+   
+    
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+        'backgroundColor': backgroundColor,
+        'borderColor': borderColor
     })

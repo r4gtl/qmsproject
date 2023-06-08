@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "django_countries",
     "django_filters",
     'widget_tweaks',
+    'django.contrib.humanize',
     
 ]
 

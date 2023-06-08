@@ -153,8 +153,24 @@ class DettaglioRegistroFormazione(models.Model):
     
 
 class RegistroOreLavoro(models.Model):
+
+
     YEAR_CHOICES = [(y,y) for y in range(2000, datetime.date.today().year+1)]
-    MONTH_CHOICE = [(m,m) for m in range(1,13)]
+    #MONTH_CHOICE = [(m,m) for m in range(1,13)]
+    MONTH_CHOICE = (
+        (1, 'Gennaio'),
+        (2, 'Febbraio'),
+        (3, 'Marzo'),
+        (4, 'Aprile'),
+        (5, 'Maggio'),
+        (6, 'Giugno'),
+        (7, 'Luglio'),
+        (8, 'Agosto'),
+        (9, 'Settembre'),
+        (10, 'Ottobre'),
+        (11, 'Novembre'),
+        (12, 'Dicembre')
+    )
 
     entry_year = models.IntegerField(choices=YEAR_CHOICES,
                  default=datetime.datetime.now().year,)
@@ -189,7 +205,11 @@ class RegistroOreLavoro(models.Model):
         else:
             return None
 
-
+    def month_verbose(self):
+        return dict(RegistroOreLavoro.MONTH_CHOICE)[self.entry_month]
+    
+    class Meta:
+        ordering = ["-entry_year", "-entry_month"]
 
 class ValutazioneOperatore(models.Model):
     # Categoria
