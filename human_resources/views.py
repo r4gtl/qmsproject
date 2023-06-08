@@ -19,11 +19,14 @@ from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelFo
                     )
 from .filters import HRFilter
 
+from .charts import get_average_age
+
 # Create your views here.
 def human_resources_home(request):
     hr = HumanResource.objects.all().order_by('cognomedipendente')
     hr_active = HumanResource.objects.filter(datadimissioni__isnull=True).count()
     hr_filter = HRFilter(request.GET, queryset=hr)
+    hr_average_age = get_average_age()
     page = request.GET.get('page', 1)
     paginator = Paginator(hr, 50)
     
@@ -36,7 +39,8 @@ def human_resources_home(request):
     context={
         'human_resources': human_resources,
         'filter': hr_filter,
-        'hr_active': hr_active
+        'hr_active': hr_active,
+        'hr_average_age': hr_average_age
     }
     return render(request, "human_resources/human_resources_home.html", context)
 

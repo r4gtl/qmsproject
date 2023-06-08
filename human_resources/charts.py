@@ -1,9 +1,34 @@
 from django.http import JsonResponse
 from django.db.models import Sum, Count
+from datetime import datetime
 
 from .models import (HumanResource, 
                     RegistroFormazione, 
+
                     )
+
+
+def get_years_from_delta(d):
+    days_in_year = 365
+    return int(d.days / days_in_year)
+
+
+def get_average_age():
+    hrs = HumanResource.objects.filter(datadimissioni__isnull=True).filter(data_nascita__isnull=False)
+    days_in_year = 365
+    ages = []
+
+    for hr in hrs:
+        data_nascita=str(hr.data_nascita)
+        dt = datetime.strptime(data_nascita, '%Y-%m-%d')         
+        in_days = datetime.now() - dt
+        in_years = int(in_days.days / days_in_year)
+        ages.append(in_years)
+
+        print("Anni:" + str(in_years))
+    avg_age = sum(ages) / len(ages)
+    print("Media:" + str(avg_age))
+    return avg_age
 
 
 # Charts
