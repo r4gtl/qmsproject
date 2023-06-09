@@ -33,6 +33,18 @@
                     </div>
                     </li>
                     <li class="mb-1">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#tabelle-collapse" aria-expanded="false">
+                            Acquisti
+                        </button>
+                        <div class="collapse" id="tabelle-collapse">
+                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                            <li><a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Pelli</a></li>
+                            
+                            
+                            </ul>
+                        </div>
+                        </li>
+                    <li class="mb-1">
                         <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#generiche-collapse" aria-expanded="false">
                             Generiche
                         </button>

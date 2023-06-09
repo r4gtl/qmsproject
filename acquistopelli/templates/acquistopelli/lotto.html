@@ -1,0 +1,117 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Lotto{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<div class="container">
+    <br>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+          <li class="breadcrumb-item"><a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}">Risorse Umane</a></li>        
+  
+          {% if form.instance.id  %}
+              <li class="breadcrumb-item active" aria-current="page">{{ lotto.data_acquisto }}-{{ lotto.identificativo }}</li>
+          {% else %}
+              <li class="breadcrumb-item active" aria-current="page">Aggiungi lotto</li>
+          {% endif %}             
+          
+          
+      </ol>
+  </nav>
+    
+    <hr>
+    {% include "core/partials/_messages.html" %}
+    <!-- Form nuovo lotto -->
+    
+    <hr>
+
+    
+
+        
+        <div class="form-group mt-3">
+          <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+              {% csrf_token %}
+              
+              <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+              <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
+          
+                  <div class="row mb-4 mt-3">
+                    
+                    <div class="col-md-12 border rounded shadow-sm">
+                      <div class="row mt-3">
+                          <div class = "col-md-3">
+                            {{ form.data_acquisto|as_crispy_field }}
+                          </div>
+                          
+                          <div class="col-md-3">
+                            {{ form.identificativo|as_crispy_field }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.fk_fornitore|as_crispy_field }} 
+                          </div> 
+                      </div>
+                      <div class="row"> 
+                        <div class="col-3">
+                          {{ form.fk_tipoanimale|as_crispy_field }}
+                      </div>                         
+                        <div class="col-3">
+                          {{ form.fk_tipogrezzo|as_crispy_field }}
+                      </div>
+                          <div class="col-md-3">
+                            {{ form.origine|as_crispy_field }}
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.documento|as_crispy_field }} 
+                          </div>     
+                      </div>
+                      <div class="row mt-4">                          
+                          
+                          <div class="col-md-2">
+                            {{ form.pezzi|as_crispy_field }}
+                          </div>
+                          <div class="col-md-2">
+                            {{ form.prezzo_unitario|as_crispy_field }} 
+                          </div> 
+                          <div class="col-md-3">
+                              {{ form.spese_accessorie|as_crispy_field }} 
+                          </div>   
+                          <div class="col-md-3">
+                            {{ form.is_lwg|as_crispy_field }} 
+                        </div>      
+                      </div>
+                      <div class="row">                          
+                          
+                          <div class="col">
+                            {{ form.note|as_crispy_field }}
+                          </div>
+                            
+                      </div>
+                      <hr>
+                      
+
+                      
+
+                  </div>
+                    </div>
+
+      <!-- fine form -->
+      </form>
+      </div>
+      </div>
+
+
+        
+
+
+
+
+{% endblock content %}

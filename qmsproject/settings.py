@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "accounts",
     "anagrafiche",
     "human_resources",
+    "acquistopelli",
     
     "bootstrap5",
     "crispy_forms",
@@ -80,6 +81,7 @@ TEMPLATES = [
                     os.path.join(BASE_DIR, 'userprofile/templates'),
                     os.path.join(BASE_DIR, 'core/templates'),
                     os.path.join(BASE_DIR, 'human_resources/templates'),
+                    os.path.join(BASE_DIR, 'acquistopelli/templates'),
         ]
                 ,
         "APP_DIRS": True,

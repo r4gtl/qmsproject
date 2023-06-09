@@ -31,6 +31,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('anagrafiche/', include('anagrafiche.urls')),
     path('human_resources/', include('human_resources.urls')),
+    path('acquistopelli/', include('acquistopelli.urls')),
     path("admin/", admin.site.urls),
 ]
 if settings.DEBUG:
