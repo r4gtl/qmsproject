@@ -16,7 +16,7 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-          <li class="breadcrumb-item"><a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}">Risorse Umane</a></li>        
+          <li class="breadcrumb-item"><a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}">Dashboard</a></li>        
   
           {% if form.instance.id  %}
               <li class="breadcrumb-item active" aria-current="page">{{ lotto.data_acquisto }}-{{ lotto.identificativo }}</li>
@@ -31,12 +31,9 @@
     <hr>
     {% include "core/partials/_messages.html" %}
     <!-- Form nuovo lotto -->
-    
-    <hr>
+    <br>
 
     
-
-        
         <div class="form-group mt-3">
           <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
               {% csrf_token %}
@@ -82,19 +79,16 @@
                             {{ form.prezzo_unitario|as_crispy_field }} 
                           </div> 
                           <div class="col-md-3">
-                              {{ form.spese_accessorie|as_crispy_field }} 
+                            {{ form.spese_accessorie|as_crispy_field }} 
                           </div>   
                           <div class="col-md-3">
                             {{ form.is_lwg|as_crispy_field }} 
-                        </div>      
-                      </div>
-                      <div class="row">                          
-                          
-                          <div class="col">
+                        </div>   
+                        <div class="col-md-2">
                             {{ form.note|as_crispy_field }}
                           </div>
-                            
                       </div>
+                      
                       <hr>
                       
 
@@ -106,6 +100,35 @@
       <!-- fine form -->
       </form>
       </div>
+
+      {% if form.instance.id  %}
+      <div class="col-12 text-end">
+        
+        <a href="{% url 'acquistopelli:crea_scelta_lotto' pk=lotto.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi scelta</a>
+
+      </div>
+          <table class="table table-bordered table-striped mt-2">
+            <thead>
+              <tr>
+                <th>Scelta</th>            
+                <th>Pezzi</th>
+                <th>Azione</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              {% for scelta_effettuata in scelte_effettuate %}
+              <tr>        
+                
+                <td><a href="{% url 'acquistopelli:modifica_scelta_lotto' pk=lotto.pk id=scelta_effettuata.pk %}">{{ scelta_effettuata.fk_scelta.descrizione }}</a></td>
+                                         
+                <td>{{ scelta_effettuata.pezzi }}</td>                           
+                <td class="text-center"><a href="{% url 'acquistopelli:delete_scelta_lotto' pk=scelta_effettuata.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scelta_effettuata.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
+              </tr>  
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
       </div>
 
 

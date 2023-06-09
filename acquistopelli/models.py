@@ -3,7 +3,7 @@ from django_countries.fields import CountryField # Field from django countries a
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 
-
+'''Questi modelli devono essere inseriti in automatico'''
 class TipoAnimale(models.Model):
     descrizione = models.CharField(max_length=10)
     note = models.TextField(null=True, blank=True)
@@ -29,6 +29,8 @@ class TipoGrezzo(models.Model):
 
     def __str__(self):
         return self.descrizione
+
+'''Fine modelli da inserire in automatico'''
     
 class Scelta(models.Model):
     descrizione = models.CharField(max_length=50)
@@ -66,7 +68,7 @@ class Lotto(models.Model):
         verbose_name_plural = "Lotti"
 
     def __str__(self):
-        return self.data_acquisto + " " + self.identificativo
+        return str(self.data_acquisto) + " " + str(self.identificativo)
     
 
     

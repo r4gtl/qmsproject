@@ -81,7 +81,7 @@ class LottoModelForm(forms.ModelForm):
             'pezzi': forms.NumberInput(attrs={'class': 'form-control'}),
             'prezzo_unitario': forms.DecimalField(),
             'spese_accessorie': forms.DecimalField(),
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 1}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
         }
@@ -105,12 +105,12 @@ class SceltaLottoModelForm(forms.ModelForm):
     class Meta:
         model = SceltaLotto
         fields = '__all__'
-        fk_lotto = forms.ModelChoiceField(queryset=Lotto.objects.all())
+        #fk_lotto = forms.ModelChoiceField(queryset=Lotto.objects.all())
         fk_scelta = forms.ModelChoiceField(queryset=Scelta.objects.all())
 
 
         widget = {
-            'fk_lotto': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'fk_lotto': forms.HiddenInput(),
             'fk_scelta': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'pezzi': forms.NumberInput(attrs={'class': 'form-control'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -118,7 +118,7 @@ class SceltaLottoModelForm(forms.ModelForm):
             'created_at': forms.HiddenInput()
         }
         labels = {
-            'fk_lotto': 'Lotto',
+            
             'fk_scelta': 'Scelta',
             'pezzi': 'Pezzi',
             'note': 'Annotazioni'

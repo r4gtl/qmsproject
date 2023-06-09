@@ -5,13 +5,19 @@
 {% block head_title %}{{ block.super }} - Acquisto Pelli{% endblock head_title %} 
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_human_resources.html" %}
+{% include "core/partials/_sidenav_acquisto_pelli.html" %}
 {% endblock %}
 
 {% block content %}
 
 
-
+<div class="container">
+  <div class="row">
+    <div class="col-4">        
+  <canvas id="origine" data-url="{% url 'acquistopelli:origine' %}"></canvas>
+</div>
+</div>
+</div>
 <div class="container">
   <br>
   <h3>Lista Lotti</h3>
@@ -58,7 +64,7 @@
   <br>
   
 
-  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'acquistopelli:acquisto_lotto' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'acquistopelli:crea_lotto' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
     <table class="table table-bordered table-striped">
         <thead>
@@ -78,9 +84,9 @@
           <tr>        
             
             
-            <td><a href="#">{{ lotti.data_acquisto|date:'d/m/Y' }}</a></td>
+            <td><a href="{% url 'acquistopelli:modifica_lotto' pk=lotti.pk %}">{{ lotti.data_acquisto|date:'d/m/Y' }}</a></td>
             
-            <td>{{ lotti.Identificativo }}</td>
+            <td>{{ lotti.identificativo }}</td>
             <td>{{ lotti.fk_fornitore.ragionesociale }}</td>
             <td>{{ lotti.fk_tipoanimale.descrizione }}</td>
             <td>{{ lotti.fk_tipogrezzo.descrizione }}</td>
@@ -130,3 +136,52 @@
 </div>
 
 {% endblock content %}
+{% block extra_scripts %}
+
+<script>
+
+
+
+
+
+
+
+
+
+  $(function () {
+  
+  var $origine = $("#origine");
+  $.ajax({
+    url: $origine.data("url"),
+    success: function (data) {
+  
+      var ctx = $origine[0].getContext("2d");        
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'Origine',
+            backgroundColor: getRandomColor(),
+            data: data.data
+          }]          
+        },
+        options: {
+          responsive: true,
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'Origine'
+          },
+          
+        }
+      });
+  
+    }
+  });
+  
+  });
+</script>
+{% endblock %}
