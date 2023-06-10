@@ -14,6 +14,7 @@
                     <li><a href="{% url 'anagrafiche:home_clienti' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Clienti</a></li>
                     <li><a href="{% url 'anagrafiche:home_fornitori' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Fornitori</a></li>
                     <li><a href="{% url 'human_resources:human_resources' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Operatori</a></li>
+                    <li><a href="{% url 'articoli:articoli_home' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Articoli</a></li>
                     <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Macelli</a></li>
                     
                     </ul>
@@ -33,10 +34,10 @@
                     </div>
                     </li>
                     <li class="mb-1">
-                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#tabelle-collapse" aria-expanded="false">
+                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#acquisti-collapse" aria-expanded="false">
                             Acquisti
                         </button>
-                        <div class="collapse" id="tabelle-collapse">
+                        <div class="collapse" id="acquisti-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                             <li><a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Pelli</a></li>
                             

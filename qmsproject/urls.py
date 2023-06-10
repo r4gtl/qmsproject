@@ -32,6 +32,7 @@ urlpatterns = [
     path('anagrafiche/', include('anagrafiche.urls')),
     path('human_resources/', include('human_resources.urls')),
     path('acquistopelli/', include('acquistopelli.urls')),
+    path('articoli/', include('articoli.urls')),
     path("admin/", admin.site.urls),
 ]
 if settings.DEBUG:
