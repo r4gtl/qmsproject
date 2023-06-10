@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Articolo(models.Model):
     descrizione = models.CharField(max_length=100)
-    scheda_tecnica = models.FileField(upload_to='schede_tecniche_articoli/')
+    scheda_tecnica = models.FileField(upload_to='schede_tecniche_articoli/', null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='articolo', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

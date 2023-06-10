@@ -78,3 +78,9 @@ class ArticoloUpdateView(LoginRequiredMixin,UpdateView):
         # context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
         # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
         return context
+    
+def delete_articolo(request, pk): 
+        deleteobject = get_object_or_404(Articolo, pk = pk)        
+        deleteobject.delete()
+        url_match= reverse_lazy('articoli:articoli_home')
+        return redirect(url_match)

@@ -49,13 +49,14 @@
   <br>
   
 
-  <a class="btn btn-sm btn-success mt-2 mb-4" href="#"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'articoli:crea_articolo' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
     <table class="table table-bordered table-striped">
         <thead>
           <tr>
             
             <th>Articolo</th>            
+            <th>Scheda Tecnica</th>            
             <th>Azioni</th>
 
             
@@ -66,10 +67,9 @@
           <tr>        
             
             
-            <td><a href="#">{{ articolo.descrizione }}</a></td>
-            
-            
-            <td>Elimina</td>
+            <td><a href="{% url 'articoli:modifica_articolo' pk=articolo.pk %}">{{ articolo.descrizione }}</a></td>
+            <td><a href="{{ articolo.scheda_tecnica.url }}" download>{{ articolo.scheda_tecnica }}</a></td>            
+            <td class="text-center"><a href="{% url 'articoli:delete_articolo' pk=articolo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{articolo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>
