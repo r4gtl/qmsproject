@@ -1,6 +1,8 @@
 from django.db import models
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
+from datetime import datetime
+from django.utils import timezone
 
 class Articolo(models.Model):
     descrizione = models.CharField(max_length=100)
@@ -30,7 +32,20 @@ class Colore(models.Model):
         return self.descrizione
     
 class FaseLavoro(models.Model):
+    # Unità di misura
+    MQ = 'mq'
+    NUMERO = 'Nr.'
+    PESO_KG = 'Kg.'
+    
+    
+    CHOICES_UM = (
+        (MQ, 'Mq.'),
+        (NUMERO, 'Nr.'),
+        (PESO_KG, 'Kg.'),
+        
+    )
     descrizione = models.CharField(max_length=100)    
+    um =  models.CharField(max_length=100, choices=CHOICES_UM, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='faselavoro', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -42,4 +57,24 @@ class FaseLavoro(models.Model):
     def __str__(self):
         return self.descrizione
     
-
+    
+class Procedura(models.Model):
+    fk_articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
+    nr_procedura = models.IntegerField()
+    data_procedura = models.DateField(default=timezone.now)
+    nr_revisione = models.IntegerField()
+    data_revisione = models.DateField(default=timezone.now)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='procedure', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.fk_articolo + " Procedura Nr. " + str(self.nr_procedura) + " del " + str(self.data_procedura) + " Revisione nr. " + str(self.nr_revisione) + " del " + str(self.data_revisione)
+    
+class DettaglioProcedura(models.Model):
+    fk_procedura = models.ForeignKey(Procedura, on_delete=models.CASCADE)
+    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)    
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglioprocedura', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    

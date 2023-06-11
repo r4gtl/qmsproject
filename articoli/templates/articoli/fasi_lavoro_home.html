@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %} 
 {% load widget_tweaks %}
-{% block head_title %}{{ block.super }} - Articoli{% endblock head_title %} 
+{% block head_title %}{{ block.super }} - Fasi Lavoro{% endblock head_title %} 
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_articoli.html" %}
@@ -15,7 +15,7 @@
 
 <div class="container">
   <br>
-  <h3>Lista Articoli</h3>
+  <h3>Lista Fasi di Lavoro</h3>
   <hr>
   
   <!-- filtro -->
@@ -28,7 +28,7 @@
                     <table class="table table-hover table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr>     
-                                <th>Articolo</th>
+                                <th>Fase di lavoro</th>
                             </tr>
                         </thead>                            
                         <tbody>
@@ -39,7 +39,7 @@
                     </table>
                 </div>
                 <button class="btn btn-primary" type="submit">Cerca</button>
-                <a class="btn btn-success" href="{% url 'articoli:articoli_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                <a class="btn btn-success" href="{% url 'articoli:fasi_lavoro_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
             </form>        
         </div>
     </div>        
@@ -50,27 +50,25 @@
   <br>
   
 
-  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'articoli:crea_articolo' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'articoli:crea_fase_lavoro' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
     <table class="table table-bordered table-striped">
         <thead>
           <tr>
             
-            <th>Articolo</th>            
-            <th>Scheda Tecnica</th>            
+            <th>Fase di Lavoro</th>                        
             <th>Azioni</th>
 
             
           </tr>
         </thead>
         <tbody>
-          {% for articolo in filter.qs %}
+          {% for faselavoro in filter.qs %}
           <tr>        
             
             
-            <td><a href="{% url 'articoli:modifica_articolo' pk=articolo.pk %}">{{ articolo.descrizione }}</a></td>
-            <td><a href="{{ articolo.scheda_tecnica.url }}" download>{{ articolo.scheda_tecnica }}</a></td>            
-            <td class="text-center"><a href="{% url 'articoli:delete_articolo' pk=articolo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{articolo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            <td><a href="{% url 'articoli:modifica_fase_lavoro' pk=faselavoro.pk %}">{{ faselavoro.descrizione }}</a></td>            
+            <td class="text-center"><a href="{% url 'articoli:delete_fase_lavoro' pk=faselavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{faselavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>

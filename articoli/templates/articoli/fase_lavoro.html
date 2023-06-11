@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %} 
 {% load widget_tweaks %}
-{% block head_title %}{{ block.super }} - Articolo{% endblock head_title %} 
+{% block head_title %}{{ block.super }} - Fase Lavoro{% endblock head_title %} 
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_articoli.html" %}
@@ -15,12 +15,12 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-            <li class="breadcrumb-item"><a href="{% url 'articoli:articoli_home' %}">Lista Articoli</a></li>        
+            <li class="breadcrumb-item"><a href="{% url 'articoli:fasi_lavoro_home' %}">Lista Fasi di Lavoro</a></li>        
     
             {% if form.instance.id  %}
-                <li class="breadcrumb-item active" aria-current="page">{{ articolo.descrizione }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ faselavoro.descrizione }}</li>
             {% else %}
-                <li class="breadcrumb-item active" aria-current="page">Aggiungi Articolo</li>
+                <li class="breadcrumb-item active" aria-current="page">Aggiungi Fase Lavoro</li>
             {% endif %}             
             
             
@@ -29,11 +29,11 @@
     <hr>
     <br>
     {% if form.instance.id  %}
-            <h5 class="text-end">{{ articolo.descrizione }}</h5>
-            <h3>Modifica Articolo</h3>
+            <h5 class="text-end">{{ faselavoro.descrizione }}</h5>
+            <h3>Modifica Fase di Lavoro</h3>
         {% else %}
-            <h5 class="text-end">Articolo</h5>
-            <h3> Aggiungi Articolo</h3>
+            <h5 class="text-end">Fase di Lavoro</h5>
+            <h3> Aggiungi Fase di Lavoro</h3>
         {% endif %}
     
     <!-- Form Articolo -->
@@ -53,9 +53,7 @@
                               {{ form.descrizione|as_crispy_field }}
                             </div>
                             
-                            <div class="col-md-9">
-                              {{ form.scheda_tecnica|as_crispy_field }}
-                            </div>
+                            
                              
                         </div>
                         
