@@ -1,5 +1,5 @@
 from django import forms
-from .models import (Procedura, SezioneLWG, RevisioneProcedura, Modulo
+from .models import (Procedura, SezioneLWG, RevisioneProcedura, Modulo, RevisioneModulo
                      )
 
 
@@ -70,5 +70,25 @@ class ModuloModelForm(forms.ModelForm):
             'identificativo': 'Identificativo',
             'data_modulo': 'Data Modulo',
             'descrizione': 'Titolo/Descrizione',
+            'note': 'Annotazioni'
+        }
+        
+class RevisioneModuloModelForm(forms.ModelForm):
+    class Meta:
+        model = RevisioneModulo
+        fields = '__all__'
+        
+
+        widget = {
+            'n_revisione': forms.NumberInput(),            
+            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            'fk_modulo': forms.HiddenInput()
+        }
+        labels = {
+            'n_revisione': 'Numero revisione',
+            'data_revisione': 'Data Revisione',            
             'note': 'Annotazioni'
         }

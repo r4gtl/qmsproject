@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Revisione Procedura {% endblock %}
+{% block title %}{{ block.super }} | Revisione Modulo {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_procedure.html" %}
@@ -15,7 +15,7 @@
         <li class="breadcrumb-item"><a href="{% url 'manualeprocedure:procedure_home' %}">Manuale Procedure</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ revisioneprocedura.n_revisione }} del {{ revisioneprocedura.data_revisione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ revisionemodulo.n_revisione }} del {{ revisionemodulo.data_revisione }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Modulo</li>
         {% endif %}             
@@ -26,9 +26,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica Revisione Procedura</h3>
+            <h3>Modifica Revisione Modulo</h3>
         {% else %}
-            <h3> Aggiungi Revisione Procedura</h3>
+            <h3> Aggiungi Revisione Modulo</h3>
         {% endif %}
         
         
@@ -65,7 +65,7 @@
                     {{ form.note|as_crispy_field }}
                 </div>
                 <div class="col-4">
-                    {{ form.fk_procedura.as_hidden }}
+                    {{ form.fk_modulo.as_hidden }}
                 </div>
                 
             </div>

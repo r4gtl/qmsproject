@@ -43,8 +43,17 @@
         <form method="post">
             {% csrf_token %}
 
-            
-
+            {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %} 
+                   <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                   </div>
+                {% endfor %}
+            {% endfor %}
+         {% endif %}
+         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+         <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
             <div class="row">
                 <div class="col-3">
                     {{ form.identificativo|as_crispy_field }}
@@ -66,13 +75,60 @@
                 
             </div>
             
-            
+            <div class="col-4">
+                {{ form.fk_procedura.as_hidden }}
+            </div>
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
+            
         </form>
         <hr>
+        <!-- Lista Revisioni Modulo-->
+      <div class="row">
+        <div class="col text-end">
+          {% if form.instance.id  %}
+            <a href="{% url 'manualeprocedure:crea_revisione_modulo' pk=modulo.pk  %}" class="btn btn-success mt-2 "><i class="bi bi-file-earmark-plus"></i> Aggiungi Revisione</a>
+          {% else %}
+            <button class="btn btn-outline-success mt-2">Salvare per aggiungere</button>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="row">
         
+      </div>
+      {% if form.instance.id  %}
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Numero Revisione</th>            
+              <th>Data Revisione</th>
+              <th>Documento</th>
+              <th>Azione</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            {% for revisione in elenco_revisioni %}
+            <tr>        
+              
+              <td><a href="{% url 'manualeprocedure:modifica_revisione_modulo' pk=procedura.pk id=modulo.pk pk_rev=revisione.pk%}">{{ revisione.n_revisione }}</a></td>
+              <td>{{ revisione.data_revisione }}</td>   
+              {% if revisione.documento %} 
+                <td><a href="{{ revisione.documento.url }}" download>{{ revisione.documento.url }}</a></td>                       
+              {% else %}
+                <td>Nessun documento associato</td>                       
+              {% endif %}
+              <td class="text-center"><a href="{% url 'manualeprocedure:delete_revisione_modulo' pk_rev=revisione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{revisione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+      
+      <!-- Fine Lista Revisioni -->
+
+      </div>
         
     </div>
 

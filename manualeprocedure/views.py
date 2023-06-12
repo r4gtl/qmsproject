@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import (Procedura, RevisioneProcedura, Modulo, RevisioneModulo
                     )
-from .forms import ProceduraModelForm, RevisioneProceduraModelForm, ModuloModelForm
+from .forms import ProceduraModelForm, RevisioneProceduraModelForm, ModuloModelForm, RevisioneModuloModelForm
 from .filters import ProceduraFilter
 
 def procedure_home(request):
@@ -165,8 +165,12 @@ class ModuloCreateView(LoginRequiredMixin,CreateView):
     #success_url = reverse_lazy('human_resources:human_resources')
 
     def get_success_url(self):   
-        fk_procedura=self.object.fk_procedura.pk
-        return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
+        if 'salva_esci' in self.request.POST:
+            fk_procedura=self.object.fk_procedura.pk
+            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
+        pk_modulo=self.object.pk
+        return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'pk':pk_modulo})
+        
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -195,8 +199,11 @@ class ModuloUpdateView(LoginRequiredMixin, UpdateView):
     #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
     
     def get_success_url(self):        
-        fk_procedura=self.object.fk_procedura.pk        
-        return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
+        if 'salva_esci' in self.request.POST:
+            fk_procedura=self.object.fk_procedura.pk
+            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
+        pk_modulo=self.object.pk
+        return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'pk':pk_modulo})
     
 
     def form_valid(self, form):        
@@ -205,8 +212,10 @@ class ModuloUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs['pk']       
-        context['fk_procedura'] = Procedura.objects.get(pk=pk)
+        pk_procedura = self.kwargs['pk'] 
+        pk_modulo = self.kwargs['id']
+        context['fk_procedura'] = Procedura.objects.get(pk=pk_procedura)
+        context['elenco_revisioni'] = RevisioneModulo.objects.filter(fk_modulo=pk_modulo)
         return context
 
 
@@ -216,4 +225,70 @@ def delete_modulo(request, pk):
         fk_procedura = deleteobject.fk_procedura.pk                
         deleteobject.delete()
         url_match = reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
+        return redirect(url_match)
+    
+class RevisioneModuloCreateView(LoginRequiredMixin,CreateView):
+    model = RevisioneModulo
+    form_class = RevisioneModuloModelForm
+    template_name = 'manualeprocedure/revisione_modulo.html'
+    success_message = 'Revisione Modulo aggiunta correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):   
+        fk_procedura=self.object.fk_procedura.pk
+        pk_modulo = self.kwargs['id']
+        return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'pk':fk_procedura, 'id':pk_modulo})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_modulo = self.kwargs['pk']
+
+        return {
+            'created_by': created_by,
+            'fk_modulo': fk_modulo
+        }
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        # pk = self.kwargs['pk']       
+        # context['fk_procedura'] = Procedura.objects.get(pk=pk) 
+        return context
+
+class RevisioneModuloUpdateView(LoginRequiredMixin, UpdateView):
+    model = RevisioneModulo
+    form_class = RevisioneModuloModelForm
+    template_name = 'manualeprocedure/revisione_modulo.html'
+    success_message = 'Revisione Modulo modificata correttamente!'
+    #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
+    
+    def get_success_url(self):        
+        fk_procedura=self.object.fk_procedura.pk        
+        pk_modulo = self.kwargs['id']
+        return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'pk':fk_procedura, 'id':pk_modulo})
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        # pk_procedura = self.kwargs['pk'] 
+        # pk_modulo = self.kwargs['id']
+        # context['fk_procedura'] = Procedura.objects.get(pk=pk_procedura)
+        # context['elenco_revisioni'] = RevisioneModulo.objects.filter(fk_modulo=pk_modulo)
+        return context
+
+
+
+def delete_revisione_modulo(request, pk): 
+        deleteobject = get_object_or_404(RevisioneModulo, pk = pk) 
+        fk_modulo = deleteobject.fk_modulo.pk 
+        fk_procedura=deleteobject.fk_procedura.pk                 
+        deleteobject.delete()
+        url_match = reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'pk':fk_procedura, 'id':fk_modulo})
         return redirect(url_match)

@@ -127,8 +127,12 @@
             <tr>        
               
               <td><a href="{% url 'manualeprocedure:modifica_revisione_procedura' pk=procedura.pk id=revisione.pk %}">{{ revisione.n_revisione }}</a></td>
-              <td>{{ revisione.data_revisione }}</td>    
-              <td><a href="{{ revisione.documento.url }}" download>{{ revisione.documento }}</a></td>                       
+              <td>{{ revisione.data_revisione }}</td>   
+              {% if revisione.documento %} 
+                <td><a href="{{ revisione.documento.url }}" download>{{ revisione.documento.url }}</a></td>                       
+              {% else %}
+                <td>Nessun documento associato</td>                       
+              {% endif %}
               <td class="text-center"><a href="{% url 'manualeprocedure:delete_revisione_procedura' pk=revisione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{revisione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}

@@ -3,6 +3,7 @@ from manualeprocedure.views import (procedure_home,
                                     ProceduraCreateView, ProceduraUpdateView, delete_procedura,
                                     RevisioneProceduraCreateView, RevisioneProceduraUpdateView, delete_revisione_procedura,
                                     ModuloCreateView, ModuloUpdateView, delete_modulo,
+                                    RevisioneModuloCreateView, RevisioneModuloUpdateView, delete_revisione_modulo
                                     )
 
 app_name="manualeprocedure"
@@ -26,4 +27,9 @@ urlpatterns = [
     path('<int:pk>/crea_modulo/', ModuloCreateView.as_view(), name="crea_modulo"), 
     path('<int:pk>/modifica_modulo/<int:id>/', ModuloUpdateView.as_view(), name="modifica_modulo"), 
     path('delete_modulo/<int:pk>', delete_modulo, name="delete_modulo"),
+    
+    # Manage revisione moduli
+    path('<int:pk>/crea_revisione_modulo/', RevisioneModuloCreateView.as_view(), name="crea_modulo"), 
+    path('<int:pk>/modifica_revisione_modulo/<int:id>/', RevisioneModuloUpdateView.as_view(), name="modifica_modulo"), 
+    path('delete_revisione_modulo/<int:pk>', delete_revisione_modulo, name="delete_revisione_modulo"),
 ]

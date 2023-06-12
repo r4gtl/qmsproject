@@ -27,7 +27,7 @@ class Procedura(models.Model):
 
 
     def __str__(self):
-        return self.identificativo + " " + self.data_procedura
+        return self.identificativo + " " + str(self.data_procedura)
     
 
 class RevisioneProcedura(models.Model):
