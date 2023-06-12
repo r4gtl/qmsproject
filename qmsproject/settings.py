@@ -85,6 +85,7 @@ TEMPLATES = [
                     os.path.join(BASE_DIR, 'human_resources/templates'),
                     os.path.join(BASE_DIR, 'acquistopelli/templates'),
                     os.path.join(BASE_DIR, 'articoli/templates'),
+                    os.path.join(BASE_DIR, 'manualeprocedure/templates'),
         ]
                 ,
         "APP_DIRS": True,

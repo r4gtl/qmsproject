@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Revisione Procedura {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_procedure.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'manualeprocedure:procedure_home' %}">Manuale Procedure</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ revisioneprocedura.n_revisione }} del {{ revisioneprocedura.data_revisione }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Modulo</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica Revisione Procedura</h3>
+        {% else %}
+            <h3> Aggiungi Revisione Procedura</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+            {% if form.errors %}
+       {% for field in form %}
+           {% for error in field.errors %} 
+              <div class="alert alert-danger">
+                   <strong>{{ error|escape }}</strong>
+              </div>
+           {% endfor %}
+       {% endfor %}
+    {% endif %}
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.n_revisione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.data_revisione|as_crispy_field }}
+                </div>
+                
+                <div class="col-6">
+                    {{ form.documento|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-4">
+                    {{ form.fk_procedura|as_crispy_field }}
+                </div>
+                
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

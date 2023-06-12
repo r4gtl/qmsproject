@@ -151,7 +151,7 @@ class SceltaLottoUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_scelta_lotto(request, pk): 
         deleteobject = get_object_or_404(SceltaLotto, pk = pk)   
-        fk_lotto = deleteobject.fk_rlotto.pk      
+        fk_lotto = deleteobject.fk_lotto.pk      
         deleteobject.delete()
         url_match = reverse_lazy('acquistopelli:modifica_lotto', kwargs={'pk':fk_lotto})
         return redirect(url_match)
