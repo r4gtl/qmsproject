@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "human_resources",
     "acquistopelli",
     "articoli",
+    "manualeprocedure",
     
     "bootstrap5",
     "crispy_forms",

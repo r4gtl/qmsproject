@@ -1,0 +1,140 @@
+[
+    {
+      "model": "manualeprocedure.SezioneLWG",      
+      "pk": 1,
+      "fields": {
+        "lwgsection": "1 - Facility Details",
+        "created_at": "2023-01-01"
+      }
+    },
+    {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 2,
+        "fields": {
+          "lwgsection": "2 - Subcontracted Operations",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 3,
+        "fields": {
+          "lwgsection": "3 - Social Audit",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 4,
+        "fields": {
+          "lwgsection": "4 - Operating Permits",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 5,
+        "fields": {
+          "lwgsection": "5 - Production Data",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 6,
+        "fields": {
+          "lwgsection": "6 - Traceability (incoming)",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 7,
+        "fields": {
+          "lwgsection": "7 - Traceability (outgoing)",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 8,
+        "fields": {
+          "lwgsection": "8 - Environmental Management Systems",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 9,
+        "fields": {
+          "lwgsection": "9 - Restricted Substances, Compliance, Chromium VI Management",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 10,
+        "fields": {
+          "lwgsection": "10 - Energy Consumption",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 11,
+        "fields": {
+          "lwgsection": "11 - Water Usage",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 12,
+        "fields": {
+          "lwgsection": "12 - Air & Noise Emissions",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 13,
+        "fields": {
+          "lwgsection": "13 - Waste Management",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 14,
+        "fields": {
+          "lwgsection": "14 - Effluent Treatment",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 15,
+        "fields": {
+          "lwgsection": "15 - Health, Safety, Emergency Preparedness",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 16,
+        "fields": {
+          "lwgsection": "16 - Chemical Management",
+          "created_at": "2023-01-01"
+        }
+      },
+      {
+        "model": "manualeprocedure.SezioneLWG",      
+        "pk": 17,
+        "fields": {
+          "lwgsection": "17 - Operations Management",
+          "created_at": "2023-01-01"
+        }
+      }
+
+
+  ]
