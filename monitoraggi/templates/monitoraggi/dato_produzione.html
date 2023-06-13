@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Dati Produzione {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'monitoraggi:dashboard_monitoraggi' %}">Dashboard Monitoraggi</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica inserimento {{ datiproduzione.data_inserimento }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi inserimento</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica inserimento {{ datiproduzione.data_inserimento }}</h3>
+        {% else %}
+            <h3> Aggiungi inserimento</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.data_inserimento|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.industries_served|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.n_pelli|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.mq|as_crispy_field }}
+                </div>
+                
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by.as_hidden }}
+                </div>
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 
