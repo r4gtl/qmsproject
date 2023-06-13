@@ -19,17 +19,17 @@ urlpatterns = [
     path('delete_procedura/<int:pk>', delete_procedura, name="delete_procedura"),
 
     # Manage Revisioni Procedure
-    path('<int:pk>/crea_revisione_procedura/', RevisioneProceduraCreateView.as_view(), name="crea_revisione_procedura"), 
-    path('<int:pk>/modifica_revisione_procedura/<int:id>/', RevisioneProceduraUpdateView.as_view(), name="modifica_revisione_procedura"), 
+    path('<int:fk_procedura>/crea_revisione_procedura/', RevisioneProceduraCreateView.as_view(), name="crea_revisione_procedura"), 
+    path('<int:fk_procedura>/modifica_revisione_procedura/<int:pk>/', RevisioneProceduraUpdateView.as_view(), name="modifica_revisione_procedura"), 
     path('delete_revisione_procedura/<int:pk>', delete_revisione_procedura, name="delete_revisione_procedura"),
 
     # Manage moduli
     path('<int:pk>/crea_modulo/', ModuloCreateView.as_view(), name="crea_modulo"), 
-    path('<int:pk>/modifica_modulo/<int:id>/', ModuloUpdateView.as_view(), name="modifica_modulo"), 
+    path('<int:fk_procedura>/modifica_modulo/<int:pk>/', ModuloUpdateView.as_view(), name="modifica_modulo"),     
     path('delete_modulo/<int:pk>', delete_modulo, name="delete_modulo"),
     
     # Manage revisione moduli
-    path('<int:pk>/crea_revisione_modulo/', RevisioneModuloCreateView.as_view(), name="crea_modulo"), 
-    path('<int:pk>/modifica_revisione_modulo/<int:id>/', RevisioneModuloUpdateView.as_view(), name="modifica_modulo"), 
+    path('<int:fk_modulo>/crea_revisione_modulo/', RevisioneModuloCreateView.as_view(), name="crea_revisione_modulo"), 
+    path('<int:fk_modulo>/modifica_revisione_modulo/<int:pk>/', RevisioneModuloUpdateView.as_view(), name="modifica_revisione_modulo"), 
     path('delete_revisione_modulo/<int:pk>', delete_revisione_modulo, name="delete_revisione_modulo"),
 ]

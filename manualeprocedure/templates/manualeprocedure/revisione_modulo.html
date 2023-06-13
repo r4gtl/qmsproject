@@ -64,8 +64,11 @@
                 <div class="col-8">
                     {{ form.note|as_crispy_field }}
                 </div>
-                <div class="col-4">
+                <div class="col-2">
                     {{ form.fk_modulo.as_hidden }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by.as_hidden}}
                 </div>
                 
             </div>

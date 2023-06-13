@@ -56,7 +56,7 @@ class ModuloModelForm(forms.ModelForm):
         model = Modulo
         fields = '__all__'
         
-
+        fk_procedura = forms.ModelChoiceField(queryset=Procedura.objects.all())
         widget = {
             'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo procedura'}),            
             'data_modulo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
