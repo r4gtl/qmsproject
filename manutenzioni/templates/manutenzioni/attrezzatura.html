@@ -1,0 +1,96 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Attrezzatura {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard manutenzioni</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ attrezzatura.codice_attrezzatura }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Attrezzatura</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ attrezzatura.codice_attrezzatura }}</h3>
+        {% else %}
+            <h3> Aggiungi Attrezzatura</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.codice_attrezzatura|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.descrizione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.modello|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.serie_matricola|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-2">
+                    {{ form.is_taratura|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.periodo_taratura|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by.as_hidden }}
+                </div>
+
+
+            </div>
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

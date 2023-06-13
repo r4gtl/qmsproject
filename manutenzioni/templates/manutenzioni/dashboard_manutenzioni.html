@@ -1,0 +1,128 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Manutenzioni{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_articoli.html" %}
+{% endblock %}
+
+{% block content %}
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+      <li class="breadcrumb-item active" aria-current="page">Manutenzioni</li>
+  </ol>
+</nav>
+{% include 'core/modals/delConfirm.html' %}
+
+
+
+<div class="container">
+  <br>
+  <h3>Lista Attrezzatura</h3>
+  <hr>
+  
+  <!-- filtro -->
+  <div class="row">
+    <div class="col">
+        <div class="card card-body">
+            <form method="get">
+
+                <div class="table-responsive-sm">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>     
+                                <th>Attrezzatura</th>
+                            </tr>
+                        </thead>                            
+                        <tbody>
+                            <tr>
+                                <td >{{ filter.form.codice_attrezzatura|as_crispy_field }}</td>                                    
+                                <td >{{ filter.form.descrizione|as_crispy_field }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-primary" type="submit">Cerca</button>
+                <a class="btn btn-success" href="{% url 'manutenzioni:dashboard_manutenzioni' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+            </form>        
+        </div>
+    </div>        
+</div>
+<!-- fine filtro-->
+  <hr>
+  {% include "core/partials/_messages.html" %}
+  <br>
+  
+
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'manutenzioni:crea_attrezzatura' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi Attrezzatura</a>
+  <br>
+    <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            
+            <th>Codice</th>            
+            <th>Descrizione</th>            
+            <th>Soggetta a taratura</th>
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for attrezzatura in filter.qs %}
+          <tr>        
+            
+            
+            <td><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.codice_attrezzatura }}</a></td>
+            <td>{{ attrezzatura.descrizione }}</td>            
+            <td>{{ attrezzatura.is_taratura }}</td>            
+            <td class="text-center"><a href="{% url 'manutenzioni:delete_attrezzatura' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- Pagination -->
+      {% if filter.qs.has_other_pages %}
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if filter.qs.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ filter.qs.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
+          {% endif %}
+  
+          {% for p in filter.qs.paginator.page_range %}
+            {% if filter.qs.number == p %}
+              <li class="page-item"><a class="page-link" style="color: red;" href="#">{{ p }}</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% endif %}
+          {% endfor %}
+  
+          {% if filter.qs.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ filter.qs.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
+          {% endif %}
+      </ul>
+      </nav>
+    {% endif %}
+    <!-- End Pagination -->
+</div>
+
+{% endblock content %}

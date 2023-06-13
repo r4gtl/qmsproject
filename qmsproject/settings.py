@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "articoli",
     "manualeprocedure",
     "monitoraggi",
+    "manutenzioni",
     
     "bootstrap5",
     "crispy_forms",
@@ -88,6 +89,7 @@ TEMPLATES = [
                     os.path.join(BASE_DIR, 'articoli/templates'),
                     os.path.join(BASE_DIR, 'manualeprocedure/templates'),
                     os.path.join(BASE_DIR, 'monitoraggi/templates'),
+                    os.path.join(BASE_DIR, 'manutenzioni/templates'),
         ]
                 ,
         "APP_DIRS": True,
