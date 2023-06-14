@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
+
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import (Attrezzatura, ManutenzioneStraordinaria,
                     ManutenzioneOrdinaria, Taratura
@@ -16,11 +17,12 @@ from .filters import AttrezzaturaFilter
 
 
 def dashboard_manutenzioni(request):
-    attrezzature = Attrezzatura.objects.all()
+    attrezzature = Attrezzatura.objects.filter(is_dismesso=False)
+    filter = AttrezzaturaFilter(request.GET, queryset=Attrezzatura.objects.all())
     manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.all()
     manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.all()
     tarature = Taratura.objects.all()
-    attrezzature_filter = AttrezzaturaFilter
+    filterset_class = AttrezzaturaFilter
     page = request.GET.get('page', 1)
     paginator = Paginator(attrezzature, 50)
     
@@ -32,7 +34,7 @@ def dashboard_manutenzioni(request):
         attrezzature_home = paginator.page(paginator.num_pages)
     context={
         'attrezzature_home': attrezzature_home,
-        'filter': attrezzature_filter,
+        'filter': filter,
         'manutenzioni_ordinarie': manutenzioni_ordinarie,
         'manutenzioni_straordinarie': manutenzioni_straordinarie,
         'tarature': tarature

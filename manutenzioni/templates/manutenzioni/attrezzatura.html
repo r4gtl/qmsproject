@@ -63,6 +63,17 @@
             </div>
             <div class="row">
                 <div class="col-2">
+                    {{ form.is_dismesso|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.data_dismissione|as_crispy_field }}
+                </div>
+               
+
+
+            </div>
+            <div class="row">
+                <div class="col-2">
                     {{ form.is_taratura|as_crispy_field }}
                 </div>
                 <div class="col-2">

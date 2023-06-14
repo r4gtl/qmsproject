@@ -18,6 +18,8 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
             'modello': forms.TextInput(attrs={'placeholder': 'Inserisci modello'}),
             'serie_matricola': forms.TextInput(attrs={'placeholder': 'Inserisci serie/matricola'}),
+            'is_dismesso': forms.CheckboxInput(),
+            'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'is_taratura': forms.CheckboxInput(),
             'periodo_taratura': forms.TextInput(attrs={'placeholder': 'Inserisci periodo taratura'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -30,6 +32,8 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'descrizione': 'Descrizione',
             'modello': 'Modello',
             'serie_matricola': 'N. serie/N. Matricola',
+            'is_dismesso': 'Dismesso',
+            'data_dismissione': 'Data Dismissione',
             'is_taratura': 'Soggetto a taratura',
             'periodo_taratura': 'Periodi di taratura',
             'note': 'Annotazioni'

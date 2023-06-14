@@ -25,6 +25,7 @@
   <h3>Lista Attrezzatura</h3>
   <hr>
   
+  
   <!-- filtro -->
   <div class="row">
     <div class="col">
@@ -35,18 +36,25 @@
                     <table class="table table-hover table-striped table-bordered">
                         <thead class="thead-dark">
                             <tr>     
-                                <th>Attrezzatura</th>
+                                <th>Codice Attrezzatura</th>
+                                <th>Descrizione</th>
+                                <th>Soggetto a Taratura</th>
+                                <th>Dismesso</th>
                             </tr>
                         </thead>                            
                         <tbody>
                             <tr>
-                                <td >{{ filter.form.codice_attrezzatura|as_crispy_field }}</td>                                    
-                                <td >{{ filter.form.descrizione|as_crispy_field }}</td>
+                             
+                                <td>{% render_field filter.form.codice_attrezzatura class="form-control" %}</td>
+                                <td>{% render_field filter.form.descrizione class="form-control" %}</td>
+                                <td>{{ filter.form.is_taratura|default_if_none:" " }}</td>
+                                <td>{{ filter.form.is_dismesso|default_if_none:" " }}</td>
+                                
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <button class="btn btn-primary" type="submit">Cerca</button>
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
                 <a class="btn btn-success" href="{% url 'manutenzioni:dashboard_manutenzioni' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
             </form>        
         </div>
@@ -67,6 +75,7 @@
             <th>Codice</th>            
             <th>Descrizione</th>            
             <th>Soggetta a taratura</th>
+            <th>Dismesso</th>
 
             
           </tr>
@@ -79,6 +88,7 @@
             <td><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.codice_attrezzatura }}</a></td>
             <td>{{ attrezzatura.descrizione }}</td>            
             <td>{{ attrezzatura.is_taratura }}</td>            
+            <td>{{ attrezzatura.is_dismesso }}</td>            
             <td class="text-center"><a href="{% url 'manutenzioni:delete_attrezzatura' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
