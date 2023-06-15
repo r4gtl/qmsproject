@@ -181,7 +181,8 @@
   document.addEventListener('DOMContentLoaded', updateChart);
 
   function updateChart() {
-      fetch('{% url 'monitoraggi:produzione_ultimo_anno' %}')
+    var url = "{% url 'monitoraggi:produzione_ultimo_anno' %}"
+      fetch(url)
           .then(response => response.json())
           .then(data => {
               var labels = [];
