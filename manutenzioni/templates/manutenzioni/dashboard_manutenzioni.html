@@ -47,7 +47,7 @@
                              
                                 <td>{% render_field filter.form.codice_attrezzatura class="form-control" %}</td>
                                 <td>{% render_field filter.form.descrizione class="form-control" %}</td>
-                                <td>{{ filter.form.is_taratura|default_if_none:" " }}</td>
+                                <td>{% render_field filter.form.is_taratura class="form-control" %}</td>
                                 <td>{{ filter.form.is_dismesso|default_if_none:" " }}</td>
                                 
                             </tr>

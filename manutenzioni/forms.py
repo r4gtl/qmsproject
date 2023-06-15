@@ -12,7 +12,7 @@ class AttrezzaturaModelForm(forms.ModelForm):
         model = Attrezzatura
         fields = '__all__'
         
-        widget = {
+        widgets = {
             
             'codice_attrezzatura': forms.TextInput(attrs={'placeholder': 'Inserisci codice attrezzatura'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
@@ -22,7 +22,9 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'is_taratura': forms.CheckboxInput(),
             'periodo_taratura': forms.TextInput(attrs={'placeholder': 'Inserisci periodo taratura'}),            
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 3}),
+            
+
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
         }
@@ -44,7 +46,7 @@ class ManutenzioneStraordinariaModelForm(forms.ModelForm):
         model = ManutenzioneStraordinaria
         fields = '__all__'
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
-        widget = {
+        widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
             'importo': forms.DecimalField(),
@@ -74,7 +76,7 @@ class TaraturaModelForm(forms.ModelForm):
         model = Taratura
         fields = '__all__'
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
-        widget = {
+        widgets = {
             'data_taratura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),            
             'documento': forms.FileField(),
@@ -100,7 +102,7 @@ class ManutenzioneOrdinariaModelForm(forms.ModelForm):
         model = ManutenzioneOrdinaria
         fields = '__all__'
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
-        widget = {
+        widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),                        

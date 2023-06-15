@@ -13,7 +13,7 @@ class Attrezzatura(models.Model):
     is_dismesso = models.BooleanField(default=False)
     data_dismissione = models.DateField(null=True, blank=True)
     is_taratura = models.BooleanField(default=False)
-    periodo_taratura = models.CharField(max_length=50)
+    periodo_taratura = models.CharField(max_length=50, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='attrezzatura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

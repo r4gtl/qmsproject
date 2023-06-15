@@ -91,17 +91,87 @@
             
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
         </form>
         <hr>
         
-        
+
+
+<!-- Tabella Manutenzioni Ordinarie -->
+<div class="row">
+    <div class="col-4">
+      <h5>Manutenzioni Ordinarie</h5>
+                
     </div>
+    {% if form.instance.id  %}
+    <div class="col-4 text-end">
+      
+      <a href="#" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Manutenzione</a>
+
+    </div>
+  </div>
+    <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+            <thead>
+            <tr>
+                <th>Data</th>   
+                <th>Descrizione</th>
+                <th>Azione</th>
+                
+            </tr>
+            </thead>
+            <tbody>
+            {% for man_ord in elenco_man_ord %}
+            <tr>        
+                
+                <td><a href="#">{{ man_ord.data_manutenzione }}</a></td>
+                <td>{{ man_ord.descrizione }}</td>
+                
+                <td class="text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{man_ord.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  {% endif %}
+</div>
+
+        
+    
+
+
+
+  
 
 
 
 {% endblock %}
 
-{% block scripts %}
-
+{% block extra_scripts %}
+<script>
+    $(document).ready(function() {
+      // Ottieni i riferimenti ai campi
+      var booleanField = $('#id_is_taratura');
+      var secondField = $('#id_periodo_taratura');
+    
+      // Inizializza lo stato del secondo campo
+      updateRequiredAttribute();
+    
+      // Aggiorna lo stato del secondo campo quando il campo booleano cambia
+      booleanField.change(function() {
+        updateRequiredAttribute();
+      });
+    
+      // Funzione per aggiornare lo stato del secondo campo
+      function updateRequiredAttribute() {
+        if (booleanField.is(':checked')) {
+          secondField.attr('required', 'required');
+        } else {
+          secondField.removeAttr('required');
+        }
+      }
+    });
+    </script>
+    
 {% endblock %} 
