@@ -11,7 +11,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import (Attrezzatura, ManutenzioneStraordinaria,
                     ManutenzioneOrdinaria, Taratura
                     )
-from .forms import AttrezzaturaModelForm, ManutenzioneOrdinariaModelForm, ManutenzioneOrdinariaModelForm, TaraturaModelForm
+from .forms import AttrezzaturaModelForm, ManutenzioneOrdinariaModelForm, ManutenzioneStraordinariaModelForm, TaraturaModelForm
 from .filters import AttrezzaturaFilter
 
 
@@ -50,9 +50,14 @@ class AttrezzaturaCreateView(LoginRequiredMixin,CreateView):
     success_message = 'Attrezzatura aggiunta correttamente!'
     #success_url = reverse_lazy('human_resources:human_resources')
 
-    def get_success_url(self):        
+    def get_success_url(self):     
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('manutenzioni:dashboard_manutenzioni')
         
-        return reverse_lazy('manutenzioni:dashboard_manutenzioni')
+        pk_attrezzatura=self.object.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':pk_attrezzatura})   
+        
+        
         
     
     def form_valid(self, form):        
@@ -72,9 +77,13 @@ class AttrezzaturaUpdateView(LoginRequiredMixin, UpdateView):
     success_message = 'Attrezzatura modificata correttamente!'
     #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
     
-    def get_success_url(self):        
+    def get_success_url(self):          
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('manutenzioni:dashboard_manutenzioni')
         
-        return reverse_lazy('manutenzioni:dashboard_manutenzioni')
+        pk_attrezzatura=self.object.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':pk_attrezzatura})   
+        
             
 
     def form_valid(self, form):        
@@ -109,8 +118,8 @@ class ManutenzioneOrdinariaCreateView(LoginRequiredMixin,CreateView):
     #success_url = reverse_lazy('human_resources:human_resources')
 
     def get_success_url(self):        
-        
-        return reverse_lazy('manutenzioni:dashboard_manutenzioni')
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
         
     
     def form_valid(self, form):        
@@ -118,7 +127,9 @@ class ManutenzioneOrdinariaCreateView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
     
     def get_initial(self):
-        fk_attrezzatura = self.request.pk
+        for key, value in self.kwargs.items():
+            print(f"Chiave: {key}, Valore: {value}")
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]
         created_by = self.request.user
         return {
             'created_by': created_by,
@@ -133,8 +144,8 @@ class ManutenzioneOrdinariaUpdateView(LoginRequiredMixin, UpdateView):
     #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
     
     def get_success_url(self):        
-        
-        return reverse_lazy('manutenzioni:dashboard_manutenzioni')
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
             
 
     def form_valid(self, form):        
@@ -143,10 +154,10 @@ class ManutenzioneOrdinariaUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk_attrezzatura = self.object.pk        
-        context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #pk_attrezzatura = self.object.pk        
+        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
 
         return context
 
@@ -154,6 +165,131 @@ class ManutenzioneOrdinariaUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_manutenzione_ordinaria(request, pk): 
         deleteobject = get_object_or_404(ManutenzioneOrdinaria, pk = pk)                 
+        fk_attrezzatura = deleteobject.fk_attrezzatura.pk
         deleteobject.delete()
-        url_match = reverse_lazy('manutenzioni:dashboard_manutenzioni')
+        url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        return redirect(url_match)
+
+
+# Manutenzione Straordinaria
+
+class ManutenzioneStraordinariaCreateView(LoginRequiredMixin,CreateView):
+    model = ManutenzioneStraordinaria
+    form_class = ManutenzioneStraordinariaModelForm
+    template_name = 'manutenzioni/manutenzione_straordinaria.html'
+    success_message = 'Manutenzione ordinaria aggiunta correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        for key, value in self.kwargs.items():
+            print(f"Chiave: {key}, Valore: {value}")
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+            'fk_attrezzatura': fk_attrezzatura
+        }
+
+class ManutenzioneStraordinariaUpdateView(LoginRequiredMixin, UpdateView):
+    model = ManutenzioneStraordinaria
+    form_class = ManutenzioneStraordinariaModelForm
+    template_name = 'manutenzioni/manutenzione_straordinaria.html'
+    success_message = 'Manutenzione modificata correttamente!'
+    #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
+    
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+            
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        #pk_attrezzatura = self.object.pk        
+        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+
+        return context
+
+
+
+def delete_manutenzione_straordinaria(request, pk): 
+        deleteobject = get_object_or_404(ManutenzioneStraordinaria, pk = pk)                 
+        fk_attrezzatura = deleteobject.fk_attrezzatura.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        return redirect(url_match)
+
+
+# Taratura
+
+class TaraturaCreateView(LoginRequiredMixin,CreateView):
+    model = Taratura
+    form_class = TaraturaModelForm
+    template_name = 'manutenzioni/taratura.html'
+    success_message = 'Manutenzione ordinaria aggiunta correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):        
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+            'fk_attrezzatura': fk_attrezzatura
+        }
+
+class TaraturaUpdateView(LoginRequiredMixin, UpdateView):
+    model = Taratura
+    form_class = TaraturaModelForm
+    template_name = 'manutenzioni/taratura.html'
+    success_message = 'Manutenzione modificata correttamente!'
+    #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
+    
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+            
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        #pk_attrezzatura = self.object.pk        
+        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+
+        return context
+
+
+
+def delete_taratura(request, pk): 
+        deleteobject = get_object_or_404(Taratura, pk = pk)                 
+        fk_attrezzatura = deleteobject.fk_attrezzatura.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
         return redirect(url_match)

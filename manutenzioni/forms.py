@@ -42,16 +42,18 @@ class AttrezzaturaModelForm(forms.ModelForm):
         }
         
 class ManutenzioneStraordinariaModelForm(forms.ModelForm):
+    fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+
     class Meta:
         model = ManutenzioneStraordinaria
         fields = '__all__'
-        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        
         widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
-            'importo': forms.DecimalField(),
-            'ore_fermo': forms.DecimalField(),
-            'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            #'importo': forms.DecimalField(),
+            #'ore_fermo': forms.DecimalField(),
+            'fk_fornitore': forms.Select(attrs={'style': 'background-color: #F5F8EC'}),
             'ft_prot': forms.TextInput(attrs={'placeholder': 'Inserisci codice attrezzatura'}),
             'data_fattura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -79,7 +81,7 @@ class TaraturaModelForm(forms.ModelForm):
         widgets = {
             'data_taratura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),            
-            'documento': forms.FileField(),
+            #'documento': forms.FileField(),
             'is_conforme': forms.CheckboxInput(),
             'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -115,7 +117,7 @@ class ManutenzioneOrdinariaModelForm(forms.ModelForm):
         }
         labels = {
             
-            'data_manutenzione': 'Data Manutanzione',
+            'data_manutenzione': 'Data Manutenzione',
             'fk_fornitore': 'Fornitore',
             'descrizione': 'Descrizione',
             'is_eseguita': 'Eseguita',

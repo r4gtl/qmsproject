@@ -21,6 +21,8 @@ from .views import (home_fornitori,
                     TransferValueUpdateView,
                     ClienteCreateView, ClienteListView, ClienteUpdateView, ListaClienteView
                     )
+from .charts import get_country_count
+
 
 app_name="anagrafiche"
 
@@ -53,6 +55,10 @@ urlpatterns = [
     path("transfer_values_list/", TransferValueListView.as_view(), name="transfer_values_list"),
     path("add_transfer_values/", TransferValueCreateView.as_view(), name="add_transfer_values"),
     path("edit_transfer_values/<int:pk>", TransferValueUpdateView.as_view(), name="edit_transfer_values"),
+
+    # Charts
+    path('get_country_count/', get_country_count, name='get_country_count'),
+    
 
     
 ]

@@ -23,6 +23,12 @@
         <br>
         {% include "core/partials/_messages.html" %}
         
+        <div class="row">
+          <div class="col-4">        
+            <canvas id="country_count" data-url=""></canvas>
+          </div>
+        </div>
+
         <!-- Inizio filtro -->
         <div class="row">
           <div class="col">
@@ -116,4 +122,40 @@
 
 
 
+{% endblock %}
+{% block extra_scripts %}
+<script>
+  
+
+  document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('country_count').getContext('2d');
+        
+        fetch('{% url 'anagrafiche:get_country_count' %}')
+            .then(response => response.json())
+            .then(data => {
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'Conteggio Fornitori per Nazione',
+                            data: data.data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                precision: 0
+                            }
+                        }
+                    }
+                });
+            });
+    });
+
+</script>
 {% endblock %}

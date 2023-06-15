@@ -9,6 +9,17 @@ html {
   overflow-y: auto; /* Aggiunge la barra di scorrimento verticale */
 }
 
+.table-container-big {
+  height: 500px; /* Imposta l'altezza desiderata del contenitore */
+  overflow-y: auto; /* Aggiunge la barra di scorrimento verticale */
+}
+
+.table-fixed-header thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  
+}
 
 
 /* CSS Sidebar */

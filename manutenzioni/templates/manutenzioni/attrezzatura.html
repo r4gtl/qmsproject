@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% include 'core/modals/delConfirm.html' %}
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -44,8 +44,9 @@
             {% csrf_token %}
 
             
-
-            <div class="row">
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <div class="row mt-2">
                 <div class="col-3">
                     {{ form.codice_attrezzatura|as_crispy_field }}
                 </div>
@@ -91,51 +92,138 @@
             
 
             
-            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
-            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            
         </form>
         <hr>
         
+        {% include "core/partials/_messages.html" %}
 
-
-<!-- Tabella Manutenzioni Ordinarie -->
+{% if form.instance.id  %}
 <div class="row">
-    <div class="col-4">
-      <h5>Manutenzioni Ordinarie</h5>
-                
+    <!-- Tabella Manutenzioni Ordinarie -->
+    <div class="col-4"> 
+        <div class="row justify-content-end">
+            <div class="col">
+                <p><strong>Manutenzioni ordinarie</strong></p>
+            </div>
+            <div class="col text-end">
+                <a href="{% url 'manutenzioni:aggiungi_manutenzione_ordinaria' fk_attrezzatura=attrezzatura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Manutenzione</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-container">
+                <table class="table table-fixed-header table-bordered table-striped mt-2">
+                <caption>Manutenzioni Ordinarie</caption>
+                <thead>
+                    <tr>
+                        <th>Data</th>   
+                        <th>Descrizione</th>
+                        <th>Azione</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for man_ord in elenco_man_ord %}
+                    <tr>        
+                        
+                        <td><a href="{% url 'manutenzioni:modifica_manutenzione_ordinaria' fk_attrezzatura=attrezzatura.pk pk=man_ord.pk%}">{{ man_ord.data_manutenzione }}</a></td>
+                        <td>{{ man_ord.descrizione }}</td>
+                        
+                        <td class="text-center"><a href="{% url 'manutenzioni:delete_manutenzione_ordinaria' pk=man_ord.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{man_ord.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    </tr>  
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    {% if form.instance.id  %}
-    <div class="col-4 text-end">
-      
-      <a href="#" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Manutenzione</a>
 
+</div> <!-- Fine colonna Tabella Manutenzioni Ordinarie -->
+
+<!-- Tabella Manutenzioni Straordinarie -->
+<div class="col-4"> 
+    <div class="row justify-content-end">
+        <div class="col">
+            <p><strong>Manutenzioni straordinarie</strong></p>
+        </div>
+        <div class="col text-end">
+            <a href="{% url 'manutenzioni:aggiungi_manutenzione_straordinaria' fk_attrezzatura=attrezzatura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Manutenzione</a>
+        </div>
     </div>
-  </div>
-    <div class="table-container">
-        <table class="table table-bordered table-striped mt-2">
+    <div class="row">
+        <div class="table-container">
+            <table class="table table-bordered table-striped mt-2">
+            <caption>Manutenzioni Straordinarie</caption>
             <thead>
-            <tr>
-                <th>Data</th>   
-                <th>Descrizione</th>
-                <th>Azione</th>
-                
-            </tr>
+                <tr>
+                    <th>Data</th>   
+                    <th>Descrizione</th>
+                    <th>Azione</th>
+                    
+                </tr>
             </thead>
             <tbody>
-            {% for man_ord in elenco_man_ord %}
-            <tr>        
-                
-                <td><a href="#">{{ man_ord.data_manutenzione }}</a></td>
-                <td>{{ man_ord.descrizione }}</td>
-                
-                <td class="text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{man_ord.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-            </tr>  
-            {% endfor %}
+                {% for man_straord in elenco_man_straord %}
+                <tr>        
+                    
+                    <td><a href="{% url 'manutenzioni:modifica_manutenzione_straordinaria' fk_attrezzatura=attrezzatura.pk pk=man_straord.pk%}">{{ man_straord.data_manutenzione }}</a></td>
+                    <td>{{ man_straord.descrizione }}</td>
+                    
+                    <td class="text-center"><a href="{% url 'manutenzioni:delete_manutenzione_straordinaria' pk=man_straord.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{man_straord.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                </tr>  
+                {% endfor %}
             </tbody>
         </table>
     </div>
-  {% endif %}
 </div>
+
+</div> <!-- Fine colonna Tabella Manutenzioni Straordinarie -->
+
+
+<!-- Tabella Tarature -->
+<div class="col-4"> 
+    <div class="row justify-content-end">
+        <div class="col">
+            <p><strong>Tarature</strong></p>
+        </div>
+        <div class="col text-end">
+            <a href="{% url 'manutenzioni:aggiungi_taratura' fk_attrezzatura=attrezzatura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Taratura</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-container">
+            <table class="table table-bordered table-striped mt-2">
+            <caption>Tarature</caption>
+            <thead>
+                <tr>
+                    <th>Data</th>   
+                    <th>Prossima Scadenza</th>
+                    <th>Azione</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                {% for taratura in elenco_tarature %}
+                <tr>        
+                    
+                    <td><a href="{% url 'manutenzioni:modifica_taratura' fk_attrezzatura=attrezzatura.pk pk=taratura.pk%}">{{ taratura.data_taratura }}</a></td>
+                    <td>{{ taratura.prossima_scadenza }}</td>
+                    
+                    <td class="text-center"><a href="{% url 'manutenzioni:delete_taratura' pk=taratura.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{taratura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                </tr>  
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</div> <!-- Fine colonna Tabella Tarature -->
+
+
+</div> <!-- Fine riga tabelle -->
+{% endif %}
+
+
+</div><!-- Fine Container -->
 
         
     

@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Manutenzione Ordinaria {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard Manutenzioni</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica manutenzione del {{ manutenzionestraordinaria.data_manutenzione }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Manutenzione Straordinaria</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica manutenzione straordinaria del {{ manutenzionestraordinaria.data_manutenzione }}</h3>
+        {% else %}
+            <h3> Aggiungi manutenzione straordinaria</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-2">
+                    {{ form.data_manutenzione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.descrizione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.fk_fornitore|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.importo|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.ore_fermo|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{ form.ft_prot|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.data_fattura|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-1">
+                    {{ form.fk_attrezzatura|as_crispy_field }}
+                </div>
+                <div class="col-1">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 
