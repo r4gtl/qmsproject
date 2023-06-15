@@ -9,7 +9,7 @@ class MonitoraggioAcquaModelForm(forms.ModelForm):
         model = MonitoraggioAcqua
         fields = '__all__'
 
-        widget = {
+        widgets = {
             'data_lettura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'mc_in': forms.NumberInput(attrs={'class': 'form-control'}),
             'mc_out': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -28,7 +28,7 @@ class MonitoraggioGasModelForm(forms.ModelForm):
         model = MonitoraggioGas
         fields = '__all__'
 
-        widget = {
+        widgets = {
             'data_lettura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'mc_in': forms.NumberInput(attrs={'class': 'form-control'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -45,7 +45,7 @@ class MonitoraggioEnergiaElettricaModelForm(forms.ModelForm):
         model = MonitoraggioEnergiaElettrica
         fields = '__all__'
 
-        widget = {
+        widgets = {
             'data_lettura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'kwh_in': forms.NumberInput(attrs={'class': 'form-control'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -62,12 +62,12 @@ class DatoProduzioneModelForm(forms.ModelForm):
         model = DatoProduzione
         fields = '__all__'
 
-        widget = {
+        widgets = {
             'data_inserimento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'industries_served': forms.ChoiceField(),
+            #'industries_served': forms.ChoiceField(),
             'n_pelli': forms.NumberInput(attrs={'class': 'form-control'}),
             'mq': forms.NumberInput(attrs={'class': 'form-control'}),
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':3}),
             'created_by': forms.HiddenInput()
         }
         labels = {

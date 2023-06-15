@@ -14,7 +14,7 @@ class TipoAnimaleModelForm(forms.ModelForm):
         fields = '__all__'
 
 
-        widget = {
+        widgets = {
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci tipo animale'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),

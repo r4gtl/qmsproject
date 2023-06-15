@@ -5,6 +5,7 @@ from monitoraggi.views import (dashboard_monitoraggi,
                                MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
                                DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
                                     )
+from .charts import produzione_ultimo_anno
 
 app_name="monitoraggi"
 
@@ -32,4 +33,8 @@ urlpatterns = [
     path('inserisci_lettura_dato_produzione/', DatoProduzioneCreateView.as_view(), name="inserisci_lettura_dato_produzione"), 
     path('modifica_lettura_dato_produzione/<int:pk>/', DatoProduzioneUpdateView.as_view(), name="modifica_lettura_dato_produzione"), 
     path('delete_lettura_dato_produzione/<int:pk>', delete_lettura_dato_produzione, name="delete_lettura_dato_produzione"),
+    
+    # Charts
+    path('produzione_ultimo_anno/', produzione_ultimo_anno, name='produzione_ultimo_anno'),
+    
 ]
