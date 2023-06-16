@@ -9,10 +9,12 @@
 {% block content %}
 
 
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Formazione</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Operatori</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:dashboard_formazione' %}">Formazione</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:tabelle_generiche_formazione' %}">Tabelle Generiche Formazione</a></li>        
 
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica {{ corsoformazione.descrizione }}</li>

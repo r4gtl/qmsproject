@@ -3,13 +3,13 @@
 {% block title %}{{ block.super }} | Anagrafiche - Fornitori {% endblock %}
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_base.html" %}
+{% include "core/partials/_sidenav_anagrafiche.html" %}
 {% endblock %}
 
 {% block content %}
 
 
-<nav aria-label="breadcrumb">
+<nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        

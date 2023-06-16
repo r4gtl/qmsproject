@@ -16,7 +16,14 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
-    
+    <nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Operatori</a></li>     
+        <li class="breadcrumb-item active" aria-current="page">Registro Formazione</li>        
+    </ol>
+
+</nav>
     <!-- Form nuovo registro -->
     
     <div class="form-group mt-3">

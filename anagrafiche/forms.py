@@ -141,8 +141,8 @@ class FormCliente(forms.ModelForm):
         created_by = forms.CharField()
         created_at = forms.DateTimeField()
         widgets = {'country': CountrySelectWidget(),
-                # 'created_at': forms.HiddenInput(),
-                # 'created_by': forms.HiddenInput()
+                'created_at': forms.HiddenInput(),
+                'created_by': forms.HiddenInput()
                 }
         labels = {
             'ragionesociale': 'Ragione Sociale',
