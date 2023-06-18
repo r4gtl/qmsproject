@@ -126,7 +126,7 @@
             {% for revisione in elenco_revisioni %}
             <tr>        
               
-              <td><a href="{% url 'manualeprocedure:modifica_revisione_procedura' fk_procedura=procedura.pk pk=revisione.pk %}">{{ revisione.n_revisione }}</a></td>
+              <td><a href="{% url 'manualeprocedure:modifica_revisione_procedura' fk_procedura=procedura.pk pk=revisione.pk %}">Rev. N. {{ revisione.n_revisione }}</a></td>
               <td>{{ revisione.data_revisione }}</td>   
               {% if revisione.documento %} 
                 <td><a href="{{ revisione.documento.url }}" download>{{ revisione.documento.url }}</a></td>                       

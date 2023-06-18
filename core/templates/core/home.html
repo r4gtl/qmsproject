@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block title %}QMS {% endblock %}
 
 {% block sidenav %}
@@ -9,17 +9,21 @@
 {% block content %}
   <div class="container">
     <div class="row mt-4">
+      
         <div class="col-4">
-            <div class="card" >
+          <div class="card" >
+              
+             
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-person-vcard"></i> Anagrafiche</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'anagrafiche:home_clienti' %}" class="btn btn-lg btn-primary">Sezione Clienti</a>
-                  <a href="{% url 'anagrafiche:home_fornitori' %}" class="btn btn-lg btn-primary">Sezione Fornitori</a>
+                  <a href="{% url 'anagrafiche:home_clienti' %}" class="btn btn-sm btn-primary">Sezione Clienti</a>
+                  <a href="{% url 'anagrafiche:home_fornitori' %}" class="btn btn-sm btn-primary">Sezione Fornitori</a>
                   
                 </div>
               </div>
+              
         </div>
 
         <div class="col-4">
@@ -28,7 +32,7 @@
                   <h5 class="card-title"><i class="bi bi-archive"></i> Articoli</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'articoli:articoli_home' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="{% url 'articoli:articoli_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -40,7 +44,7 @@
                   <h5 class="card-title"><i class="bi bi-person-workspace"></i> Risorse Umane</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'human_resources:human_resources' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="{% url 'human_resources:human_resources' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -54,7 +58,7 @@
                   <h5 class="card-title"><i class="bi bi-box-arrow-in-down-left"></i> Acquisti</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -66,7 +70,7 @@
                   <h5 class="card-title"><i class="bi bi-box-arrow-up-right"></i> Vendite</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -78,7 +82,7 @@
                   <h5 class="card-title">Lavorazioni</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -92,7 +96,7 @@
                   <h5 class="card-title"><i class="bi bi-moisture"></i> Gestione Chimica</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -104,7 +108,7 @@
                   <h5 class="card-title"><i class="bi bi-speedometer"></i> Monitoraggi</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -116,7 +120,7 @@
                   <h5 class="card-title"><i class="bi bi-wrench"></i> Manutenzioni</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                  <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -130,7 +134,7 @@
                 <h5 class="card-title"><i class="bi bi-book"></i> Manuale Procedure</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="{% url 'manualeprocedure:procedure_home' %}" class="btn btn-lg btn-primary">Vai alla sezione</a>
+                <a href="{% url 'manualeprocedure:procedure_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                 
               </div>
             </div>

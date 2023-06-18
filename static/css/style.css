@@ -2,21 +2,36 @@ html {
   font-size: 14px;
 }
 
+/* regole per le tabelle */
+
+/* questa regola imposta la larghezza massima di una cella */
+.max-width-cell {
+  max-width: 50px; /* Imposta la larghezza massima desiderata per la colonna */
+  /* white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;*/
+}
 
 
+/* questa regola imposta l'altezza massima della tabella e mette la barra di scorrimento a destra */
 .table-container {
   height: 300px; /* Imposta l'altezza desiderata del contenitore */
   overflow-y: auto; /* Aggiunge la barra di scorrimento verticale */
+  
 }
 
 .table-container-big {
   height: 500px; /* Imposta l'altezza desiderata del contenitore */
   overflow-y: auto; /* Aggiunge la barra di scorrimento verticale */
+  
 }
 
+
+/* questa regola imposta l'header della tabella come fissata in alto */
 .table-fixed-header thead th {
   position: sticky;
   top: 0;
+  z-index: 1;
   background-color: #fff;
   
 }

@@ -247,27 +247,32 @@ class FacilityUpdateView(UpdateView):
     model = Facility
     template_name = 'anagrafiche/facility.html'
     form_class = FormFacility
-
-def edit_facility_details(request, pk):
-    facility = get_object_or_404(Facility, pk=pk)
-    # print("Facility:" + str(facility))
-    facility_contacts = FacilityContact.objects.filter(fk_facility=pk)
-    form = FormFacility()
-    # print("Facility contacts:" + str(facility_contacts))
-    if request.method == "POST":
-        form = FormFacility(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            form.instance.facility = facility
-        else:
-            form = FormFacility()
-
-    context = {'facility': facility, 
-                'form': form,
-                'facility_contacts': facility_contacts
-                }
     
-    return render(request, "anagrafiche/facility.html", context)
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)        
+        context['facility_contacts'] = FacilityContact.objects.filter(fk_facility=self.object.pk)        
+        return context
+
+# def edit_facility_details(request, pk):
+#     facility = get_object_or_404(Facility, pk=pk)
+#     # print("Facility:" + str(facility))
+#     facility_contacts = FacilityContact.objects.filter(fk_facility=pk)
+#     form = FormFacility()
+#     # print("Facility contacts:" + str(facility_contacts))
+#     if request.method == "POST":
+#         form = FormFacility(request.POST)
+#         if form.is_valid():
+#             form.save(commit=False)
+#             form.instance.facility = facility
+#         else:
+#             form = FormFacility()
+
+#     context = {'facility': facility, 
+#                 'form': form,
+#                 'facility_contacts': facility_contacts
+#                 }
+    
+#     return render(request, "anagrafiche/facility.html", context)
     
 
 def add_facility_contact(request, pk):
@@ -291,6 +296,24 @@ def add_facility_contact(request, pk):
 
     return render(request, 'anagrafiche/facility_contacts.html', {'facility': facility, 'form': form})
     
+    
+class FacilityContactUpdateView(LoginRequiredMixin, UpdateView):
+    model = FacilityContact
+    form_class = FormFacilityContact
+    template_name = 'anagrafiche/facility_contacts.html'
+    success_message = 'Contatto modificato correttamente!'
+    #success_url = reverse_lazy('human_resources:tabelle_generiche_formazione')
+    
+    def get_success_url(self):                
+        fk_facility=self.object.fk_facility.pk        
+        return reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
+
+def delete_facility_contact(request, pk): 
+        deleteobject = get_object_or_404(FacilityContact, pk = pk)         
+        fk_facility=deleteobject.fk_facility.pk       
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
+        return redirect(url_match)    
 
 # Creazione, Vista e Update Clienti
 class ClienteCreateView(LoginRequiredMixin,CreateView):

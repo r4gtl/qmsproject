@@ -13,6 +13,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'manualeprocedure:procedure_home' %}">Manuale Procedure</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'manualeprocedure:modifica_procedura' pk=fk_procedura.pk %}">Procedura {{ fk_procedura }}</a></li>        
 
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica {{ revisioneprocedura.n_revisione }} del {{ revisioneprocedura.data_revisione }}</li>
@@ -40,7 +41,7 @@
         <br>
 
 
-        <form method="post">
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
             {% csrf_token %}
 
             
