@@ -1,0 +1,174 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% block title %} Statistiche Risorse Umane {% endblock %}
+
+
+    <style>
+        @page {
+            /*size: A5 landscape;*/
+			size: A4 portrait;
+			/*left: 50pt; */
+			/*left: 10pt;*/
+			/*width: 512pt; */
+			width:100%;
+			/*top: 50pt; */
+			/*top: 10pt; */
+			height: 80pt;
+		}
+		@media print {
+			body {
+				margin: 0.1em 0.6em 0.1em 0.6em ;
+								
+				}
+				.row {
+					height: 90px;
+				}
+				.logo-text {
+					font-size: 0.7rem;
+				}
+				.code-text {
+					font-size: 2em;
+				}
+				.big-text {
+					font-size: 3em;
+				}
+				.bigger-text {
+					font-size: 3em;
+				}
+		}
+		
+		@media screen {
+
+			body {
+			margin: 2em;
+			
+			}
+			.row {
+				height: 80px;
+			}
+			.logo-text {
+				font-size: 0.7rem;
+			}
+			.code-text {
+				font-size: 2em;
+			}
+			.big-text {
+				font-size: 2.5em;
+			}
+			.bigger-text {
+				/*font-size: 3.2em;*/
+				font-size: 3em;
+			}
+		}
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+<h1 class="text-center">Statistiche Risorse Umane</h1>
+
+
+</div>
+
+<br>
+<hr>
+<br>
+<div class="row">
+	<div class="col-6">
+		<canvas id="hr_count" data-url="{% url 'human_resources:hr_count' %}"></canvas>
+	</div>
+</div>
+<br>
+<hr>
+<div class="row">
+	<div class="col-6">		
+		<canvas id="age_groups" data-url="{% url 'human_resources:age_groups' %}"></canvas>
+    </div>
+</div>
+
+		
+		
+
+
+
+
+{% endblock %}
+{% block extra_scripts %}
+<script>
+  
+
+  $(function () {
+
+    var $hrcount = $("#hr_count");
+    $.ajax({
+      url: $hrcount.data("url"),
+      success: function (data) {
+
+        var ctx = $hrcount[0].getContext("2d");        
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: 'Operatori per Reparto',
+              backgroundColor: getRandomColor(),
+              data: data.data
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Operatori per Reparto'
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  });
+
+$(function () {
+
+var $agegroups = $("#age_groups");
+$.ajax({
+  url: $agegroups.data("url"),
+  success: function (data) {
+
+    var ctx = $agegroups[0].getContext("2d");        
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Età media',
+          backgroundColor: data.backgroundColor,
+          borderColor: data.borderColor,
+          data: data.data
+        }]          
+      },
+      options: {
+        responsive: true,
+        
+        title: {
+          display: true,
+          text: 'Età media'
+        },
+        
+      }
+    });
+
+  }
+});
+
+});
+
+</script>
+{% endblock %}

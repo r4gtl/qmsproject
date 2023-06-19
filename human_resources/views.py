@@ -557,3 +557,13 @@ def delete_registro_ore(request, pk):
 
 '''FINE SEZIONE REGISTRO ORE'''
 
+'''REPORTS'''
+
+
+def stampa_risorse_umane(request):
+    
+    context = {
+    }
+    
+    return render(request, "human_resources/reports/stampa_risorse_umane.html", context)
+'''FINE REPORTS'''

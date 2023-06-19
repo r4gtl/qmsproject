@@ -11,6 +11,15 @@ class ProceduraFilter(django_filters.FilterSet):
                                                 widget=forms.Select(attrs={'class': 'form-control'})
                                                 )
     
+    def __init__(self, *args, **kwargs):
+        fk_lwgsection_value = kwargs.pop('fk_lwgsection', None)
+        super(ProceduraFilter, self).__init__(*args, **kwargs)
+        
+        if fk_lwgsection_value:
+            self.filters['fk_lwgsection'].extra.update(
+                {'initial': fk_lwgsection_value}
+            )
+    
     class Meta:
         model = Procedura
         fields = ['descrizione',

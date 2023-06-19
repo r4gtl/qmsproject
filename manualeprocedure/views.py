@@ -14,7 +14,7 @@ from .filters import ProceduraFilter
 
 def procedure_home(request):
     procedure = Procedura.objects.all()
-    procedura_filter = ProceduraFilter
+    procedura_filter = ProceduraFilter(request.GET, queryset=Procedura.objects.all())
     page = request.GET.get('page', 1)
     paginator = Paginator(procedure, 50)
     
