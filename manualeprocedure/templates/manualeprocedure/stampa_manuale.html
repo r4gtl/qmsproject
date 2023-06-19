@@ -1,0 +1,115 @@
+{% extends 'core/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% block title %}Stampa Registro Procedure {% endblock %}
+
+
+    <style>
+        @page {
+            /*size: A5 landscape;*/
+			size: A4 portrait;
+			/*left: 50pt; */
+			/*left: 10pt;*/
+			/*width: 512pt; */
+			width:100%;
+			/*top: 50pt; */
+			/*top: 10pt; */
+			height: 80pt;
+		}
+		@media print {
+			body {
+				margin: 0.1em 0.6em 0.1em 0.6em ;
+								
+				}
+				.row {
+					height: 90px;
+				}
+				.logo-text {
+					font-size: 0.7rem;
+				}
+				.code-text {
+					font-size: 2em;
+				}
+				.big-text {
+					font-size: 3em;
+				}
+				.bigger-text {
+					font-size: 3em;
+				}
+		}
+		
+		@media screen {
+
+			body {
+			margin: 2em;
+			
+			}
+			.row {
+				height: 80px;
+			}
+			.logo-text {
+				font-size: 0.7rem;
+			}
+			.code-text {
+				font-size: 2em;
+			}
+			.big-text {
+				font-size: 2.5em;
+			}
+			.bigger-text {
+				/*font-size: 3.2em;*/
+				font-size: 3em;
+			}
+		}
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+<h1 class="text-center">Registro delle Procedure</h1>
+
+<p class="text-center">Aggiornamento del {{ max_data_revisione }}</p>
+</div>
+<br>
+<hr>
+<br>
+<table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Numero Procedura</th>            
+              <th>Data Procedura</th>
+              <th>Ultima Revisione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+             {% for procedura in procedure_query %}
+      <tr>
+        <td>{{ procedura.identificativo }}</td>
+        <td>{{ procedura.data_procedura }}</td>
+			{% with procedura.revisioneprocedura_set.latest as ultima_revisione %}
+			{% if ultima_revisione %}
+		<td>Revisione n. {{ ultima_revisione.n_revisione }} del {{ ultima_revisione.data_revisione }}</td>
+		
+  {% else %}
+    <td>Nessuna revisione</td>
+    
+  {% endif %}
+			
+			{% endwith %}
+      </tr>
+        
+            {% endfor %}
+          </tbody>
+        </table>
+    
+
+		
+		
+
+
+
+
+{% endblock %}

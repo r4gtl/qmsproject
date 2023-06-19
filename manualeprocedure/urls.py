@@ -3,7 +3,8 @@ from manualeprocedure.views import (procedure_home,
                                     ProceduraCreateView, ProceduraUpdateView, delete_procedura,
                                     RevisioneProceduraCreateView, RevisioneProceduraUpdateView, delete_revisione_procedura,
                                     ModuloCreateView, ModuloUpdateView, delete_modulo,
-                                    RevisioneModuloCreateView, RevisioneModuloUpdateView, delete_revisione_modulo
+                                    RevisioneModuloCreateView, RevisioneModuloUpdateView, delete_revisione_modulo,
+                                    stampa_manuale_procedure
                                     )
 
 app_name="manualeprocedure"
@@ -32,4 +33,9 @@ urlpatterns = [
     path('<int:fk_modulo>/crea_revisione_modulo/', RevisioneModuloCreateView.as_view(), name="crea_revisione_modulo"), 
     path('<int:fk_modulo>/modifica_revisione_modulo/<int:pk>/', RevisioneModuloUpdateView.as_view(), name="modifica_revisione_modulo"), 
     path('delete_revisione_modulo/<int:pk>', delete_revisione_modulo, name="delete_revisione_modulo"),
+
+
+    # Stampe
+    path('stampa_manuale_procedure/', stampa_manuale_procedure, name="stampa_manuale_procedure"), 
+    
 ]

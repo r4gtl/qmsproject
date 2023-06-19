@@ -41,6 +41,12 @@ class RevisioneProcedura(models.Model):
 
     class Meta:
         ordering = ["-data_revisione"]
+        get_latest_by = ['data_revisione']
+
+    def __str__(self):
+        return f"Revisione {self.n_revisione} - Procedura {self.fk_procedura.identificativo}"
+    
+    
 
 
 class Modulo(models.Model):

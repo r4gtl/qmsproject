@@ -11,12 +11,12 @@ class ProceduraModelForm(forms.ModelForm):
         fields = '__all__'
         fk_lwgsection = forms.ModelChoiceField(queryset=SezioneLWG.objects.all())
 
-        widget = {
+        widgets = {
             'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo procedura'}),            
             'data_procedura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci breve Descrizione/Titolo'}),   
             'is_eliminata' : forms.CheckboxInput(),
-            'fk_lwgsection': forms.ChoiceField(),     
+            #'fk_lwgsection': forms.ChoiceField(),     
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
@@ -37,7 +37,7 @@ class RevisioneProceduraModelForm(forms.ModelForm):
         fields = '__all__'
         
         fk_procedura = forms.ModelChoiceField(queryset=Procedura.objects.all())
-        widget = {
+        widgets = {
             'n_revisione': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo procedura'}),            
             'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
@@ -57,7 +57,7 @@ class ModuloModelForm(forms.ModelForm):
         fields = '__all__'
         
         fk_procedura = forms.ModelChoiceField(queryset=Procedura.objects.all())
-        widget = {
+        widgets = {
             'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo procedura'}),            
             'data_modulo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci breve Descrizione/Titolo'}),                  
@@ -79,7 +79,7 @@ class RevisioneModuloModelForm(forms.ModelForm):
         fields = '__all__'
         
 
-        widget = {
+        widgets = {
             'n_revisione': forms.NumberInput(),            
             'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),

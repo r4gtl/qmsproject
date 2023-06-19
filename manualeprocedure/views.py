@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max, Prefetch
 import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -111,7 +111,7 @@ class RevisioneProceduraCreateView(LoginRequiredMixin,CreateView):
     
     def get_initial(self):
         created_by = self.request.user
-        fk_procedura = self.kwargs['pk']
+        fk_procedura = self.kwargs['fk_procedura']
 
         return {
             'created_by': created_by,
@@ -120,7 +120,7 @@ class RevisioneProceduraCreateView(LoginRequiredMixin,CreateView):
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs['pk']       
+        pk = self.kwargs['fk_procedura']       
         context['fk_procedura'] = Procedura.objects.get(pk=pk) 
         return context
 
@@ -316,3 +316,39 @@ def delete_revisione_modulo(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'fk_procedura':fk_procedura, 'pk':fk_modulo})
         return redirect(url_match)
+
+
+
+
+#def stampa_manuale_procedure (request):
+#    procedure_query = Procedura.objects.annotate(ultima_revisione=Max('revisioneprocedura__data_revisione'), ultima_revisione_pk=Max('revisioneprocedura__pk'))
+#    
+#    revisioni_procedure = RevisioneProcedura.objects.all()
+#    context = {
+#        'procedure_query': procedure_query,
+#        'revisioni_procedure': revisioni_procedure
+#    }
+#    return render(request, "manualeprocedure/stampa_manuale.html", context)#
+
+
+def get_ultima_revisione(procedura):
+    ultima_revisione = procedura.revisioneprocedura_set.order_by('-data_revisione').first()
+    if ultima_revisione:
+        return ultima_revisione.n_revisione
+    return '-'
+
+
+
+def stampa_manuale_procedure(request):
+    procedure_query = Procedura.objects.all()
+    max_data_revisione = RevisioneProcedura.objects.aggregate(Max('data_revisione'))['data_revisione__max']
+    
+    context = {
+        'procedure_query': procedure_query,
+        'get_ultima_revisione': get_ultima_revisione,
+        'max_data_revisione': max_data_revisione
+        
+    }
+    return render(request, "manualeprocedure/stampa_manuale.html", context)
+
+
