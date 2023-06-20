@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from .models import (Procedura, RevisioneProcedura, Modulo, RevisioneModulo
                     )
 from .forms import ProceduraModelForm, RevisioneProceduraModelForm, ModuloModelForm, RevisioneModuloModelForm
@@ -316,19 +316,6 @@ def delete_revisione_modulo(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'fk_procedura':fk_procedura, 'pk':fk_modulo})
         return redirect(url_match)
-
-
-
-
-#def stampa_manuale_procedure (request):
-#    procedure_query = Procedura.objects.annotate(ultima_revisione=Max('revisioneprocedura__data_revisione'), ultima_revisione_pk=Max('revisioneprocedura__pk'))
-#    
-#    revisioni_procedure = RevisioneProcedura.objects.all()
-#    context = {
-#        'procedure_query': procedure_query,
-#        'revisioni_procedure': revisioni_procedure
-#    }
-#    return render(request, "manualeprocedure/stampa_manuale.html", context)#
 
 
 def get_ultima_revisione(procedura):

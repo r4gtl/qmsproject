@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "monitoraggi",
     "manutenzioni",
     "lwg",
+    "autorizzazioni",
     
     "bootstrap5",
     "crispy_forms",
@@ -92,6 +93,7 @@ TEMPLATES = [
                     os.path.join(BASE_DIR, 'monitoraggi/templates'),
                     os.path.join(BASE_DIR, 'manutenzioni/templates'),
                     os.path.join(BASE_DIR, 'lwg/templates'),
+                    os.path.join(BASE_DIR, 'autorizzazioni/templates'),
         ]
                 ,
         "APP_DIRS": True,

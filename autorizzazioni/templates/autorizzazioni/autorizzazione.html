@@ -1,0 +1,148 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Autorizzazione {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_manutenzioni.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:autorizzazioni_home' %}">Elenco Autorizzazioni</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ autorizzazione.descrizione }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi autorizzazione</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ autorizzazione.descrizione }}</h3>
+        {% else %}
+            <h3> Aggiungi autorizzazione</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <div class="row mt-2">
+                <div class="col-3">
+                    {{ form.descrizione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.rilasciata_da|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.n_autorizzazione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.data_autorizzazione|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    {{ form.frequenza_scadenza|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by.as_hidden }}
+                </div>
+
+               
+
+
+            </div>
+            
+            
+
+            
+            
+        </form>
+        <hr>
+        
+        {% include "core/partials/_messages.html" %}
+
+{% if form.instance.id  %}
+<div class="row">
+    <!-- Tabella Rinnovi -->
+    <div class="col-12"> 
+        <div class="row justify-content-end">
+            <div class="col">
+                <p><strong>Rinnovi</strong></p>
+            </div>
+            <div class="col text-end">
+                <a href="{% url 'autorizzazioni:aggiungi_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Rinnovo</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-container">
+                <table class="table table-fixed-header table-bordered table-striped mt-2">
+                <caption>Rinnovi</caption>
+                <thead>
+                    <tr>
+                        <th>Numero</th>   
+                        <th>Data Rinnovo</th>
+                        <th>Scadenza</th>
+                        <th>Rinnovata</th>
+                        <th>Documento</th>
+                        <th>Azione</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scadenza in elenco_dettaglio_scadenze %}
+                    <tr>        
+                        
+                        <td><a href="{% url 'autorizzazioni:modifica_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk pk=scadenza.pk%}">{{ scadenza.descrizione }}</a></td>
+                        <td>{{ scadenza.data_rinnovo }}</td>
+                        <td>{{ scadenza.scadenza_rinnovo }}</td>
+                        <td>{{ scadenza.is_rinnovata }}</td>
+                        <td>{{ scadenza.documento.url }}</td>
+                        
+                        <td class="text-center"><a href="{% url 'autorizzazioni:delete_dettaglio_autorizzazione' pk=scadenza.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scadenza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    </tr>  
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div> <!-- Fine colonna Tabella Manutenzioni Ordinarie -->
+
+
+
+</div> <!-- Fine riga tabelle -->
+{% endif %}
+
+
+</div><!-- Fine Container -->
+
+   
+
+
+{% endblock %}
