@@ -6,10 +6,19 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 
-from .models import Autorizzazione, DettaglioScadenzaAutorizzazione
+from .models import (Autorizzazione, 
+                     DettaglioScadenzaAutorizzazione, 
+                     ParametroAutorizzazione,
+                     CampoApplicazione,
+                     DettaglioCampoApplicazione
+                     )
 from .filters import AutorizzazioneFilter
-from .forms import AutorizzazioneModelForm, DettaglioScadenzaAutorizzazioneModelForm
-# Create your views here.
+from .forms import (AutorizzazioneModelForm, 
+                    DettaglioScadenzaAutorizzazioneModelForm, 
+                    ParametroAutorizzazioneModelForm,
+                    CampoApplicazioneModelForm, DettaglioCampoApplicazioneModelForm,
+                    )
+
 
 def autorizzazioni_home(request):
     autorizzazioni = Autorizzazione.objects.all()
@@ -29,6 +38,16 @@ def autorizzazioni_home(request):
         
     }
     return render(request, "autorizzazioni/autorizzazioni_home.html", context)
+
+
+
+def tabelle_generiche_autorizzazioni(request):
+    parametri = ParametroAutorizzazione.objects.all()
+
+    context = {'parametri': parametri,                            
+                }
+    
+    return render(request, "autorizzazioni/tabelle_generiche_autorizzazioni.html", context)
 
 
 class AutorizzazioneCreateView(LoginRequiredMixin,CreateView):
@@ -149,6 +168,107 @@ def delete_dettaglio_autorizzazione(request, pk):
         fk_autorizzazione = deleteobject.fk_autorizzazione.pk                
         deleteobject.delete()
         url_match = reverse_lazy('autorizzazioni:modifica_autorizzazione', kwargs={'pk':fk_autorizzazione,})
+        return redirect(url_match)
+
+
+
+
+
+class ParametroAutorizzazioneCreateView(LoginRequiredMixin,CreateView):
+    model = ParametroAutorizzazione
+    form_class = ParametroAutorizzazioneModelForm
+    template_name = 'autorizzazioni/parametro.html'
+    success_message = 'Parametro aggiunto correttamente!'
+    
+
+    def get_success_url(self):        
+        return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class ParametroAutorizzazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = ParametroAutorizzazione
+    form_class = ParametroAutorizzazioneModelForm
+    template_name = 'autorizzazioni/parametro.html'
+    success_message = 'Parametro modificato correttamente!'
+        
+    def get_success_url(self):        
+        return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+
+def delete_parametro(request, pk): 
+        deleteobject = get_object_or_404(ParametroAutorizzazione, pk = pk)                 
+        deleteobject.delete()
+        url_match = reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
+        return redirect(url_match)
+
+
+
+
+class CampoApplicazioneCreateView(LoginRequiredMixin,CreateView):
+    model = CampoApplicazione
+    form_class = CampoApplicazioneModelForm
+    template_name = 'autorizzazioni/campo_applicazione.html'
+    success_message = 'Campo Applicazione aggiunto correttamente!'
+    
+
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
+        
+        pk_hr=self.object.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_hr})
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class CampoApplicazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = CampoApplicazione
+    form_class = CampoApplicazioneModelForm
+    template_name = 'autorizzazioni/campo_applicazione.html'
+    success_message = 'Campo applicazione modificato correttamente!'
+        
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
+        
+        pk_hr=self.object.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_hr})
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+
+def delete_campo_applicazione(request, pk): 
+        deleteobject = get_object_or_404(CampoApplicazione, pk = pk)                 
+        deleteobject.delete()
+        url_match = reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
         return redirect(url_match)
 
 

@@ -1,0 +1,266 @@
+[
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 1,
+        "fields": {
+            "descrizione" : "Volume orario",
+		    "created_at": "2023-01-01"
+        }		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 2,
+        "fields": {
+            "descrizione" : "Volume Giornaliero",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 3,
+        "fields": {
+            "descrizione" : "Volume Settimanale",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 4,
+        "fields": {
+            "descrizione" : "Volume Mensile",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 5,
+		"fields": {
+            "descrizione" : "Volume Annuale",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 6,
+        "fields": {
+            "descrizione" : "COD",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 7,
+		"fields": {
+            "descrizione" : "BOD",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 8,
+        "fields": {
+            "descrizione" : "Totale Azoto Kjeldahl",
+            "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 9,
+        "fields": {
+            "descrizione" : "Azoto Totale",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 10,
+		"fields": {
+            "descrizione" : "Ammonia (azoto)",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 11,
+        "fields": {
+            "descrizione" : "Solidi Sospesi",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 12,
+        "fields": {
+            "descrizione" : "Oil & Grease",
+		    "created_at": "2023-01-01"
+        }		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 13,
+		"fields": {
+            "descrizione" : "Cromo Totale",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 14,
+		"fields": {
+            "descrizione" : "Cromo VI",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 15,
+        "fields": {
+            "descrizione" : "Solfuri",
+		    "created_at": "2023-01-01"
+        }
+		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 16,
+		"fields": {
+            "descrizione" : "Fosforo",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 17,
+		"fields": {
+            "descrizione" : "Fenoli",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 18,
+		"fields": {
+            "descrizione" : "Cloruri",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 19,
+		"fields": {
+            "descrizione" : "Limite Detergente Sintetico",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 20,
+		"fields": {
+            "descrizione" : "Rame",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 21,
+		"fields": {
+            "descrizione" : "Cianuro",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 22,
+		"fields": {
+            "descrizione" : "Piombo",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 23,
+        "fields": {
+            "descrizione" : "Mercurio",
+		    "created_at": "2023-01-01"
+        }		
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 24,
+		"fields": {
+            "descrizione" : "Nickel",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 25,
+		"fields": {
+            "descrizione" : "Cadmio",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 26,
+		"fields": {
+            "descrizione" : "Zinco",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 27,
+		"fields": {
+            "descrizione" : "Solfati",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 28,
+		"fields": {
+            "descrizione" : "PH",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 29,
+		"fields": {
+            "descrizione" : "Limite temperatura",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 30,
+		"fields": {
+            "descrizione" : "Contaminanti proibiti",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{	
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 31,
+		"fields": {
+            "descrizione" : "Zolfo Totale",
+		    "created_at": "2023-01-01"
+        }
+	},
+	{
+		"model": "autorizzazioni.ParametroAutorizzazione",
+		"pk" : 32,
+		"fields": {
+            "descrizione" : "Conducibilità",
+		    "created_at": "2023-01-01"
+        }
+	}
+]

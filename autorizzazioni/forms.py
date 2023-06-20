@@ -1,7 +1,8 @@
 from django import forms
 
 from .models import (Autorizzazione, 
-                    DettaglioScadenzaAutorizzazione
+                    DettaglioScadenzaAutorizzazione,
+                    ParametroAutorizzazione, CampoApplicazione, DettaglioCampoApplicazione
                 )
 
 
@@ -31,11 +32,14 @@ class AutorizzazioneModelForm(forms.ModelForm):
         }
 
 class DettaglioScadenzaAutorizzazioneModelForm(forms.ModelForm):
+
+    fk_autorizzazione = forms.ModelChoiceField(queryset=Autorizzazione.objects.all())
+
     class Meta:
         model = DettaglioScadenzaAutorizzazione
         fields = '__all__'
         
-        fk_autorizzazione = forms.ModelChoiceField(queryset=Autorizzazione.objects.all())
+        
         widgets = {
             'n_rinnovo': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo rinnovo (protocollo, numero,...)'}),            
             'data_rinnovo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
@@ -43,7 +47,7 @@ class DettaglioScadenzaAutorizzazioneModelForm(forms.ModelForm):
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),
-            'fk_autorizzazione': forms.HiddenInput()
+            'fk_autorizzazione': forms.ChoiceField()
         }
         labels = {
             'n_rinnovo': 'Numero Rinnovo',
@@ -51,5 +55,74 @@ class DettaglioScadenzaAutorizzazioneModelForm(forms.ModelForm):
             'scadenza_rinnovo': 'Scadenza Rinnovo',
             'is_rinnovata': 'Rinnovata',
             'documento': 'Documento',
+            'note': 'Annotazioni'
+        }
+
+
+class ParametroAutorizzazioneModelForm(forms.ModelForm):
+
+    
+
+    class Meta:
+        model = ParametroAutorizzazione
+        fields = '__all__'
+        
+        
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci parametro'}),                        
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            
+        }
+        labels = {
+            'descrizione': 'Descrizione',            
+            'note': 'Annotazioni'
+        }
+
+
+
+class CampoApplicazioneModelForm(forms.ModelForm):
+    fk_autorizzazione = forms.ModelChoiceField(queryset=Autorizzazione.objects.all())
+
+    class Meta:
+        model = CampoApplicazione
+        fields = '__all__'
+        
+        
+
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Campo di applicazione (Scarichi idrici, Emissioni in Atmosfera...)'}),                        
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            'fk_autorizzazione': forms.HiddenInput()
+        }
+        labels = {
+            'descrizione': 'descrizione',            
+            'is_applicabile': 'Applicabile',            
+            'note': 'Annotazioni'
+        }
+
+class DettaglioCampoApplicazioneModelForm(forms.ModelForm):
+
+    fk_parametro = forms.ModelChoiceField(queryset=ParametroAutorizzazione.objects.all())
+    fk_campoapplicazione = forms.ModelChoiceField(queryset=CampoApplicazione.objects.all())
+
+    class Meta:
+        model = DettaglioCampoApplicazione
+        fields = '__all__'
+        widgets = {
+            'fk_parametro': forms.ChoiceField(),            
+            'um': forms.TextInput(),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            'fk_campoapplicazione': forms.HiddenInput()
+        }
+        labels = {
+            'fk_parametro': 'Parametro',  
+            'um': 'Unità di Misura',   
+            'limite': 'Limite',
             'note': 'Annotazioni'
         }

@@ -1,0 +1,68 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Acquisto Pelli {% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_autorizzazioni.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:autorizzazioni_home' %}">Elenco autorizzazioni</a></li>     
+        <li class="breadcrumb-item active" aria-current="page">Tabelle Generiche Autorizzazioni</li>        
+    </ol>
+
+</nav>
+<div class="container">
+  <br>
+  <h3>Tabelle Generiche Autorizzazioni</h3>
+  <hr>
+
+  {% include "core/partials/_messages.html" %}
+
+
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Parametri</h5>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'autorizzazioni:crea_parametro' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi parametro</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Descrizione</th>            
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for parametro in parametri %}
+            <tr>        
+              
+              <td><a href="{% url 'autorizzazioni:modifica_parametro' pk=parametro.pk %}">{{ parametro.descrizione }}</a></td>
+              
+              <td class="text-center"><a href="{% url 'autorizzazioni:delete_parametro' pk=parametro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{parametro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    
+
+
+  </div>
+</div>
+
+{% endblock content %}

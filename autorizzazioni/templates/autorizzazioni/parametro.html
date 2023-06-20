@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Generiche - Parametro {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_autorizzazioni.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:tabelle_generiche_autorizzazioni' %}">Tabelle Generiche</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ parametro.descrizione }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Parametro</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ parametro.descrizione }}</h3>
+        {% else %}
+            <h3> Aggiungi Parametro</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.descrizione|as_crispy_field }}
+                </div>
+                <div class="col-5">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

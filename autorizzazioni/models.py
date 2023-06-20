@@ -32,3 +32,44 @@ class DettaglioScadenzaAutorizzazione(models.Model):
     class Meta:
         ordering = ['-data_rinnovo']
         get_latest_by = ['data_rinnovo']
+
+
+class ParametroAutorizzazione(models.Model):
+    descrizione = models.CharField(max_length=100, null=False, blank=False, help_text="descrizione")
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='parametro_autorizzazione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['descrizione']
+
+    def __str__ (self):
+        return self.descrizione
+    
+
+class CampoApplicazione(models.Model):
+    fk_autorizzazione = models.ForeignKey(Autorizzazione, on_delete=models.CASCADE)
+    descrizione=models.CharField(max_length=100, null=False, blank=False, help_text="descrizione")
+    is_applicabile = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='campo_applicazione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['descrizione']
+
+    def __str__ (self):
+        return self.descrizione
+    
+
+class DettaglioCampoApplicazione(models.Model):
+    fk_parametro = models.ForeignKey(ParametroAutorizzazione, on_delete=models.CASCADE)
+    fk_campoapplicazione = models.ForeignKey(CampoApplicazione, on_delete=models.CASCADE)
+    um = models.CharField(max_length=10, null=True, blank=True, help_text="unità_misura")
+    limite = models.DecimalField(max_digits=10, decimal_places=3)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_campo_applicazione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+

@@ -110,6 +110,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "qmsproject.wsgi.application"
 
+FIXTURES = [
+    'autorizzazioni/fixtures/data.json',
+    'manualeprocedure/fixtures/data.json'
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
