@@ -24,28 +24,51 @@ from .utils import filtro_lotti
 
 
 
+# def dashboard_acquisto_pelli(request):     
+#     lotti = Lotto.objects.all()
+    
+#     lotti_filter = LottoFilter(request.GET, queryset=lotti)
+    
+#     page = request.GET.get('page', 1)
+#     paginator = Paginator(lotti_filter.qs, 50)
+    
+#     try:
+#         lotti_paginator = paginator.page(page)
+#     except PageNotAnInteger:
+#         lotti_paginator = paginator.page(1)
+#     except EmptyPage:
+#         lotti_paginator = paginator.page(paginator.num_pages)
+#     context={
+#         'lotti_paginator': lotti_paginator,
+#         'filter': lotti_filter,
+        
+#     }
+    
+    #return render(request, 'acquistopelli/dashboard_acquisto_pelli.html', context)
+
 def dashboard_acquisto_pelli(request):     
     lotti = Lotto.objects.all()
     
     lotti_filter = LottoFilter(request.GET, queryset=lotti)
     
     page = request.GET.get('page', 1)
-    paginator = Paginator(lotti_filter.qs, 50)
-    
+    paginator = Paginator(lotti_filter.qs, 50)  # Utilizza lotti_filter.qs per la paginazione
+    for pagina in paginator:
+        print("paginator:" + str(pagina))
+        
     try:
         lotti_paginator = paginator.page(page)
     except PageNotAnInteger:
         lotti_paginator = paginator.page(1)
     except EmptyPage:
         lotti_paginator = paginator.page(paginator.num_pages)
-    context={
+        
+    context = {
         'lotti_paginator': lotti_paginator,
         'filter': lotti_filter,
-        
     }
     
     return render(request, 'acquistopelli/dashboard_acquisto_pelli.html', context)
-
 
 class LottoCreateView(LoginRequiredMixin,CreateView):
     model = Lotto
@@ -299,14 +322,13 @@ def report_traceability_in(request):
         from_date = request.GET.get('from_date')
         to_date = request.GET.get('to_date')
 
-        # Effettua il filtro dei dati in base ai criteri
-        # e genera il report utilizzando i dati filtrati
+        
         lotti_filtrati= filtro_lotti(from_date, to_date) 
         context = {
             'lotti_filtrati': lotti_filtrati
         }
 
-        return render(request, 'acquistopelli/reports/report_traceability_in.html', context)
+        return render(request, 'acquistopelli/report_traceability_in.html', context)
     else:
         # Gestisci eventuali altri metodi HTTP
         pass

@@ -88,7 +88,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for lotti in lotti_paginator %}
+          {% for lotti in filter.qs %}
           <tr>        
             
             
@@ -103,49 +103,44 @@
         </tbody>
       </table>
       <!-- Pagination -->
-{% if lotti_paginator.has_other_pages %}
-<nav>
-  <ul class="pagination justify-content-center">
-    {% if lotti_paginator.has_previous %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ lotti_paginator.previous_page_number }}" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
-    {% else %}
-      <li class="page-item disabled">
-        <span class="page-link" aria-hidden="true">&laquo;</span>
-      </li>
+      {% if filter.qs.has_other_pages %}
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if filter.qs.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ filter.qs.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&laquo;</span>
+            </li>
+          {% endif %}
+  
+          {% for p in filter.qs.paginator.page_range %}
+            {% if filter.qs.number == p %}
+              <li class="page-item"><a class="page-link" style="color: red;" href="#">{{ p }}</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% endif %}
+          {% endfor %}
+  
+          {% if filter.qs.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ filter.qs.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link" aria-hidden="true">&raquo;</span>
+            </li>
+          {% endif %}
+      </ul>
+      </nav>
     {% endif %}
-
-    {% for page in lotti_paginator.paginator.page_range %}
-      {% if page == lotti_paginator.number %}
-        <li class="page-item active">
-          <span class="page-link">{{ page }}</span>
-        </li>
-      {% else %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ page }}">{{ page }}</a>
-        </li>
-      {% endif %}
-    {% endfor %}
-
-    {% if lotti_paginator.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ lotti_paginator.next_page_number }}" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    {% else %}
-      <li class="page-item disabled">
-        <span class="page-link" aria-hidden="true">&raquo;</span>
-      </li>
-    {% endif %}
-  </ul>
-</nav>
-{% endif %}
-<!-- End Pagination -->
-
+    <!-- End Pagination -->
 </div>
 
 {% include 'acquistopelli/modals/lwg_report_criteria.html' %}
@@ -155,6 +150,12 @@
 {% block extra_scripts %}
 
 <script>
+
+
+
+
+
+
 
 
 

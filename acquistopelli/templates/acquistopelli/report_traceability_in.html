@@ -1,0 +1,95 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% block title %}Tracciabilità in ingresso {% endblock %}
+
+
+    <style>
+        @page {
+            width: 297mm; /* Larghezza pagina A4 orizzontale */
+            height: 210mm; /* Altezza pagina A4 orizzontale */
+            margin: 0 auto;
+            background-color: #fff; /* Colore di sfondo della pagina */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombra della pagina */
+        }
+        
+        /* Imposta l'orientamento orizzontale della pagina */
+        @media print {
+            .page {
+                width: 210mm;
+                height: 297mm;
+            }
+            @page {
+                size: A4 landscape;
+            }
+        }
+		
+		@media screen {
+
+			body {
+			margin: 2em;
+			
+			}
+			.row {
+				height: 80px;
+			}
+			.logo-text {
+				font-size: 0.7rem;
+			}
+			.code-text {
+				font-size: 2em;
+			}
+			.big-text {
+				font-size: 2.5em;
+			}
+			.bigger-text {
+				/*font-size: 3.2em;*/
+				font-size: 3em;
+			}
+		}
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+<h1 class="text-center">Tracciabilità in Ingresso</h1>
+
+</div>
+<br>
+<hr>
+<br>
+<table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Data Acquisto</th>            
+              <th>Fornitore</th>
+              <th>Tipo Animale</th>
+              <th>Tipo Grezzo</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+             {% for lotto in lotti_filtrati %}
+      <tr>
+        <td>{{ lotto.data_acquisto }}</td>
+        <td>{{ lotto.fk_fornitore }}</td>
+			
+		<td>{{ lotto.fk_tipoanimale.descrizione }}</td>
+		<td>{{ lotto.fk_tipogrezzo.descrizione }}</td>
+		
+      </tr>
+        
+            {% endfor %}
+          </tbody>
+        </table>
+    
+
+		
+		
+
+
+
+
+{% endblock %}

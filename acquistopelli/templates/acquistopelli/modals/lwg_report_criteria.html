@@ -10,18 +10,19 @@
       </div>
       <div class="modal-body">
         <!-- Includi il form dei criteri all'interno del modal -->
-        <form action="{% url 'acquistopelli:report_traceability_in' %}" method="GET">
-          <label class="form-label" for="from_date">Dalla data:</label>
+        <form action="{% url 'acquistopelli:report_traceability_in' %}" target="_blank" method="GET">
+          <label class="form-label mt-2" for="from_date">Dalla data:</label>
           <input class="form-control" type="date" id="from_date" name="from_date">
 
-          <label class="form-label" for="to_date">Alla data:</label>
+          <label class="form-label mt-2" for="to_date">Alla data:</label>
           <input class="form-control" type="date" id="to_date" name="to_date">
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary">Genera report</button>
+          </div>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-        <button type="submit" class="btn btn-primary">Genera report</button>
-      </div>
+     
     </div>
   </div>
 </div>

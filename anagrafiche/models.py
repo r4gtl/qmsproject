@@ -100,7 +100,7 @@ class Fornitore(models.Model):
     country = CountryField(blank_label='(seleziona Paese)')
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
     is_lwg = models.BooleanField(default=False)
-    created_by = models.ForeignKey(User, related_name='fornitori', on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, related_name='fornitori', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
