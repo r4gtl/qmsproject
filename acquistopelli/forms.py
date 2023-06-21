@@ -67,9 +67,9 @@ class LottoModelForm(forms.ModelForm):
         fk_tipogrezzo = forms.ModelChoiceField(queryset=TipoGrezzo.objects.all())
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
         origine = CountryField().formfield()
-        #is_lwg = forms.BooleanField(widget=forms.CheckboxInput())
+        is_lwg = forms.BooleanField(widget=forms.CheckboxInput())
 
-        widget = {
+        widgets = {
             'data_acquisto': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci scelta'}),            
             'fk_tipoanimale': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
@@ -78,10 +78,10 @@ class LottoModelForm(forms.ModelForm):
             'origine': CountrySelectWidget(),
             'documento': forms.TextInput(attrs={'placeholder': 'Riferimenti documento'}),            
             'is_lwg': forms.CheckboxInput(),
-            'pezzi': forms.NumberInput(attrs={'class': 'form-control'}),
-            'prezzo_unitario': forms.DecimalField(),
-            'spese_accessorie': forms.DecimalField(),
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 1}),
+            'pezzi': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
+            'prezzo_unitario': forms.NumberInput(attrs={'style': 'text-align: right;'}),
+            'spese_accessorie': forms.NumberInput(attrs={'style': 'text-align: right;'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 3}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
         }

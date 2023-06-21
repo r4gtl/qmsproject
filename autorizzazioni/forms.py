@@ -47,7 +47,7 @@ class DettaglioScadenzaAutorizzazioneModelForm(forms.ModelForm):
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),
-            'fk_autorizzazione': forms.ChoiceField()
+            #'fk_autorizzazione': forms.ChoiceField()
         }
         labels = {
             'n_rinnovo': 'Numero Rinnovo',
@@ -59,9 +59,7 @@ class DettaglioScadenzaAutorizzazioneModelForm(forms.ModelForm):
         }
 
 
-class ParametroAutorizzazioneModelForm(forms.ModelForm):
-
-    
+class ParametroAutorizzazioneModelForm(forms.ModelForm):   
 
     class Meta:
         model = ParametroAutorizzazione
@@ -83,7 +81,7 @@ class ParametroAutorizzazioneModelForm(forms.ModelForm):
 
 
 class CampoApplicazioneModelForm(forms.ModelForm):
-    fk_autorizzazione = forms.ModelChoiceField(queryset=Autorizzazione.objects.all())
+    fk_autorizzazione = forms.ModelChoiceField(queryset=Autorizzazione.objects.all(), required=False, empty_label='Seleziona Autorizzazione', label='Autorizzazione riferimento')
 
     class Meta:
         model = CampoApplicazione
@@ -96,10 +94,11 @@ class CampoApplicazioneModelForm(forms.ModelForm):
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),
-            'fk_autorizzazione': forms.HiddenInput()
+            
         }
         labels = {
-            'descrizione': 'descrizione',            
+            'fk_autorizzazione': 'Autorizzazione riferimento',
+            'descrizione': 'Descrizione',            
             'is_applicabile': 'Applicabile',            
             'note': 'Annotazioni'
         }
@@ -107,13 +106,13 @@ class CampoApplicazioneModelForm(forms.ModelForm):
 class DettaglioCampoApplicazioneModelForm(forms.ModelForm):
 
     fk_parametro = forms.ModelChoiceField(queryset=ParametroAutorizzazione.objects.all())
-    fk_campoapplicazione = forms.ModelChoiceField(queryset=CampoApplicazione.objects.all())
+    #fk_campoapplicazione = forms.ModelChoiceField(queryset=CampoApplicazione.objects.all())
 
     class Meta:
         model = DettaglioCampoApplicazione
         fields = '__all__'
         widgets = {
-            'fk_parametro': forms.ChoiceField(),            
+            #'fk_parametro': forms.ChoiceField(),            
             'um': forms.TextInput(),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),

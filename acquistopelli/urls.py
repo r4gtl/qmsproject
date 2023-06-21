@@ -6,6 +6,7 @@ from .views import (dashboard_acquisto_pelli, tabelle_generiche_acquisto_pelli,
                     TipoAnimaleCreateView, TipoAnimaleUpdateView, delete_tipo_animale,
                     TipoGrezzoCreateView, TipoGrezzoUpdateView, delete_tipo_grezzo,
                     SceltaCreateView, SceltaUpdateView, delete_scelta,
+                    report_traceability_in,
                     )
 
 from .charts import origine
@@ -45,6 +46,8 @@ urlpatterns = [
 
     # Charts
     path('origine/', origine, name='origine'),
-    
+
+    # Stampe
+    path('report_traceability_in/', report_traceability_in, name='report_traceability_in'),
 
 ]

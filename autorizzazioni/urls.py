@@ -4,6 +4,7 @@ from .views import (autorizzazioni_home,
                     DettaglioScadenzaAutorizzazioneCreateView, DettaglioScadenzaAutorizzazioneUpdateView, delete_dettaglio_autorizzazione,
                     ParametroAutorizzazioneCreateView, ParametroAutorizzazioneUpdateView, delete_parametro,
                     CampoApplicazioneCreateView, CampoApplicazioneUpdateView, delete_campo_applicazione,
+                    DettaglioCampoApplicazioneCreateView, DettaglioCampoApplicazioneUpdateView, delete_dettaglio_campo_applicazione,
                     tabelle_generiche_autorizzazioni,
                     stampa_registro_autorizzazioni,
                     
@@ -38,6 +39,11 @@ urlpatterns = [
     path('crea_campo_applicazione/', CampoApplicazioneCreateView.as_view(), name="crea_campo_applicazione"), 
     path('modifica_campo_applicazione/<int:pk>/', CampoApplicazioneUpdateView.as_view(), name="modifica_campo_applicazione"), 
     path('delete_campo_applicazione/<int:pk>', delete_campo_applicazione, name="delete_campo_applicazione"),
+
+    # Manage Dettaglio Campi Applicazione
+    path('<int:fk_campoapplicazione>/aggiungi_dettaglio_campo_applicazione/', DettaglioCampoApplicazioneCreateView.as_view(), name="aggiungi_dettaglio_campo_applicazione"), 
+    path('<int:fk_campoapplicazione>/modifica_dettaglio_campo_applicazione/<int:pk>/', DettaglioCampoApplicazioneUpdateView.as_view(), name="modifica_dettaglio_campo_applicazione"), 
+    path('delete_dettaglio_campo_applicazione/<int:pk>', delete_dettaglio_campo_applicazione, name="delete_dettaglio_campo_applicazione"),
 
     # Stampe
     path('stampa_registro_autorizzazioni/', stampa_registro_autorizzazioni, name="stampa_registro_autorizzazioni"), 

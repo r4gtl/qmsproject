@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Dettaglio Autorizzazione {% endblock %}
+{% block title %}{{ block.super }} | Dettaglio Campo Applicazione {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_autorizzazioni.html" %}
@@ -13,12 +13,12 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:autorizzazioni_home' %}">Elenco Autorizzazioni</a></li>        
-        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:modifica_autorizzazione' pk=fk_autorizzazione.pk %}">Autorizzazione {{ fk_autorizzazione }}</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:modifica_campo_applicazione' pk=fk_campoapplicazione.pk %}">{{ fk_campoapplicazione }}</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ dettaglioscadenzaautorizzazione.n_rinnovo }} del {{ dettaglioscadenzaautorizzazione.data_rinnovo }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ dettagliocampoapplicazione.fk_parametro }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Rinnovo</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Limite Parametro</li>
         {% endif %}             
         
         
@@ -27,9 +27,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica {{ dettaglioscadenzaautorizzazione.n_rinnovo }} del {{ dettaglioscadenzaautorizzazione.data_rinnovo }}</h3>
+            <h3>Modifica {{ dettagliocampoapplicazione.fk_parametro }}</h3>
         {% else %}
-            <h3> Aggiungi Rinnovo</h3>
+            <h3> Aggiungi Limite Parametro</h3>
         {% endif %}
         
         
@@ -49,18 +49,16 @@
 
             <div class="row">
                 <div class="col-3">
-                    {{ form.n_rinnovo|as_crispy_field }}
+                    {{ form.fk_parametro|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.data_rinnovo|as_crispy_field }}
+                    {{ form.um|as_crispy_field }}
                 </div>
                 
                 <div class="col-3">
-                    {{ form.scadenza_rinnovo|as_crispy_field }}
+                    {{ form.limite|as_crispy_field }}
                 </div>
-                <div class="col-3">
-                    {{ form.documento|as_crispy_field }}
-                </div>
+                
                 
                 
             </div>
@@ -69,11 +67,9 @@
                 <div class="col-6">
                     {{ form.note|as_crispy_field }}
                 </div>
+                
                 <div class="col-2">
-                    {{ form.is_rinnovata|as_crispy_field }}
-                </div>
-                <div class="col-2">
-                    {{ form.fk_autorizzazione|as_crispy_field }}
+                    {{ form.fk_campoapplicazione|as_crispy_field }}
                 </div>
                 <div class="col-2">
                     {{ form.created_by|as_crispy_field }}

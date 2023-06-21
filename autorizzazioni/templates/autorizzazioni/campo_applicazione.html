@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Autorizzazione {% endblock %}
+{% block title %}{{ block.super }} | Campo di Applicazione {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_autorizzazioni.html" %}
@@ -13,11 +13,12 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:autorizzazioni_home' %}">Elenco Autorizzazioni</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:tabelle_generiche_autorizzazioni' %}">Tabelle Generiche</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ autorizzazione.descrizione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ campo_applicazione.descrizione }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi autorizzazione</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi campo di applicazione</li>
         {% endif %}             
         
         
@@ -26,9 +27,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica {{ autorizzazione.descrizione }}</h3>
+            <h3>Modifica {{ campo_applicazione.descrizione }}</h3>
         {% else %}
-            <h3> Aggiungi autorizzazione</h3>
+            <h3> Aggiungi campo di applicazione</h3>
         {% endif %}
         
         
@@ -47,34 +48,27 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <div class="row mt-2">
-                <div class="col-3">
+                <div class="col-4">
                     {{ form.descrizione|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.rilasciata_da|as_crispy_field }}
+                    {{ form.is_applicabile|as_crispy_field }}
                 </div>
-                <div class="col-3">
-                    {{ form.n_autorizzazione|as_crispy_field }}
+                <div class="col-5">
+                    {{ form.fk_autorizzazione|as_crispy_field }}
                 </div>
-                <div class="col-3">
-                    {{ form.data_autorizzazione|as_crispy_field }}
-                </div>
+                
                 
                 
             </div>
             <div class="row">
-                <div class="col-3">
-                    {{ form.frequenza_scadenza|as_crispy_field }}
-                </div>
+                
                 <div class="col-6">
                     {{ form.note|as_crispy_field }}
                 </div>
                 <div class="col-2">
                     {{ form.created_by.as_hidden }}
                 </div>
-
-               
-
 
             </div>
             
@@ -89,42 +83,39 @@
 
 {% if form.instance.id  %}
 <div class="row">
-    <!-- Tabella Rinnovi -->
+    <!-- Tabella Dettaglio Campo di Applicazione -->
     <div class="col-12"> 
         <div class="row justify-content-end">
             <div class="col">
-                <p><strong>Rinnovi</strong></p>
+                <p><strong>Limiti parametri</strong></p>
             </div>
             <div class="col text-end">
-                <a href="{% url 'autorizzazioni:aggiungi_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Rinnovo</a>
+                <a href="{% url 'autorizzazioni:aggiungi_dettaglio_campo_applicazione' fk_campoapplicazione=campoapplicazione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Limite parametro</a>
             </div>
         </div>
         <div class="row">
             <div class="table-container">
                 <table class="table table-fixed-header table-bordered table-striped mt-2">
-                <caption>Rinnovi</caption>
+                <caption>Limiti parametri</caption>
                 <thead>
                     <tr>
-                        <th>Numero</th>   
-                        <th>Data Rinnovo</th>
-                        <th>Scadenza</th>
-                        <th>Rinnovata</th>
-                        <th>Documento</th>
+                        <th>Parametro</th>   
+                        <th>Unità di Misura</th>
+                        <th>Scadenza</th>                        
                         <th>Azione</th>
                         
                     </tr>
                 </thead>
                 <tbody>
-                    {% for scadenza in elenco_dettaglio_scadenze %}
+                    {% for limite in elenco_dettaglio_limiti %}
                     <tr>        
                         
-                        <td><a href="{% url 'autorizzazioni:modifica_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk pk=scadenza.pk%}">{{ scadenza.descrizione }}</a></td>
-                        <td>{{ scadenza.data_rinnovo }}</td>
-                        <td>{{ scadenza.scadenza_rinnovo }}</td>
-                        <td>{{ scadenza.is_rinnovata }}</td>
-                        <td>{{ scadenza.documento.url }}</td>
+                        <td><a href="{% url 'autorizzazioni:modifica_dettaglio_campo_applicazione' fk_campoapplicazione=campoapplicazione.pk pk=limite.pk%}">{{ limite.fk_parametro }}</a></td>
+                        <td>{{ limite.um }}</td>
+                        <td>{{ limite.limite }}</td>
+                       
                         
-                        <td class="text-center"><a href="{% url 'autorizzazioni:delete_dettaglio_autorizzazione' pk=scadenza.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scadenza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                        <td class="text-center"><a href="{% url 'autorizzazioni:delete_dettaglio_campo_applicazione' pk=limite.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{limite.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                     </tr>  
                     {% endfor %}
                 </tbody>

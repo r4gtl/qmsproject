@@ -10,7 +10,8 @@
 
 {% block content %}
 {% include 'core/modals/delConfirm.html' %}
-<nav aria-label="breadcrumb">
+
+<nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'autorizzazioni:autorizzazioni_home' %}">Elenco autorizzazioni</a></li>     
@@ -30,7 +31,8 @@
     <div class="col-6">
       <div class="row">
         <div class="col-6">
-          <h5>Parametri</h5>                  
+          <h5>Parametri</h5>
+          <p>Inserire i parametri richiesti dalle varie autorizzazioni. I limiti andranno inseriti nei Campi di Applicazione.</p>                  
         </div>
         <div class="col-6 text-end">
           <a href="{% url 'autorizzazioni:crea_parametro' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi parametro</a>
@@ -59,7 +61,39 @@
       </div>
     </div>
 
-    
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Campi di Applicazione</h5>
+          <p>Inserire i Campi di Applicazione, associarli alle Autorizzazioni e inserire i parametri con i limiti.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'autorizzazioni:crea_campo_applicazione' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi campi applicazione</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Descrizione</th>            
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for campo_applicazione in campi_applicazione %}
+            <tr>        
+              
+              <td><a href="{% url 'autorizzazioni:modifica_campo_applicazione' pk=campo_applicazione.pk %}">{{ campo_applicazione.descrizione }}</a></td>
+              
+              <td class="text-center"><a href="{% url 'autorizzazioni:delete_campo_applicazione' pk=campo_applicazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{campo_applicazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
 
   </div>

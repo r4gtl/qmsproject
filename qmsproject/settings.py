@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "django_filters",
     'widget_tweaks',
     'django.contrib.humanize',
+    'django_seed',
     
 ]
 

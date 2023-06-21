@@ -18,7 +18,7 @@ class TipoAnimale(models.Model):
         return self.descrizione
     
 class TipoGrezzo(models.Model):
-    descrizione = models.CharField(max_length=10)
+    descrizione = models.CharField(max_length=50)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='grezzo', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -57,8 +57,8 @@ class Lotto(models.Model):
     documento = models.CharField(max_length=10, null=True, blank=True)
     is_lwg = models.BooleanField(default=False)
     pezzi = models.IntegerField(null=True, blank=True)
-    prezzo_unitario = models.DecimalField(max_digits=8, decimal_places=3)
-    spese_accessorie = models.DecimalField(max_digits=10, decimal_places=3)
+    prezzo_unitario = models.DecimalField(max_digits=8, decimal_places=3, null=True, blank=True, )
+    spese_accessorie = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, )
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='lotto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -48,7 +48,7 @@ class ParametroAutorizzazione(models.Model):
     
 
 class CampoApplicazione(models.Model):
-    fk_autorizzazione = models.ForeignKey(Autorizzazione, on_delete=models.CASCADE)
+    fk_autorizzazione = models.ForeignKey(Autorizzazione, null=True, blank=True, on_delete=models.SET_NULL)
     descrizione=models.CharField(max_length=100, null=False, blank=False, help_text="descrizione")
     is_applicabile = models.BooleanField(default=False)
     note = models.TextField(null=True, blank=True)

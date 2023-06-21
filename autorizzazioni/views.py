@@ -43,8 +43,10 @@ def autorizzazioni_home(request):
 
 def tabelle_generiche_autorizzazioni(request):
     parametri = ParametroAutorizzazione.objects.all()
+    campi_applicazione = CampoApplicazione.objects.all()
 
-    context = {'parametri': parametri,                            
+    context = {'parametri': parametri, 
+               'campi_applicazione': campi_applicazione,                           
                 }
     
     return render(request, "autorizzazioni/tabelle_generiche_autorizzazioni.html", context)
@@ -231,8 +233,8 @@ class CampoApplicazioneCreateView(LoginRequiredMixin,CreateView):
         if 'salva_esci' in self.request.POST:
             return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
         
-        pk_hr=self.object.pk
-        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_hr})
+        pk_campo_applicazione=self.object.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_campo_applicazione})
         
     
     def form_valid(self, form):        
@@ -255,13 +257,20 @@ class CampoApplicazioneUpdateView(LoginRequiredMixin, UpdateView):
         if 'salva_esci' in self.request.POST:
             return reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
         
-        pk_hr=self.object.pk
-        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_hr})
+        pk_campo_applicazione=self.object.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':pk_campo_applicazione})
     
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk_campoapplicazione = self.object.pk        
+        context['elenco_dettaglio_limiti'] = DettaglioCampoApplicazione.objects.filter(fk_campoapplicazione=pk_campoapplicazione)          
+
+        return context
     
     
 
@@ -270,6 +279,72 @@ def delete_campo_applicazione(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('autorizzazioni:tabelle_generiche_autorizzazioni')
         return redirect(url_match)
+
+
+
+class DettaglioCampoApplicazioneCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioCampoApplicazione
+    form_class = DettaglioCampoApplicazioneModelForm
+    template_name = 'autorizzazioni/dettaglio_campo_applicazione.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+    
+
+    def get_success_url(self):   
+        fk_campoapplicazione=self.object.fk_campoapplicazione.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':fk_campoapplicazione})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_campoapplicazione = self.kwargs['fk_campoapplicazione']
+
+        return {
+            'created_by': created_by,
+            'fk_campoapplicazione': fk_campoapplicazione
+        }
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs['fk_campoapplicazione']       
+        context['fk_campoapplicazione'] = CampoApplicazione.objects.get(pk=pk) 
+        return context
+
+class DettaglioCampoApplicazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioCampoApplicazione
+    form_class = DettaglioCampoApplicazioneModelForm
+    template_name = 'autorizzazioni/dettaglio_campo_applicazione.html'
+    success_message = 'Dettaglio modificato correttamente!'
+    
+    
+    def get_success_url(self):   
+        fk_campoapplicazione=self.object.fk_campoapplicazione.pk
+        return reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':fk_campoapplicazione})
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs['fk_campoapplicazione']          
+        context['fk_campoapplicazione'] = CampoApplicazione.objects.get(pk=pk)         
+        return context
+
+
+
+def delete_dettaglio_campo_applicazione(request, pk): 
+        deleteobject = get_object_or_404(DettaglioCampoApplicazione, pk = pk) 
+        fk_campoapplicazione = deleteobject.fk_campoapplicazione.pk                
+        deleteobject.delete()
+        url_match = reverse_lazy('autorizzazioni:modifica_campo_applicazione', kwargs={'pk':fk_campoapplicazione})
+        return redirect(url_match)
+
+
+
 
 
 # Stampe

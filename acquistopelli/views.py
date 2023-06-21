@@ -20,13 +20,17 @@ from .forms import (LottoModelForm, SceltaModelForm,
                     TipoGrezzoModelForm
 )
 
+from .utils import filtro_lotti
+
+
+
 def dashboard_acquisto_pelli(request):     
     lotti = Lotto.objects.all()
     
     lotti_filter = LottoFilter(request.GET, queryset=lotti)
     
     page = request.GET.get('page', 1)
-    paginator = Paginator(lotti, 50)
+    paginator = Paginator(lotti_filter.qs, 50)
     
     try:
         lotti_paginator = paginator.page(page)
@@ -289,3 +293,20 @@ def delete_scelta(request, pk):
 
 
 '''FINE SEZIONE TABELLE GENERICHE'''
+
+def report_traceability_in(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+
+        # Effettua il filtro dei dati in base ai criteri
+        # e genera il report utilizzando i dati filtrati
+        lotti_filtrati= filtro_lotti(from_date, to_date) 
+        context = {
+            'lotti_filtrati': lotti_filtrati
+        }
+
+        return render(request, 'acquistopelli/reports/report_traceability_in.html', context)
+    else:
+        # Gestisci eventuali altri metodi HTTP
+        pass
