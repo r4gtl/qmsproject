@@ -17,7 +17,7 @@
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-person-vcard"></i> Facility Details</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Dettagli Azienda</h6>
-                  <p class="card-text">Dati aziendali</p>
+                  <p class="card-text">Questa sezione raccoglie informazioni introduttive riguardanti l'Azienda.</p>
                   <a href="{% url 'anagrafiche:edit_facility_details' pk=1 %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                   
@@ -55,7 +55,7 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title"><i class="bi bi-box-arrow-in-down-left"></i> Operating Permits</h5>
+                  <h5 class="card-title"><i class="bi bi-file-check"></i> Operating Permits</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Permessi Operativi</h6>
                   <p class="card-text">Questa sezione valuta la conformità dell'impianto alle licenze e alla legislazione applicabili.</p>
                   <a href="{% url 'autorizzazioni:autorizzazioni_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
@@ -67,10 +67,10 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title"><i class="bi bi-box-arrow-up-right"></i> Production Data</h5>
+                  <h5 class="card-title"><i class="bi bi-bar-chart"></i> Production Data</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Dati Produzione</h6>
                   <p class="card-text">Questa sezione è progettata per collegare insieme la filiera della pelle e valutare il rischio e il rating di coloro che forniscono materiali semilavorati e grezzi.</p>
-                  <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+                  <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -79,10 +79,10 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title">Traceability (incoming)</h5>
+                  <h5 class="card-title"><i class="bi bi-journal-arrow-down"></i> Traceability (incoming)</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Tracciabilità in ingresso</h6>
                   <p class="card-text">Questa sezione valuta la capacità dei produttori di pelle di tracciare il loro materiale in entrata fino al mattatoio specifico o alla regione di origine.</p>
-                  <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+                  <a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
               </div>
@@ -93,7 +93,7 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title"><i class="bi bi-moisture"></i> Traceability (outgoing)</h5>
+                  <h5 class="card-title"><i class="bi bi-journal-arrow-up"></i> Traceability (outgoing)</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Tracciabilità in Uscita</h6>
                   <p class="card-text">Questa sezione valuta la capacità dei produttori di pelle di tracciare il proprio materiale attraverso i propri processi di produzione.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -105,7 +105,7 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title"><i class="bi bi-speedometer"></i> Environmental Management System</h5>
+                  <h5 class="card-title"><i class="bi bi-flower3"></i> Environmental Management System</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Sistema di Gestione Ambientale</h6>
                   <p class="card-text">Questa sezione valuta se l'impianto dispone di un sistema documentato, efficace e attivo per gestire gli aspetti ambientali della propria attività.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -117,7 +117,7 @@
         <div class="col-4">
             <div class="card" >
                 <div class="card-body">
-                  <h5 class="card-title"><i class="bi bi-wrench"></i> Restricted Substances, Compliance, Chromium VI Management</h5>
+                  <h5 class="card-title"><i class="bi bi-diamond"></i> Restricted Substances, Compliance, Chromium VI Management</h5>
                   <h6 class="card-subtitle mb-2 text-body-secondary">Sostanze con limitazioni, Conformità e gestione del Cromo VI</h6>
                   <p class="card-text">Questa sezione valuta fino a che punto l'impianto gestisce, comprende e attua i requisiti sulle sostanze con limitazioni dei propri clienti.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -131,10 +131,10 @@
       <div class="col-4">
           <div class="card" >
               <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-book"></i> Energy Comsumption</h5>
+                <h5 class="card-title"><i class="bi bi-battery-charging"></i> Energy Comsumption</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">Consumi Energetici</h6>
                 <p class="card-text">Questa sezione valuta il consumo di energia per unità prodotta, inclusi i processi che sono stati appaltati ad altre aziende.</p>
-                <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+                <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                 
               </div>
             </div>
@@ -143,7 +143,7 @@
       <div class="col-4">
         <div class="card" >
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-book"></i> Water Usage</h5>
+              <h5 class="card-title"><i class="bi bi-water"></i> Water Usage</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">Consumi idrici</h6>
               <p class="card-text">Questa sezione valuta l'utilizzo di acqua dolce per unità prodotta.</p>
               <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -154,7 +154,7 @@
     <div class="col-4">
         <div class="card" >
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-book"></i> Air & Noise Emissions</h5>
+              <h5 class="card-title"><i class="bi bi-cloud-check"></i> Air & Noise Emissions</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">Emissioni in atmosfera e Rumore</h6>
               <p class="card-text">Questa sezione valuta la gestione delle emissioni atmosferiche e acustiche di un impianto verso l'ambiente e richiede inventari, gestione e monitoraggio.</p>
               <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -170,7 +170,7 @@
     <div class="col-4">
         <div class="card" >
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-book"></i> Waste Management</h5>
+              <h5 class="card-title"><i class="bi bi-recycle"></i> Waste Management</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">Gestione dei Rifiuti</h6>
               <p class="card-text">Questa sezione valuta la gestione e il controllo dei rifiuti generati dal sito dell'impianto e richiede inventari, categorizzazione dei rifiuti e adeguata conservazione e smaltimento.</p>
               <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -185,7 +185,7 @@
             <h5 class="card-title"><i class="bi bi-book"></i> Effluent Treatment</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">Scarichi idrici</h6>
             <p class="card-text">Questa sezione valuta la gestione degli scarichi idrici, sia presso il proprio sito che presso un fornitore esterno.</p>
-            <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+            <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
             
           </div>
         </div>
@@ -193,10 +193,10 @@
   <div class="col-4">
       <div class="card" >
           <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-book"></i> Health, Safety, Emergency Preparedness</h5>
+            <h5 class="card-title"><i class="bi bi-shield-check"></i> Health, Safety, Emergency Preparedness</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">Salute, Sicurezza e preparazione alle emergenze</h6>
             <p class="card-text">Questa sezione valuta la capacità dell'impianto di gestire una serie di rischi di emergenza, salute e sicurezza. Ciò include sistemi, processi e responsabilità.</p>
-            <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+            <a href="{% url 'human_resources:human_resources' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
             
           </div>
         </div>
@@ -210,7 +210,7 @@
     <div class="col-4">
         <div class="card" >
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-book"></i> Chemical Management</h5>
+              <h5 class="card-title"><i class="bi bi-moisture"></i> Chemical Management</h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">Gestione Chimica</h6>
               <p class="card-text">Lo scopo di questa sezione è valutare la consapevolezza, la comprensione e la gestione dei prodotti chimici utilizzati nel processo di produzione della pelle.</p>
               <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
@@ -222,7 +222,7 @@
     <div class="col-4">
       <div class="card" >
           <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-book"></i> Operations Management</h5>
+            <h5 class="card-title"><i class="bi bi-house-check"></i> Operations Management</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">Gestione delle Operazioni</h6>
             <p class="card-text">Questa sezione valuta la capacità dell'impianto di controllare i propri processi di produzione, esaminando le migliori pratiche, l'utilizzo delle attrezzature e le calibrazioni, ecc.</p>
             <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>

@@ -1,5 +1,6 @@
 {% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
 {% load static %}
+{% load countries %}
 {% block title %}Tracciabilità in ingresso {% endblock %}
 
 
@@ -87,12 +88,13 @@
           <tbody>
             
              {% for lotto in lotti_filtrati %}
+             
                 <tr>
                   
                   <td>{{ lotto.fk_fornitore__ragionesociale }}</td>			
                   <td>{{ lotto.fk_tipoanimale__descrizione }}</td>
                   <td>{{ lotto.fk_tipogrezzo__descrizione }}</td>
-                  <td>{{ lotto.origine }}</td>
+                  <td>{{ lotto.origine }}</td>                  
                   <td>{{ lotto.numero_lotti }}</td>
                   <td>{{ lotto.pezzi }}</td>
                 </tr>
