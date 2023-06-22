@@ -5,9 +5,10 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.list import ListView
-from django_filters.views import FilterView
+from django.db.models import Count
+from django.views.generic.edit import CreateView, UpdateView
+from django.http import JsonResponse
+
 from .filters import LottoFilter
 from anagrafiche.models import Fornitore
 from .models import (TipoAnimale, TipoGrezzo, 
@@ -24,28 +25,6 @@ from .utils import filtro_lotti
 
 
 
-# def dashboard_acquisto_pelli(request):     
-#     lotti = Lotto.objects.all()
-    
-#     lotti_filter = LottoFilter(request.GET, queryset=lotti)
-    
-#     page = request.GET.get('page', 1)
-#     paginator = Paginator(lotti_filter.qs, 50)
-    
-#     try:
-#         lotti_paginator = paginator.page(page)
-#     except PageNotAnInteger:
-#         lotti_paginator = paginator.page(1)
-#     except EmptyPage:
-#         lotti_paginator = paginator.page(paginator.num_pages)
-#     context={
-#         'lotti_paginator': lotti_paginator,
-#         'filter': lotti_filter,
-        
-#     }
-    
-    #return render(request, 'acquistopelli/dashboard_acquisto_pelli.html', context)
-
 def dashboard_acquisto_pelli(request):     
     lotti = Lotto.objects.all()
     
@@ -53,8 +32,7 @@ def dashboard_acquisto_pelli(request):
     
     page = request.GET.get('page', 1)
     paginator = Paginator(lotti_filter.qs, 50)  # Utilizza lotti_filter.qs per la paginazione
-    for pagina in paginator:
-        print("paginator:" + str(pagina))
+    
         
     try:
         lotti_paginator = paginator.page(page)
@@ -69,6 +47,7 @@ def dashboard_acquisto_pelli(request):
     }
     
     return render(request, 'acquistopelli/dashboard_acquisto_pelli.html', context)
+
 
 class LottoCreateView(LoginRequiredMixin,CreateView):
     model = Lotto
@@ -323,12 +302,19 @@ def report_traceability_in(request):
         to_date = request.GET.get('to_date')
 
         
+        from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+
         lotti_filtrati= filtro_lotti(from_date, to_date) 
         context = {
-            'lotti_filtrati': lotti_filtrati
+            'lotti_filtrati': lotti_filtrati,
+            'from_date': from_date_formatted,
+            'to_date': to_date_formatted
         }
 
-        return render(request, 'acquistopelli/report_traceability_in.html', context)
+        return render(request, 'acquistopelli/reports/report_traceability_in.html', context)
     else:
         # Gestisci eventuali altri metodi HTTP
         pass
+
+                   

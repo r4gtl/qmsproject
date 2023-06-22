@@ -6,10 +6,14 @@ from .views import (dashboard_acquisto_pelli, tabelle_generiche_acquisto_pelli,
                     TipoAnimaleCreateView, TipoAnimaleUpdateView, delete_tipo_animale,
                     TipoGrezzoCreateView, TipoGrezzoUpdateView, delete_tipo_grezzo,
                     SceltaCreateView, SceltaUpdateView, delete_scelta,
-                    report_traceability_in,
+                    report_traceability_in
                     )
 
-from .charts import origine
+from .charts import (origine, 
+                     origine_per_rpt_lwg, 
+                     tipoanimale_per_rpt_lwg,
+                     tipogrezzo_per_rpt_lwg
+                     )
 
 app_name="acquistopelli"
 
@@ -46,6 +50,9 @@ urlpatterns = [
 
     # Charts
     path('origine/', origine, name='origine'),
+    path('origine_per_rpt_lwg/', origine_per_rpt_lwg, name='origine_per_rpt_lwg'),
+    path('tipoanimale_per_rpt_lwg/', tipoanimale_per_rpt_lwg, name='tipoanimale_per_rpt_lwg'),
+    path('tipogrezzo_per_rpt_lwg/', tipogrezzo_per_rpt_lwg, name='tipogrezzo_per_rpt_lwg'),
 
     # Stampe
     path('report_traceability_in/', report_traceability_in, name='report_traceability_in'),

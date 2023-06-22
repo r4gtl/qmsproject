@@ -50,9 +50,9 @@ class Scelta(models.Model):
 class Lotto(models.Model):    
     data_acquisto = models.DateField(null=False, blank=False)
     identificativo = models.CharField(max_length=10, null=False, blank=False)
-    fk_tipoanimale = models.ForeignKey(TipoAnimale, null=True, blank=True, on_delete=models.SET_NULL)
-    fk_tipogrezzo = models.ForeignKey(TipoGrezzo, null=True, blank=True, on_delete=models.SET_NULL)
-    fk_fornitore = models.ForeignKey(Fornitore, null=False, blank=False, on_delete=models.CASCADE)
+    fk_tipoanimale = models.ForeignKey(TipoAnimale, null=True, blank=True, on_delete=models.SET_NULL, related_name='lotto')
+    fk_tipogrezzo = models.ForeignKey(TipoGrezzo, null=True, blank=True, on_delete=models.SET_NULL, related_name='lotto')
+    fk_fornitore = models.ForeignKey(Fornitore, null=False, blank=False, on_delete=models.CASCADE, related_name='lotto')
     origine = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
     documento = models.CharField(max_length=10, null=True, blank=True)
     is_lwg = models.BooleanField(default=False)
