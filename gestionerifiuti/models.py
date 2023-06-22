@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class CodiceCER(models.Model):
     codice = models.CharField(max_length=7, null=False, blank=False)
-    descrizione = models.CharField(max_length=100, null=True, blank=True)
+    descrizione = models.CharField(max_length=300, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='codice_cer', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -30,7 +30,7 @@ class CodiceSmaltRec(models.Model):
     smalt_rec =  models.CharField(max_length=15, choices=CHOICES_SMALT_REC)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='codice_smalt_rec', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     def __str__(self):
         return self.codice

@@ -5,13 +5,20 @@
 {% block head_title %}{{ block.super }} - Gestione Rifiuti {% endblock head_title %} 
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_acquisto_pelli.html" %}
+{% include "core/partials/_sidenav_gestione_rifiuti.html" %}
 {% endblock %}
 
 
 
 {% block content %}
 
+<nav aria-label="breadcrumb" class="mt-3">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+      <li class="breadcrumb-item active" aria-current="page">Movimenti Rifiuti</li>
+  </ol>
+</nav>
+{% include 'core/modals/delConfirm.html' %}
 
 
 <div class="container">
@@ -64,7 +71,7 @@
   <br>
   
 
-  <a class="btn btn-sm btn-success mt-2 mb-4" href="#"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'gestionerifiuti:crea_movimento_rifiuti' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
     <table class="table table-bordered table-striped">
         <thead>
@@ -83,11 +90,12 @@
           <tr>        
             
             
-            <td><a href="#">{{ movimento.data_movimento|date:'d/m/Y' }}</a></td>
+            <td><a href="{% url 'gestionerifiuti:modifica_movimento_rifiuti' pk=movimento.pk %}">{{ movimento.data_movimento|date:'d/m/Y' }}</a></td>
             
             <td>{{ movimento.fk_codicecer.codice }}</td>
             <td>{{ movimento.car_scar }}</td>
             <td>{{ movimento.fk_smaltrec.codice }}</td>
+            <td class="text-center"><a href="{% url 'gestionerifiuti:delete_movimento_rifiuti' pk=movimento.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{movimento.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             
           </tr>  
           {% endfor %}

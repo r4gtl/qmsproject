@@ -17,3 +17,4 @@ function getRandomColor() { //generates random colours and puts them in string
 
 
 
+

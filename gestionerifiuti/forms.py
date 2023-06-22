@@ -8,8 +8,8 @@ from .models import (MovimentoRifiuti,
 
 class MovimentoRifiutiModelForm(forms.ModelForm):
 
-    fk_codicecer = forms.ModelChoiceField(queryset=CodiceCER.objects.all())
-    fk_smaltrec = forms.ModelChoiceField(queryset=CodiceSmaltRec.objects.all())
+    fk_codicecer = forms.ModelChoiceField(queryset=CodiceCER.objects.all(), label='Codice Cer')
+    fk_smaltrec = forms.ModelChoiceField(queryset=CodiceSmaltRec.objects.all(), label='Codice Smalt/Rec')
 
     class Meta:
         model = MovimentoRifiuti
@@ -27,6 +27,53 @@ class MovimentoRifiutiModelForm(forms.ModelForm):
             'car_scar': 'Carico/Scarico',
             'quantity': 'Quantità',
             'fk_smaltrec': 'Codice Smalt/Rec',
+            'note': 'Annotazioni'
+
+            
+        }
+        
+
+class CodiceCERModelForm(forms.ModelForm):
+
+    
+
+    class Meta:
+        model = CodiceCER
+        fields = '__all__'
+        widgets = {
+            'codice': forms.TextInput(attrs={'class': 'form-control'}),
+            'descrizione': forms.TextInput(attrs={'class': 'form-control'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'codice': 'Codice Cer',
+            'descrizione': 'Descrizione',            
+            'note': 'Annotazioni'
+
+            
+        }
+        
+
+class CodiceSmaltRecModelForm(forms.ModelForm):
+
+    
+
+    class Meta:
+        model = CodiceSmaltRec
+        fields = '__all__'
+        widgets = {
+            'codice': forms.TextInput(attrs={'class': 'form-control'}),
+            'descrizione': forms.TextInput(attrs={'class': 'form-control'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'codice': 'Codice Cer',
+            'descrizione': 'Descrizione',   
+            'smalt_rec': 'Smaltimento/Recupero',
             'note': 'Annotazioni'
 
             
