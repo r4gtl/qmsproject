@@ -38,6 +38,7 @@ urlpatterns = [
     path('manutenzioni/', include('manutenzioni.urls')),
     path('lwg/', include('lwg.urls')),
     path('autorizzazioni/', include('autorizzazioni.urls')),
+    path('gestionerifiuti/', include('gestionerifiuti.urls')),
     path("admin/", admin.site.urls),
 ]
 if settings.DEBUG:

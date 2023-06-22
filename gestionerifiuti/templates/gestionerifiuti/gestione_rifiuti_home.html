@@ -1,0 +1,147 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Gestione Rifiuti {% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_acquisto_pelli.html" %}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+
+<div class="container">
+  <br>
+  <h3>Lista Movimenti Rifiuti</h3>
+  <hr>
+  
+
+ 
+
+
+  <!-- filtro -->
+  <div class="row">
+    <div class="col">
+        <div class="card card-body">
+            <form method="get">
+
+                <div class="table-responsive-sm">
+                    <table class="table table-hover table-striped table-bordered">
+                        <thead class="thead-dark">
+                            <tr>     
+                                <th>Data Movimento</th>
+                                <th>Codice Cer</th>                                    
+                                <th>Carico/Scarico</th>                                    
+                                <th>Smalt/Rec</th>                                    
+                                
+
+                            </tr>
+                        </thead>                            
+                        <tbody>
+                            <tr>                                    
+                                <td style="width: 20%">{{ filter.form.data_movimento|as_crispy_field }}</td>                                    
+                                <td style="width: 20%">{{ filter.form.fk_codicecer|as_crispy_field }}</td>                                
+                                <td style="width: 20%">{{ filter.form.car_scar|as_crispy_field }}</td>                                
+                                <td style="width: 20%">{{ filter.form.fk_smaltrec|as_crispy_field }}</td>                                
+                                
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-primary" type="submit">Cerca</button>
+                <a class="btn btn-success" href="{% url 'gestionerifiuti:gestione_rifiuti_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+            </form>        
+        </div>
+    </div>        
+</div>
+<!-- fine filtro-->
+  <hr>
+  {% include "core/partials/_messages.html" %}
+  <br>
+  
+
+  <a class="btn btn-sm btn-success mt-2 mb-4" href="#"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <br>
+    <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            
+            <th>Data Movimento</th>
+            <th>Codice Cer</th>                                    
+            <th>Carico/Scarico</th>                                    
+            <th>Smalt/Rec</th>     
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for movimento in dati_paginator %}
+          <tr>        
+            
+            
+            <td><a href="#">{{ movimento.data_movimento|date:'d/m/Y' }}</a></td>
+            
+            <td>{{ movimento.fk_codicecer.codice }}</td>
+            <td>{{ movimento.car_scar }}</td>
+            <td>{{ movimento.fk_smaltrec.codice }}</td>
+            
+          </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+      <!-- Pagination -->
+{% if dati_paginator.has_other_pages %}
+<nav>
+  <ul class="pagination justify-content-center">
+    {% if dati_paginator.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ dati_paginator.previous_page_number }}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&laquo;</span>
+      </li>
+    {% endif %}
+
+    {% for page in dati_paginator.paginator.page_range %}
+      {% if page == dati_paginator.number %}
+        <li class="page-item active">
+          <span class="page-link">{{ page }}</span>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if dati_paginator.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ dati_paginator.next_page_number }}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-hidden="true">&raquo;</span>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+<!-- End Pagination -->
+
+</div>
+
+
+
+{% endblock content %}
+
+
+
