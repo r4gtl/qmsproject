@@ -111,7 +111,7 @@
         {% for operatore_associato in operatori_associati %}
         <tr>        
           
-          <td><a href="{% url 'human_resources:modifica_dettaglio_registro_formazione' pk=registroformazione.pk id=operatore_associato.id %}">{{ operatore_associato.fk_hr }}</a></td>
+          <td><a href="{% url 'human_resources:modifica_dettaglio_registro_formazione' fk_registro_formazione=registroformazione.pk pk=operatore_associato.id %}">{{ operatore_associato.fk_hr }}</a></td>
           <td><a href="{{ operatore_associato.certificato.url }}" download>{{ operatore_associato.certificato }}</a></td>
           <td class="text-center"><a href="{% url 'human_resources:delete_dettaglio_registro_formazione' pk=operatore_associato.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatore_associato.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  

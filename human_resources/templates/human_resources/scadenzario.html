@@ -1,0 +1,72 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Scadenzario {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Home Risorse Umane</a></li>        
+
+        <li class="breadcrumb-item active" aria-current="page">Scadenze prossimo anno</li>
+        
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        <h3> Scadenze prossimo anno</h3>
+        
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <table class="table table-bordered table-striped">
+        <caption>Formazione</caption>
+        <thead>
+          <tr>
+            
+            <th scope="col">Corso</th>            
+            <th scope="col">Operatore</th>
+            <th scope="col">Prossima Scadenza</th>
+            
+
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for prossima_formazione in prossime_formazioni %}
+          <tr>        
+            
+            
+            <td>{{ prossima_formazione.fk_registro_formazione.fk_corso }}</td>
+            <td>{{ prossima_formazione.fk_hr }}</td>            
+            <td>{{ prossima_formazione.prossima_scadenza }}</td>            
+            
+          </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+        <hr>
+
+
+        
+    </div>
+
+
+
+{% endblock %}
+

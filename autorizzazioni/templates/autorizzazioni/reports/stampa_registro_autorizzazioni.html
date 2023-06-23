@@ -91,10 +91,10 @@
         <td>{{ autorizzazione.data_autorizzazione }}</td>
 			{% with autorizzazione.dettaglioscadenzaautorizzazione_set.latest as prossima_scadenza %}
 			{% if prossima_scadenza %}
-		<td>{{ prossima_scadenza.data_rinnovo }} </td>
+		<td>{{ prossima_scadenza.scadenza_rinnovo }} </td>
 		
   {% else %}
-    <td>Nessuna revisione</td>
+    <td>Nessuna scadenza</td>
     
   {% endif %}
 			

@@ -350,9 +350,9 @@ def delete_dettaglio_campo_applicazione(request, pk):
 # Stampe
 
 def get_prossima_scadenza(autorizzazione):
-    prossima_scadenza = autorizzazione.dettaglioscadenzaautorizzazione_set.order_by('-data_rinnovo').first()
+    prossima_scadenza = autorizzazione.dettaglioscadenzaautorizzazione_set.order_by('-scadenza_rinnovo').first()
     if prossima_scadenza:
-        return prossima_scadenza.data_rinnovo
+        return prossima_scadenza.scadenza_rinnovo
     return '-'
 
 

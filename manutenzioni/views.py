@@ -13,6 +13,7 @@ from .models import (Attrezzatura, ManutenzioneStraordinaria,
                     )
 from .forms import AttrezzaturaModelForm, ManutenzioneOrdinariaModelForm, ManutenzioneStraordinariaModelForm, TaraturaModelForm
 from .filters import AttrezzaturaFilter
+from core.utils import get_records_with_upcoming_expiry
 
 
 
@@ -41,6 +42,17 @@ def dashboard_manutenzioni(request):
     }
     return render(request, "manutenzioni/dashboard_manutenzioni.html", context)
 
+
+def scadenzario(request):
+    tarature = get_records_with_upcoming_expiry(Taratura, "prossima_scadenza", 30)
+    manutenzioni_ordinarie = get_records_with_upcoming_expiry(ManutenzioneOrdinaria, "prossima_scadenza", 30)
+
+    context = {
+        'tarature': tarature,
+        'manutenzioni_ordinarie': manutenzioni_ordinarie
+    }
+
+    return render(request, "manutenzioni/scadenzario.html", context)
 
 
 class AttrezzaturaCreateView(LoginRequiredMixin,CreateView):

@@ -2,13 +2,15 @@ from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from manualeprocedure.models import Procedura
 from manualeprocedure.filters import ProceduraFilter
+from core.utils import count_records_with_upcoming_expiry
+from autorizzazioni.models import DettaglioScadenzaAutorizzazione
 
 # Create your views here.
 
 def lwg_home(request):
-    
+    scadenze_autorizzazioni =count_records_with_upcoming_expiry(DettaglioScadenzaAutorizzazione, "scadenza_rinnovo", 30)
     context = {
-        
+        'scadenze_autorizzazioni': scadenze_autorizzazioni
     }
     return render(request, 'lwg/lwg_home.html', context)
 

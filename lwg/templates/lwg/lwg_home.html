@@ -59,6 +59,16 @@
                   <h6 class="card-subtitle mb-2 text-body-secondary">Permessi Operativi</h6>
                   <p class="card-text">Questa sezione valuta la conformità dell'impianto alle licenze e alla legislazione applicabili.</p>
                   <a href="{% url 'autorizzazioni:autorizzazioni_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
+                  {% if scadenze_autorizzazioni > 0 %}
+        
+                    <button onclick="goToPermitsSchedule()" type="button" class="btn btn-primary btn-sm position-relative float-end ">
+                        Prossime scadenze
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ scadenze_autorizzazioni }}
+                        <span class="visually-hidden">Prossime scadenze</span>
+                        </span>
+                    </button>
+                  {% endif %}
                   
                 </div>
               </div>
@@ -236,4 +246,13 @@
 </div>
 <hr>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function goToPermitsSchedule(){
+        document.location.href = "{% url 'autorizzazioni:stampa_registro_autorizzazioni' %}"        
+    }
+
+</script>
 {% endblock %}

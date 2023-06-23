@@ -45,7 +45,16 @@
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="{% url 'human_resources:human_resources' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
-                  
+                  {% if scadenze_formazione > 0 %}
+        
+                    <button onclick="goToTrainingSchedule()" type="button" class="btn btn-primary btn-sm position-relative float-end ">
+                        Prossime scadenze
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ scadenze_formazione }}
+                        <span class="visually-hidden">Prossime scadenze</span>
+                        </span>
+                    </button>
+                  {% endif %}
                 </div>
               </div>
         </div>
@@ -121,6 +130,16 @@
                   <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
                   <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                   <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
+                  {% if scadenze_manutenzioni > 0 %}
+        
+                    <button onclick="goToMaintenanceSchedule()" type="button" class="btn btn-primary btn-sm position-relative float-end ">
+                        Prossime scadenze
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ scadenze_manutenzioni }}
+                        <span class="visually-hidden">Prossime scadenze</span>
+                        </span>
+                    </button>
+                  {% endif %}
                   
                 </div>
               </div>
@@ -144,4 +163,18 @@
   </div>
   <hr>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function goToMaintenanceSchedule(){
+        document.location.href = "{% url 'manutenzioni:scadenzario' %}"        
+    }
+  
+function goToTrainingSchedule(){
+        document.location.href = "{% url 'human_resources:scadenzario' %}"        
+    }
+
+
+</script>
 {% endblock %}

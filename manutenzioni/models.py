@@ -19,7 +19,7 @@ class Attrezzatura(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__ (self):
-        return self.codice_attrezzatura + self.descrizione
+        return self.codice_attrezzatura + " " + self.descrizione
     
 class ManutenzioneStraordinaria(models.Model):
     fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)

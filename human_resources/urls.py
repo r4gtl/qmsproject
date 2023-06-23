@@ -5,7 +5,7 @@ from .views import (human_resources_home,
                     add_new_operator,
                     tabelle_generiche,
                     tabelle_generiche_formazione,
-                    dashboard_formazione,
+                    dashboard_formazione, scadenzario,
                     CentrodiLavoroCreateView, CentrodiLavoroUpdateView, delete_centro_di_lavoro,
                     WardCreateView, WardUpdateView, delete_ward,
                     RoleCreateView, RoleUpdateView, delete_role,
@@ -81,9 +81,9 @@ urlpatterns = [
     
     # Dettaglio Registro Formazione
     path('<int:pk>/crea_dettaglio_registro_formazione/', DettaglioRegistroFormazioneCreateView.as_view(), name="crea_dettaglio_registro_formazione"),  
-    path('<int:pk>/modifica_dettaglio_registro_formazione/<int:id>', DettaglioRegistroFormazioneUpdateView.as_view(), name="modifica_dettaglio_registro_formazione"),  
+    path('<int:fk_registro_formazione>/modifica_dettaglio_registro_formazione/<int:pk>/', DettaglioRegistroFormazioneUpdateView.as_view(), name="modifica_dettaglio_registro_formazione"),  
     path('delete_dettaglio_registro_formazione/<int:pk>', delete_dettaglio_registro_formazione, name="delete_dettaglio_registro_formazione"),
-    
+    #path('<int:fk_attrezzatura>/modifica_manutenzione_straordinaria/<int:pk>/', ManutenzioneStraordinariaUpdateView.as_view(), name="modifica_manutenzione_straordinaria"), 
     # Valutazione operatori
     path('<int:pk>/crea_valutazione_operatore/', ValutazioneOperatoreCreateView.as_view(), name="crea_valutazione_operatore"),  
     path('<int:pk>/modifica_valutazione_operatore/<int:id>', ValutazioneOperatoreUpdateView.as_view(), name="modifica_valutazione_operatore"),  
@@ -91,4 +91,7 @@ urlpatterns = [
     
     # Stampe
     path('stampa_risorse_umane/', stampa_risorse_umane, name="stampa_risorse_umane"), 
+
+    # Scadenzario
+    path('scadenzario/', scadenzario, name="scadenzario"), 
 ]

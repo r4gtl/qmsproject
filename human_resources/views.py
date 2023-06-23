@@ -20,6 +20,7 @@ from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelFo
 from .filters import HRFilter
 
 from .charts import get_average_age, get_gender_perc, get_ita_perc
+from core.utils import get_records_with_upcoming_expiry
 
 # Create your views here.
 def human_resources_home(request):
@@ -49,6 +50,18 @@ def human_resources_home(request):
         'hr_ita': hr_ita
     }
     return render(request, "human_resources/human_resources_home.html", context)
+
+def scadenzario(request):
+    prossime_formazioni = get_records_with_upcoming_expiry(DettaglioRegistroFormazione, "prossima_scadenza", 365)
+    
+
+    context = {
+        'prossime_formazioni': prossime_formazioni,
+        
+    }
+
+    return render(request, "human_resources/scadenzario.html", context)
+
 
 class HumanResourceCreateView(LoginRequiredMixin,CreateView):
     model = HumanResource
@@ -473,16 +486,23 @@ class DettaglioRegistroFormazioneUpdateView(LoginRequiredMixin, UpdateView):
     form_class = DettaglioRegistroFormazioneModelForm
     template_name = 'human_resources/dettaglio_registro_formazione.html'
     success_message = 'Operatore modificato correttamente!'
-    #success_url = reverse_lazy('human_resources:crea_registro_formazione', kwargs={"pk": pk})
+    
     
     def get_success_url(self):          
         fk_registro_formazione=self.object.fk_registro_formazione.pk
-        print("fk_registro_formazione: " + str(fk_registro_formazione))
+        
         return reverse_lazy('human_resources:modifica_registro_formazione', kwargs={'pk':fk_registro_formazione})
     
     def form_valid(self, form):                
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk_registro_formazione = self.kwargs['fk_registro_formazione'] 
+        pk_dettaglioregistro = self.kwargs['pk']               
+        context['fk_registroformazione'] = RegistroFormazione.objects.get(pk=pk_registro_formazione)
+        return context
 
 def delete_dettaglio_registro_formazione(request, pk): 
         deleteobject = get_object_or_404(DettaglioRegistroFormazione, pk = pk)   

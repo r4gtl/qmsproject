@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import (dashboard_manutenzioni, 
+from .views import (dashboard_manutenzioni, scadenzario,
                     AttrezzaturaCreateView, AttrezzaturaUpdateView, delete_attrezzatura,
                     ManutenzioneOrdinariaCreateView, ManutenzioneOrdinariaUpdateView, delete_manutenzione_ordinaria,
                     ManutenzioneStraordinariaCreateView, ManutenzioneStraordinariaUpdateView, delete_manutenzione_straordinaria,
@@ -10,8 +10,9 @@ app_name="manutenzioni"
 
 urlpatterns = [
     
-    # Home Procedure
+    # Home Manutenzioni
     path('', dashboard_manutenzioni, name='dashboard_manutenzioni'),    
+    path('scadenzario/', scadenzario, name='scadenzario'),    
 
     # Manage Attrezzatura
     path('crea_attrezzatura/', AttrezzaturaCreateView.as_view(), name="crea_attrezzatura"), 

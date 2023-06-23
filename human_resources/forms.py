@@ -17,7 +17,7 @@ class HumanResourceModelForm(forms.ModelForm):
         exclude = ['created_at', 'updated_at']
         country = CountryField().formfield()
         
-        widget = {
+        widgets = {
             
             'cognomedipendente': forms.TextInput(attrs={'class': 'form-control'}),
             'nomedipendente': forms.TextInput(attrs={'class': 'form-control'}),
@@ -128,8 +128,9 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
         widgets = {
             'fk_registro_formazione': forms.HiddenInput(),            
             'fk_hr': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'efficace': forms.CheckboxInput(),
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             
         }
         labels = {
@@ -137,6 +138,7 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
             'certificato': 'Certificato',
             'presenza': 'Presenza',
             'efficace': 'Efficace',
+            'prossima_scadenza': 'Prossima Scadenza',
             'note': 'Annotazioni'
         }
         

@@ -122,7 +122,12 @@
                         <td>{{ scadenza.data_rinnovo }}</td>
                         <td>{{ scadenza.scadenza_rinnovo }}</td>
                         <td>{{ scadenza.is_rinnovata }}</td>
-                        <td>{{ scadenza.documento.url }}</td>
+                            {% if scadenza.documento %}
+                                <td><a href="{{ scadenza.documento.url }}" download>{{ scadenza.documento.url }}</a></td>
+                            {% else %}
+                                <td>Nessun documento associato</td>
+                            {% endif %}
+                        
                         
                         <td class="text-center"><a href="{% url 'autorizzazioni:delete_dettaglio_autorizzazione' pk=scadenza.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scadenza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                     </tr>  
