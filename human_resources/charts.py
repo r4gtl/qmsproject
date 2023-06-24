@@ -21,8 +21,10 @@ def get_average_age():
         in_years = int(in_days.days / days_in_year)
         ages.append(in_years)
 
-        
-    avg_age = sum(ages) / len(ages)    
+    if ages:       
+        avg_age = sum(ages) / len(ages)
+    else:
+        avg_age = 0    
     return avg_age
 
 def get_gender_perc(gender):
@@ -32,9 +34,7 @@ def get_gender_perc(gender):
     my_gender = 0
 
     for hr in hrs:
-        gender_choice = hr.gender
-        print("Nome: " + str(hr.cognomedipendente) + " " + str(hr.nomedipendente))
-        print("Genere: " + str(gender_choice))
+        gender_choice = hr.gender        
         if gender_choice==gender:
             my_gender+=1
 

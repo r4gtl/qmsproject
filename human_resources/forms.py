@@ -17,22 +17,22 @@ class HumanResourceModelForm(forms.ModelForm):
         exclude = ['created_at', 'updated_at']
         country = CountryField().formfield()
         
-        widgets = {
-            
+        widgets = {            
             'cognomedipendente': forms.TextInput(attrs={'class': 'form-control'}),
             'nomedipendente': forms.TextInput(attrs={'class': 'form-control'}),
             'country': CountrySelectWidget(),
-            'data_nascita': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'immagine': forms.ImageField(),
-            'gender': forms.ChoiceField(),
-            'dataassunzione': forms.DateInput(),
-            'datadimissioni': forms.DateInput(),
-            'fk_mansione': forms.ChoiceField(),
-            'fk_reparto': forms.ChoiceField(),
+            'data_nascita': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
+            #'immagine': forms.ImageField(),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'dataassunzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'datadimissioni': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'fk_mansione': forms.Select(attrs={'class': 'form-control'}),
+            'fk_reparto': forms.Select(attrs={'class': 'form-control'}),
             'qualifica': forms.TextInput(attrs={'class': 'form-control'}),
             'commenti': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             
-        },
+        }
+        
         labels = {
             'cognomedipendente': 'Cognome',
             'nomedipendente': 'Nome',

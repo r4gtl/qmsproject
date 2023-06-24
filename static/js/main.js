@@ -2,6 +2,17 @@ setTimeout(function() {
     $('#message').fadeOut('slow');
 }, 3000);
 
+
+
+$(document).ready(function() {
+  $('.datepicker').datepicker({
+      format: 'dd-mm-yyyy',
+      autoclose: true,
+      todayHighlight: true
+  });
+});
+
+
 function getRandomColor() { //generates random colours and puts them in string    
     var colors = [];
     for (var i = 0; i < 50; i++) {

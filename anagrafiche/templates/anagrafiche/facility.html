@@ -98,6 +98,7 @@
                             <div class="col">
                                 {{ form.longitude|as_crispy_field}}
                             </div>
+                            <button class="btn btn-sm btn-success" onclick="openGoogleMaps()"><i class="bi bi-geo-alt"></i> Apri su Google Maps</button>
                         </div>
                     </div>
                 </div>
@@ -166,4 +167,20 @@
 
 
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function openGoogleMaps() {
+        var latitudine = document.getElementById("id_latitude").value;
+        var longitudine = document.getElementById("id_longitude").value;
+
+        if (latitudine && longitudine) {
+            var url = "https://www.google.com/maps/search/?api=1&query=" + latitudine + "," + longitudine;
+            window.open(url);
+        } else {
+            alert("Completa i campi Latitudine e Longitudine prima di aprire Google Maps.");
+        }
+    }
+</script>
 {% endblock %}
