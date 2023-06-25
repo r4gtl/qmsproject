@@ -11,20 +11,34 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from django.contrib.messages import constants as messages
+import environ
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+
+# Take environment variables from .env file
+environ.Env.read_env(BASE_DIR / '.env')
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
+SECRET_KEY = env('SECRET_KEY')
+#SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG = env('DEBUG')
+#DEBUG = True
 
 ALLOWED_HOSTS = []
 
