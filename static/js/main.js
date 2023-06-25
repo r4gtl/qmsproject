@@ -4,13 +4,13 @@ setTimeout(function() {
 
 
 
-$(document).ready(function() {
-  $('.datepicker').datepicker({
-      format: 'dd-mm-yyyy',
-      autoclose: true,
-      todayHighlight: true
-  });
-});
+// $(document).ready(function() {
+//   $('.datepicker').datepicker({
+//       format: 'dd-mm-yyyy',
+//       autoclose: true,
+//       todayHighlight: true
+//   });
+// });
 
 
 function getRandomColor() { //generates random colours and puts them in string    
@@ -24,8 +24,17 @@ function getRandomColor() { //generates random colours and puts them in string
       colors.push(color);
     }
     return colors;
-  }
+  };
 
-
+//Funzione per ricaricare subito eventuali immagini senza dover ricaricare la pagina
+function handleImagePreview(imageUploadId, previewImageId) {
+  var imageUploadField = $('#' + imageUploadId);
+  var previewImageElement = $('#' + previewImageId);  
+  imageUploadField.change(function() {
+    var input = this;
+    var url = URL.createObjectURL(input.files[0]);
+    previewImageElement.attr('src', url);
+  });
+};
 
 
