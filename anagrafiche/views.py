@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -27,10 +28,22 @@ from .forms import (FormFornitore, FormFacility,
 
 def home_fornitori(request): 
     fornitori = Fornitore.objects.all()
-    filterset_class = FornitoreFilter
+    fornitori_filter = FornitoreFilter(request.GET, queryset=fornitori)
+    #filterset_class = FornitoreFilter
+    page = request.GET.get('page', 1)
+    paginator = Paginator(fornitori_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
+            
+    try:
+        fornitori_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        fornitori_paginator = paginator.page(1)
+    except EmptyPage:
+        fornitori_paginator = paginator.page(paginator.num_pages)
+        
     context = {
-        'fornitori': filterset_class,
-        'filterset': filterset_class
+        #'fornitori': filterset_class,
+        'fornitori_paginator': fornitori_paginator,
+        'filter': fornitori_filter
     }
     return render(request, 'anagrafiche/home_fornitori.html', context)
 
