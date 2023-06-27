@@ -31,16 +31,16 @@ environ.Env.read_env(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
-#SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
+#SECURITY WARNING: keep the secret key used in production secret!
+#SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = env('DEBUG')
-#DEBUG = True
+#DEBUG = env('DEBUG')
+DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -182,7 +182,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static'
     ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '/media-serve')
 MEDIA_URL = '/media/'
 
 
