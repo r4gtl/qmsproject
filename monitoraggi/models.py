@@ -18,7 +18,7 @@ class MonitoraggioAcqua(models.Model):
 
 class MonitoraggioGas(models.Model):
     data_lettura = models.DateField(null=False, blank=False)
-    mc_in = models.IntegerField()    
+    mc_in = models.DecimalField(max_digits=8, decimal_places=3)   
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='MonitoraggioGas', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -45,7 +45,7 @@ class MonitoraggioGas(models.Model):
 
 class MonitoraggioEnergiaElettrica(models.Model):
     data_lettura = models.DateField(null=False, blank=False)
-    kwh_in = models.IntegerField()    
+    kwh_in = models.DecimalField(max_digits=8, decimal_places=3)    
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='MonitoraggioEnergiaElettrica', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

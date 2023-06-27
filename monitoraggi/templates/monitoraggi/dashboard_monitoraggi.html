@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %} 
+{% load humanize %}
 {% load static %}
 
 {% load crispy_forms_tags %} 
@@ -144,7 +145,7 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_gas' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.mc_in }}</td>                                                                 
+              <td>{{ lettura.mc_in|intcomma }}</td>                                                                 
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_gas' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -173,7 +174,7 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_energia_elettrica' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.kwh_in }}</td>                                                                 
+              <td>{{ lettura.kwh_in|intcomma }}</td>                                                                 
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_energia_elettrica' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}

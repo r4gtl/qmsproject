@@ -1,7 +1,13 @@
 from django import forms
+
 from .models import (MonitoraggioAcqua, MonitoraggioGas, MonitoraggioEnergiaElettrica,
                      DatoProduzione
                      )
+
+
+
+
+
 
 
 class MonitoraggioAcquaModelForm(forms.ModelForm):
@@ -30,7 +36,7 @@ class MonitoraggioGasModelForm(forms.ModelForm):
 
         widgets = {
             'data_lettura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'mc_in': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'mc_in': forms.NumberInput(attrs={'class': 'form-control'}),           
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput()
         }
@@ -47,7 +53,7 @@ class MonitoraggioEnergiaElettricaModelForm(forms.ModelForm):
 
         widgets = {
             'data_lettura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'kwh_in': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'kwh_in': forms.NumberInput(attrs={'step': 'any'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput()
         }
