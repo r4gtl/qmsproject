@@ -18,12 +18,15 @@ def dashboard_monitoraggi(request):
     consumi_gas = MonitoraggioGas.objects.all()
     consumi_energia_elettrica = MonitoraggioEnergiaElettrica.objects.all()
     dati_produzione = DatoProduzione.objects.all()
-
+    mq_last_year=DatoProduzione.somma_produzione_ultimo_anno('mq')
+    n_pelli_last_year=DatoProduzione.somma_produzione_ultimo_anno('n_pelli')
     context = {
         'consumi_acqua': consumi_acqua,
         'consumi_gas': consumi_gas,
         'consumi_energia_elettrica': consumi_energia_elettrica,
-        'dati_produzione': dati_produzione
+        'dati_produzione': dati_produzione,
+        'mq_last_year': mq_last_year,
+        'n_pelli_last_year': n_pelli_last_year
     }
     return render(request, "monitoraggi/dashboard_monitoraggi.html", context)
 

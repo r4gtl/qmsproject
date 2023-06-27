@@ -31,3 +31,22 @@ def get_records_with_upcoming_expiry(model, date_field, days):
     )
     
     return records
+
+
+
+'''
+Questa funzione serve per conteggiare quanti record ci sono nell'intervallo richiesto.
+Utilizzata inizialmente per avere un controllo sui monitoraggi.
+Esempio:
+record_count = get_record_last_interval(MyModel, "data_lettura", 365)
+'''
+
+def get_record_last_interval(model, date_field, days):
+    current_date = date.today()
+    begin_date = current_date - timedelta(days=days)
+    
+    count = model.objects.filter(
+        Q(**{f"{date_field}__lte": current_date}) & Q(**{f"{date_field}__gte": begin_date})
+    ).count()
+    
+    return count

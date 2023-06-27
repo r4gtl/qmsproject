@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 # Create your models here.
 class MonitoraggioAcqua(models.Model):
@@ -63,5 +64,20 @@ class DatoProduzione(models.Model):
 
     class Meta:
         ordering = ["-data_inserimento"]
+
+    @classmethod
+    def somma_produzione_ultimo_anno(cls, campo_sommabile):
+        # Calcola la data di un anno fa
+        data_oggi = datetime.today()
+        data_anno_precedente = data_oggi - timedelta(days=365)
+
+        # Esegue la query per ottenere la somma del campo da sommare
+        somma = cls.objects.filter(data_inserimento__gte=data_anno_precedente).aggregate(total=models.Sum(campo_sommabile))['total']
+
+        # Verifica se la somma è None (nessun record trovato)
+        if somma is None:
+            somma = 0
+
+        return somma
 
 
