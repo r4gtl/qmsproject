@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+
+
 from .models import (
                     MonitoraggioAcqua, MonitoraggioGas, MonitoraggioEnergiaElettrica, DatoProduzione
 )
@@ -14,6 +16,7 @@ from .forms import (
 # Create your views here.
 
 def dashboard_monitoraggi(request):
+    
     consumi_acqua = MonitoraggioAcqua.objects.all()
     consumi_gas = MonitoraggioGas.objects.all()
     consumi_energia_elettrica = MonitoraggioEnergiaElettrica.objects.all()

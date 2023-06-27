@@ -5,7 +5,7 @@ from monitoraggi.views import (dashboard_monitoraggi,
                                MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
                                DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
                                     )
-from .charts import produzione_ultimo_anno
+from .charts import produzione_ultimo_anno, consumi_mj_mq_ultimo_anno
 
 app_name="monitoraggi"
 
@@ -36,5 +36,6 @@ urlpatterns = [
     
     # Charts
     path('produzione_ultimo_anno/', produzione_ultimo_anno, name='produzione_ultimo_anno'),
+    path('consumi_mj_mq_ultimo_anno/', consumi_mj_mq_ultimo_anno, name='consumi_mj_mq_ultimo_anno'),
     
 ]

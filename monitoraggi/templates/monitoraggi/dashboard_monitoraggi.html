@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %} 
 {% load humanize %}
 {% load static %}
+{% load custom_filters %}
 
 {% load crispy_forms_tags %} 
 {% load widget_tweaks %}
@@ -29,14 +30,18 @@
     </div>
     <div class="col-2">
       <p>Ultimi 12 mesi:</p>
-      <p>Mq. {{ mq_last_year }}</p>
-      <p>N. Pelli {{ n_pelli_last_year }}</p>
+      <p>Mq. {{ mq_last_year|intcomma }}</p>
+      <p>N. Pelli {{ n_pelli_last_year|intcomma}}</p>
     </div>
     <div class="col-2">
       <p>Mjoule/mq ultimi 12 mesi:</p>
-      <p>Energia {{ kwh_mq_mj|floatformat:2 }} MJ/Mq</p>
-      <p>Gas {{ mc_mq_mj|floatformat:2 }} MJ/Mq</p>
+      <p>Energia {{ kwh_mq_mj|format_number_dec_thousand }} MJ/Mq</p>
+      <p>Gas {{ mc_mq_mj|format_number_dec_thousand }} MJ/Mq</p>
       
+    </div>
+    <div class="col-4">
+     <canvas id="grafico" data-url=""></canvas>
+  
     </div>
   </div>
 
@@ -85,7 +90,7 @@
               <td><a href="{% url 'monitoraggi:modifica_lettura_dato_produzione' pk=dato_produzione.pk %}">{{ dato_produzione.data_inserimento }}</a></td>
               <td>{{ dato_produzione.industries_served }}</td>                           
               <td>{{ dato_produzione.n_pelli }}</td>
-              <td>{{ dato_produzione.mq }}</td>
+              <td>{{ dato_produzione.mq|intcomma }}</td>
               <td class="text-center"><a href="{% url 'monitoraggi:delete_lettura_dato_produzione' pk=dato_produzione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dato_produzione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -115,8 +120,8 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_acqua' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.mc_in }}</td>                           
-              <td>{{ lettura.mc_out }}</td>                           
+              <td>{{ lettura.mc_in|intcomma }}</td>                           
+              <td>{{ lettura.mc_out|intcomma }}</td>                           
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_acqua' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -191,6 +196,7 @@
 {% block extra_scripts %}
 <script>
   document.addEventListener('DOMContentLoaded', updateChart);
+  document.addEventListener('DOMContentLoaded', renderizzaGrafico);
 
   function updateChart() {
     var url = "{% url 'monitoraggi:produzione_ultimo_anno' %}"
@@ -229,6 +235,63 @@
           })
           .catch(error => console.log(error));
   }
+
+
+function renderizzaGrafico() {
+  var url = "{% url 'monitoraggi:consumi_mj_mq_ultimo_anno' %}"
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      // Recupera i dati per il rapporto del gas e dell'energia
+      var rapportoGas = data.rapporto_gas;
+      var rapportoEnergia = data.rapporto_energia;
+
+      // Recupera i mesi per l'asse X
+      var mesi = rapportoGas.map(item => item.mese);
+
+      // Recupera i valori del rapporto del gas per l'asse Y
+      var valoriGas = rapportoGas.map(item => item.rapporto);
+
+      // Recupera i valori del rapporto dell'energia per l'asse Y
+      var valoriEnergia = rapportoEnergia.map(item => item.rapporto);
+
+      // Crea il grafico utilizzando Chart.js
+      var ctx = document.getElementById('grafico').getContext('2d');
+      var grafico = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: mesi,
+          datasets: [
+            {
+              label: 'Rapporto Gas',
+              data: valoriGas,
+              borderColor: 'red',
+              fill: false
+            },
+            {
+              label: 'Rapporto Energia',
+              data: valoriEnergia,
+              borderColor: 'blue',
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    })
+    .catch(error => {
+      //console.error('Si è verificato un errore:', error);
+    });
+}
+
+
 
 </script>
 {% endblock %}

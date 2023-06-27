@@ -40,6 +40,21 @@ class MonitoraggioGas(models.Model):
             somma = 0
 
         return somma
+    
+    @classmethod
+    def somma_gas_ultimo_anno_per_mese(cls):
+        # Calcola la data di un anno fa
+        data_oggi = datetime.today()
+        data_anno_precedente = data_oggi - timedelta(days=365)
+
+        # Esegue la query per ottenere la somma dei mc_in raggruppati per mese
+        somme_mese_gas = cls.objects.filter(data_lettura__gte=data_anno_precedente) \
+            .annotate(mese=models.functions.TruncMonth('data_lettura')) \
+            .values('mese') \
+            .annotate(somma=models.Sum('mc_in')) \
+            .order_by('mese')
+
+        return somme_mese_gas
 
 
 
@@ -67,6 +82,21 @@ class MonitoraggioEnergiaElettrica(models.Model):
             somma = 0
 
         return somma
+    
+    @classmethod
+    def somma_energia_ultimo_anno_per_mese(cls):
+        # Calcola la data di un anno fa
+        data_oggi = datetime.today()
+        data_anno_precedente = data_oggi - timedelta(days=365)
+
+        # Esegue la query per ottenere la somma dei mc_in raggruppati per mese
+        somme_mese_energia = cls.objects.filter(data_lettura__gte=data_anno_precedente) \
+            .annotate(mese=models.functions.TruncMonth('data_lettura')) \
+            .values('mese') \
+            .annotate(somma=models.Sum('kwh_in')) \
+            .order_by('mese')
+
+        return somme_mese_energia
 
 
 class DatoProduzione(models.Model):
@@ -114,5 +144,19 @@ class DatoProduzione(models.Model):
             somma = 0
 
         return somma
+    
+    @classmethod
+    def somma_produzione_ultimo_anno_per_mese(cls):
+        # Calcola la data di un anno fa
+        data_oggi = datetime.today()
+        data_anno_precedente = data_oggi - timedelta(days=365)
+
+        somma_produzione_ultimo_anno_per_mese = cls.objects.filter(data_inserimento__gte=data_anno_precedente) \
+            .annotate(mese=models.functions.TruncMonth('data_inserimento')) \
+            .values('mese') \
+            .annotate(somma=models.Sum('mq')) \
+            .order_by('mese')
+
+        return somma_produzione_ultimo_anno_per_mese
 
 
