@@ -27,9 +27,15 @@
       <canvas id="produzione_ultimo_anno" data-url=""></canvas>
     </div>
     <div class="col-2">
-      <p> Ultimi 12 mesi:</p>
+      <p>Ultimi 12 mesi:</p>
       <p>Mq. {{ mq_last_year }}</p>
       <p>N. Pelli {{ n_pelli_last_year }}</p>
+    </div>
+    <div class="col-2">
+      <p>Mjoule/mq ultimi 12 mesi:</p>
+      <p>Energia {{ kwh_mq_mj|floatformat:2 }} MJ/Mq</p>
+      <p>Gas {{ mc_mq_mj|floatformat:2 }} MJ/Mq</p>
+      
     </div>
   </div>
 

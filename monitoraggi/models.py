@@ -27,13 +27,13 @@ class MonitoraggioGas(models.Model):
         ordering = ["-data_lettura"]
     
     @classmethod
-    def somma_gas_ultimo_anno(cls, campo_sommabile):
+    def somma_gas_ultimo_anno(cls):
         # Calcola la data di un anno fa
         data_oggi = datetime.today()
         data_anno_precedente = data_oggi - timedelta(days=365)
 
         # Esegue la query per ottenere la somma del campo da sommare
-        somma = cls.objects.filter(data_lettura__gte=data_anno_precedente).aggregate(total=models.Sum(campo_sommabile))['total']
+        somma = cls.objects.filter(data_lettura__gte=data_anno_precedente).aggregate(total=models.Sum('mc_in'))['total']
 
         # Verifica se la somma è None (nessun record trovato)
         if somma is None:
@@ -54,13 +54,13 @@ class MonitoraggioEnergiaElettrica(models.Model):
         ordering = ["-data_lettura"]
     
     @classmethod
-    def somma_energia_ultimo_anno(cls, campo_sommabile):
+    def somma_energia_ultimo_anno(cls):
         # Calcola la data di un anno fa
         data_oggi = datetime.today()
         data_anno_precedente = data_oggi - timedelta(days=365)
 
         # Esegue la query per ottenere la somma del campo da sommare
-        somma = cls.objects.filter(data_lettura__gte=data_anno_precedente).aggregate(total=models.Sum(campo_sommabile))['total']
+        somma = cls.objects.filter(data_lettura__gte=data_anno_precedente).aggregate(total=models.Sum('kwh_in'))['total']
 
         # Verifica se la somma è None (nessun record trovato)
         if somma is None:

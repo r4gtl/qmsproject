@@ -20,13 +20,25 @@ def dashboard_monitoraggi(request):
     dati_produzione = DatoProduzione.objects.all()
     mq_last_year=DatoProduzione.somma_produzione_ultimo_anno('mq')
     n_pelli_last_year=DatoProduzione.somma_produzione_ultimo_anno('n_pelli')
+    energia_elettrica_last_year = MonitoraggioEnergiaElettrica.somma_energia_ultimo_anno()
+    gas_last_year = MonitoraggioGas.somma_gas_ultimo_anno()
+    if mq_last_year==0:
+        kwh_mq_mj = 0
+        mc_mq_mj = 0
+    else:
+        kwh_mq_mj = (float(energia_elettrica_last_year) / float(mq_last_year))*3.6
+        mc_mq_mj = (float(gas_last_year) / float(mq_last_year))*38.4
+        
+
     context = {
         'consumi_acqua': consumi_acqua,
         'consumi_gas': consumi_gas,
         'consumi_energia_elettrica': consumi_energia_elettrica,
         'dati_produzione': dati_produzione,
         'mq_last_year': mq_last_year,
-        'n_pelli_last_year': n_pelli_last_year
+        'n_pelli_last_year': n_pelli_last_year,
+        'kwh_mq_mj': kwh_mq_mj,
+        'mc_mq_mj': mc_mq_mj
     }
     return render(request, "monitoraggi/dashboard_monitoraggi.html", context)
 
