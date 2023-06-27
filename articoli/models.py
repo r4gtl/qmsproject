@@ -3,10 +3,34 @@ from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
+from acquistopelli.models import TipoAnimale, TipoGrezzo
 
 class Articolo(models.Model):
+    # Industrie fornite
+    APPAREL_CLOTHING = 'apparel/clothing'
+    AUTOMOTIVE = 'automotive'
+    CONTRACT = 'contract'
+    FOOTWEAR = 'footwear'
+    FOOTWEAR_ATHLETIC = 'footwear (athletic)'
+    LEATHER_GOODS = 'leather goods'
+    UPHOLSTERY = 'upholstery'
+    
+    
+    CHOICES_INDUSTRIES_SERVED = (
+        (APPAREL_CLOTHING, 'Apparel/clothing'),
+        (AUTOMOTIVE, 'Automotive'),        
+        (CONTRACT, 'Contract'),
+        (FOOTWEAR, 'Footwear'),
+        (FOOTWEAR_ATHLETIC, 'Footwear (Athletic)'),
+        (LEATHER_GOODS, 'Leather goods'),
+        (UPHOLSTERY, 'Upholstery')
+    )
+    
     descrizione = models.CharField(max_length=100)
     scheda_tecnica = models.FileField(upload_to='schede_tecniche_articoli/', null=True, blank=True)
+    industries_served = models.CharField(max_length=50, choices=CHOICES_INDUSTRIES_SERVED, null=True, blank=True)
+    fk_tipoanimale = models.ForeignKey(TipoAnimale, null=True, blank=True, on_delete=models.SET_NULL, related_name='articolo')
+    fk_tipogrezzo = models.ForeignKey(TipoGrezzo, null=True, blank=True, on_delete=models.SET_NULL, related_name='articolo')
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='articolo', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -3,12 +3,15 @@ from django import forms
 from .models import (Articolo, 
                     Colore, FaseLavoro
                 )
+from acquistopelli.models import TipoAnimale, TipoGrezzo
 
 
 class ArticoloModelForm(forms.ModelForm):
     class Meta:
         model = Articolo
         fields = '__all__'
+        fk_tipoanimale = forms.ModelChoiceField(queryset=TipoAnimale.objects.all())
+        fk_tipogrezzo = forms.ModelChoiceField(queryset=TipoGrezzo.objects.all())
         widgets = {
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci Nome Articolo'}),            
             'created_by': forms.HiddenInput(),
@@ -16,6 +19,8 @@ class ArticoloModelForm(forms.ModelForm):
         }
         labels = {
             'descrizione': 'Articolo',
+            'fk_tipoanimale': 'Tipo Animale',
+            'fk_tipogrezzo': 'Tipo Grezzo'
             
         }
         

@@ -53,6 +53,12 @@ class ArticoloCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+    
     
 
 class ArticoloUpdateView(LoginRequiredMixin,UpdateView):
