@@ -156,7 +156,7 @@ class DatoProduzione(models.Model):
             .values('mese') \
             .annotate(somma=models.Sum('mq')) \
             .order_by('mese')
-
+        
         return somma_produzione_ultimo_anno_per_mese
 
 

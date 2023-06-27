@@ -39,6 +39,7 @@ def consumi_mj_mq_ultimo_anno(request):
         
         if somma_gas != 0:
             rapporto = (float(produzione) / float(somma_gas))*38.4
+            
         else:
             rapporto = 0
 
@@ -52,6 +53,7 @@ def consumi_mj_mq_ultimo_anno(request):
         
         if somma_energia != 0:
             rapporto = (float(produzione) / float(somma_energia))*3.6
+            
         else:
             rapporto = 0
 
@@ -62,5 +64,5 @@ def consumi_mj_mq_ultimo_anno(request):
         'rapporto_gas': rapporto_per_mese_gas,
         'rapporto_energia': rapporto_per_mese_energia
     }
-    print("Dati: " + str(dati_json))
+    
     return JsonResponse(dati_json)
