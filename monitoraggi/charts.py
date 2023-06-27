@@ -45,7 +45,7 @@ def consumi_mj_mq_ultimo_anno(request):
 
         rapporto_per_mese_gas.append({'mese': mese, 'rapporto': rapporto})
 
-        rapporto_per_mese_energia = []
+    rapporto_per_mese_energia = []
     for prod_mese, energia_mese in zip(produzione_per_mese, somma_energia_per_mese):
         mese = prod_mese['mese']
         produzione = prod_mese['somma']

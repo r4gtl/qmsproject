@@ -76,7 +76,11 @@
             
             
             <td><a href="{% url 'articoli:modifica_articolo' pk=articolo.pk %}">{{ articolo.descrizione }}</a></td>
-            <td><a href="{{ articolo.scheda_tecnica.url }}" download>{{ articolo.scheda_tecnica }}</a></td>            
+            {% if articolo.scheda_tecnica %}            
+              <td><a href="{{ articolo.scheda_tecnica.url }}" download>{{ articolo.scheda_tecnica }}</a></td>            
+            {% else %}
+              <td>Non è disponibile una scheda tecnica per questo oggetto.</td>
+            {% endif %}
             <td class="text-center"><a href="{% url 'articoli:delete_articolo' pk=articolo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{articolo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
