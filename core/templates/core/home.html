@@ -16,7 +16,7 @@
              
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-person-vcard"></i> Anagrafiche</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Aggiorna, elimina e visualizza le informazioni dettagliate di clienti e fornitori.</p>
                   <a href="{% url 'anagrafiche:home_clienti' %}" class="btn btn-sm btn-primary">Sezione Clienti</a>
                   <a href="{% url 'anagrafiche:home_fornitori' %}" class="btn btn-sm btn-primary">Sezione Fornitori</a>
@@ -30,7 +30,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-archive"></i> Articoli</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Esplora, crea, modifica ed elimina gli articoli.</p>
                   <a href="{% url 'articoli:articoli_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
@@ -42,7 +42,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-person-workspace"></i> Risorse Umane</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Gestisci il personale, gli incarichi e la formazione aziendale.</p>
                   <a href="{% url 'human_resources:human_resources' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   {% if scadenze_formazione > 0 %}
@@ -65,8 +65,9 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-box-arrow-in-down-left"></i> Acquisti</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                  <p class="card-text">"Gestisci l'approvvigionamento delle materie prime.</p>
+                  <hr>
+
+                  <p class="card-text">Gestisci l'approvvigionamento delle materie prime.</p>
                   <a href="{% url 'acquistopelli:dashboard_acquisto_pelli' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
                 </div>
@@ -77,7 +78,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-box-arrow-up-right"></i> Vendite</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Gestisci vendite e messa in lavoro aziendale.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
@@ -89,7 +90,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title">Lavorazioni</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Elenco lavorazioni.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
@@ -103,7 +104,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-moisture"></i> Gestione Chimica</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Massimizza la sicurezza e l'efficienza nella gestione dei prodotti chimici.</p>
                   <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
                   
@@ -115,7 +116,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-speedometer"></i> Monitoraggi</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Misura e monitora l'efficienza energetica dei processi.</p>
                   <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   
@@ -127,7 +128,7 @@
             <div class="card" >
                 <div class="card-body">
                   <h5 class="card-title"><i class="bi bi-wrench"></i> Manutenzioni</h5>
-                  <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                  <hr>
                   <p class="card-text">Programma e monitora le manutenzioni ordinarie e straordinarie.</p>
                   <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                   {% if scadenze_manutenzioni > 0 %}
@@ -151,7 +152,7 @@
           <div class="card" >
               <div class="card-body">
                 <h5 class="card-title"><i class="bi bi-book"></i> Manuale Procedure</h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+                <hr>
                 <p class="card-text">Standardizza e documenta le procedure aziendali per una maggiore efficienza.</p>
                 <a href="{% url 'manualeprocedure:procedure_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
                 
@@ -163,7 +164,7 @@
         <div class="card" >
             <div class="card-body">
               <h5 class="card-title"><i class="bi bi-recycle"></i> Gestione Rifiuti</h5>
-              <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+              <hr>
               <p class="card-text">Traccia e gestisci la raccolta, il trattamento e lo smaltimento dei rifiuti.</p>
               <a href="{% url 'gestionerifiuti:gestione_rifiuti_home' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
               
@@ -175,7 +176,7 @@
       <div class="card" >
           <div class="card-body">
             <h5 class="card-title"><i class="bi bi-journal-check"></i> Registro Non Conformità</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
+            <hr>
             <p class="card-text">Documenta e traccia le azioni correttive e preventive.</p>
             <a href="{% url 'nonconformity:home_rapporti_nc' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
             

@@ -7,8 +7,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
 
-from .models import Processo, RapportoNC, RapportoAudit
-from .forms import ProcessoModelForm, RapportoNCModelForm, RapportoAuditModelForm
+from .models import Processo, RapportoNC, RapportoAudit, ProcessoAudit
+from .forms import ProcessoModelForm, RapportoNCModelForm, RapportoAuditModelForm, ProcessoAuditModelForm
 from .filters import RapportoAuditFilter, RapportoNCFilter
 
 
@@ -96,7 +96,7 @@ def delete_rapporto_nc(request, pk):
 
 def home_rapporti_audit(request): 
     rapporti_audit = RapportoAudit.objects.all()
-    rapporti_audit_filter = RapportoNCFilter(request.GET, queryset=rapporti_audit)
+    rapporti_audit_filter = RapportoAuditFilter(request.GET, queryset=rapporti_audit)
     #filterset_class = FornitoreFilter
     page = request.GET.get('page', 1)
     paginator = Paginator(rapporti_audit_filter.qs, 50)  # Utilizza rapporti_audit_filter.qs per la paginazione
@@ -157,9 +157,9 @@ class RapportoAuditUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        # pk_procedura = self.object.pk        
-        # context['elenco_revisioni'] = RevisioneProcedura.objects.filter(fk_procedura=pk_procedura) 
-        # context['elenco_moduli'] = Modulo.objects.filter(fk_procedura=pk_procedura) 
+        pk_rapporto = self.object.pk        
+        context['elenco_nc_associate'] = RapportoNC.objects.filter(fk_rapportoaudit=pk_rapporto) 
+        context['processi_audit'] = ProcessoAudit.objects.filter(fk_rapportoaudit=pk_rapporto) 
 
         return context
 
@@ -169,4 +169,141 @@ def delete_rapporto_audit(request, pk):
         deleteobject = get_object_or_404(RapportoAudit, pk = pk)                 
         deleteobject.delete()
         url_match = reverse_lazy('nonconformity:home_rapporti_audit')
+        return redirect(url_match)
+
+'''TABELLE GENERICHE'''
+def tabelle_generiche(request):
+    processi = Processo.objects.all() 
+
+    context = {'processi': processi, 
+               
+                }
+    
+    return render(request, "nonconformity/tabelle_generiche.html", context)
+
+
+
+class ProcessoCreateView(LoginRequiredMixin,CreateView):
+    model = Processo
+    form_class = ProcessoModelForm
+    template_name = 'nonconformity/processo.html'
+    success_message = 'Processo aggiunto correttamente!'
+    
+
+    def get_success_url(self):        
+        
+        return reverse_lazy('nonconformity:tabelle_generiche')
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class ProcessoUpdateView(LoginRequiredMixin, UpdateView):
+    model = Processo
+    form_class = ProcessoModelForm
+    template_name = 'nonconformity/processo.html'
+    success_message = 'Processo modificato correttamente!'
+    
+    
+    def get_success_url(self):        
+        
+        return reverse_lazy('nonconformity:tabelle_generiche')
+            
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        # pk_procedura = self.object.pk        
+        # context['elenco_revisioni'] = RevisioneProcedura.objects.filter(fk_procedura=pk_procedura) 
+        # context['elenco_moduli'] = Modulo.objects.filter(fk_procedura=pk_procedura) 
+
+        return context
+
+
+
+def delete_processo(request, pk): 
+        deleteobject = get_object_or_404(Processo, pk = pk)                 
+        deleteobject.delete()
+        url_match = reverse_lazy('nonconformity:tabelle_generiche')
+        return redirect(url_match)
+
+
+'''Processo->Audit'''
+class ProcessoAuditCreateView(LoginRequiredMixin,CreateView):
+    model = ProcessoAudit
+    form_class = ProcessoAuditModelForm
+    template_name = 'nonconformity/processo_audit.html'
+    success_message = 'Processo aggiunto correttamente!'
+    
+
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('nonconformity:home_rapporti_audit')
+        
+        fk_rapportoaudit=self.object.fk_rapportoaudit.pk
+        return reverse_lazy('nonconformity:modifica_rapporto_audit', kwargs={'pk':fk_rapportoaudit})
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_rapportoaudit = self.kwargs['fk_rapportoaudit']
+        return {
+            'created_by': created_by,
+            'fk_rapportoaudit': fk_rapportoaudit
+        }
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_rapportoaudit = self.kwargs['fk_rapportoaudit']       
+        context['fk_rapportoaudit'] = RapportoAudit.objects.get(pk=fk_rapportoaudit) 
+        return context
+    
+
+
+class ProcessoAuditUpdateView(LoginRequiredMixin, UpdateView):
+    model = ProcessoAudit
+    form_class = ProcessoAuditModelForm
+    template_name = 'nonconformity/processo_audit.html'
+    success_message = 'Processo modificato correttamente!'
+    
+    
+    def get_success_url(self):        
+        
+        fk_rapportoaudit=self.object.fk_rapportoaudit.pk
+        return reverse_lazy('nonconformity:modifica_rapporto_audit', kwargs={'pk':fk_rapportoaudit})
+            
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_rapportoaudit = self.kwargs['fk_rapportoaudit']        
+        context['fk_rapportoaudit'] = RapportoAudit.objects.filter(pk=fk_rapportoaudit) 
+        # context['elenco_moduli'] = Modulo.objects.filter(fk_procedura=pk_procedura) 
+
+        return context
+
+
+
+def delete_processo_audit(request, pk): 
+        deleteobject = get_object_or_404(ProcessoAudit, pk = pk) 
+        fk_rapportoaudit = deleteobject.fk_rapportoaudit.pk                 
+        deleteobject.delete()
+        url_match = reverse_lazy('nonconformity:modifica_rapporto_audit', kwargs={'pk':fk_rapportoaudit})
         return redirect(url_match)

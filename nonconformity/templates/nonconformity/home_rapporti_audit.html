@@ -108,11 +108,11 @@
               
               <tbody>
                 {% for rapporto_audit in rapporti_audit_filter_paginator %}
-                    
+                    <tr>
                     <td><a href="{% url 'nonconformity:modifica_rapporto_audit' pk=rapporto_audit.pk %}">{{ rapporto_audit.numero_rapporto_audit }}</a></td>
                     <td>{{ rapporto_audit.data_rapporto_audit }}</td>                                               
                     <td class="text-center"><a href="{% url 'nonconformity:delete_rapporto_audit' pk=rapporto_audit.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{rapporto_audit.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
-                  
+                    </tr>
                 
                 {% endfor %}
                 

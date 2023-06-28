@@ -43,8 +43,22 @@ class RapportoAudit(models.Model):
     class Meta:
         ordering = ["-data_rapporto_audit"]
 
+    def save(self, *args, **kwargs):
+        if not self.numero_rapporto_audit:
+            last_number = RapportoAudit.objects.order_by('-numero_rapporto_audit').first()
+            if last_number:
+                self.numero_rapporto_audit = last_number.numero_rapporto_audit + 1
+                print("Last number: " + str(last_number))
+            else:
+                self.numero_rapporto_audit = 1
+        super().save(*args, **kwargs)
+
+
+
+
     def __str__(self):
-        return str(self.numero_rapporto_audit) + " del " + str(self.data_rapporto_audit)
+        formatted_date = self.data_rapporto_audit.strftime('%d/%m/%Y')
+        return str(self.numero_rapporto_audit) + " del " + formatted_date
 
 
 class RapportoNC(models.Model):
@@ -126,7 +140,7 @@ class RapportoNC(models.Model):
     is_ac_completa = models.BooleanField(default=False)
     is_ac_efficace = models.BooleanField(default=False)
     altre_decisioni_ac = models.TextField(null=True, blank=True)
-    fk_rapportoaudit = models.ForeignKey(RapportoAudit, on_delete=models.SET_NULL, null=True, blank=True)
+    fk_rapportoaudit = models.ForeignKey(RapportoAudit, on_delete=models.CASCADE, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='rapportornc', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -150,7 +164,7 @@ class RapportoNC(models.Model):
     
 
 class ProcessoAudit(models.Model):
-    fk_audit = models.ForeignKey(RapportoAudit, on_delete=models.CASCADE)
+    fk_rapportoaudit = models.ForeignKey(RapportoAudit, on_delete=models.CASCADE)
     fk_processo = models.ForeignKey(Processo, on_delete=models.CASCADE)
     note = models.TextField(null=True, blank=True)
 

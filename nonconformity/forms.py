@@ -78,14 +78,14 @@ class RapportoNCModelForm(forms.ModelForm):
 
 class RapportoAuditModelForm(forms.ModelForm):
 
-    numero_rapporto_audit = forms.IntegerField(
-        widget=forms.TextInput(attrs={'readonly': 'readonly'})
-    )
+    #numero_rapporto_audit = forms.IntegerField(
+    #    widget=forms.TextInput(attrs={'readonly': 'readonly'})
+    #)
 
     class Meta:
         model = RapportoAudit
         fields = '__all__'
-
+        
         widgets = {
             'data_rapporto_audit': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'norme_riferimento': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Norme di Riferimento'}),
