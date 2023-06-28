@@ -2,9 +2,9 @@ from django import forms
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
 from .models import (Fornitore, Facility,
-                      FacilityContact, LwgFornitore,
-                      XrTransferValueLwgFornitore, TransferValue,
-                      Cliente
+                    FacilityContact, LwgFornitore,
+                    XrTransferValueLwgFornitore, TransferValue,
+                    Cliente
 )
 
 class FormFornitore(forms.ModelForm):
@@ -20,11 +20,10 @@ class FormFornitore(forms.ModelForm):
         country = CountryField().formfield()
         categoria = forms.CharField()
         is_lwg = forms.BooleanField(widget=forms.CheckboxInput(attrs={'onClick': 'myFunction();'}))
-        created_by = forms.CharField()
-        created_at = forms.DateTimeField()
+        
         widgets = {'country': CountrySelectWidget(),
-                # 'created_at': forms.HiddenInput(),
-                # 'created_by': forms.HiddenInput()
+                    'created_by': forms.HiddenInput(),
+                    'created_at': forms.HiddenInput()
                 }
         labels = {
             'ragionesociale': 'Ragione Sociale',

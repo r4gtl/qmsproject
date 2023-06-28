@@ -8,8 +8,8 @@ from anagrafiche.models import Fornitore
 class Attrezzatura(models.Model):
     codice_attrezzatura = models.CharField(max_length=10)
     descrizione = models.CharField(max_length=50)
-    modello = models.CharField(max_length=100)
-    serie_matricola = models.CharField(max_length=50)
+    modello = models.CharField(max_length=100, null=True, blank=True)
+    serie_matricola = models.CharField(max_length=50, null=True, blank=True)
     is_dismesso = models.BooleanField(default=False)
     data_dismissione = models.DateField(null=True, blank=True)
     is_taratura = models.BooleanField(default=False)

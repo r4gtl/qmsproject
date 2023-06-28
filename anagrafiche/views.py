@@ -18,6 +18,8 @@ from .models import (Fornitore, Facility,
                     Cliente
 )
 
+from nonconformity.models import RapportoNC
+
 from .forms import (FormFornitore, FormFacility,
                     FormFacilityContact, FormLwgFornitore,
                     FormXrTransferValueLwgFornitore, FormTransferValue,
@@ -58,6 +60,7 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
+        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
         
         return context
     

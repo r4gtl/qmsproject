@@ -55,7 +55,7 @@ class RapportoNCModelForm(forms.ModelForm):
             'tipo_nc': 'Tipo Rapporto',
             'compilato_da': 'Compilato da',
             'segnalato_da': 'Segnalato da',
-            'fk_fornitore': 'Fornitore che ha segnalato',
+            'fk_fornitore': 'Fornitore Non Conforme',
             'fk_cliente': 'Cliente che ha segnalato',
             'descrizione': 'Descrizione rapporto',
             'causa_radice': 'Causa radice',
