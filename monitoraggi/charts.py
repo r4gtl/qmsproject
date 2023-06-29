@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 import json
 from django.db.models import Sum, Count
 from datetime import datetime, timedelta
@@ -8,6 +9,8 @@ from .models import (DatoProduzione,
                     MonitoraggioGas, MonitoraggioEnergiaElettrica
 
                     )
+
+from .utils import filtro_dati_produzione
 
 def produzione_ultimo_anno(request):
     today = datetime.now().date()
@@ -66,3 +69,21 @@ def consumi_mj_mq_ultimo_anno(request):
     }
     
     return JsonResponse(dati_json)
+
+
+def produzione_intervallo_date(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+
+        data = DatoProduzione.objects.filter(
+            data_inserimento__gte=from_date,
+            data_inserimento__lte=to_date
+        ).values('industries_served').annotate(total_quantity=Sum('n_pelli'))
+        
+        data_json = list(data)
+        
+        return JsonResponse(data_json, safe=False)
+    else:
+        
+        pass

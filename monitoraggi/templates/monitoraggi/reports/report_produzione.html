@@ -1,0 +1,195 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% block title %}Produzione {% endblock %}
+
+
+    <style>
+        .page {
+            width: 297mm; /* Larghezza pagina A4 orizzontale */
+            height: 210mm; /* Altezza pagina A4 orizzontale */
+            margin: 0 auto;
+            background-color: #fff; /* Colore di sfondo della pagina */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Ombra della pagina */
+        }
+        
+        /* Imposta l'orientamento orizzontale della pagina */
+        @media print {
+  @page {
+    size: landscape; /* Imposta l'orientamento orizzontale della pagina */
+    margin: 0;
+  }
+
+  body {
+    margin: 0;
+  }
+
+  /* Imposta la larghezza massima dei contenuti per adattarli alla pagina */
+  .container,
+  .row {
+    max-width: 100%;
+  }
+}
+
+		
+		@media screen {
+
+			body {
+			margin: 2em;
+			
+			}
+			.row {
+				height: 80px;
+			}
+			.logo-text {
+				font-size: 0.7rem;
+			}
+			.code-text {
+				font-size: 2em;
+			}
+			.big-text {
+				font-size: 2.5em;
+			}
+			.bigger-text {
+				/*font-size: 3.2em;*/
+				font-size: 3em;
+			}
+		}
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+  <h1 class="text-center">Dati produzione</h1>
+  <h2 class="text-center">Intervallo di date selezionato: <strong>{{ from_date_formatted }} - {{ to_date_formatted }}</strong></h2>
+  
+
+</div>
+<br>
+<hr>
+<div class="row" style="max-width:100%">
+  <div class="col-6">        
+    <canvas id="produzione_ultimo_anno" data-url=""></canvas>
+  </div>
+  
+  <div class="col-6">
+    <h4>Destinazione d'uso</h4>        
+    <table class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            
+            <th>Destinazione d'uso</th>
+            <th>N. Pelli</th>                                    
+             
+          </tr>
+        </thead>
+        <tbody id='data-table-body'>
+          
+        </tbody>
+      </table>
+  </div>
+      
+      
+</div>
+
+
+    
+
+		
+		
+
+
+
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script src="{% static '/js/monitoraggi/monitoraggi.js' %}"></script>
+<script>
+ 
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  var from_date = '{{ from_date }}';
+    var to_date = '{{ to_date }}';
+
+  // Effettua una richiesta AJAX a produzione_intervallo_date
+  fetch("{% url 'monitoraggi:produzione_intervallo_date' %}?from_date=" + from_date + "&to_date=" + to_date)
+    .then(response => response.json())
+    .then(data => {
+      // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
+      updateChartWithData(data, from_date, to_date);
+      renderDataInTemplate(data, from_date, to_date);
+      
+    })
+    .catch(error => console.log(error));
+});
+
+function updateChartWithData(data, from_date, to_date) {
+  // Elabora i dati e aggiorna il grafico utilizzando Chart.js
+
+  var labels = [];
+  var quantities = [];
+
+  for (var i = 0; i < data.length; i++) {
+    labels.push(data[i].industries_served);
+    quantities.push(data[i].total_quantity);
+  }
+
+  var ctx = document.getElementById('produzione_ultimo_anno').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Total Quantity',
+        data: quantities,
+        backgroundColor: getRandomColor(),
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+
+function renderDataInTemplate(data, from_date, to_date) {
+ // Seleziona l'elemento della tabella nel tuo template
+  var tableBody = document.getElementById('data-table-body');
+  
+  // Svuota il contenuto precedente della tabella
+  tableBody.innerHTML = '';
+  
+  // Itera sui dati e crea righe della tabella per ogni record
+  data.forEach(function(record) {
+    var row = document.createElement('tr');
+    
+    // Crea le colonne della tabella per ogni campo del record
+    var industriesServedColumn = document.createElement('td');
+    industriesServedColumn.textContent = record.industries_served;
+    row.appendChild(industriesServedColumn);
+    
+    var totalQuantityColumn = document.createElement('td');
+    totalQuantityColumn.classList.add("text-end");
+    totalQuantityColumn.textContent = record.total_quantity;
+    row.appendChild(totalQuantityColumn);
+    
+    // Aggiungi la riga alla tabella
+    tableBody.appendChild(row);
+  });
+
+  // Aggiungi altre operazioni di rendering o manipolazione della tabella se necessario
+}
+
+  </script>
+{% endblock %}

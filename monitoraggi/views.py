@@ -3,6 +3,7 @@ from django.urls import reverse, reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+import datetime
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 
@@ -13,7 +14,9 @@ from .models import (
 from .forms import (
                     MonitoraggioAcquaModelForm, MonitoraggioGasModelForm, MonitoraggioEnergiaElettricaModelForm, DatoProduzioneModelForm
 )
-# Create your views here.
+
+from .utils import filtro_dati_produzione
+
 
 def dashboard_monitoraggi(request):
     
@@ -267,3 +270,30 @@ def delete_lettura_dato_produzione(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('monitoraggi:dashboard_monitoraggi')
         return redirect(url_match)
+
+
+
+
+def report_dati_produzione(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        print("Dalla view: " +str(from_date) + " " + str(to_date))
+        
+        from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+
+        produzione_filtrata = filtro_dati_produzione(from_date, to_date)
+        context = {
+                'produzione_filtrata': produzione_filtrata,
+                'from_date_formatted': from_date_formatted,
+                'to_date_formatted': to_date_formatted,
+                'from_date': from_date,
+                'to_date': to_date
+                
+            }
+
+        return render(request, 'monitoraggi/reports/report_produzione.html', context)
+    else:
+        # Gestisci eventuali altri metodi HTTP
+        pass

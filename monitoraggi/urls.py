@@ -4,8 +4,9 @@ from monitoraggi.views import (dashboard_monitoraggi,
                                MonitoraggioGasCreateView, MonitoraggioGasUpdateView, delete_monitoraggio_gas,
                                MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
                                DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
+                               report_dati_produzione
                                     )
-from .charts import produzione_ultimo_anno, consumi_mj_mq_ultimo_anno
+from .charts import produzione_ultimo_anno, consumi_mj_mq_ultimo_anno, produzione_intervallo_date
 
 app_name="monitoraggi"
 
@@ -37,5 +38,9 @@ urlpatterns = [
     # Charts
     path('produzione_ultimo_anno/', produzione_ultimo_anno, name='produzione_ultimo_anno'),
     path('consumi_mj_mq_ultimo_anno/', consumi_mj_mq_ultimo_anno, name='consumi_mj_mq_ultimo_anno'),
+    path('produzione_intervallo_date/', produzione_intervallo_date, name='produzione_intervallo_date'),
+
+    # Reports
+    path('report_dati_produzione/', report_dati_produzione, name='report_dati_produzione'),
     
 ]
