@@ -87,3 +87,17 @@ def produzione_intervallo_date(request):
     else:
         
         pass
+    
+def energia_intervallo_date(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+
+        data = MonitoraggioEnergiaElettrica.somma_energia_per_intervallo(from_date, to_date)
+        
+        data_json = list(data)
+        
+        return JsonResponse(data_json, safe=False)
+    else:
+        
+        pass

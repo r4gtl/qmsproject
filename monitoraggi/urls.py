@@ -1,10 +1,10 @@
 from django.urls import path
 from monitoraggi.views import (dashboard_monitoraggi,
-                               MonitoraggioAcquaCreateView, MonitoraggioAcquaUpdateView, delete_monitoraggio_acqua,                                     
-                               MonitoraggioGasCreateView, MonitoraggioGasUpdateView, delete_monitoraggio_gas,
-                               MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
-                               DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
-                               report_dati_produzione
+                            MonitoraggioAcquaCreateView, MonitoraggioAcquaUpdateView, delete_monitoraggio_acqua,                                     
+                            MonitoraggioGasCreateView, MonitoraggioGasUpdateView, delete_monitoraggio_gas,
+                            MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
+                            DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
+                            report_dati_produzione, report_energia
                                     )
 from .charts import produzione_ultimo_anno, consumi_mj_mq_ultimo_anno, produzione_intervallo_date
 
@@ -42,5 +42,6 @@ urlpatterns = [
 
     # Reports
     path('report_dati_produzione/', report_dati_produzione, name='report_dati_produzione'),
+    path('report_energia/', report_energia, name='report_energia'),
     
 ]

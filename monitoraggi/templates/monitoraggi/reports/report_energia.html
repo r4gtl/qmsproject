@@ -7,14 +7,17 @@
 
 {% block content %}
 
-  <h1 class="text-center">Dati produzione</h1>
+  <h1 class="text-center">Dati Energia</h1>
   <h2 class="text-center">Intervallo di date selezionato: <strong>{{ from_date_formatted }} - {{ to_date_formatted }}</strong></h2>
   
 
 
 <br>
 <hr>
-
+<div class="container">
+  <p>Somma produzione mq {{ produzione_filtrata }}</p>
+  <p>Somma energia kwh {{ energia_filtrata }}</p>
+</div>
 <div class="row">
   <div class="col-sm-6" >
     <canvas id="produzione_intervallo_date" data-url=""></canvas>

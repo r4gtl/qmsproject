@@ -55,6 +55,15 @@ class MonitoraggioGas(models.Model):
             .order_by('mese')
 
         return somme_mese_gas
+    
+    @classmethod
+    def somma_gas_per_intervallo(cls, data_inizio, data_fine):
+        somme_mese_intervallo = cls.objects.filter(data_lettura__range=[data_inizio, data_fine]) \
+        .values('mese') \
+        .annotate(somma=models.Sum('mc_in')) \
+        .order_by('mese')
+
+        return somme_mese_intervallo
 
 
 
@@ -97,6 +106,15 @@ class MonitoraggioEnergiaElettrica(models.Model):
             .order_by('mese')
 
         return somme_mese_energia
+    
+    @classmethod
+    def somma_energia_per_intervallo(cls, data_inizio, data_fine):
+        somma_energia_per_intervallo = cls.objects.filter(data_lettura__range=[data_inizio, data_fine]) \
+            .values('mese') \
+            .annotate(somma=models.Sum('kwh_in')) \
+            .order_by('mese')
+
+        return somma_energia_per_intervallo
 
 
 class DatoProduzione(models.Model):
@@ -158,5 +176,15 @@ class DatoProduzione(models.Model):
             .order_by('mese')
         
         return somma_produzione_ultimo_anno_per_mese
-
+    
+    
+    @classmethod
+    def somma_produzione_per_intervallo(cls, campo_sommabile, data_inizio, data_fine):
+        somma_produzione_per_intervallo = cls.objects.filter(data_inserimento__range=[data_inizio, data_fine]) \
+            .annotate(mese=models.functions.TruncMonth('data_inserimento')) \
+            .values('mese') \
+            .annotate(somma=models.Sum(campo_sommabile)) \
+            .order_by('mese')
+        
+        return somma_produzione_per_intervallo
 

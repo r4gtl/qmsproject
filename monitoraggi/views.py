@@ -15,7 +15,7 @@ from .forms import (
                     MonitoraggioAcquaModelForm, MonitoraggioGasModelForm, MonitoraggioEnergiaElettricaModelForm, DatoProduzioneModelForm
 )
 
-from .utils import filtro_dati_produzione
+from .utils import filtro_dati_produzione, somma_quantity_intervallo_date
 
 
 def dashboard_monitoraggi(request):
@@ -278,7 +278,7 @@ def report_dati_produzione(request):
     if request.method == 'GET':
         from_date = request.GET.get('from_date')
         to_date = request.GET.get('to_date')
-        print("Dalla view: " +str(from_date) + " " + str(to_date))
+        
         
         from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
         to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
@@ -294,6 +294,37 @@ def report_dati_produzione(request):
             }
 
         return render(request, 'monitoraggi/reports/report_produzione.html', context)
+    else:
+        # Gestisci eventuali altri metodi HTTP
+        pass
+    
+
+def report_energia(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+                
+        from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+        
+        #Somma dei mq
+        produzione_filtrata = somma_quantity_intervallo_date(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+        
+        #Somma dei Kwh
+        energia_filtrata = somma_quantity_intervallo_date(MonitoraggioEnergiaElettrica, 'kwh_in', 'data_lettura', from_date, to_date)
+        
+        
+        context = {
+                'produzione_filtrata': produzione_filtrata,
+                'energia_filtrata': energia_filtrata,
+                'from_date_formatted': from_date_formatted,
+                'to_date_formatted': to_date_formatted,
+                'from_date': from_date,
+                'to_date': to_date
+                
+            }
+
+        return render(request, 'monitoraggi/reports/report_energia.html', context)
     else:
         # Gestisci eventuali altri metodi HTTP
         pass
