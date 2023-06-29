@@ -29,6 +29,33 @@
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    <style>
+        
+        
+        /* Imposta l'orientamento orizzontale della pagina */
+        @media print {
+          @page {
+            size: landscape; /* Imposta l'orientamento orizzontale della pagina */
+            margin: 0;
+          }
+
+          body {
+            margin: 0;
+          }
+
+          /* Imposta la larghezza massima dei contenuti per adattarli alla pagina */
+          .container,
+          .row {
+            max-width: 100%;
+          }
+          
+          
+      }
+
+      
+
+			
+    </style>
 </head>
     <body>
             <div class="header">
