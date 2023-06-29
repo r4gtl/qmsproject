@@ -1,0 +1,45 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+      <!-- Modal Title -->
+            {% block modal-title %}
+            <h5 class="modal-title" id="modal_title"><i class="bi bi-calendar-check"></i>&nbsp;&nbsp; Criteri di Stampa </h5>          
+            {% endblock modal-title %}
+        
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="date_form" action="" target="_blank" method="GET">
+          <label class="form-label mt-2" for="from_date">Dalla data:</label>
+          <input class="form-control" type="date" id="from_date" name="from_date">
+
+          <label class="form-label mt-2" for="to_date">Alla data:</label>
+          <input class="form-control" type="date" id="to_date" name="to_date">
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary">Genera report</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function setModalUrl(url, title) {
+    // Imposta l'URL nel campo azione del form nel modal
+    document.getElementById('date_form').action = url;
+
+    // Ottieni l'elemento del titolo del modal
+    var modalTitle = document.getElementById('modal_title');
+    
+    // Aggiungi il valore di title al testo esistente del titolo
+    modalTitle.innerText = modalTitle.innerText + ' | ' + title;
+
+
+    
+  }
+</script>

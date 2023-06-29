@@ -158,7 +158,7 @@ class RapportoAuditUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         pk_rapporto = self.object.pk        
-        context['elenco_nc_associate'] = RapportoNC.objects.filter(fk_rapportoaudit=pk_rapporto) 
+        context['nc_associate'] = RapportoNC.objects.filter(fk_rapportoaudit=pk_rapporto) 
         context['processi_audit'] = ProcessoAudit.objects.filter(fk_rapportoaudit=pk_rapporto) 
 
         return context

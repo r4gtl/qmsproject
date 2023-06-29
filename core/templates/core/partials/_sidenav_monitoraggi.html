@@ -4,7 +4,28 @@
         
         <ul>
             <li class="border-top my-3"></li>
-           
+
+            <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#registri" aria-expanded="false">
+                    Stampa registri
+                </button>
+                <div class="collapse" id="registri">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    
+                    <li><a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl('{% url 'acquistopelli:report_traceability_in' %}', 'Dati Produzione')">
+  Apri modal
+</a>
+</li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Risorse Idriche</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Energia</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Gas</a></li>
+                    <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Bilancio Ambientale</a></li>
+                    
+                    </ul>
+                </div>
+                </li>
+                <li class="border-top my-3"></li>
+
             <li><a href="{% url 'manualeprocedure:procedure_home' %}">Procedure</a></li>
             <li><a href="{% url 'lwg:lwg_home' %}">LWG</a></li>
         </ul>

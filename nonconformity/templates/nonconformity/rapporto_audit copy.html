@@ -127,7 +127,44 @@
     </div><!-- Fine colonna per inglobare Processi-Rapporti -->
 
 
-    {% include "nonconformity/partials/_nc_associate.html" %}
+    <div class="col-6"><!-- Inizio colonna per inglobare i RNC associati -->
+        <!-- Lista RNC Associati -->
+        <div class="row">
+        <div class="col text-end">
+          
+          
+           <h2>Rapporti NC Associati</h2>
+          
+        </div>
+      </div>
+        <div class="row">
+        
+      
+      {% if form.instance.id  %}
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Rapporto NC</th>            
+              <th>Data Rapporto NC</th>              
+              
+            </tr>
+          </thead>
+          <tbody>
+            
+            {% for nc_associata in elenco_nc_associate %}
+            <tr>        
+              
+              <td>{{ nc_associata.numero_nc }}</td>
+              <td>{{ nc_associata.data_nc }}</td>   
+              
+              
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+
+    </div><!-- Fine colonna per inglobare NC Associate-->
     </div> 
     </div><!-- Fine colonna per inglobare Processi-Rapporti -->
 

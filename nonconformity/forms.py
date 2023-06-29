@@ -26,9 +26,7 @@ class ProcessoModelForm(forms.ModelForm):
 
 class RapportoNCModelForm(forms.ModelForm):
 
-    #numero_nc = forms.IntegerField(
-    #    widget=forms.TextInput(attrs={'readonly': 'readonly'})
-    #)
+    
 
     class Meta:
         model = RapportoNC
@@ -36,17 +34,17 @@ class RapportoNCModelForm(forms.ModelForm):
 
         widgets = {
             'data_nc': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
-            'descrizione': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descrizione NC'}),
-            'causa_radice': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Causa radice'}),
+            'descrizione': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descrizione NC', 'rows':'3'}),
+            'causa_radice': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Causa radice', 'rows':'3'}),
             'settore_responsabile': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Settore responsabile'}),
-            'note_decisioni_immediate': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Note decisioni immediate'}),
+            'note_decisioni_immediate': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Note decisioni immediate', 'rows':'3'}),
             'responsabile_decisione_immediata': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Responsabile'}),
             'data_limite_decisione_immediata': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
-            'descrizione_ac': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descrizione azione correttiva'}),
+            'descrizione_ac': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Descrizione azione correttiva', 'rows':'3'}),
             'responsabile_ac': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Responsabile'}),
             'data_limite_ac': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'altre_decisioni_ac': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Altre decisioni'}),                        
-            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'altre_decisioni_ac': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Altre decisioni', 'rows':'3'}),                        
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3', 'rows':'3'}),
             'created_by': forms.HiddenInput()
         }
         labels = {
@@ -78,19 +76,15 @@ class RapportoNCModelForm(forms.ModelForm):
 
 class RapportoAuditModelForm(forms.ModelForm):
 
-    #numero_rapporto_audit = forms.IntegerField(
-    #    widget=forms.TextInput(attrs={'readonly': 'readonly'})
-    #)
-
     class Meta:
         model = RapportoAudit
         fields = '__all__'
         
         widgets = {
             'data_rapporto_audit': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
-            'norme_riferimento': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Norme di Riferimento'}),
-            'auditor': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Auditors'}),            
-            'risultato': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Risultato'}),
+            'norme_riferimento': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Norme di Riferimento', 'rows':'3'}),
+            'auditor': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Auditors', 'rows':'3'}),            
+            'risultato': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Risultato', 'rows':'3'}),
             'data_controllo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             
             'created_by': forms.HiddenInput()
