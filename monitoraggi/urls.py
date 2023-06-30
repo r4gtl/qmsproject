@@ -33,7 +33,7 @@ urlpatterns = [
     # Monitoraggio Energia Elettrica    
     path('inserisci_lettura_energia_elettrica/', MonitoraggioEnergiaElettricaCreateView.as_view(), name="inserisci_lettura_energia_elettrica"), 
     path('modifica_lettura_energia_elettrica/<int:pk>/', MonitoraggioEnergiaElettricaUpdateView.as_view(), name="modifica_lettura_energia_elettrica"), 
-    path('delete_monitoraggio_energia_elettrica/<int:pk>', delete_monitoraggio_gas, name="delete_monitoraggio_energia_elettrica"),
+    path('delete_monitoraggio_energia_elettrica/<int:pk>', delete_monitoraggio_energia_elettrica, name="delete_monitoraggio_energia_elettrica"),
 
     # Dati produzione    
     path('inserisci_lettura_dato_produzione/', DatoProduzioneCreateView.as_view(), name="inserisci_lettura_dato_produzione"), 
