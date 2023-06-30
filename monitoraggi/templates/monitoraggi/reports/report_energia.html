@@ -27,7 +27,7 @@
   </div>
   
   <div class="col-sm-4 offset-md-2">
-    <h4>Destinazione d'uso</h4>        
+    <h4>Rapporto mensile Mq/Mjoule</h4>        
     <table class="table table-bordered table-striped">
         <thead>
           <tr>
@@ -139,7 +139,10 @@ function renderDataInTemplateEnergia(data, from_date, to_date) {
     
     // Crea le colonne della tabella per ogni campo del record
     var mesecolumn = document.createElement('td');
-    mesecolumn.textContent = record.mese;
+    var meseDate = new Date(record.mese);
+    var meseText = meseDate.toLocaleString('default', { month: 'long' }); // Estrarre il mese in testo
+    var annoText = meseDate.getFullYear(); // Estrarre l'anno
+    mesecolumn.textContent = meseText + ' ' + annoText;
     row.appendChild(mesecolumn);
     
     var mjoulecolumn = document.createElement('td');
