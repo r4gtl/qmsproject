@@ -15,7 +15,7 @@ from .forms import (
                     MonitoraggioAcquaModelForm, MonitoraggioGasModelForm, MonitoraggioEnergiaElettricaModelForm, DatoProduzioneModelForm
 )
 
-from .utils import filtro_dati_produzione, somma_quantity_intervallo_date
+from .utils import filtro_dati_produzione, somma_quantity_intervallo_date, somma_dato_per_intervallo_per_mese
 
 
 def dashboard_monitoraggi(request):
@@ -313,10 +313,22 @@ def report_energia(request):
         #Somma dei Kwh
         energia_filtrata = somma_quantity_intervallo_date(MonitoraggioEnergiaElettrica, 'kwh_in', 'data_lettura', from_date, to_date)
         
+        #Somma dei mq per mese
+        produzione_filtrata_per_mese=somma_dato_per_intervallo_per_mese(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
         
+        #Somma dei mq per mese
+        energia_filtrata_per_mese=somma_dato_per_intervallo_per_mese(MonitoraggioEnergiaElettrica, 'kwh_in', 'data_lettura', from_date, to_date)
+        
+        # MegaJoule periodo
+        megajoule_periodo = (float(produzione_filtrata) / float(energia_filtrata))*3.6
+
+
         context = {
                 'produzione_filtrata': produzione_filtrata,
+                'produzione_filtrata_per_mese': produzione_filtrata_per_mese,
                 'energia_filtrata': energia_filtrata,
+                'energia_filtrata_per_mese': energia_filtrata_per_mese,
+                'megajoule_periodo': megajoule_periodo,
                 'from_date_formatted': from_date_formatted,
                 'to_date_formatted': to_date_formatted,
                 'from_date': from_date,
