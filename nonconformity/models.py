@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from human_resources.models import HumanResource
 from anagrafiche.models import Fornitore, Cliente
 
+from django.db.models import Count
+
+
 
 
 class Processo(models.Model):
@@ -161,6 +164,21 @@ class RapportoNC(models.Model):
     def __str__(self):
         formatted_date = self.data_nc.strftime('%d/%m/%Y')
         return str(self.numero_nc) + " del " + formatted_date
+    
+    @classmethod
+    def get_data_for_chart(cls, from_date, to_date):
+        # Esegue la query per ottenere il conteggio dei record per ogni tipo_nc
+        data_set = (
+            cls.objects
+            .filter(data_nc__range=[from_date, to_date])
+            .values('tipo_nc')
+            .annotate(count=Count('id'))
+        )
+        print("Data_set: " + str(data_set))
+        # Formatta i dati nel formato desiderato per il grafico
+        data = [{'tipo_nc': item['tipo_nc'], 'count': item['count']} for item in data_set]
+        print("Dati: " + str(data))
+        return data
     
 
 class ProcessoAudit(models.Model):

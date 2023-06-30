@@ -4,13 +4,16 @@ from manualeprocedure.models import Procedura
 from manualeprocedure.filters import ProceduraFilter
 from core.utils import count_records_with_upcoming_expiry
 from autorizzazioni.models import DettaglioScadenzaAutorizzazione
+from manutenzioni.models import Taratura, ManutenzioneOrdinaria
 
 # Create your views here.
 
 def lwg_home(request):
     scadenze_autorizzazioni =count_records_with_upcoming_expiry(DettaglioScadenzaAutorizzazione, "scadenza_rinnovo", 30)
+    scadenze_manutenzioni = count_records_with_upcoming_expiry(Taratura, "prossima_scadenza", 30) + count_records_with_upcoming_expiry(ManutenzioneOrdinaria, "prossima_scadenza", 30)
     context = {
-        'scadenze_autorizzazioni': scadenze_autorizzazioni
+        'scadenze_autorizzazioni': scadenze_autorizzazioni,
+        'scadenze_manutenzioni': scadenze_manutenzioni
     }
     return render(request, 'lwg/lwg_home.html', context)
 

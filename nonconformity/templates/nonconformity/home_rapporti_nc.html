@@ -27,7 +27,7 @@
         <!-- Riga grafici e statistiche -->
         <div class="row">
           <div class="col-4">        
-            <canvas id="country_count" data-url=""></canvas>
+            <canvas id="nc_count" data-url=""></canvas>
           </div>
         </div>
         <!-- Fine riga grafici e statistiche -->
@@ -112,12 +112,12 @@
               
               <tbody>
                 {% for rapporto_nc in rapporti_nc_filter_paginator %}
-                    
+                    <tr>
                     <td><a href="{% url 'nonconformity:modifica_rapporto_nc' pk=rapporto_nc.pk %}">{{ rapporto_nc.numero_nc }}</a></td>
                     <td>{{ rapporto_nc.data_nc }}</td>                           
                     <td>{{ rapporto_nc.tipo_nc }}</td>                    
                     <td class="text-center"><a href="{% url 'nonconformity:delete_rapporto_nc' pk=rapporto_nc.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{rapporto_nc.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
-                  
+                    </tr>
                 
                 {% endfor %}
                 
@@ -182,5 +182,75 @@
     </div>
 
 
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  //var from_date = '{{ from_date }}';
+  //var to_date = '{{ to_date }}';
+
+  // Effettua una richiesta AJAX a produzione_intervallo_date
+  fetch("{% url 'nonconformity:chart_nc_per_tipo_ultimo_anno' %}")
+    .then(response => response.json())
+    .then(data => {
+      
+      // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
+      updateChartWithDataNC(data);
+      
+      
+    })
+    .catch(error => console.log(error));
+});
+
+function updateChartWithDataNC(data) {
+  // Elabora i dati e aggiorna il grafico utilizzando Chart.js
+  
+  
+
+  var labels = [];
+  var quantities = [];
+
+  for (var i = 0; i < data.length; i++) {
+    
+    labels.push(data[i].tipo_nc);
+    
+    quantities.push(data[i].count);
+    
+  }
+
+  var ctx = document.getElementById('nc_count').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'RNC per tipo Ultimo Anno',
+        data: quantities,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Specifica un colore predefinito
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          display: false  // Imposta il display della legenda su false per rimuoverla
+        }
+      }
+    }
+  });
+};
+
+
+</script>
 
 {% endblock %}

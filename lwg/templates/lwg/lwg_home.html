@@ -235,7 +235,17 @@
             <h5 class="card-title"><i class="bi bi-house-check"></i> Operations Management</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">Gestione delle Operazioni</h6>
             <p class="card-text">Questa sezione valuta la capacità dell'impianto di controllare i propri processi di produzione, esaminando le migliori pratiche, l'utilizzo delle attrezzature e le calibrazioni, ecc.</p>
-            <a href="#" class="btn btn-sm btn-secondary">Vai alla sezione</a>
+            <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
+                  {% if scadenze_manutenzioni > 0 %}
+        
+                    <button onclick="goToMaintenanceSchedule()" type="button" class="btn btn-primary btn-sm position-relative float-end ">
+                        Prossime scadenze
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ scadenze_manutenzioni }}
+                        <span class="visually-hidden">Prossime scadenze</span>
+                        </span>
+                    </button>
+                  {% endif %}
             
           </div>
         </div>
@@ -252,7 +262,12 @@
 <script>
 function goToPermitsSchedule(){
         document.location.href = "{% url 'autorizzazioni:stampa_registro_autorizzazioni' %}"        
-    }
+    };
+
+function goToMaintenanceSchedule(){
+        document.location.href = "{% url 'manutenzioni:scadenzario' %}"        
+    };
+
 
 </script>
 {% endblock %}

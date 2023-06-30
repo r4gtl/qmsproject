@@ -7,6 +7,7 @@ from .views import (home_rapporti_nc, home_rapporti_audit, tabelle_generiche,
                     
                     )
 
+from .charts import chart_nc_per_tipo_ultimo_anno
 
 
 app_name="nonconformity"
@@ -35,11 +36,14 @@ urlpatterns = [
     # Processi
     path('aggiungi_processo/', ProcessoCreateView.as_view(), name="aggiungi_processo"), 
     path('modifica_processo/<int:pk>/', ProcessoUpdateView.as_view(), name="modifica_processo"), 
-    path('delete_processo/<int:pk>', delete_processo, name="delete_processo"),
-    
+    path('delete_processo/<int:pk>', delete_processo, name="delete_processo"),    
 
     # Processi-Rapporti Audit
     path('<int:fk_rapportoaudit>/aggiungi_processo_rapporto_audit/', ProcessoAuditCreateView.as_view(), name="aggiungi_processo_rapporto_audit"), 
     path('<int:fk_rapportoaudit>/modifica_processo_rapporto_audit/<int:id>/', ProcessoAuditUpdateView.as_view(), name="modifica_processo_rapporto_audit"), 
     path('delete_processo_audit/<int:pk>', delete_processo_audit, name="delete_processo_audit"),
+
+    # Charts
+    path('chart_nc_per_tipo_ultimo_anno/', chart_nc_per_tipo_ultimo_anno, name="chart_nc_per_tipo_ultimo_anno"),
+
 ]
