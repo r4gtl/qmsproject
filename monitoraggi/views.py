@@ -340,3 +340,45 @@ def report_energia(request):
     else:
         # Gestisci eventuali altri metodi HTTP
         pass
+
+def report_gas(request):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+                
+        from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+        
+        #Somma dei mq
+        produzione_filtrata = somma_quantity_intervallo_date(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+        
+        #Somma dei mc
+        gas_filtrato = somma_quantity_intervallo_date(MonitoraggioGas, 'mc_in', 'data_lettura', from_date, to_date)
+        
+        #Somma dei mq per mese
+        produzione_filtrata_per_mese=somma_dato_per_intervallo_per_mese(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+        
+        #Somma dei mc per mese
+        gas_filtrato_per_mese=somma_dato_per_intervallo_per_mese(MonitoraggioGas, 'mc_in', 'data_lettura', from_date, to_date)
+        
+        # MegaJoule periodo
+        megajoule_periodo = (float(produzione_filtrata) / float(gas_filtrato))*3.6
+
+
+        context = {
+                'produzione_filtrata': produzione_filtrata,
+                'produzione_filtrata_per_mese': produzione_filtrata_per_mese,
+                'gas_filtrato': gas_filtrato,
+                'gas_filtrato_per_mese': gas_filtrato_per_mese,
+                'megajoule_periodo': megajoule_periodo,
+                'from_date_formatted': from_date_formatted,
+                'to_date_formatted': to_date_formatted,
+                'from_date': from_date,
+                'to_date': to_date
+                
+            }
+
+        return render(request, 'monitoraggi/reports/report_gas.html', context)
+    else:
+        # Gestisci eventuali altri metodi HTTP
+        pass

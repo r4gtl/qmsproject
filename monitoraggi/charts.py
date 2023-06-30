@@ -187,3 +187,40 @@ def consumi_mj_mq_intervallo_date_energia(request):
     
 
     return JsonResponse(dati_json, safe=False)
+
+
+def consumi_mj_mq_intervallo_date_gas(request):
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    
+    # Effettua il parsing delle date
+    from_date = parse_date(from_date)
+    to_date = parse_date(to_date)
+    
+    produzione_per_mese = somma_dato_per_intervallo_per_mese(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+    
+    somma_gas_per_mese = somma_dato_per_intervallo_per_mese(MonitoraggioGas, 'mc_in', 'data_lettura', from_date, to_date)
+
+    
+
+    rapporto_per_mese_gas = []
+    for prod_mese, gas_mese in zip(produzione_per_mese, somma_gas_per_mese):
+        mese = prod_mese['mese']
+        produzione = prod_mese['somma']
+        somma_gas = gas_mese['somma']
+        
+        if from_date and to_date and from_date <= mese <= to_date:
+            if somma_gas != 0:
+                rapporto = (float(produzione) / float(somma_gas)) * 38.4
+            else:
+                rapporto = 0
+            rapporto_per_mese_gas.append({'mese': mese, 'rapporto': rapporto})
+
+
+    rapporto_gas= rapporto_per_mese_gas
+    # Crea un dizionario con i dati JSON
+    dati_json = list(rapporto_gas)
+        
+    
+
+    return JsonResponse(dati_json, safe=False)

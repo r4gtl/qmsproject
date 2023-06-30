@@ -4,12 +4,13 @@ from monitoraggi.views import (dashboard_monitoraggi,
                             MonitoraggioGasCreateView, MonitoraggioGasUpdateView, delete_monitoraggio_gas,
                             MonitoraggioEnergiaElettricaCreateView, MonitoraggioEnergiaElettricaUpdateView, delete_monitoraggio_energia_elettrica,
                             DatoProduzioneCreateView, DatoProduzioneUpdateView, delete_lettura_dato_produzione,
-                            report_dati_produzione, report_energia
+                            report_dati_produzione, report_energia, report_gas
                                     )
 from .charts import (produzione_ultimo_anno, 
                      consumi_mj_mq_ultimo_anno, 
                      produzione_intervallo_date,
-                     consumi_mj_mq_intervallo_date_energia
+                     consumi_mj_mq_intervallo_date_energia,
+                     consumi_mj_mq_intervallo_date_gas
 )
 
 app_name="monitoraggi"
@@ -44,9 +45,11 @@ urlpatterns = [
     path('consumi_mj_mq_ultimo_anno/', consumi_mj_mq_ultimo_anno, name='consumi_mj_mq_ultimo_anno'),
     path('produzione_intervallo_date/', produzione_intervallo_date, name='produzione_intervallo_date'),
     path('consumi_mj_mq_intervallo_date_energia/', consumi_mj_mq_intervallo_date_energia, name='consumi_mj_mq_intervallo_date_energia'),
+    path('consumi_mj_mq_intervallo_date_gas/', consumi_mj_mq_intervallo_date_gas, name='consumi_mj_mq_intervallo_date_gas'),
 
     # Reports
     path('report_dati_produzione/', report_dati_produzione, name='report_dati_produzione'),
     path('report_energia/', report_energia, name='report_energia'),
+    path('report_gas/', report_gas, name='report_gas'),
     
 ]

@@ -1,33 +1,39 @@
 {% extends 'core/basi_stampe/base_stampa_a4_orizzontale.html' %}
 {% load static %}
 {% load countries %}
-{% block title %}Produzione {% endblock %}
+{% load custom_filters %}
+{% block title %}Gas {% endblock %}
 
 
 
 {% block content %}
 
-  <h1 class="text-center">Dati produzione</h1>
+  <h1 class="text-center">Dati Gas</h1>
   <h2 class="text-center">Intervallo di date selezionato: <strong>{{ from_date_formatted }} - {{ to_date_formatted }}</strong></h2>
   
 
 
 <br>
 <hr>
-
+<div class="container">
+  <p>Somma produzione intervallo selezionato mq {{ produzione_filtrata|format_number_dec_thousand }}</p>
+  <p>Somma gas intervallo selezionato MC {{ gas_filtrato|format_number_dec_thousand }}</p>
+  <p>MegaJoule intervallo selezionato Mjoule {{ megajoule_periodo|format_number_dec_thousand }}</p>
+</div>
+<hr>
 <div class="row">
   <div class="col-sm-6" >
-    <canvas id="produzione_intervallo_date" data-url=""></canvas>
+    <canvas id="gas_intervallo_date" data-url=""></canvas>
   </div>
   
   <div class="col-sm-4 offset-md-2">
-    <h4>Destinazione d'uso</h4>        
+    <h4>Rapporto mensile Mq/Mjoule</h4>        
     <table class="table table-bordered table-striped">
         <thead>
           <tr>
             
-            <th>Destinazione d'uso</th>
-            <th>N. Pelli</th>                                    
+            <th>Mese</th>
+            <th>Mjoule</th>                                    
              
           </tr>
         </thead>
@@ -61,40 +67,46 @@
 
 document.addEventListener('DOMContentLoaded', function() {
   var from_date = '{{ from_date }}';
-    var to_date = '{{ to_date }}';
+  var to_date = '{{ to_date }}';
 
   // Effettua una richiesta AJAX a produzione_intervallo_date
-  fetch("{% url 'monitoraggi:produzione_intervallo_date' %}?from_date=" + from_date + "&to_date=" + to_date)
+  fetch("{% url 'monitoraggi:consumi_mj_mq_intervallo_date_gas' %}?from_date=" + from_date + "&to_date=" + to_date)
     .then(response => response.json())
     .then(data => {
+      
       // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
-      updateChartWithData(data, from_date, to_date);
-      renderDataInTemplate(data, from_date, to_date);
+      updateChartWithDataGas(data, from_date, to_date);
+      renderDataInTemplateGas(data, from_date, to_date);
       
     })
     .catch(error => console.log(error));
 });
 
-function updateChartWithData(data, from_date, to_date) {
+function updateChartWithDataGas(data, from_date, to_date) {
   // Elabora i dati e aggiorna il grafico utilizzando Chart.js
+  
+  
 
   var labels = [];
   var quantities = [];
 
   for (var i = 0; i < data.length; i++) {
-    labels.push(data[i].industries_served);
-    quantities.push(data[i].total_quantity);
+    
+    labels.push(data[i].mese);
+    
+    quantities.push(data[i].rapporto);
+    
   }
 
-  var ctx = document.getElementById('produzione_intervallo_date').getContext('2d');
+  var ctx = document.getElementById('gas_intervallo_date').getContext('2d');
   var myChart = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: labels,
       datasets: [{
-        label: 'Total Quantity',
+        label: 'Rapporto mensile in MJ tra Mq produzione e Mc',
         data: quantities,
-        backgroundColor: getRandomColor(),
+        backgroundColor: 'rgba(75, 192, 192, 0.2)', // Specifica un colore predefinito
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1
       }]
@@ -112,10 +124,9 @@ function updateChartWithData(data, from_date, to_date) {
       }
     }
   });
-}
+};
 
-
-function renderDataInTemplate(data, from_date, to_date) {
+function renderDataInTemplateGas(data, from_date, to_date) {
  // Seleziona l'elemento della tabella nel tuo template
   var tableBody = document.getElementById('data-table-body');
   
@@ -127,14 +138,18 @@ function renderDataInTemplate(data, from_date, to_date) {
     var row = document.createElement('tr');
     
     // Crea le colonne della tabella per ogni campo del record
-    var industriesServedColumn = document.createElement('td');
-    industriesServedColumn.textContent = record.industries_served;
-    row.appendChild(industriesServedColumn);
+    var mesecolumn = document.createElement('td');
+    var meseDate = new Date(record.mese);
+    var meseText = meseDate.toLocaleString('default', { month: 'long' }); // Estrarre il mese in testo
+    var annoText = meseDate.getFullYear(); // Estrarre l'anno
+    mesecolumn.textContent = meseText + ' ' + annoText;
+    row.appendChild(mesecolumn);
     
-    var totalQuantityColumn = document.createElement('td');
-    totalQuantityColumn.classList.add("text-end");
-    totalQuantityColumn.textContent = record.total_quantity;
-    row.appendChild(totalQuantityColumn);
+    var mjoulecolumn = document.createElement('td');
+    mjoulecolumn.classList.add("text-end");
+
+    mjoulecolumn.textContent = record.rapporto.toFixed(2);
+    row.appendChild(mjoulecolumn);
     
     // Aggiungi la riga alla tabella
     tableBody.appendChild(row);
@@ -142,6 +157,7 @@ function renderDataInTemplate(data, from_date, to_date) {
 
   // Aggiungi altre operazioni di rendering o manipolazione della tabella se necessario
 }
+
 
   </script>
 {% endblock %}
