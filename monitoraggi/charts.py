@@ -14,7 +14,7 @@ from .models import (DatoProduzione,
 from .utils import filtro_dati_produzione, somma_dato_per_intervallo_per_mese
 
 def produzione_ultimo_anno(request):
-    today = datetime.today()
+    today = datetime.now().date()
     twelve_months_ago = today - timedelta(days=365)
 
     data = DatoProduzione.objects.filter(

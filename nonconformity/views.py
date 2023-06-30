@@ -124,9 +124,15 @@ class RapportoAuditCreateView(LoginRequiredMixin,CreateView):
     success_message = 'Rapporto aggiunto correttamente!'
     
 
+
+
     def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('nonconformity:home_rapporti_audit')
+
+        pk=self.object.pk
+        return reverse_lazy('nonconformity:modifica_rapporto_audit', kwargs={'pk':pk})
         
-        return reverse_lazy('nonconformity:home_rapporti_audit')
         
     
     def form_valid(self, form):        
@@ -146,9 +152,12 @@ class RapportoAuditUpdateView(LoginRequiredMixin, UpdateView):
     success_message = 'Rapporto modificato correttamente!'
     
     
-    def get_success_url(self):        
-        
-        return reverse_lazy('nonconformity:home_rapporti_audit')
+    def get_success_url(self):    
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('nonconformity:home_rapporti_audit')
+
+        pk=self.object.pk
+        return reverse_lazy('nonconformity:modifica_rapporto_audit', kwargs={'pk':pk})
             
 
     def form_valid(self, form):        

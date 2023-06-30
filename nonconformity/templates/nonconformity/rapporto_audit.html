@@ -35,7 +35,7 @@
         <hr>
         
         
-        
+        {% include "core/partials/_messages.html" %}
         
         <br>
 
@@ -113,8 +113,8 @@
             {% for processo in processi_audit %}
             <tr>        
               
-              <td><a href="{% url 'nonconformity:modifica_processo_rapporto_audit' fk_rapportoaudit=rapportoaudit.pk id=processo.pk %}">{{ processo }}</a></td>
-              <td>{{ processo.classe_processo }}</td>   
+              <td><a href="{% url 'nonconformity:modifica_processo_rapporto_audit' fk_rapportoaudit=rapportoaudit.pk id=processo.pk %}">{{ processo.fk_processo }}</a></td>
+              <td>{{ processo.fk_processo.classe_processo }}</td>   
               
               <td class="text-center"><a href="{% url 'nonconformity:delete_processo_audit' pk=processo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{processo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
@@ -141,6 +141,3 @@
 
 {% endblock %}
 
-{% block scripts %}
-
-{% endblock %} 

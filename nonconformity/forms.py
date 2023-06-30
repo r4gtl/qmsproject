@@ -108,7 +108,7 @@ class ProcessoAuditModelForm(forms.ModelForm):
         widgets = {
             'fk_processo': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
-            'fk_audit': forms.HiddenInput()
+            'fk_rapportoaudit': forms.HiddenInput()
         }
         labels = {
             'fk_processo': 'Processo',                       
