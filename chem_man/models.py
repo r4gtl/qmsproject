@@ -93,9 +93,9 @@ class PrezzoProdotto(models.Model):
 def schedatecnica_upload_path(instance, filename):
     forn_ragione_sociale = instance.fk_prodottochimico.fk_fornitore.ragionesociale
     prodotto_descrizione = instance.fk_prodottochimico.descrizione
-    base_path = 'SchedeTecniche'
+    base_path = 'Prodotti_Chimici'
     file_extension = os.path.splitext(filename)[1]
-    new_filename = f"{forn_ragione_sociale}_{prodotto_descrizione}_{instance.id}{file_extension}"
+    new_filename = f"{forn_ragione_sociale}/{prodotto_descrizione}/SchedeTecniche/{filename}{file_extension}"
     return os.path.join(base_path, new_filename)
 
 

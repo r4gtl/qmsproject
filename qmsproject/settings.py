@@ -186,8 +186,9 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
     ]
-
-MEDIA_ROOT = os.path.join(BASE_DIR, '/media-serve')
+MEDIA_ROOT='/home/stefano/Documenti/dev/QMSProject/media-serve/'
+#MEDIA_ROOT = os.path.join(BASE_DIR, '/media-serve')
+#MEDIA_ROOT = '/home/django/media-serve/'
 MEDIA_URL = '/media/'
 
 

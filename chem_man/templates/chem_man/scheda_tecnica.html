@@ -51,7 +51,9 @@
                 </div>
                 <div class="col-6">
                     {{ form.documento|as_crispy_field }}                    
+                    <button type="button" class="btn btn-sm btn-info" id="openButton">Vedi File</button>
                 </div>
+                
                 <div class="col-3">
                     {{ form.note|as_crispy_field }}                    
                 </div>
@@ -76,6 +78,15 @@
 
 {% endblock %}
 
-{% block scripts %}
-
+{% block extra_scripts %}
+<script>
+    var openButton = document.getElementById('openButton');
+    openButton.addEventListener('click', function() {
+      var input = document.getElementById('id_documento');
+      if (input.files.length > 0) {
+        var fileURL = URL.createObjectURL(input.files[0]);
+        window.open(fileURL);
+      }
+    });
+  </script>
 {% endblock %} 
