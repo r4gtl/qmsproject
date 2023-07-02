@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Prezzo Prodotto {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_human_resources.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti Chimici</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=fk_prodottochimico.pk %}">{{ fk_prodottochimico }}</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Scheda Tecnica</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Scheda Tecnica</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica Scheda Tecnica</h3>
+        {% else %}
+            <h3> Aggiungi Scheda Tecnica</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+            <div class="row">
+                <div class="col-2">
+                    {{ form.data_inserimento|as_crispy_field }}                    
+                </div>
+                <div class="col-6">
+                    {{ form.documento|as_crispy_field }}                    
+                </div>
+                <div class="col-3">
+                    {{ form.note|as_crispy_field }}                    
+                </div>
+                <div class="col-1">
+                    {{ form.fk_prodottochimico|as_crispy_field }}                    
+                </div>
+                
+                
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

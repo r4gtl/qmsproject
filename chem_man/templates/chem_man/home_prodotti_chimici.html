@@ -85,7 +85,7 @@
 
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Prodotto</a>
+        <a href="{% url 'chem_man:aggiungi_prodotto_chimico' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Prodotto</a>
         </div>  
         <br>
 
@@ -96,6 +96,7 @@
               <thead class="thead-dark">
               <tr>        
                 <th>Prodotto Chimico</th>
+                <th>Prezzo Corrente</th>
                 <th>Solvente</th>
                 <th>Fornitore</th>
                 <th>Azione</th>
@@ -108,17 +109,22 @@
               <tbody>
                 {% for prodotto in prodotti_chimici_paginator %}
                     
-                    <td class="col-md-1"><a href="#">{{ prodotto.descrizione }}</a></td>
-                    <td class="col-md-2">{{ prodotto.solvente }}</td>  
-                    <td class="col-md-2">{{ prodotto.fk_fornitore  }} </td>
-                    <td class="col-md-2">Azione</td> 
+                    <td class="col-md"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=prodotto.pk %}">{{ prodotto.descrizione }}</a></td>
+                    {% if prodotto.get_ultimo_prezzo %}
+                      <td>{{ prodotto.get_ultimo_prezzo }}</td>
+                    {% else %}
+                      <td>Nessun prezzo</td>
+                    {% endif %}
+                    <td class="col-md">{{ prodotto.solvente }}</td>  
+                    <td class="col-md">{{ prodotto.fk_fornitore  }} </td>
+                    <td class="col-md text-center"><a href="{% url 'chem_man:delete_prodotto_chimico' pk=prodotto.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prodotto.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
                 
               </tbody>
             </table>
-             
+
 
 
 

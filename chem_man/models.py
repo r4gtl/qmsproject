@@ -61,6 +61,16 @@ class ProdottoChimico(models.Model):
     def __str__(self):
         return self.descrizione
     
+    @classmethod
+    def get_ultimo_prezzo(cls):
+        prezzo_ultimo = None
+        prodotto = cls.objects.first()
+        if prodotto:
+            ultimo_prezzo = prodotto.prezzo.order_by('-data_inserimento').first()
+            if ultimo_prezzo:
+                prezzo_ultimo = ultimo_prezzo.prezzo
+        return prezzo_ultimo
+    
 class PrezzoProdotto(models.Model):
     fk_prodottochimico = models.ForeignKey(
             ProdottoChimico,
@@ -81,7 +91,7 @@ class PrezzoProdotto(models.Model):
     
     
 def schedatecnica_upload_path(instance, filename):
-    forn_ragione_sociale = instance.fk_prodottochimico.fornitore.ragionesociale
+    forn_ragione_sociale = instance.fk_prodottochimico.fk_fornitore.ragionesociale
     prodotto_descrizione = instance.fk_prodottochimico.descrizione
     base_path = 'SchedeTecniche'
     file_extension = os.path.splitext(filename)[1]
@@ -95,5 +105,6 @@ class SchedaTecnica(models.Model):
         on_delete=models.CASCADE,
         related_name='schede_tecniche'
     )
+    data_inserimento = models.DateField(default=date.today)
     documento=models.FileField(upload_to=schedatecnica_upload_path, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
