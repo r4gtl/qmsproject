@@ -61,15 +61,12 @@ class ProdottoChimico(models.Model):
     def __str__(self):
         return self.descrizione
     
-    @classmethod
-    def get_ultimo_prezzo(cls):
-        prezzo_ultimo = None
-        prodotto = cls.objects.first()
-        if prodotto:
-            ultimo_prezzo = prodotto.prezzo.order_by('-data_inserimento').first()
-            if ultimo_prezzo:
-                prezzo_ultimo = ultimo_prezzo.prezzo
-        return prezzo_ultimo
+    @property
+    def ultimo_prezzo(self):
+        ultimo_prezzo = self.prezzo.order_by('-data_inserimento').first()
+        if ultimo_prezzo:
+            return ultimo_prezzo.prezzo
+        return None
     
 class PrezzoProdotto(models.Model):
     fk_prodottochimico = models.ForeignKey(
@@ -108,3 +105,77 @@ class SchedaTecnica(models.Model):
     data_inserimento = models.DateField(default=date.today)
     documento=models.FileField(upload_to=schedatecnica_upload_path, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
+
+
+
+class Sostanza(models.Model):
+    descrizione = models.CharField(max_length=500)
+    num_cas = models.CharField(max_length=20, blank=True, null=True)
+    num_ec = models.CharField(max_length=20, blank=True, null=True)
+    num_reach = models.CharField(max_length=20, blank=True, null=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='sostanze', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["descrizione"]
+        
+    def __str__(self):
+        return self.descrizione
+    
+
+class SostanzaSVHC(models.Model):
+    descrizione = models.CharField(max_length=500)
+    data_inclusione=models.DateField()
+    num_cas = models.CharField(max_length=20, blank=True, null=True)
+    num_ec = models.CharField(max_length=20, blank=True, null=True)
+    num_reach = models.CharField(max_length=20, blank=True, null=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='sostanze_svhc', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["descrizione"]
+        
+    def __str__(self):
+        return self.descrizione
+    
+class HazardStatement(models.Model):
+
+    # Classe Pericolo
+    FISICI = 'Pericoli Fisici'
+    SALUTE = 'Pericoli per la Salute' 
+    AMBIENTE = 'Pericoli per l\'Ambiente' 
+    SUPPLEMENTARI = 'Pericoli Supplementari' 
+    
+    CHOICES_HAZARD_CAT = (
+        (FISICI, 'Pericoli Fisici'),
+        (SALUTE, 'Pericoli per la Salute'),        
+        (AMBIENTE, 'Pericoli per l\'Ambiente'),        
+        (SUPPLEMENTARI, 'Pericoli Supplementari')       
+    )
+    
+    hazard_statement = models.CharField(max_length=20)
+    descrizione = models.CharField(max_length=100, null=True, blank=True)
+    hazard_category = models.CharField(max_length=50, choices=CHOICES_HAZARD_CAT, null=True, blank=True)
+    is_dangerous = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='hazard_statement', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["hazard_statement"]
+        
+    def __str__(self):
+        return self.hazard_statement + " " + self.descrizione
+    
+
+class PrecautionaryStatement(models.Model):
+    codice = models.CharField(max_length=20)
+    descrizione = models.CharField(max_length=200)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='precautionary_statement', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    
+
