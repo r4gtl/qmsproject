@@ -5,7 +5,7 @@
 {% block head_title %}{{ block.super }} - Prodotto Chimico{% endblock head_title %} 
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_human_resources.html" %}
+{% include "core/partials/_sidenav_chem_man.html" %}
 {% endblock %}
 
 {% block content %}
@@ -105,11 +105,12 @@
       <!-- Tabella prezzi -->
       <div class="col-6">
         <div class="row">
+        
+        {% if form.instance.id  %}
         <div class="col-6">
           <h5>Storico Prezzi</h5>
                     
         </div>
-        {% if form.instance.id  %}
         <div class="col-6 text-end">
           
           <a href="{% url 'chem_man:aggiungi_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Prezzo</a>
@@ -143,11 +144,13 @@
 
   <div class="col-6">
     <div class="row">
+    
+    {% if form.instance.id  %}
     <div class="col-6">
       <h5>Schede tecniche</h5>
                 
     </div>
-    {% if form.instance.id  %}
+
     <div class="col-6 text-end">
       
       <a href="{% url 'chem_man:aggiungi_scheda_tecnica' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Scheda tecnica</a>

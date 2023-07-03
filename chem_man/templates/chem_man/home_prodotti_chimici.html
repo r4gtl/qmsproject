@@ -4,7 +4,7 @@
 {% block title %}{{ block.super }} | Prodotti Chimici {% endblock %}
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_anagrafiche.html" %}
+{% include "core/partials/_sidenav_chem_man.html" %}
 {% endblock %}
 
 {% block content %}
@@ -111,11 +111,11 @@
                     
                     <td class="col-md"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=prodotto.pk %}">{{ prodotto.descrizione }}</a></td>
                      {% if prodotto.ultimo_prezzo %}
-                        <td>{{ prodotto.ultimo_prezzo }}</td>
+                        <td class="col-md text-end">{{ prodotto.ultimo_prezzo }}</td>
                     {% else %}
-                        <td>Nessun prezzo</td>
+                        <td class="col-md text-center">Nessun prezzo</td>
                     {% endif %}
-                    <td class="col-md">{{ prodotto.solvente }}</td>  
+                    <td class="col-md text-end">{{ prodotto.solvente }}</td>  
                     <td class="col-md">{{ prodotto.fk_fornitore  }} </td>
                     <td class="col-md text-center"><a href="{% url 'chem_man:delete_prodotto_chimico' pk=prodotto.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prodotto.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>

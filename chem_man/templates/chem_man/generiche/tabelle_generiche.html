@@ -1,0 +1,182 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Tabelle Generiche {% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_autorizzazioni.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti Chimici</a></li>     
+        <li class="breadcrumb-item active" aria-current="page">Tabelle Generiche</li>        
+    </ol>
+
+</nav>
+<div class="container">
+  <br>
+  <h3>Tabelle Generiche</h3>
+  <hr>
+
+  {% include "core/partials/_messages.html" %}
+
+
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Sostanze</h5>
+          <p>Inserire/modificare le sostanze da associare ai prodotti.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_sostanza' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Descrizione</th> 
+              <th>N. CAS</th> 
+              <th>N. EC</th> 
+
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for sostanza in sostanze %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_sostanza' pk=sostanza.pk %}">{{ sostanza.descrizione }}</a></td>
+              <td>{{ sostanza.n_cas }}</td>
+              <td>{{ sostanza.n_ec }}</td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_sostanza' pk=sostanza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{sostanza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Sostanze SVHC</h5>
+          <p>Inserire/Modificare le Sostanze SVHC. L'elenco serve per avvisare della presenza nelle SDS.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_sostanza_svhc' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza SVHC</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Descrizione</th>            
+              <th>N. CAS</th>
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for sostanza_svhc in sostanze_svhc %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_sostanza_svhc' pk=sostanza_svhc.pk %}">{{ sostanza_svhc.descrizione }}</a></td>
+              <td>{{ sostanza_svhc.num_cas }}</td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_sostanza_svhc' pk=sostanza_svhc.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{sostanza_svhc.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Indicazioni di Rischio</h5>
+          <p>Inserire/modificare le Indicazioni di Rischio.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_hazard_statement' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Indicazione di Rischio</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th> 
+              <th>Descrizione</th> 
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for hazard_statement in hazard_statements %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_hazard_statement' pk=hazard_statement.pk %}">{{ hazard_statement.hazard_statement }}</a></td>
+              <td>{{ hazard_statement.descrizione }}</td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_hazard_statement' pk=hazard_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{hazard_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Consigli di Prudenza</h5>
+          <p>Inserire/Modificare i Consigli di Prudenza.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_precautionary_statement' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th>            
+              <th>Descrizione</th>
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for precautionary_statement in precautionary_statements %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_precautionary_statement' pk=precautionary_statement.pk %}">{{ precautionary_statement.codice }}</a></td>
+              <td>{{ precautionary_statement.descrizione }}</td>
+              
+              <td class="text-center"><a href="{% url 'chem_man:delete_precautionary_statement' pk=precautionary_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{precautionary_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+
+  </div>
+
+</div>
+
+{% endblock content %}
