@@ -4,6 +4,7 @@ from django.db.models.fields import BooleanField
 from .models import *
 from django import forms
 from .models import Attrezzatura
+from human_resources.models import Ward
 
 
 
@@ -32,13 +33,18 @@ class AttrezzaturaFilter(django_filters.FilterSet):
     descrizione=django_filters.CharFilter(lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}), label='Descrizione')
     #is_taratura=django_filters.BooleanFilter(method='unchecked_means_any_value')
     is_taratura=MyBooleanFilter(field_name='is_taratura')
-    
+    fk_ward = django_filters.ModelChoiceFilter(
+        field_name='fk_ward',
+        queryset=Ward.objects.all(),
+        label='Reparto'
+    )
     class Meta:
         model = Attrezzatura
         fields = ['codice_attrezzatura',
                 'descrizione',
                 'is_taratura',
-                'is_dismesso'
+                'is_dismesso',
+                'fk_ward'
                 ] 
         filter_overrides = {
                 

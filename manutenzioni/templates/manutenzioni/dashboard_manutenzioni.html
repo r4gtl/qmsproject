@@ -38,6 +38,7 @@
                             <tr>     
                                 <th>Codice Attrezzatura</th>
                                 <th>Descrizione</th>
+                                <th>Reparto</th>                                
                                 <th>Soggetto a Taratura</th>
                                 <th>Dismesso</th>
                             </tr>
@@ -47,6 +48,7 @@
                              
                                 <td>{% render_field filter.form.codice_attrezzatura class="form-control" %}</td>
                                 <td>{% render_field filter.form.descrizione class="form-control" %}</td>
+                                <td>{% render_field filter.form.fk_ward class="form-control" %}</td>
                                 <td>{% render_field filter.form.is_taratura class="form-control" %}</td>
                                 <td>{{ filter.form.is_dismesso|default_if_none:" " }}</td>
                                 
@@ -74,6 +76,7 @@
             
             <th>Codice</th>            
             <th>Descrizione</th>            
+            <th>Reparto</th>            
             <th>Soggetta a taratura</th>
             <th>Dismesso</th>
 
@@ -87,6 +90,7 @@
             
             <td><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.codice_attrezzatura }}</a></td>
             <td>{{ attrezzatura.descrizione }}</td>            
+            <td>{{ attrezzatura.fk_ward }}</td>            
             <td>{{ attrezzatura.is_taratura }}</td>            
             <td>{{ attrezzatura.is_dismesso }}</td>            
             <td class="text-center"><a href="{% url 'manutenzioni:delete_attrezzatura' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
