@@ -2,13 +2,13 @@
 {% load static %}
 {% load countries %}
 {% load custom_filters %}
-{% block title %}Piano Tarature {% endblock %}
+{% block title %}Piano delle Manutenzioni {% endblock %}
 
 
 
 {% block content %}
 
-  <h1 class="text-center">Piano delle tarature</h1>
+  <h1 class="text-center">Piano delle Manutenzioni</h1>
   <h2 class="text-center">Intervallo di date selezionato: <strong>{{ data_inizio }} - {{ data_fine }}</strong></h2>
   <h2 class="text-center">Reparto: <strong>{{ fk_ward_id }}</strong></h2>
   
@@ -28,6 +28,7 @@
             <th>Modello</th>
             <th>Serie/Matricola</th>
             <th>Reparto</th>
+            <th>Manutenzione</th>
             <th>Prossima Scadenza</th>
             
                         
@@ -35,14 +36,16 @@
         </thead>
         
         <tbody>
-            {% for taratura in tarature %}
+            {% for manutenzione in manutenzioni_ordinarie %}
                 
-                <td>{{ taratura.fk_attrezzatura.codice_attrezzatura }}</td>
-                <td>{{ taratura.fk_attrezzatura.descrizione}}</td>
-                <td>{{ taratura.fk_attrezzatura.modello }}</td>
-                <td>{{ taratura.fk_attrezzatura.serie_matricola }}</td>
-                <td>{{ taratura.fk_attrezzatura.fk_ward }}</td>
-                <td>{{ taratura.prossima_scadenza }}</td>
+                <td>{{ manutenzione.fk_attrezzatura.codice_attrezzatura }}</td>
+                <td>{{ manutenzione.fk_attrezzatura.descrizione}}</td>
+                <td>{{ manutenzione.fk_attrezzatura.modello }}</td>
+                <td>{{ manutenzione.fk_attrezzatura.serie_matricola }}</td>
+                <td>{{ manutenzione.fk_attrezzatura.fk_ward }}</td>
+                <td>{{ manutenzione.descrizione }}</td>
+
+                <td>{{ manutenzione.prossima_scadenza }}</td>
 
             </tr>
             

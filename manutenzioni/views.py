@@ -7,6 +7,7 @@ from datetime import date, timedelta, datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from qmsproject.context_processors import fk_ward_records
 
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -26,12 +27,9 @@ def dashboard_manutenzioni(request):
     manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.all()
     manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.all()
     tarature = Taratura.objects.all()
-    fk_ward_records = Ward.objects.all()
+    #fk_ward_records = Ward.objects.all()
+    #fk_ward_records = [('tutti', 'Tutti')] + [(ward.pk, ward.description) for ward in fk_ward_records]
     
-    # Aggiungi manualmente l'opzione "tutti" all'inizio dell'elenco
-    fk_ward_records = [('tutti', 'Tutti')] + [(ward.pk, ward.description) for ward in fk_ward_records]
-    for ward in fk_ward_records:
-        print(str(ward[0]) + ' ' + str(ward[1]))
 
     filterset_class = AttrezzaturaFilter
     page = request.GET.get('page', 1)
@@ -49,7 +47,7 @@ def dashboard_manutenzioni(request):
         'manutenzioni_ordinarie': manutenzioni_ordinarie,
         'manutenzioni_straordinarie': manutenzioni_straordinarie,
         'tarature': tarature,
-        'fk_ward_records': fk_ward_records,
+        'fk_ward_records': fk_ward_records(request)['fk_ward_records']
     }
     return render(request, "manutenzioni/dashboard_manutenzioni.html", context)
 
@@ -367,9 +365,51 @@ def piano_tarature(request):
         
         context = {
             'tarature': tarature,
+            'data_inizio': data_inizio,
+            'data_fine': data_fine,
+            'fk_ward_id': fk_ward_id
+            
             
         }
         
     return render(request, 'manutenzioni/reports/piano_tarature.html', context)
+
+
+
+def piano_manutenzioni(request):
+    
+    if request.method == 'GET':
+        
+        data_inizio = request.GET.get('data_inizio')  # Assumi che il campo del modal si chiami 'data_inizio'
+        data_fine = request.GET.get('data_fine')  # Assumi che il campo del modal si chiami 'data_fine'
+        fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
+        
+        # Effettua il parsing delle date in oggetti datetime
+        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+    
+        # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
+        if fk_ward_id == 'tutti':
+            manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine)
+            ).order_by('-prossima_scadenza')
+        else:
+            manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine),
+                fk_attrezzatura__fk_ward=fk_ward_id
+            ).order_by('-prossima_scadenza')
+        
+        print("request: " + str(request))
+        
+        context = {
+            'manutenzioni_ordinarie': manutenzioni_ordinarie,
+            'data_inizio': data_inizio,
+            'data_fine': data_fine,
+            'fk_ward_id': fk_ward_id
+            
+            
+        }
+        
+    return render(request, 'manutenzioni/reports/piano_manutenzioni.html', context)
     
     

@@ -4,7 +4,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="selezioneDateModalLabel"><i class="bi bi-calendar-check"></i>&nbsp;&nbsp; </h5>
+        <h5 class="modal-title" id="modal_title"></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           
         </button>
@@ -52,7 +52,7 @@
     var modalTitle = document.getElementById('modal_title');
     
     // Aggiungi il valore di title al testo esistente del titolo
-    modalTitle.innerText = modalTitle.innerText + ' | ' + title;
+    modalTitle.innerHTML = modalTitle.innerHTML + ' <i class="bi bi-calendar-check"></i>&nbsp;&nbsp; ' + title;
 
 
     

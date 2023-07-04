@@ -4,7 +4,7 @@ from .views import (dashboard_manutenzioni, scadenzario,
                     ManutenzioneOrdinariaCreateView, ManutenzioneOrdinariaUpdateView, delete_manutenzione_ordinaria,
                     ManutenzioneStraordinariaCreateView, ManutenzioneStraordinariaUpdateView, delete_manutenzione_straordinaria,
                     TaraturaCreateView, TaraturaUpdateView, delete_taratura,
-                    piano_tarature,
+                    piano_tarature, piano_manutenzioni,
                     )
 
 app_name="manutenzioni"
@@ -37,5 +37,6 @@ urlpatterns = [
 
     # Stampe
     path('piano_tarature/', piano_tarature, name="piano_tarature"),
+    path('piano_manutenzioni/', piano_manutenzioni, name="piano_manutenzioni"),
 
 ]
