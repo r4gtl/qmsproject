@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
 from django.urls import reverse, reverse_lazy
-from django.db.models import Sum, Count
+from django.utils import timezone
+from django.db.models import Sum, Count, Q
 import datetime
+from datetime import date, timedelta, datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -14,6 +16,7 @@ from .models import (Attrezzatura, ManutenzioneStraordinaria,
 from .forms import AttrezzaturaModelForm, ManutenzioneOrdinariaModelForm, ManutenzioneStraordinariaModelForm, TaraturaModelForm
 from .filters import AttrezzaturaFilter
 from core.utils import get_records_with_upcoming_expiry
+from human_resources.models import Ward
 
 
 
@@ -23,6 +26,13 @@ def dashboard_manutenzioni(request):
     manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.all()
     manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.all()
     tarature = Taratura.objects.all()
+    fk_ward_records = Ward.objects.all()
+    
+    # Aggiungi manualmente l'opzione "tutti" all'inizio dell'elenco
+    fk_ward_records = [('tutti', 'Tutti')] + [(ward.pk, ward.description) for ward in fk_ward_records]
+    for ward in fk_ward_records:
+        print(str(ward[0]) + ' ' + str(ward[1]))
+
     filterset_class = AttrezzaturaFilter
     page = request.GET.get('page', 1)
     paginator = Paginator(attrezzature, 50)
@@ -38,18 +48,41 @@ def dashboard_manutenzioni(request):
         'filter': filter,
         'manutenzioni_ordinarie': manutenzioni_ordinarie,
         'manutenzioni_straordinarie': manutenzioni_straordinarie,
-        'tarature': tarature
+        'tarature': tarature,
+        'fk_ward_records': fk_ward_records,
     }
     return render(request, "manutenzioni/dashboard_manutenzioni.html", context)
 
 
 def scadenzario(request):
-    tarature = get_records_with_upcoming_expiry(Taratura, "prossima_scadenza", 30)
-    manutenzioni_ordinarie = get_records_with_upcoming_expiry(ManutenzioneOrdinaria, "prossima_scadenza", 30)
+    today = timezone.now().date()
+    
+    manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.filter(Q(prossima_scadenza__gte=today)).order_by('prossima_scadenza')
+    tarature = Taratura.objects.filter(Q(prossima_scadenza__gte=today)).order_by('prossima_scadenza')
+    # nella prossima tupla mettiamo le scadenze e le dividiamo per quelle in scadenza entro 30 giorni e quelle successive
+    # per dare un colore diverso nello scadenzario
+    piano_tarature = []
+    piano_manutenzioni = []
+    for taratura in tarature:
+        if taratura.prossima_scadenza < today + timedelta(days=30):
+            piano_tarature.append((taratura, True))
+            
+        else:
+            piano_tarature.append((taratura, False))
+
+    for manutenzione in manutenzioni_ordinarie:
+        if manutenzione.prossima_scadenza < today + timedelta(days=30):
+            piano_manutenzioni.append((manutenzione, True))
+            
+            
+        else:
+            piano_manutenzioni.append((manutenzione, False))
+
+    
 
     context = {
-        'tarature': tarature,
-        'manutenzioni_ordinarie': manutenzioni_ordinarie
+        'piano_tarature': piano_tarature,
+        'piano_manutenzioni': piano_manutenzioni
     }
 
     return render(request, "manutenzioni/scadenzario.html", context)
@@ -305,3 +338,38 @@ def delete_taratura(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
         return redirect(url_match)
+
+# Stampe
+def piano_tarature(request):
+    
+    if request.method == 'GET':
+        
+        data_inizio = request.GET.get('data_inizio')  # Assumi che il campo del modal si chiami 'data_inizio'
+        data_fine = request.GET.get('data_fine')  # Assumi che il campo del modal si chiami 'data_fine'
+        fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
+        
+        # Effettua il parsing delle date in oggetti datetime
+        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+    
+        # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
+        if fk_ward_id == 'tutti':
+            tarature = Taratura.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine)
+            ).order_by('-prossima_scadenza')
+        else:
+            tarature = Taratura.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine),
+                fk_attrezzatura__fk_ward=fk_ward_id
+            ).order_by('-prossima_scadenza')
+        
+        print("request: " + str(request))
+        
+        context = {
+            'tarature': tarature,
+            
+        }
+        
+    return render(request, 'manutenzioni/reports/piano_tarature.html', context)
+    
+    

@@ -14,7 +14,7 @@
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard Manutenzioni</a></li>        
 
-        <li class="breadcrumb-item active" aria-current="page">Scadenze prossimi 30 giorni</li>
+        <li class="breadcrumb-item active" aria-current="page">Prossime Scadenze</li>
         
         
         
@@ -22,7 +22,7 @@
 </nav>
 
     <div class="container">
-        <h3> Scadenze prossimi 30 giorni</h3>
+        <h3> Prossime scadenze</h3>
         
         
         
@@ -48,13 +48,14 @@
           </tr>
         </thead>
         <tbody>
-          {% for taratura in tarature %}
+          {% for taratura, is_da_scadere in piano_tarature %}
           <tr>        
             
             
             <td>{{ taratura.fk_attrezzatura }}</td>
-            <td>{{ taratura.fk_attrezzatura.descrizione }}</td>            
-            <td>{{ taratura.prossima_scadenza }}</td>            
+            <td>{{ taratura.fk_attrezzatura.descrizione }}</td> 
+            <td {% if is_da_scadere %} style="background-color: yellow;"{% endif %} class="text-center">           
+            {{ taratura.prossima_scadenza }}</td>            
             
           </tr>  
           {% endfor %}
@@ -69,7 +70,7 @@
           <tr>
             
             <th scope="col">Codice</th>            
-            <th scope="col">Descrizione</th>            
+            <th scope="col">Descrizione Manutenzione</th>            
             <th scope="col">Prossima Scadenza</th>
             
 
@@ -77,13 +78,14 @@
           </tr>
         </thead>
         <tbody>
-          {% for manutenzione in manutenzioni_ordinarie %}
+          {% for manutenzione, is_da_scadere in piano_manutenzioni %}
           <tr>        
             
             
             <td>{{ manutenzione.fk_attrezzatura }}</td>
-            <td>{{ manutenzione.fk_attrezzatura.descrizione }}</td>            
-            <td>{{ manutenzione.prossima_scadenza }}</td>            
+            <td>{{ manutenzione.descrizione }}</td>            
+            <td {% if is_da_scadere %} style="background-color: yellow;"{% endif %} class="text-center">
+            {{ manutenzione.prossima_scadenza }}</td>            
             
           </tr>  
           {% endfor %}

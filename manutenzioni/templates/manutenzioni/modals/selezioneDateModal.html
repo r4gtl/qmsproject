@@ -1,0 +1,60 @@
+
+<!-- Modal -->
+<div class="modal fade" id="selezioneDateModal" tabindex="-1" role="dialog" aria-labelledby="selezioneDateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="selezioneDateModalLabel"><i class="bi bi-calendar-check"></i>&nbsp;&nbsp; </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Aggiungi i campi per la selezione delle date e fk_ward -->
+        <form action="" target="_blank" id="date_form" method="GET" >
+          
+          <div class="form-group">
+            <label for="data_inizio">Dalla data:</label>
+            <input type="date" class="form-control" id="data_inizio" name="data_inizio">
+          </div>
+          <div class="form-group">
+            <label for="data_fine">Alla data:</label>
+            <input type="date" class="form-control" id="data_fine" name="data_fine">
+          </div>
+          <div class="form-group">
+            <label for="fk_ward_id">Reparto</label>
+            <select class="form-control" id="fk_ward_id" name="fk_ward_id">
+              <!-- Aggiungi le opzioni per fk_ward -->
+               {% for ward in fk_ward_records %}
+                  <option value="{{ ward.0 }}">{{ ward.1 }}</option>
+                {% endfor %}
+              <!-- Aggiungi altre opzioni -->
+            </select>
+          </div>
+          <br>
+          
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            <button type="submit" class="btn btn-primary">Genera Report</button>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  function setModalUrl(url, title) {
+    // Imposta l'URL nel campo azione del form nel modal
+    document.getElementById('date_form').action = url;
+
+    // Ottieni l'elemento del titolo del modal
+    var modalTitle = document.getElementById('modal_title');
+    
+    // Aggiungi il valore di title al testo esistente del titolo
+    modalTitle.innerText = modalTitle.innerText + ' | ' + title;
+
+
+    
+  }
+</script>

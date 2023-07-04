@@ -4,6 +4,7 @@ from django_countries.fields import CountryField
 from .models import (Attrezzatura, ManutenzioneStraordinaria, Taratura,
                     ManutenzioneOrdinaria,
                     )
+from human_resources.models import Ward
 
 from anagrafiche.models import Fornitore
 
@@ -11,7 +12,7 @@ class AttrezzaturaModelForm(forms.ModelForm):
     class Meta:
         model = Attrezzatura
         fields = '__all__'
-        
+        fk_ward = forms.ModelChoiceField(queryset=Ward.objects.all())
         widgets = {
             
             'codice_attrezzatura': forms.TextInput(attrs={'placeholder': 'Inserisci codice attrezzatura'}),
@@ -34,6 +35,7 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'descrizione': 'Descrizione',
             'modello': 'Modello',
             'serie_matricola': 'N. serie/N. Matricola',
+            'fk_ward': 'Reparto',
             'is_dismesso': 'Dismesso',
             'data_dismissione': 'Data Dismissione',
             'is_taratura': 'Soggetto a taratura',

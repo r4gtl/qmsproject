@@ -4,6 +4,7 @@ from .views import (dashboard_manutenzioni, scadenzario,
                     ManutenzioneOrdinariaCreateView, ManutenzioneOrdinariaUpdateView, delete_manutenzione_ordinaria,
                     ManutenzioneStraordinariaCreateView, ManutenzioneStraordinariaUpdateView, delete_manutenzione_straordinaria,
                     TaraturaCreateView, TaraturaUpdateView, delete_taratura,
+                    piano_tarature,
                     )
 
 app_name="manutenzioni"
@@ -33,5 +34,8 @@ urlpatterns = [
     path('<int:fk_attrezzatura>/aggiungi_taratura/', TaraturaCreateView.as_view(), name="aggiungi_taratura"), 
     path('<int:fk_attrezzatura>/modifica_taratura/<int:pk>/', TaraturaUpdateView.as_view(), name="modifica_taratura"), 
     path('delete_taratura/<int:pk>', delete_taratura, name="delete_taratura"),
+
+    # Stampe
+    path('piano_tarature/', piano_tarature, name="piano_tarature"),
 
 ]

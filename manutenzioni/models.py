@@ -4,12 +4,18 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth.models import User
 from anagrafiche.models import Fornitore
+from human_resources.models import Ward
 
 class Attrezzatura(models.Model):
     codice_attrezzatura = models.CharField(max_length=10)
     descrizione = models.CharField(max_length=50)
     modello = models.CharField(max_length=100, null=True, blank=True)
     serie_matricola = models.CharField(max_length=50, null=True, blank=True)
+    fk_ward = models.ForeignKey(
+        Ward, related_name='attrezzatura',        
+        on_delete=models.SET_NULL,
+        null=True, blank=True
+    )
     is_dismesso = models.BooleanField(default=False)
     data_dismissione = models.DateField(null=True, blank=True)
     is_taratura = models.BooleanField(default=False)
