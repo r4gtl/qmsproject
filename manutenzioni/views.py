@@ -47,7 +47,7 @@ def dashboard_manutenzioni(request):
         'manutenzioni_ordinarie': manutenzioni_ordinarie,
         'manutenzioni_straordinarie': manutenzioni_straordinarie,
         'tarature': tarature,
-        'fk_ward_records': fk_ward_records(request)['fk_ward_records']
+        #'fk_ward_records': fk_ward_records(request)['fk_ward_records']
     }
     return render(request, "manutenzioni/dashboard_manutenzioni.html", context)
 

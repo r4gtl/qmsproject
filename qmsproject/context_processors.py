@@ -11,6 +11,6 @@ def nome_sito(request):
 def fk_ward_records(request):
     wards = Ward.objects.all()
     ward_records = [('tutti', 'Tutti')] + [(ward.pk, ward.description) for ward in wards]
-    for ward in ward_records:
-        print(str(ward[0] + ' ' + str(ward[1])))
+    #for ward in ward_records:
+     #   print(str(ward[0] + ' ' + str(ward[1])))
     return {'fk_ward_records': ward_records}
