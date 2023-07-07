@@ -223,10 +223,7 @@
           </tbody>
         </table>
       </div>
-    </div>
-
-
-    <!-- Paginazione -->
+      <!-- Paginazione -->
       <div class="pagination">
         <span class="step-links">
           {% if sostanze_svhc_paginator.has_previous %}
@@ -242,6 +239,10 @@
       </div>
       
   <!-- Fine Paginazione -->
+    </div>
+
+
+    
 
   </div>
 
@@ -260,6 +261,59 @@
           <a href="{% url 'chem_man:aggiungi_hazard_statement' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Indicazione di Rischio</a>
         </div>
       </div>
+
+      <!-- Inizio filtro -->
+        <div class="row">
+          <div class="col">
+            <div class="card card-body">
+        
+              
+              <form method="get">
+        
+                <div class="table-responsive-sm">
+                  <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                      <tr>     
+                        <th>Indicazione Pericolo</th>
+                        <th>Categoria Pericolo</th>
+                        
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                      <td style="width: 20%">                
+                        {% render_field filter_hazard_statements.form.hazard_statement class="form-control" %}
+                      </td>
+                      
+                      <td style="width: 20%">
+                        {% render_field filter_hazard_statements.form.hazard_category class="form-control" %}
+                      </td>
+                      
+                    </tr>
+              
+                    
+                    
+                  </tbody>
+                  </table>
+                </div>
+                  
+        
+                
+        
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+                <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                
+              </form>
+              
+              
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fine filtro -->
+        <p>Numero Indicazioni di Pericolo totale {{ tot_hazard_statements }} - Numero Indicazioni di Pericolo filtrate {{ hazard_statements_filter_count }}</p>
+
       <div class="table-container">
         <table class="table table-bordered table-striped mt-2">
           <thead>
@@ -271,17 +325,34 @@
             </tr>
           </thead>
           <tbody>
-            {% for hazard_statement in hazard_statements %}
+            {% for hazard_statement in hazard_statements_paginator %}
             <tr>        
               
               <td><a href="{% url 'chem_man:modifica_hazard_statement' pk=hazard_statement.pk %}">{{ hazard_statement.hazard_statement }}</a></td>
-              <td>{{ hazard_statement.descrizione }}</td>
+              <td>{{ hazard_statement.descrizione|truncatechars:20 }}</td>
               <td class="text-center"><a href="{% url 'chem_man:delete_hazard_statement' pk=hazard_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{hazard_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
         </table>
       </div>
+
+    <!-- Paginazione -->
+      <div class="pagination">
+        <span class="step-links">
+          {% if hazard_statements_paginator.has_previous %}
+            <a href="?page={{ hazard_statements_paginator.previous_page_number }}">precedente</a>
+          {% endif %}
+
+          <span class="current-page">{{ hazard_statements_paginator.number }}</span>
+
+          {% if hazard_statements_paginator.has_next %}
+            <a href="?page={{ hazard_statements_paginator.next_page_number }}">successivo</a>
+          {% endif %}
+        </span>
+      </div>
+      
+  <!-- Fine Paginazione -->
     </div>
 
     <div class="col-6">
@@ -294,6 +365,60 @@
           <a href="{% url 'chem_man:aggiungi_precautionary_statement' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
         </div>
       </div>
+
+      <!-- Inizio filtro -->
+        <div class="row">
+          <div class="col">
+            <div class="card card-body">
+        
+              
+              <form method="get">
+        
+                <div class="table-responsive-sm">
+                  <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                      <tr>     
+                        <th>Consiglio Prudenza</th>
+                        <th>Descrizione</th>
+                        
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                      <td style="width: 20%">                
+                        {% render_field filter_precautionary_statements.form.codice class="form-control" %}
+                      </td>
+                      
+                      <td style="width: 20%">
+                        {% render_field filter_precautionary_statements.form.descrizione class="form-control" %}
+                      </td>
+                      
+                    </tr>
+              
+                    
+                    
+                  </tbody>
+                  </table>
+                </div>
+                  
+        
+                
+        
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+                <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                
+              </form>
+              
+              
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fine filtro -->
+        <p>Numero Consigli di Prudenza totale {{ tot_precautionary_statements }} - Numero IConsigli di Prudenza filtrate {{ precautionary_statements_filter_count }}</p>
+
+
       <div class="table-container">
         <table class="table table-bordered table-striped mt-2">
           <thead>
@@ -305,11 +430,11 @@
             </tr>
           </thead>
           <tbody>
-            {% for precautionary_statement in precautionary_statements %}
+            {% for precautionary_statement in precautionary_statements_paginator %}
             <tr>        
               
               <td><a href="{% url 'chem_man:modifica_precautionary_statement' pk=precautionary_statement.pk %}">{{ precautionary_statement.codice }}</a></td>
-              <td>{{ precautionary_statement.descrizione }}</td>
+              <td>{{ precautionary_statement.descrizione|truncatechars:20 }}</td>
               
               <td class="text-center"><a href="{% url 'chem_man:delete_precautionary_statement' pk=precautionary_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{precautionary_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
@@ -317,11 +442,149 @@
           </tbody>
         </table>
       </div>
+      <!-- Paginazione -->
+      <div class="pagination">
+        <span class="step-links">
+          {% if precautionary_statements_paginator.has_previous %}
+            <a href="?page={{ precautionary_statements_paginator.previous_page_number }}">precedente</a>
+          {% endif %}
+
+          <span class="current-page">{{ precautionary_statements_paginator.number }}</span>
+
+          {% if precautionary_statements_paginator.has_next %}
+            <a href="?page={{ precautionary_statements_paginator.next_page_number }}">successivo</a>
+          {% endif %}
+        </span>
+      </div>
+      
+  <!-- Fine Paginazione -->
     </div>
 
 
 
   </div>
+
+<!-- TERZA RIGA -->
+
+  <br>
+  <hr>
+
+
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Simboli GHS</h5>
+          <p>Inserire/modificare i simboli GHS.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_simbolo_ghs' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Simbolo</a>
+        </div>
+      </div>
+
+      <!-- Inizio filtro -->
+        <div class="row">
+          <div class="col">
+            <div class="card card-body">
+        
+              
+              <form method="get">
+        
+                <div class="table-responsive-sm">
+                  <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                      <tr>     
+                        <th>Codice</th>
+                        
+                        
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                      <td style="width: 20%">                
+                        {% render_field filter_simboli_ghs.form.codice class="form-control" %}
+                      </td>
+                      
+                      
+                      
+                    </tr>
+              
+                    
+                    
+                  </tbody>
+                  </table>
+                </div>
+                  
+        
+                
+        
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+                <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                
+              </form>
+              
+              
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fine filtro -->
+        <p>Numero Simboli GHS totale {{ tot_simboli_ghs }} - Numero Simboli GHS filtrate {{ simboli_ghs_filter_count }}</p>
+
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th> 
+              <th>Immagine</th> 
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for simbolo_ghs in simboli_ghs_paginator %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_simbolo_ghs' pk=simbolo_ghs.pk %}">{{ simbolo_ghs.codice }}</a></td>
+              <td>
+               {% if simbolo_ghs.symbol_image %}
+                <img src="{% static simbolo_ghs.symbol_image.url %}" alt="Symbol Image">
+              {% else %}
+                No Image
+              {% endif %}
+              </td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_simbolo_ghs' pk=simbolo_ghs.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{delete_simbolo_ghs.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    <!-- Paginazione -->
+      <div class="pagination">
+        <span class="step-links">
+          {% if simboli_ghs_paginator.has_previous %}
+            <a href="?page={{ simboli_ghs_paginator.previous_page_number }}">precedente</a>
+          {% endif %}
+
+          <span class="current-page">{{ simboli_ghs_paginator.number }}</span>
+
+          {% if simboli_ghs_paginator.has_next %}
+            <a href="?page={{ simboli_ghs_paginator.next_page_number }}">successivo</a>
+          {% endif %}
+        </span>
+      </div>
+      
+  <!-- Fine Paginazione -->
+    </div>
+
+    
+
+
+
+  </div>
+
 
 </div>
 

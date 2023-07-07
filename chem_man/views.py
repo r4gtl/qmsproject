@@ -10,10 +10,14 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_filters.views import FilterView
 
 
-from .filters import ProdottoChimicoFilter, SostanzaFilter, SostanzaSVHCFilter
+from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
+                      SostanzaSVHCFilter, HazardStatementFilter, 
+                      PrecautionaryStatementFilter, SimboloGHSFilter
+)
 
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
+                    SimboloGHS,
                     )
 
 
@@ -21,7 +25,7 @@ from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
 from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
                     SchedaTecnicaModelForm, SostanzaModelForm,
                     SostanzaSVHCModelForm, HazardStatementModelForm,
-                    PrecautionaryStatementModelForm,
+                    PrecautionaryStatementModelForm, SimboloGHSModelForm
 )
 
 # Create your views here.
@@ -255,9 +259,13 @@ def tabelle_generiche(request):
     sostanze_svhc = SostanzaSVHC.objects.all()
     tot_sostanze_svhc = SostanzaSVHC.objects.count()
     hazard_statements = HazardStatement.objects.all()
+    tot_hazard_statements = HazardStatement.objects.count()
     precautionary_statements = PrecautionaryStatement.objects.all()
-    
+    tot_precautionary_statements = PrecautionaryStatement.objects.count()
+    simboli_ghs = SimboloGHS.objects.all()
+    tot_simboli_ghs = SimboloGHS.objects.count()
 
+    
     sostanze_filter = SostanzaFilter(request.GET, queryset=sostanze)
     filtered_sostanze = sostanze_filter.qs  # Ottieni i record filtrati
     sostanze_filter_count = filtered_sostanze.count()  # Conta i record filtrati
@@ -265,6 +273,18 @@ def tabelle_generiche(request):
     sostanze_svhc_filter = SostanzaSVHCFilter(request.GET, queryset=sostanze_svhc)
     filtered_sostanze_svhc = sostanze_svhc_filter.qs
     sostanze_svhc_filter_count = filtered_sostanze_svhc.count()
+
+    hazard_statements_filter = HazardStatementFilter(request.GET, queryset=hazard_statements)
+    filtered_hazard_statements = hazard_statements_filter.qs
+    hazard_statements_filter_count = filtered_hazard_statements.count()
+
+    precautionary_statements_filter = PrecautionaryStatementFilter(request.GET, queryset=precautionary_statements)
+    filtered_precautionary_statements = precautionary_statements_filter.qs
+    precautionary_statements_filter_count = filtered_precautionary_statements.count()
+
+    simboli_ghs_filter = SimboloGHSFilter(request.GET, queryset=simboli_ghs)
+    filtered_simboli_ghs = simboli_ghs_filter.qs
+    simboli_ghs_filter_count = filtered_simboli_ghs.count()
     
 
     # Paginazione Sostanze
@@ -287,19 +307,73 @@ def tabelle_generiche(request):
     except EmptyPage:
         sostanze_svhc_paginator = paginator_sostanze_svhc.page(paginator_sostanze_svhc.num_pages)
 
+    # Paginazione Hazard Statements
+    page_hazard_statements = request.GET.get('page', 1)
+    paginator_hazard_statements = Paginator(filtered_hazard_statements, 50)
+    try:
+        hazard_statements_paginator = paginator_hazard_statements.page(page_hazard_statements)
+    except PageNotAnInteger:
+        hazard_statements_paginator = paginator_hazard_statements.page(1)
+    except EmptyPage:
+        hazard_statements_paginator = paginator_hazard_statements.page(paginator_hazard_statements.num_pages)
+
+    # Paginazione Precautionary Statements
+    page_precautionary_statements = request.GET.get('page', 1)
+    paginator_precautionary_statements = Paginator(filtered_precautionary_statements, 50)
+    try:
+        precautionary_statements_paginator = paginator_precautionary_statements.page(page_precautionary_statements)
+    except PageNotAnInteger:
+        precautionary_statements_paginator = paginator_precautionary_statements.page(1)
+    except EmptyPage:
+        precautionary_statements_paginator = paginator_precautionary_statements.page(paginator_precautionary_statements.num_pages)
+
+    # Paginazione Simboli GHS
+    page_simboli_ghs = request.GET.get('page', 1)
+    paginator_simboli_ghs = Paginator(filtered_simboli_ghs, 50)
+    try:
+        simboli_ghs_paginator = paginator_simboli_ghs.page(page_simboli_ghs)
+    except PageNotAnInteger:
+        simboli_ghs_paginator = paginator_simboli_ghs.page(1)
+    except EmptyPage:
+        simboli_ghs_paginator = paginator_simboli_ghs.page(paginator_simboli_ghs.num_pages)
+
     context = {
+        # Sostanze
         'sostanze': sostanze,
         'sostanze_paginator': sostanze_paginator,
+        'tot_sostanze': tot_sostanze,
+        'filter_sostanze': sostanze_filter,
+        'sostanze_filter_count': sostanze_filter_count,
+        
+        # Sostanza SVHC
         'sostanze_svhc': sostanze_svhc,
         'sostanze_svhc_paginator': sostanze_svhc_paginator,
         'tot_sostanze_svhc': tot_sostanze_svhc,
-        'hazard_statements': hazard_statements,
-        'precautionary_statements': precautionary_statements, 
-        'filter_sostanze': sostanze_filter,
         'filter_svhc': sostanze_svhc_filter,
-        'tot_sostanze': tot_sostanze,
-        'sostanze_filter_count': sostanze_filter_count,
-        'sostanze_svhc_filter_count': sostanze_svhc_filter_count
+        'sostanze_svhc_filter_count': sostanze_svhc_filter_count,
+        
+        # Hazard Statements
+        'hazard_statements': hazard_statements,
+        'hazard_statements_paginator': hazard_statements_paginator,
+        'tot_hazard_statements': tot_hazard_statements,
+        'filter_hazard_statements': hazard_statements_filter,
+        'hazard_statements_filter_count': hazard_statements_filter_count,
+
+        # Precautionary Statements
+        'precautionary_statements': precautionary_statements, 
+        'tot_precautionary_statements': tot_precautionary_statements,
+        'precautionary_statements_paginator': precautionary_statements_paginator,
+        'filter_precautionary_statements': precautionary_statements_filter,
+        'precautionary_statements_filter_count': precautionary_statements_filter_count,
+
+        # Simboli GHS
+        'simboli_ghs': simboli_ghs, 
+        'tot_simboli_ghs': tot_simboli_ghs,
+        'simboli_ghs_paginator': simboli_ghs_paginator,
+        'filter_simboli_ghs': simboli_ghs_filter,
+        'simboli_ghs_filter_count': simboli_ghs_filter_count
+
+
     }
 
     return render(request, 'chem_man/generiche/tabelle_generiche.html', context)
@@ -503,7 +577,7 @@ class PrecautionaryStatementUpdateView(LoginRequiredMixin, UpdateView):
     model = PrecautionaryStatement
     form_class = PrecautionaryStatementModelForm
     template_name = 'chem_man/generiche/precautionary_statement.html'
-    success_message = 'Consiglio di Prodenza modificato correttamente!'
+    success_message = 'Consiglio di prudenza modificato correttamente!'
 
 
     def get_success_url(self):
@@ -525,6 +599,63 @@ class PrecautionaryStatementUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_precautionary_statement(request, pk):
         deleteobject = get_object_or_404(PrecautionaryStatement, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:tabelle_generiche')
+        return redirect(url_match)
+
+
+
+# Simboli GHS
+
+
+class SimboloGHSCreateView(LoginRequiredMixin,CreateView):
+    model = SimboloGHS
+    form_class = SimboloGHSModelForm
+    template_name = 'chem_man/generiche/simbolo_ghs.html'
+    success_message = 'Simbolo aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('chem_man:tabelle_generiche')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class SimboloGHSUpdateView(LoginRequiredMixin, UpdateView):
+    model = SimboloGHS
+    form_class = SimboloGHSModelForm
+    template_name = 'chem_man/generiche/simbolo_ghs.html'
+    success_message = 'Simbolo modificato correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('chem_man:tabelle_generiche')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_simbolo_ghs(request, pk):
+        deleteobject = get_object_or_404(SimboloGHS, pk = pk)
         deleteobject.delete()
         url_match = reverse_lazy('chem_man:tabelle_generiche')
         return redirect(url_match)

@@ -8,6 +8,7 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     SostanzaSVHCCreateView, SostanzaSVHCUpdateView, delete_sostanza_svhc,
                     HazardStatementCreateView, HazardStatementUpdateView, delete_hazard_statement,
                     PrecautionaryStatementCreateView, PrecautionaryStatementUpdateView, delete_precautionary_statement,
+                    SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
                     
                     )
 
@@ -58,6 +59,11 @@ urlpatterns = [
     path('aggiungi_precautionary_statement/', PrecautionaryStatementCreateView.as_view(), name="aggiungi_precautionary_statement"), 
     path('modifica_precautionary_statement/<int:pk>/', PrecautionaryStatementUpdateView.as_view(), name="modifica_precautionary_statement"), 
     path('delete_precautionary_statement/<int:pk>', delete_precautionary_statement, name="delete_precautionary_statement"),
+
+    # Simboli GHS
+    path('aggiungi_simbolo_ghs/', SimboloGHSCreateView.as_view(), name="aggiungi_simbolo_ghs"), 
+    path('modifica_simbolo_ghs/<int:pk>/', SimboloGHSUpdateView.as_view(), name="modifica_simbolo_ghs"), 
+    path('delete_simbolo_ghs/<int:pk>', delete_simbolo_ghs, name="delete_simbolo_ghs"),
     
     
 ]

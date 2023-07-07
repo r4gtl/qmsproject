@@ -4,6 +4,7 @@ from django import forms
 from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
+                    SimboloGHS
 )
 from anagrafiche.models import Fornitore
 
@@ -160,6 +161,26 @@ class PrecautionaryStatementModelForm(forms.ModelForm):
             'codice': 'Codice',
             'descrizione': 'Descrizione',            
             'is_dangerous': 'Segnalata nel DVR',           
+            'note': 'Note'
+
+        }
+
+class SimboloGHSModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = SimboloGHS
+        fields= '__all__'
+        widgets = {
+            'codice': forms.TextInput(attrs={'placeholder': 'Inserisci codice del simbolo di pericolo'}),
+            'descrizione': forms.Textarea(attrs={'placeholder': 'Inserisci descrizione', 'rows':'5'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            'codice': 'Codice',
+            'descrizione': 'Descrizione',   
+            'symbol_image': 'Simbolo',
+            
             'note': 'Note'
 
         }

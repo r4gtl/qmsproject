@@ -177,5 +177,16 @@ class PrecautionaryStatement(models.Model):
     created_by = models.ForeignKey(User, related_name='precautionary_statement', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+class SimboloGHS(models.Model):
+    codice = models.CharField(max_length=10)
+    descrizione = models.TextField(null=True, blank=True)
+    symbol_image = models.ImageField(upload_to='static/ghs_symbols/', null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='simbolo_ghs', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
     
 
