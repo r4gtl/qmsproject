@@ -10,7 +10,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django_filters.views import FilterView
 
 
-from .filters import ProdottoChimicoFilter
+from .filters import ProdottoChimicoFilter, SostanzaFilter, SostanzaSVHCFilter
 
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
@@ -251,18 +251,61 @@ def delete_scheda_tecnica(request, pk):
 
 def tabelle_generiche(request):
     sostanze = Sostanza.objects.all()
+    tot_sostanze = Sostanza.objects.count()
     sostanze_svhc = SostanzaSVHC.objects.all()
+    tot_sostanze_svhc = SostanzaSVHC.objects.count()
     hazard_statements = HazardStatement.objects.all()
     precautionary_statements = PrecautionaryStatement.objects.all()
     
+
+    sostanze_filter = SostanzaFilter(request.GET, queryset=sostanze)
+    filtered_sostanze = sostanze_filter.qs  # Ottieni i record filtrati
+    sostanze_filter_count = filtered_sostanze.count()  # Conta i record filtrati
+    
+    sostanze_svhc_filter = SostanzaSVHCFilter(request.GET, queryset=sostanze_svhc)
+    filtered_sostanze_svhc = sostanze_svhc_filter.qs
+    sostanze_svhc_filter_count = filtered_sostanze_svhc.count()
+    
+
+    # Paginazione Sostanze
+    page_sostanze = request.GET.get('page', 1)
+    paginator_sostanze = Paginator(filtered_sostanze, 50)
+    try:
+        sostanze_paginator = paginator_sostanze.page(page_sostanze)
+    except PageNotAnInteger:
+        sostanze_paginator = paginator_sostanze.page(1)
+    except EmptyPage:
+        sostanze_paginator = paginator_sostanze.page(paginator_sostanze.num_pages)
+
+    # Paginazione Sostanze SVHC
+    page_sostanze_svhc = request.GET.get('page', 1)
+    paginator_sostanze_svhc = Paginator(filtered_sostanze_svhc, 50)
+    try:
+        sostanze_svhc_paginator = paginator_sostanze_svhc.page(page_sostanze_svhc)
+    except PageNotAnInteger:
+        sostanze_svhc_paginator = paginator_sostanze_svhc.page(1)
+    except EmptyPage:
+        sostanze_svhc_paginator = paginator_sostanze_svhc.page(paginator_sostanze_svhc.num_pages)
+
     context = {
         'sostanze': sostanze,
+        'sostanze_paginator': sostanze_paginator,
         'sostanze_svhc': sostanze_svhc,
+        'sostanze_svhc_paginator': sostanze_svhc_paginator,
+        'tot_sostanze_svhc': tot_sostanze_svhc,
         'hazard_statements': hazard_statements,
-        'precautionary_statements': precautionary_statements   
+        'precautionary_statements': precautionary_statements, 
+        'filter_sostanze': sostanze_filter,
+        'filter_svhc': sostanze_svhc_filter,
+        'tot_sostanze': tot_sostanze,
+        'sostanze_filter_count': sostanze_filter_count,
+        'sostanze_svhc_filter_count': sostanze_svhc_filter_count
     }
 
     return render(request, 'chem_man/generiche/tabelle_generiche.html', context)
+
+
+
 
 
 # Sostanze
