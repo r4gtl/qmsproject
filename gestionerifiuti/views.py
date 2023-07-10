@@ -4,6 +4,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.db.models import Q, Sum
+
+from datetime import date, timedelta
 
 
 from .models import (CodiceCER, 
@@ -20,12 +23,21 @@ from .forms import (MovimentoRifiutiModelForm,
 
 
 
+
 def gestione_rifiuti_home(request): 
 
     movimenti_rifiuti = MovimentoRifiuti.objects.all()
     
     movimenti_rifiuti_filter = MovimentoRifiutiFilter(request.GET, queryset=movimenti_rifiuti)
     
+    current_date = date.today()
+    begin_date = current_date - timedelta(days=365)
+    
+    
+    movimenti_recupero = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="Recupero").aggregate(total=Sum('quantity'))['total']
+    movimenti_smaltimento = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="Smaltimento").aggregate(total=Sum('quantity'))['total']
+
+
     page = request.GET.get('page', 1)
     paginator = Paginator(movimenti_rifiuti_filter.qs, 50)  # Utilizza lotti_filter.qs per la paginazione
     
@@ -40,6 +52,8 @@ def gestione_rifiuti_home(request):
     context = {
         'dati_paginator': movimenti_rifiuti_paginator,
         'filter': movimenti_rifiuti_filter,
+        'movimenti_recupero': movimenti_recupero,
+        'movimenti_smaltimento': movimenti_smaltimento
     }
     
     return render(request, 'gestionerifiuti/gestione_rifiuti_home.html', context)

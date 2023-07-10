@@ -20,7 +20,21 @@
 </nav>
 {% include 'core/modals/delConfirm.html' %}
 
-
+<div class="row">
+  <div class="col-4">
+  <h5>Destinazione Rifiuti Prodotti ultimo anno:</h5>
+    {% if movimenti_recupero %}
+      <h6>Recupero kg.: {{ movimenti_recupero }}</h6>
+    {% else %}
+      <h6>Nessun rifiuto a recupero</h6>
+    {% endif %}
+    {% if movimenti_smaltimento %}
+      <h6>Smaltimento kg.: {{ movimenti_smaltimento }}</h6>
+    {% else %}
+      <h6>Nessun rifiuto a smaltimento</h6>
+    {% endif %}
+  </div>
+</div>
 <div class="container">
   <br>
   <h3>Lista Movimenti Rifiuti</h3>
@@ -80,7 +94,10 @@
             <th>Data Movimento</th>
             <th>Codice Cer</th>                                    
             <th>Carico/Scarico</th>                                    
-            <th>Smalt/Rec</th>     
+            <th>Smalt/Rec</th>  
+            <th>Quantità</th>  
+            <th>Azione</th>  
+
 
             
           </tr>
@@ -95,6 +112,12 @@
             <td>{{ movimento.fk_codicecer.codice }}</td>
             <td>{{ movimento.car_scar }}</td>
             <td>{{ movimento.fk_smaltrec.codice }}</td>
+            {% if movimento.car_scar == 'carico' %}
+              <td class="text-end">{{ movimento.quantity }}</td>
+            {% else %}
+              <td class="text-end text-danger">{{ movimento.quantity }}</td>
+            {% endif %}
+
             <td class="text-center"><a href="{% url 'gestionerifiuti:delete_movimento_rifiuti' pk=movimento.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{movimento.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             
           </tr>  

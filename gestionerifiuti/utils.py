@@ -1,5 +1,8 @@
 from django.http import JsonResponse
-from.models import CodiceCER, CodiceSmaltRec
+from datetime import date, timedelta
+from django.db.models import Q, Sum
+from.models import CodiceCER, CodiceSmaltRec, MovimentoRifiuti
+
 
 
 def get_descrizione_cer(request):
@@ -21,3 +24,5 @@ def get_descrizione_smaltrec(request):
         return JsonResponse({'descrizione': descrizione})
     except CodiceCER.DoesNotExist:
         return JsonResponse({'descrizione': ''})
+    
+
