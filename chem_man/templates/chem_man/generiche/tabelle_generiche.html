@@ -547,11 +547,11 @@
             <tr>        
               
               <td><a href="{% url 'chem_man:modifica_simbolo_ghs' pk=simbolo_ghs.pk %}">{{ simbolo_ghs.codice }}</a></td>
-              <td>
-               {% if simbolo_ghs.symbol_image %}
-                <img src="{% static simbolo_ghs.symbol_image.url %}" alt="Symbol Image">
+              
+              {% if simbolo_ghs.symbol_image %}
+                <td class="text-center"><img src="{{ simbolo_ghs.symbol_image.url }}" alt="Symbol Image"></td>
               {% else %}
-                No Image
+                <td>No Image</td>
               {% endif %}
               </td>
               <td class="text-center"><a href="{% url 'chem_man:delete_simbolo_ghs' pk=simbolo_ghs.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{delete_simbolo_ghs.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
