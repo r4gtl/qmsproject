@@ -2,6 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %} 
 {% load widget_tweaks %}
+{% load custom_filters %}
 {% block head_title %}{{ block.super }} - Gestione Rifiuti {% endblock head_title %} 
 
 {% block sidenav %}
@@ -20,6 +21,8 @@
 </nav>
 {% include 'core/modals/delConfirm.html' %}
 
+
+<div class="container">
 <div class="row">
   <div class="col-4">
   <h5>Destinazione Rifiuti Prodotti ultimo anno:</h5>
@@ -34,8 +37,13 @@
       <h6>Nessun rifiuto a smaltimento</h6>
     {% endif %}
   </div>
+
+  <div class="col-4">        
+    <canvas id="cer_last_year" data-url="{% url 'gestionerifiuti:cer_last_year' %}"></canvas>
+  </div>
+
+
 </div>
-<div class="container">
   <br>
   <h3>Lista Movimenti Rifiuti</h3>
   <hr>
@@ -113,9 +121,9 @@
             <td>{{ movimento.car_scar }}</td>
             <td>{{ movimento.fk_smaltrec.codice }}</td>
             {% if movimento.car_scar == 'carico' %}
-              <td class="text-end">{{ movimento.quantity }}</td>
+              <td class="text-end">{{ movimento.quantity|format_number_dec_thousand }}</td>
             {% else %}
-              <td class="text-end text-danger">{{ movimento.quantity }}</td>
+              <td class="text-end text-danger">{{ movimento.quantity|format_number_dec_thousand }}</td>
             {% endif %}
 
             <td class="text-center"><a href="{% url 'gestionerifiuti:delete_movimento_rifiuti' pk=movimento.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{movimento.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
@@ -174,5 +182,47 @@
 
 {% endblock content %}
 
+{% block extra_scripts %}
 
+<script>
+
+
+
+  $(function () {
+  
+  var $cer_last_year = $("#cer_last_year");
+  $.ajax({
+    url: $cer_last_year.data("url"),
+    success: function (data) {
+  
+      var ctx = $cer_last_year[0].getContext("2d");        
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [{
+            label: 'CER Ultimi 12 mesi',
+            backgroundColor: getRandomColor(),
+            data: data.data
+          }]          
+        },
+        options: {
+          responsive: true,
+          legend: {
+            position: 'top',
+          },
+          title: {
+            display: true,
+            text: 'CER Ultimi 12 mesi'
+          },
+          
+        }
+      });
+  
+    }
+  });
+  
+  });
+</script>
+{% endblock %}
 

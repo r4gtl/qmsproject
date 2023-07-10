@@ -8,6 +8,8 @@ from .views import (gestione_rifiuti_home, tabelle_generiche,
 
 from .utils import get_descrizione_cer, get_descrizione_smaltrec
 
+from .charts import cer_last_year
+
 
 app_name="gestionerifiuti"
 
@@ -39,6 +41,10 @@ urlpatterns = [
     # Utils
     path('get_descrizione_cer/', get_descrizione_cer, name='get_descrizione_cer'),
     path('get_descrizione_smaltrec/', get_descrizione_smaltrec, name='get_descrizione_smaltrec'),
+
+    # Charts
+    path('cer_last_year/', cer_last_year, name='cer_last_year'),
+    
 
     
 ]
