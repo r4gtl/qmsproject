@@ -8,6 +8,7 @@ from manualeprocedure.filters import ProceduraFilter
 from core.utils import count_records_with_upcoming_expiry
 from autorizzazioni.models import DettaglioScadenzaAutorizzazione
 from manutenzioni.models import Taratura, ManutenzioneOrdinaria
+
 from .utils import get_scadenzario_completo
 
 # Create your views here.

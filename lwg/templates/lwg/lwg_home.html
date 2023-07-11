@@ -266,18 +266,22 @@
 
 </div>
 
-<div class="toast-container">
+
+
+
+ <div class="toast-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
     {% for scadenza in scadenzario %}
-      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast text-white bg-dark" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="toast-header">
-              <strong class="mr-auto">Scadenza</strong>
-              <small>{{ scadenza.scadenza|date:"d M y" }}</small>
-              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-              </button>
+              <strong class="me-auto"><i class="bi bi-bell"></i> Scadenza</strong>
+              <small><strong>{{ scadenza.scadenza|date:"d M y" }}</strong></small>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
-          <div class="toast-body">
-              {{ scadenza.descrizione }}
+          <div class="toast-body">              
+              {{ scadenza.descrizione }} 
+              <br>
+              <p>da app: <a href="{% url scadenza.url %}"><strong>{{ scadenza.nomemodello }}</strong></a></p>
+              
           </div>
       </div>
     {% endfor %}
@@ -300,6 +304,10 @@ function goToMaintenanceSchedule(){
         document.location.href = "{% url 'manutenzioni:scadenzario' %}"        
     };
 
+
+function goToApp(url){
+        document.location.href = url        
+    };
 
 </script>
 {% endblock %}
