@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}QMS {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_base.html" %}
+{% endblock %}
+
+{% block content %}
+  <div class="container mt-3">
+  <div class="row">
+    {% for scadenza in scadenzario %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h3>{{ scadenza.scadenza|date:"d M y" }}</h3>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Tipo scadenza: {{ scadenza.nomemodello }}</h5>
+                    <p class="card-text">{{ scadenza.descrizione }}</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        {% if forloop.counter|divisibleby:3 and not forloop.last %}
+            
+            </div><br><div class="row">
+            
+            
+        {% endif %}    
+    {% endfor %}
+    
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function goToPermitsSchedule(){
+        document.location.href = "{% url 'autorizzazioni:stampa_registro_autorizzazioni' %}"        
+    };
+
+function goToMaintenanceSchedule(){
+        document.location.href = "{% url 'manutenzioni:scadenzario' %}"        
+    };
+
+
+</script>
+{% endblock %}
