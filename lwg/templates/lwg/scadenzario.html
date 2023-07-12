@@ -8,10 +8,12 @@
 
 {% block content %}
   <div class="container mt-3">
+  <h3>Le tue scadenze</h3>
+  <hr>
   <div class="row">
     {% for scadenza in scadenzario %}
         <div class="col-md-4">
-            <div class="card">
+            <div class="card shadow-sm">
                 <div class="card-header text-end">
                     <h3>{{ scadenza.scadenza|date:"d M y" }}</h3>
                 </div>

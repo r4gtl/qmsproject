@@ -9,6 +9,8 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     HazardStatementCreateView, HazardStatementUpdateView, delete_hazard_statement,
                     PrecautionaryStatementCreateView, PrecautionaryStatementUpdateView, delete_precautionary_statement,
                     SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
+                    SchedaSicurezzaCreateView, SchedaSicurezzaUpdateView, delete_scheda_sicurezza,
+                    SimboloGHS_SDSCreateView, SimboloGHS_SDSUpdateView, delete_simbolo_ghs_sds,
                     
                     )
 
@@ -65,5 +67,15 @@ urlpatterns = [
     path('modifica_simbolo_ghs/<int:pk>/', SimboloGHSUpdateView.as_view(), name="modifica_simbolo_ghs"), 
     path('delete_simbolo_ghs/<int:pk>', delete_simbolo_ghs, name="delete_simbolo_ghs"),
     
+    # Schede Sicurezza
+    path('<int:fk_prodottochimico>/aggiungi_scheda_sicurezza/', SchedaSicurezzaCreateView.as_view(), name="aggiungi_scheda_sicurezza"), 
+    path('<int:fk_prodottochimico>/modifica_scheda_sicurezza/<int:pk>/', SchedaSicurezzaUpdateView.as_view(), name="modifica_scheda_sicurezza"), 
+    path('delete_scheda_sicurezza/<int:pk>', delete_scheda_sicurezza, name="delete_scheda_sicurezza"),
+    
+    # Simbolo_ghs_sds
+    path('<int:fk_sds>/aggiungi_simbolo_ghs_sds/', SimboloGHS_SDSCreateView.as_view(), name="aggiungi_simbolo_ghs_sds"), 
+    path('<int:fk_sds>/modifica_simbolo_ghs_sds/<int:pk>/', SimboloGHS_SDSUpdateView.as_view(), name="modifica_simbolo_ghs_sds"), 
+    path('delete_simbolo_ghs_sds/<int:pk>', delete_simbolo_ghs_sds, name="delete_simbolo_ghs_sds"),
+
     
 ]

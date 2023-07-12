@@ -1,0 +1,87 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Simbolo GHS SDS {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_procedure.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=fk_prodottochimico.pk %}">Prodotto {{ fk_prodotto_chimico }}</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}">Sds Revisione del  {{ fk_sds.data_revisione }}</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ simbolo_ghs_sds.fk_simbolo_ghs.codice }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Simbolo GHS</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ simbolo_ghs_sds.fk_simbolo_ghs.codice }}</h3>
+        {% else %}
+            <h3> Aggiungi Simbolo GHS</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            
+           
+
+            <div class="row">
+                <div class="col-3">
+                    {{ form.fk_simbolo_ghs|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                
+                <div class="col-2">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+
+                <div class="col-1">
+                    {{ form.fk_sds|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %} 

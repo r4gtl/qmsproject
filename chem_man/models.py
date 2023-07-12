@@ -188,5 +188,102 @@ class SimboloGHS(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+
+
+def schedasicurezza_upload_path(instance, filename):
+    forn_ragione_sociale = instance.fk_prodottochimico.fk_fornitore.ragionesociale
+    prodotto_descrizione = instance.fk_prodottochimico.descrizione
+    base_path = 'Prodotti_Chimici'
+    file_extension = os.path.splitext(filename)[1]
+    new_filename = f"{forn_ragione_sociale}/{prodotto_descrizione}/SDS/{filename}{file_extension}"
+    return os.path.join(base_path, new_filename)
+
+
+class SchedaSicurezza(models.Model):
+    
+    fk_prodottochimico = models.ForeignKey(
+            ProdottoChimico,
+            on_delete=models.CASCADE,
+            related_name='sds'
+            )
+    data_revisione = models.DateField()
+    is_reach = models.BooleanField(default=True)  
+    documento=models.FileField(upload_to=schedasicurezza_upload_path, null=True, blank=True)  
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='sds', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["-data_revisione"]
+        
+    def __str__(self):
+        return f"Sds revisione del: {self.data_revisione}"
+    
+
+class SimboloGHS_SDS(models.Model):
+    fk_sds = models.ForeignKey(
+            SchedaSicurezza,
+            on_delete=models.CASCADE,
+            related_name='simbolo_ghs_sds'
+            )
+    fk_simbolo_ghs = models.ForeignKey(
+            SimboloGHS,
+            on_delete=models.CASCADE,
+            related_name='simbolo_ghs_sds'
+            )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='simbolo_ghs_sds', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class PrecautionaryStatement_SDS(models.Model):
+    fk_sds = models.ForeignKey(
+            SchedaSicurezza,
+            on_delete=models.CASCADE,
+            related_name='precautionary_statement_sds'
+            )
+    fk_precautionary_statement = models.ForeignKey(
+            PrecautionaryStatement,
+            on_delete=models.CASCADE,
+            related_name='precautionary_statement_sds'
+            )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='precautionary_statement_sds', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+class HazardStatement_SDS(models.Model):
+    fk_sds = models.ForeignKey(
+            SchedaSicurezza,
+            on_delete=models.CASCADE,
+            related_name='hazard_statement_sds'
+            )
+    fk_hazard_statement = models.ForeignKey(
+            HazardStatement,
+            on_delete=models.CASCADE,
+            related_name='hazard_statement_sds'
+            )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='hazard_statement_sds', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Sostanza_SDS(models.Model):
+    fk_sds = models.ForeignKey(
+            SchedaSicurezza,
+            on_delete=models.CASCADE,
+            related_name='sostanza_sds'
+            )
+    fk_sostanza = models.ForeignKey(
+            Sostanza,
+            on_delete=models.CASCADE,
+            related_name='sostanza_sds'
+            )
+    concentrazione = models.CharField(max_length=50)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='sostanza_sds', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
     
 

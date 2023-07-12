@@ -24,7 +24,12 @@
   <br>
   <h3>Lista Attrezzatura</h3>
   <hr>
-  
+  <div class="row">
+    <div class="col-4">        
+      <canvas id="monthlyChart" data-url=""></canvas>
+    </div>
+    
+  </div>
   
   <!-- filtro -->
   <div class="row">
@@ -142,3 +147,45 @@
 {% endblock content %}
 
 
+{% block extra_scripts %}
+<script>
+
+var monthlyDataUrl = "{% url 'manutenzioni:get_monthly_data' %}";
+
+$(document).ready(function() {
+    $.ajax({
+        url: monthlyDataUrl,
+        dataType: 'json',
+        success: function(data) {
+            // Dati ricevuti dalla view
+
+            // Prepara i dati per il grafico
+            var ctx = document.getElementById('monthlyChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.months,
+                    datasets: [{
+                        label: 'Manutenzioni straordinarie',
+                        data: data.sums,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+
+
+</script>
+
+{% endblock %}

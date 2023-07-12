@@ -147,6 +147,54 @@
     
     {% if form.instance.id  %}
     <div class="col-6">
+      <h5>Schede Sicurezza</h5>
+                
+    </div>
+
+    <div class="col-6 text-end">
+      
+      <a href="{% url 'chem_man:aggiungi_scheda_sicurezza' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Scheda Sicurezza</a>
+
+    </div>
+  </div>
+  <div class="table-container">
+    <table class="table table-bordered table-striped mt-2">
+      <thead>
+        <tr>
+          <th>Data Revisione</th>
+          <th>Documento</th>           
+          <th>Azione</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for scheda_sicurezza in elenco_schede_sicurezza %}
+
+        <tr>        
+          <td><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=prodottochimico.pk pk=scheda_sicurezza.pk %}">{{ scheda_sicurezza.data_revisione }}</a></td>
+          {% if scheda_sicurezza.documento %}
+              <td><a href="{{ scheda_sicurezza.documento.url }}" download>{{ scheda_sicurezza.documento.url }}</a></td>
+          {% else %}
+              <td>Nessun documento associato</td>
+          {% endif %}        
+          <td class="text-center"><a href="{% url 'chem_man:delete_scheda_sicurezza' pk=scheda_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scheda_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+        </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div><!--Fine colonna Schede Sicurezza-->
+</div><!--Fine prima riga tabelle-->
+
+<!--Seconda riga tabelle-->
+<div class="row">
+      <!-- Tabella prezzi -->
+      <div class="col-6">
+    <div class="row">
+    
+    {% if form.instance.id  %}
+    <div class="col-6">
       <h5>Schede tecniche</h5>
                 
     </div>
@@ -185,6 +233,7 @@
   </div>
   {% endif %}
 </div>
-</div>
+  </div><!--Fine seconda riga tabelle-->
 
+</div> <!--Fine container-->
 {% endblock content %}

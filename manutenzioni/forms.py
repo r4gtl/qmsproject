@@ -44,7 +44,8 @@ class AttrezzaturaModelForm(forms.ModelForm):
         }
         
 class ManutenzioneStraordinariaModelForm(forms.ModelForm):
-    fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+    fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all(), label='Fornitore')
+    
 
     class Meta:
         model = ManutenzioneStraordinaria
@@ -52,17 +53,18 @@ class ManutenzioneStraordinariaModelForm(forms.ModelForm):
         
         widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
-            #'importo': forms.DecimalField(),
-            #'ore_fermo': forms.DecimalField(),
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),            
             'fk_fornitore': forms.Select(attrs={'style': 'background-color: #F5F8EC'}),
             'ft_prot': forms.TextInput(attrs={'placeholder': 'Inserisci codice attrezzatura'}),
+            'importo': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}), 
+            'ore_fermo': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}), 
             'data_fattura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'fk_attrezzatura': forms.HiddenInput(),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
         }
+
         labels = {
             
             'data_manutenzione': 'Data Manutenzione',
@@ -79,7 +81,7 @@ class TaraturaModelForm(forms.ModelForm):
     class Meta:
         model = Taratura
         fields = '__all__'
-        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all(), label='Fornitore')
         widgets = {
             'data_taratura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),            
@@ -105,7 +107,7 @@ class ManutenzioneOrdinariaModelForm(forms.ModelForm):
     class Meta:
         model = ManutenzioneOrdinaria
         fields = '__all__'
-        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all(),  label='Fornitore')
         widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
@@ -120,7 +122,7 @@ class ManutenzioneOrdinariaModelForm(forms.ModelForm):
         labels = {
             
             'data_manutenzione': 'Data Manutenzione',
-            'fk_fornitore': 'Fornitore',
+            #'fk_fornitore': 'Fornitore',
             'descrizione': 'Descrizione',
             'is_eseguita': 'Eseguita',
             'prossima_scadenza': 'Prossima Scadenza',

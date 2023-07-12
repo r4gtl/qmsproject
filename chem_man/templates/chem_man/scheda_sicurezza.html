@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Scheda Sicurezza {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_chem_man.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti Chimici</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=fk_prodottochimico.pk %}">{{ fk_prodottochimico }}</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Scheda di Sicurezza</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Scheda di Sicurezza</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica Scheda di Sicurezza</h3>
+        {% else %}
+            <h3> Aggiungi Scheda di Sicurezza</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+            <div class="row">
+                <div class="col-2">
+                    {{ form.data_revisione|as_crispy_field }}                    
+                </div>
+                <div class="col-6">
+                    {{ form.documento|as_crispy_field }}                    
+                    <button type="button" class="btn btn-sm btn-info" id="openButton">Vedi File</button>
+                </div>
+                
+                <div class="col-2">
+                    {{ form.is_reach|as_crispy_field }}                    
+                </div>
+                <div class="col-1">
+                    {{ form.fk_prodottochimico|as_crispy_field }}                    
+                </div>
+                <div class="col-1">
+                    {{ form.created_by|as_crispy_field }}                    
+                </div>
+                
+                
+            </div>
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    
+
+
+
+
+    <div class="row">
+      <!-- Tabella Simboli GHS -->
+      <div class="col-6">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Simboli GHS</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'chem_man:aggiungi_simbolo_ghs_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Simbolo GHS</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th>
+              <th>Simbolo</th>   
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for simbolo in elenco_simboli %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_simbolo_ghs_sds' fk_sds=fk_sds.pk pk=simbolo.pk %}">{{ simbolo.fk_simbolo_ghs.codice }}</a></td>
+              {% if simbolo.fk_simbolo_ghs.symbol_image %}
+                <td class="text-center"><img src="{{ simbolo.fk_simbolo_ghs.symbol_image.url }}" alt="Symbol Image"></td>
+              {% else %}
+                <td>No Image</td>
+              {% endif %}
+              <td class="text-center"><a href="{% url 'chem_man:delete_simbolo_ghs_sds' pk=simbolo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{simbolo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
+
+</div><!--Fine prima riga tabelle-->
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    var openButton = document.getElementById('openButton');
+    openButton.addEventListener('click', function() {
+      var input = document.getElementById('id_documento');
+      if (input.files.length > 0) {
+        var fileURL = URL.createObjectURL(input.files[0]);
+        window.open(fileURL);
+      }
+    });
+  </script>
+{% endblock %} 

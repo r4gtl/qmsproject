@@ -7,6 +7,8 @@ from .views import (dashboard_manutenzioni, scadenzario,
                     piano_tarature, piano_manutenzioni,
                     )
 
+from .charts import get_monthly_data
+
 app_name="manutenzioni"
 
 urlpatterns = [
@@ -38,5 +40,9 @@ urlpatterns = [
     # Stampe
     path('piano_tarature/', piano_tarature, name="piano_tarature"),
     path('piano_manutenzioni/', piano_manutenzioni, name="piano_manutenzioni"),
+
+    # Charts
+    path('get_monthly_data/', get_monthly_data, name="get_monthly_data"),
+    
 
 ]

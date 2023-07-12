@@ -42,7 +42,7 @@ def filtro_lotti(data_inizio, data_fine):
         .filter(data_acquisto__range=[data_inizio, data_fine])
         .values('fk_fornitore__ragionesociale', 'fk_tipoanimale__descrizione', 'fk_tipogrezzo__descrizione', 'origine')
         .annotate(numero_lotti=Count('pk'), pezzi=Sum('pezzi'))
-        .order_by('fk_fornitore')
+        .order_by('-pezzi')[:100]
     )
 
     for lotto in lotti_filtrati:

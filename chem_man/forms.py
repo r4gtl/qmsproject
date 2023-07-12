@@ -4,7 +4,7 @@ from django import forms
 from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
-                    SimboloGHS
+                    SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
 )
 from anagrafiche.models import Fornitore
 
@@ -180,6 +180,111 @@ class SimboloGHSModelForm(forms.ModelForm):
             'codice': 'Codice',
             'descrizione': 'Descrizione',   
             'symbol_image': 'Simbolo',
+            
+            'note': 'Note'
+
+        }
+
+
+class SchedaSicurezzaModelForm(forms.ModelForm):
+    
+    
+    class Meta:
+        model = SchedaSicurezza
+        fields= '__all__'
+        widgets = {
+            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'fk_prodottochimico': forms.HiddenInput()
+        }
+        labels = {
+            'data_revisione': 'Data Revisione',
+            'documento': 'Documento',            
+            'is_reach': 'Conforme Reach',
+            'note': 'Note'
+
+        }
+        
+
+class SimboloGHS_SDSModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = SimboloGHS_SDS
+        fields= '__all__'
+
+        fk_simbolo_ghs = forms.ModelChoiceField(queryset=SimboloGHS.objects.all())
+        widgets = {
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_sds': forms.HiddenInput()
+        }
+        labels = {
+            'fk_simbolo_ghs': 'Simbolo GHS',      
+            
+            'note': 'Note'
+
+        }
+
+
+class PrecautionaryStatement_SDSModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = PrecautionaryStatement_SDS
+        fields= '__all__'
+
+        fk_precautionary_statement = forms.ModelChoiceField(queryset=PrecautionaryStatement.objects.all())
+        widgets = {
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_sds': forms.HiddenInput()
+        }
+        labels = {
+            'fk_precautionary_statement': 'Consiglio di Prudenza',      
+            
+            'note': 'Note'
+
+        }
+
+class HazardStatement_SDSModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = HazardStatement_SDS
+        fields= '__all__'
+
+        fk_hazard_statement = forms.ModelChoiceField(queryset=HazardStatement.objects.all())
+        widgets = {
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_sds': forms.HiddenInput()
+        }
+        labels = {
+            'fk_hazard_statement': 'Indicazione di Pericolo',      
+            
+            'note': 'Note'
+
+        }
+
+
+class Sostanza_SDSModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = Sostanza_SDS
+        fields= '__all__'
+
+        fk_sostanza = forms.ModelChoiceField(queryset=Sostanza.objects.all())
+        widgets = {
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_sds': forms.HiddenInput()
+        }
+        labels = {
+            'fk_sostanza': 'Sostanza',      
             
             'note': 'Note'
 

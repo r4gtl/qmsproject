@@ -35,7 +35,7 @@ class ManutenzioneStraordinaria(models.Model):
     ore_fermo = models.DecimalField(max_digits=6, decimal_places=2)
     fk_fornitore = models.ForeignKey(Fornitore, null=True, blank=True, on_delete=models.SET_NULL)
     ft_prot = models.CharField(max_length=20, null=True, blank=True)
-    data_fattura = models.DateField(null=False, blank=False)
+    data_fattura = models.DateField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='manutenzione_straordinaria', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
