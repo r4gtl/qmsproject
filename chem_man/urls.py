@@ -11,10 +11,11 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
                     SchedaSicurezzaCreateView, SchedaSicurezzaUpdateView, delete_scheda_sicurezza,
                     SimboloGHS_SDSCreateView, SimboloGHS_SDSUpdateView, delete_simbolo_ghs_sds,
+                    HazardStatement_SDSModelFormCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds
                     
                     )
 
-
+from .utils import get_symbol_image_url
 
 
 app_name = 'chem_man'
@@ -76,6 +77,15 @@ urlpatterns = [
     path('<int:fk_sds>/aggiungi_simbolo_ghs_sds/', SimboloGHS_SDSCreateView.as_view(), name="aggiungi_simbolo_ghs_sds"), 
     path('<int:fk_sds>/modifica_simbolo_ghs_sds/<int:pk>/', SimboloGHS_SDSUpdateView.as_view(), name="modifica_simbolo_ghs_sds"), 
     path('delete_simbolo_ghs_sds/<int:pk>', delete_simbolo_ghs_sds, name="delete_simbolo_ghs_sds"),
+
+    # Hazard statement_sds
+    path('<int:fk_sds>/aggiungi_hazard_statement_sds/', HazardStatement_SDSModelFormCreateView.as_view(), name="aggiungi_hazard_statement_sds"), 
+    path('<int:fk_sds>/modifica_hazard_statement_sds/<int:pk>/', HazardStatement_SDSUpdateView.as_view(), name="modifica_hazard_statement_sds"), 
+    path('delete_hazard_statement_sds/<int:pk>', delete_hazard_statement_sds, name="delete_hazard_statement_sds"),
+
+    # Utilities
+    # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
+    path('get_symbol_image_url/', get_symbol_image_url, name="get_symbol_image_url"),
 
     
 ]

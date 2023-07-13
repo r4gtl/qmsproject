@@ -717,6 +717,7 @@ class SchedaSicurezzaUpdateView(LoginRequiredMixin, UpdateView):
         fk_prodottochimico = self.kwargs['fk_prodottochimico']
         context['fk_prodottochimico'] = ProdottoChimico.objects.get(pk=fk_prodottochimico)
         context['elenco_simboli'] = SimboloGHS_SDS.objects.filter(fk_sds=pk_sds)
+        context['elenco_hazard_statements'] = HazardStatement_SDS.objects.filter(fk_sds=pk_sds)
 
         return context
 
@@ -739,8 +740,9 @@ class SimboloGHS_SDSCreateView(LoginRequiredMixin,CreateView):
     
 
     def get_success_url(self):   
-        fk_sds=self.object.fks_sds.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'pk':fk_sds})
+        fk_sds=self.object.fk_sds.pk
+        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -772,10 +774,10 @@ class SimboloGHS_SDSUpdateView(LoginRequiredMixin, UpdateView):
     success_message = 'Simbolo modificato correttamente!'
     
     
-    def get_success_url(self):
-        #pk_revisione=self.object.pk        
-        fk_sds=self.object.fk_sds.pk        
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'pk':fk_sds})
+    def get_success_url(self):   
+        fk_sds=self.object.fk_sds.pk
+        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
     
 
     def form_valid(self, form):        
@@ -794,7 +796,82 @@ class SimboloGHS_SDSUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_simbolo_ghs_sds(request, pk): 
         deleteobject = get_object_or_404(SimboloGHS_SDS, pk = pk) 
-        fk_sds = deleteobject.fk_sds.pk                
+        fk_sds = deleteobject.fk_sds.pk   
+        fk_prodottochimico= deleteobject.fk_sds.fk_prodottochimico.pk             
         deleteobject.delete()
-        url_match = reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'pk':fk_sds})
+        url_match = reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        return redirect(url_match)
+
+
+
+# Hazard statement collegati alle SDS
+
+class HazardStatement_SDSModelFormCreateView(LoginRequiredMixin,CreateView):
+    model = HazardStatement_SDS
+    form_class = HazardStatement_SDSModelForm
+    template_name = 'chem_man/hazard_statement_sds.html'
+    success_message = 'Istruzione di pericolo aggiunta correttamente!'
+    
+
+    def get_success_url(self):   
+        fk_sds=self.object.fk_sds.pk
+        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_sds = self.kwargs['fk_sds']
+
+        return {
+            'created_by': created_by,
+            'fk_sds': fk_sds
+        }
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs['fk_sds'] 
+        sds=SchedaSicurezza.objects.get(pk=pk)
+
+        context['fk_sds'] = SchedaSicurezza.objects.get(pk=pk) 
+        context['fk_prodottochimico'] = sds.fk_prodottochimico
+
+        return context
+
+class HazardStatement_SDSUpdateView(LoginRequiredMixin, UpdateView):
+    model = HazardStatement_SDS
+    form_class = HazardStatement_SDSModelForm
+    template_name = 'chem_man/hazard_statement_sds.html'
+    success_message = 'Istruzione di pericolo modificata correttamente!'
+    
+    
+    def get_success_url(self):   
+        fk_sds=self.object.fk_sds.pk
+        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs['fk_sds'] 
+        sds=SchedaSicurezza.objects.get(pk=pk)        
+        context['fk_prodottochimico'] = sds.fk_prodottochimico   
+        context['fk_sds'] = SchedaSicurezza.objects.get(pk=pk)
+        return context
+
+
+
+def delete_hazard_statement_sds(request, pk): 
+        deleteobject = get_object_or_404(HazardStatement_SDS, pk = pk) 
+        fk_sds = deleteobject.fk_sds.pk   
+        fk_prodottochimico= deleteobject.fk_sds.fk_prodottochimico.pk             
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
         return redirect(url_match)

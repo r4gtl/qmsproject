@@ -167,7 +167,7 @@ class HazardStatement(models.Model):
         ordering = ["hazard_statement"]
         
     def __str__(self):
-        return self.hazard_statement + " " + self.descrizione
+        return str(self.hazard_statement) + " " + str(self.descrizione)
     
 
 class PrecautionaryStatement(models.Model):
@@ -177,6 +177,8 @@ class PrecautionaryStatement(models.Model):
     created_by = models.ForeignKey(User, related_name='precautionary_statement', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.codice
 
 
 class SimboloGHS(models.Model):
@@ -187,7 +189,8 @@ class SimboloGHS(models.Model):
     created_by = models.ForeignKey(User, related_name='simbolo_ghs', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
+    def __str__(self):
+        return self.codice
 
 
 def schedasicurezza_upload_path(instance, filename):

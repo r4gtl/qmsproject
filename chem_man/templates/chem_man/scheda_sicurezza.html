@@ -7,6 +7,8 @@
 {% endblock %}
 
 {% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
 
 
 <nav aria-label="breadcrumb" class="mt-3">
@@ -110,7 +112,7 @@
             {% for simbolo in elenco_simboli %}
             <tr>        
               
-              <td><a href="{% url 'chem_man:modifica_simbolo_ghs_sds' fk_sds=fk_sds.pk pk=simbolo.pk %}">{{ simbolo.fk_simbolo_ghs.codice }}</a></td>
+              <td><a href="{% url 'chem_man:modifica_simbolo_ghs_sds' fk_sds=schedasicurezza.pk pk=simbolo.pk %}">{{ simbolo.fk_simbolo_ghs.codice }}</a></td>
               {% if simbolo.fk_simbolo_ghs.symbol_image %}
                 <td class="text-center"><img src="{{ simbolo.fk_simbolo_ghs.symbol_image.url }}" alt="Symbol Image"></td>
               {% else %}
@@ -124,6 +126,50 @@
       </div>
       {% endif %}
   </div>
+
+
+  <!-- Tabella Hazard Statements -->
+      <div class="col-6">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Istruzioni di Pericolo</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'chem_man:aggiungi_hazard_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Istruzione di pericolo</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th>
+              <th>Descrizione</th>   
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for hazard_statement in elenco_hazard_statements %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_hazard_statement_sds' fk_sds=schedasicurezza.pk pk=hazard_statement.pk %}">{{ hazard_statement.fk_hazard_statement.hazard_statement }}</a></td>
+              <td>{{ hazard_statement.fk_hazard_statement.descrizione|truncatechars:20 }}</td>
+              
+              <td class="text-center"><a href="{% url 'chem_man:delete_hazard_statement_sds' pk=hazard_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{hazard_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
+
+
 
 </div><!--Fine prima riga tabelle-->
 </div>
