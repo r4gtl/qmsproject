@@ -1,5 +1,10 @@
 from django.http import JsonResponse
+from django.views import View
+
+from .models import Sostanza
 from .models import SimboloGHS
+from django.db.models import Q
+
 
 
 
@@ -14,3 +19,24 @@ def get_symbol_image_url(request):
         return JsonResponse({'success': True, 'image_url': image_url})
     except SimboloGHS.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Symbol GHS not found'})
+    
+
+def search_sostanza(request):
+    term = request.GET.get('term', '')  # Valore di ricerca dalla query string
+    results = []
+
+    if term:
+        query = Q(num_cas__icontains=term) | Q(num_ec__icontains=term)
+        sostanze = Sostanza.objects.filter(query)[:10]
+
+        for sostanza in sostanze:
+            result = {
+                'id': sostanza.id,
+                'descrizione': sostanza.descrizione,
+                'num_cas': sostanza.num_cas,
+                'num_ec': sostanza.num_ec
+            }
+            print("Result: " + str(result))
+            results.append(result)
+
+    return JsonResponse(results, safe=False)

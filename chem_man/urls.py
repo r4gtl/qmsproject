@@ -1,5 +1,7 @@
 from django.urls import path
 
+
+
 from .views import (home_prodotti_chimici, tabelle_generiche,
                     ProdottoChimicoCreateView, ProdottoChimicoUpdateView, delete_prodotto_chimico,
                     PrezzoProdottoCreateView, PrezzoProdottoUpdateView, delete_prezzo_prodotto_chimico,
@@ -11,11 +13,13 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
                     SchedaSicurezzaCreateView, SchedaSicurezzaUpdateView, delete_scheda_sicurezza,
                     SimboloGHS_SDSCreateView, SimboloGHS_SDSUpdateView, delete_simbolo_ghs_sds,
-                    HazardStatement_SDSModelFormCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds
+                    HazardStatement_SDSCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds,
+                    PrecautionaryStatement_SDSCreateView, PrecautionaryStatement_SDSUpdateView, delete_precautionary_statement_sds,
+                    Sostanza_SDSCreateView, Sostanza_SDSUpdateView, delete_sostanza_sds,
                     
                     )
 
-from .utils import get_symbol_image_url
+from .utils import get_symbol_image_url, search_sostanza
 
 
 app_name = 'chem_man'
@@ -79,13 +83,25 @@ urlpatterns = [
     path('delete_simbolo_ghs_sds/<int:pk>', delete_simbolo_ghs_sds, name="delete_simbolo_ghs_sds"),
 
     # Hazard statement_sds
-    path('<int:fk_sds>/aggiungi_hazard_statement_sds/', HazardStatement_SDSModelFormCreateView.as_view(), name="aggiungi_hazard_statement_sds"), 
+    path('<int:fk_sds>/aggiungi_hazard_statement_sds/', HazardStatement_SDSCreateView.as_view(), name="aggiungi_hazard_statement_sds"), 
     path('<int:fk_sds>/modifica_hazard_statement_sds/<int:pk>/', HazardStatement_SDSUpdateView.as_view(), name="modifica_hazard_statement_sds"), 
     path('delete_hazard_statement_sds/<int:pk>', delete_hazard_statement_sds, name="delete_hazard_statement_sds"),
+
+    # Precautionary statement_sds
+    path('<int:fk_sds>/aggiungi_precautionary_statement_sds/', PrecautionaryStatement_SDSCreateView.as_view(), name="aggiungi_precautionary_statement_sds"), 
+    path('<int:fk_sds>/modifica_precautionary_statement_sds/<int:pk>/', PrecautionaryStatement_SDSUpdateView.as_view(), name="modifica_precautionary_statement_sds"), 
+    path('delete_precautionary_statement_sds/<int:pk>', delete_precautionary_statement_sds, name="delete_precautionary_statement_sds"),
+
+    # Sostanza sds
+    path('<int:fk_sds>/aggiungi_sostanza_sds/', Sostanza_SDSCreateView.as_view(), name="aggiungi_sostanza_sds"), 
+    path('<int:fk_sds>/modifica_sostanza_sds/<int:pk>/', Sostanza_SDSUpdateView.as_view(), name="modifica_sostanza_sds"), 
+    path('delete_sostanza_sds/<int:pk>', delete_sostanza_sds, name="delete_sostanza_sds"),
 
     # Utilities
     # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
     path('get_symbol_image_url/', get_symbol_image_url, name="get_symbol_image_url"),
+    path('search_sostanza/', search_sostanza, name="search_sostanza"),
+    
 
     
 ]

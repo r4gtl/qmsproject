@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Simbolo GHS SDS {% endblock %}
+{% block title %}{{ block.super }} | Precautionary Statements SDS {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_procedure.html" %}
@@ -17,9 +17,9 @@
         <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}">Sds Revisione del  {{ fk_sds.data_revisione }}</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ simbolo_ghs_sds.fk_simbolo_ghs.codice }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ precautionary_statement.fk_precautionary_statement.codice }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Simbolo GHS</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Istruzione di pericolo</li>
         {% endif %}             
         
         
@@ -28,9 +28,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica {{ simbolo_ghs_sds.fk_simbolo_ghs.codice }}</h3>
+            <h3>Modifica {{ precautionary_statement.fk_precautionary_statement.codice }}</h3>
         {% else %}
-            <h3> Aggiungi Simbolo GHS</h3>
+            <h3> Aggiungi Istruzione di pericolo</h3>
         {% endif %}
         
         
@@ -51,27 +51,8 @@
 
             <div class="row">
 
-                <div class="col-md-2 d-flex justify-content-center">
-                    {% if form.instance.id %}
-                        {% if form.fk_simbolo_ghs.value %}
-                        <img src="{{ form.fk_simbolo_ghs.value.symbol_image.url }}"
-                            alt="{{ form.fk_simbolo_ghs.value.codice }}"
-                            style="height: 200px; width: 200px; border-radius: 50%; margin-top: 25px;"
-                            class="avatar"
-                            accept=".jpg,.jpeg,.png"
-                            id="preview-image"
-                        />
-                        {% else %}
-                        <p>Nessuna immagine</p>
-                        {% endif %}
-                    {% else %}
-                        <p>Nessuna immagine</p>
-                    {% endif %}
-                </div>
-
-
-                <div class="col-3">
-                    {{ form.fk_simbolo_ghs|as_crispy_field }}
+                <div class="col-4">
+                    {{ form.fk_precautionary_statement|as_crispy_field }}
                 </div>
 
                 <div class="col-4">
@@ -105,21 +86,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-var symbolImageURL = "{% url 'chem_man:get_symbol_image_url' %}";
-$(document).ready(function() {
-    
-	handleImagePreviewOption('id_fk_simbolo_ghs', 'preview-image', symbolImageURL);
-});
 
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    var fkSimboloField = document.getElementById('id_fk_simbolo_ghs');
-    console.log(fkSimboloField.id);
-  });
-
-
-</script>
 
 {% endblock %}

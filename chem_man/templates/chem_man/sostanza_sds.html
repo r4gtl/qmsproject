@@ -1,0 +1,181 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}{{ block.super }} | Sostanza SDS {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_procedure.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_prodotto_chimico' pk=fk_prodottochimico.pk %}">Prodotto {{ fk_prodotto_chimico }}</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}">Sds Revisione del  {{ fk_sds.data_revisione }}</a></li>        
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ sostanza.fk_sostanza.descrizione|truncatechars:10 }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Sostanza</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ sostanza.fk_sostanza.descrizione|truncatechars:10 }}</h3>
+        {% else %}
+            <h3> Aggiungi Sostanza</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+        
+
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            
+           
+
+            <div class="row">
+
+                <div class="col-8">
+                <label for="search-input">Cerca per CAS o EC</label>
+                    <input type="text" id="search-input" class="form-control" placeholder="Cerca Sostanza">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <textarea id="options-list" class="form-control" rows="3" readonly></textarea>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    {{ form.fk_sostanza|as_crispy_field }}
+                </div>
+
+                <div class="col-2">
+                    {{ form.concentrazione|as_crispy_field }}
+                </div>
+
+                <div class="col-2">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                
+                <div class="col-1">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+
+                <div class="col-1">
+                    {{ form.fk_sds|as_crispy_field }}
+                </div>
+                
+                
+            </div>
+            
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+var searchURL = "{% url 'chem_man:search_sostanza' %}";
+function searchSostanza(term) {
+        $.ajax({
+            url: searchURL,
+            data: { term: term },
+            dataType: 'json',
+            success: function(data) {
+                // Crea la lista di opzioni
+                var optionsList = '';
+                for (var i = 0; i < data.length; i++) {
+                    optionsList += data[i].id + "|" + data[i].descrizione + '\n';
+                }
+                // Aggiorna l'area delle opzioni con i risultati
+                $('#options-list').val(optionsList);
+            }
+        });
+    }
+
+    // Gestione dell'evento di input per il campo di ricerca
+    $('#search-input').on('input', function() {
+        var term = $(this).val();
+        searchSostanza(term);
+    });
+
+    /*
+    $('#options-list').on('click', function() {
+            var selectedOption = $(this).val();
+            $('#id_fk_sostanza').val(selectedOption);
+        });
+    */
+    
+    $('#options-list').on('click', function() {
+        var selectedOption = $(this).val();
+        console.log("Option: " + selectedOption)
+        var selectedOptionId = $(this).data('id');
+        console.log("selectedOptionId: " + selectedOptionId)
+        $('#id_fk_sostanza').val(selectedOptionId);
+    });
+    
+/*
+$(document).ready(function() {
+    var searchURL = "{% url 'chem_man:search_sostanza' %}";
+
+    // Funzione per gestire la ricerca
+    function searchSostanza(term) {
+        $.ajax({
+            url: searchURL,
+            data: { term: term },
+            dataType: 'json',
+            success: function(data) {
+                // Crea le opzioni per il campo select
+                var options = '';
+                for (var i = 0; i < data.length; i++) {
+                    var optionValue = data[i].id;
+                    var optionLabel = data[i].descrizione.substring(0, 20) + ' - ' + data[i].num_cas + ' - ' + data[i].num_ec;
+                    options += '<option value="' + optionValue + '">' + optionLabel + '</option>';
+                }
+                // Aggiorna il campo select con le nuove opzioni
+                $('#id_fk_sostanza').html(options);
+            }
+        });
+    }
+
+    // Gestione dell'evento di input per il campo di ricerca
+    $('#search-input').on('input', function() {
+        var term = $(this).val();
+        searchSostanza(term);
+    });
+});*/
+
+
+</script>
+
+{% endblock %}

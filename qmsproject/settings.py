@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django_seed',
     
+    
 ]
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyABpaqJWTsy7WGjWckbKcjYHJ3sk2AI-Hw'

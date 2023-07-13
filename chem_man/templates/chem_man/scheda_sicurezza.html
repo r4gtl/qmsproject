@@ -172,6 +172,99 @@
 
 
 </div><!--Fine prima riga tabelle-->
+
+<!--Seconda riga tabelle-->
+<div class="row">
+      <!-- Tabella Precautionary statement -->
+      <div class="col-6">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Consigli di prudenza</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'chem_man:aggiungi_precautionary_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Codice</th>
+                
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for precautionary_statement in elenco_precautionary_statements %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_precautionary_statement_sds' fk_sds=schedasicurezza.pk pk=precautionary_statement.pk %}">{{ precautionary_statement.fk_precautionary_statement.codice }}</a></td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_precautionary_statement_sds' pk=precautionary_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{precautionary_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
+
+
+  <!-- Tabella Sostanze -->
+      <div class="col-6">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Sostanze</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'chem_man:aggiungi_sostanza_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Sostanza</th>
+              <th>CAS</th>   
+              <th>EC</th>   
+              <th>Concentrazione</th>   
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for sostanza in elenco_sostanze %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_sostanza_sds' fk_sds=schedasicurezza.pk pk=sostanza.pk %}">{{ sostanza.fk_sostanza.descrizione|truncatechars:20 }}</a></td>
+              <td>{{ sostanza.fk_sostanza.num_cas }}</td>
+              <td>{{ sostanza.fk_sostanza.num_ec }}</td>
+              <td>{{ sostanza.concentrazione }}</td>
+              
+              <td class="text-center"><a href="{% url 'chem_man:delete_sostanza_sds' pk=sostanza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{sostanza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
+
+
+
+</div><!--Fine seconda riga tabelle-->
+
+
 </div>
 
 {% endblock %}

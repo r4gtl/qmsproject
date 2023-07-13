@@ -1,6 +1,7 @@
 from django import forms
 
 
+
 from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
@@ -271,14 +272,19 @@ class HazardStatement_SDSModelForm(forms.ModelForm):
 
 
 class Sostanza_SDSModelForm(forms.ModelForm):    
-    
+    #fk_sostanza = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Cerca Sostanza', 'autocomplete': 'on'}), label = 'Sostanza')
+    #fk_sostanza = forms.ModelChoiceField(
+    #        queryset=Sostanza.objects.all(),
+    #        label = 'Sostanza'
+     #       
+     #   )
     class Meta:
         model = Sostanza_SDS
         fields= '__all__'
 
-        fk_sostanza = forms.ModelChoiceField(queryset=Sostanza.objects.all())
+        
         widgets = {
-            
+            #'fk_sostanza': forms.ChoiceField(),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput(),
             'fk_sds': forms.HiddenInput()
