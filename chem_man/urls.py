@@ -11,6 +11,7 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     HazardStatementCreateView, HazardStatementUpdateView, delete_hazard_statement,
                     PrecautionaryStatementCreateView, PrecautionaryStatementUpdateView, delete_precautionary_statement,
                     SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
+                    ImballaggioPCCreateView, ImballaggioPCUpdateView, delete_imballaggio_pc,
                     SchedaSicurezzaCreateView, SchedaSicurezzaUpdateView, delete_scheda_sicurezza,
                     SimboloGHS_SDSCreateView, SimboloGHS_SDSUpdateView, delete_simbolo_ghs_sds,
                     HazardStatement_SDSCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds,
@@ -19,7 +20,7 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     
                     )
 
-from .utils import get_symbol_image_url, search_sostanza
+from .utils import get_symbol_image_url, search_sostanza, get_sostanza_details, check_if_svhc
 
 
 app_name = 'chem_man'
@@ -71,6 +72,11 @@ urlpatterns = [
     path('aggiungi_simbolo_ghs/', SimboloGHSCreateView.as_view(), name="aggiungi_simbolo_ghs"), 
     path('modifica_simbolo_ghs/<int:pk>/', SimboloGHSUpdateView.as_view(), name="modifica_simbolo_ghs"), 
     path('delete_simbolo_ghs/<int:pk>', delete_simbolo_ghs, name="delete_simbolo_ghs"),
+
+    # Imballaggi PC
+    path('aggiungi_imballaggio_pc/', ImballaggioPCCreateView.as_view(), name="aggiungi_imballaggio_pc"), 
+    path('modifica_imballaggio_pc/<int:pk>/', ImballaggioPCUpdateView.as_view(), name="modifica_imballaggio_pc"), 
+    path('delete_imballaggio_pc/<int:pk>', delete_imballaggio_pc, name="delete_imballaggio_pc"),
     
     # Schede Sicurezza
     path('<int:fk_prodottochimico>/aggiungi_scheda_sicurezza/', SchedaSicurezzaCreateView.as_view(), name="aggiungi_scheda_sicurezza"), 
@@ -101,6 +107,8 @@ urlpatterns = [
     # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
     path('get_symbol_image_url/', get_symbol_image_url, name="get_symbol_image_url"),
     path('search_sostanza/', search_sostanza, name="search_sostanza"),
+    path('get_sostanza_details/', get_sostanza_details, name="get_sostanza_details"),
+    path('check_if_svhc/', check_if_svhc, name='check_if_svhc'),
     
 
     

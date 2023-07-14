@@ -6,6 +6,7 @@ from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
+                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico
 )
 from anagrafiche.models import Fornitore
 
@@ -272,15 +273,12 @@ class HazardStatement_SDSModelForm(forms.ModelForm):
 
 
 class Sostanza_SDSModelForm(forms.ModelForm):    
-    #fk_sostanza = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Cerca Sostanza', 'autocomplete': 'on'}), label = 'Sostanza')
-    #fk_sostanza = forms.ModelChoiceField(
-    #        queryset=Sostanza.objects.all(),
-    #        label = 'Sostanza'
-     #       
-     #   )
+    
     class Meta:
         model = Sostanza_SDS
         fields= '__all__'
+    
+    
 
         
         widgets = {
@@ -290,7 +288,30 @@ class Sostanza_SDSModelForm(forms.ModelForm):
             'fk_sds': forms.HiddenInput()
         }
         labels = {
-            'fk_sostanza': 'Sostanza',      
+        #    'fk_sostanza': 'Sostanza',      
+            
+            'note': 'Note'
+
+        }
+
+    
+
+     
+class ImballaggioPCModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = ImballaggioPC
+        fields= '__all__'
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione (Fusto da kg. 30, Cisterna...) '}),
+            'peso_unitario': forms.TextInput(attrs={'placeholder': 'Inserisci peso unitario (30, 1000...)'}),              
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            
+            'descrizione': 'Descrizione',
+            'peso_unitario': 'Peso Unitario',
             
             'note': 'Note'
 

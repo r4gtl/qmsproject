@@ -6,18 +6,21 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.db.models import Max
 
 from django_filters.views import FilterView
 
 
 from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
                       SostanzaSVHCFilter, HazardStatementFilter, 
-                      PrecautionaryStatementFilter, SimboloGHSFilter
+                      PrecautionaryStatementFilter, SimboloGHSFilter,
+                      ImballaggioPCFilter,
 )
 
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
+                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico
                     )
 
 
@@ -26,7 +29,8 @@ from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
                     SchedaTecnicaModelForm, SostanzaModelForm,
                     SostanzaSVHCModelForm, HazardStatementModelForm,
                     PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
-                    SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm
+                    SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
+                    ImballaggioPCModelForm
 )
 
 # Create your views here.
@@ -34,6 +38,7 @@ from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
 def home_prodotti_chimici(request):
     prodotti_chimici = ProdottoChimico.objects.all()
     prodotti_chimici_filter = ProdottoChimicoFilter(request.GET, queryset=prodotti_chimici)
+    ultimo_agg_svhc = SostanzaSVHC.objects.aggregate(max_date=Max('data_inclusione'))['max_date']
     #filterset_class = FornitoreFilter
     page = request.GET.get('page', 1)
     paginator = Paginator(prodotti_chimici_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
@@ -48,7 +53,8 @@ def home_prodotti_chimici(request):
     context = {
         #'fornitori': filterset_class,
         'prodotti_chimici_paginator': prodotti_chimici_paginator,
-        'filter': prodotti_chimici_filter
+        'filter': prodotti_chimici_filter,
+        'ultimo_agg_svhc': ultimo_agg_svhc
     }
     return render(request, 'chem_man/home_prodotti_chimici.html', context)
 
@@ -266,6 +272,8 @@ def tabelle_generiche(request):
     tot_precautionary_statements = PrecautionaryStatement.objects.count()
     simboli_ghs = SimboloGHS.objects.all()
     tot_simboli_ghs = SimboloGHS.objects.count()
+    imballaggi_pc = ImballaggioPC.objects.all()
+    tot_imballaggi_pc = ImballaggioPC.objects.count()
 
     
     sostanze_filter = SostanzaFilter(request.GET, queryset=sostanze)
@@ -288,6 +296,10 @@ def tabelle_generiche(request):
     filtered_simboli_ghs = simboli_ghs_filter.qs
     simboli_ghs_filter_count = filtered_simboli_ghs.count()
     
+    imballaggi_pc_filter = ImballaggioPCFilter(request.GET, queryset=imballaggi_pc)
+    filtered_imballaggi_pc = imballaggi_pc_filter.qs
+    imballaggi_pc_filter_count = filtered_imballaggi_pc.count()
+
 
     # Paginazione Sostanze
     page_sostanze = request.GET.get('page', 1)
@@ -339,6 +351,17 @@ def tabelle_generiche(request):
     except EmptyPage:
         simboli_ghs_paginator = paginator_simboli_ghs.page(paginator_simboli_ghs.num_pages)
 
+    # Paginazione Imballaggi PC
+    page_imballaggi_pc = request.GET.get('page', 1)
+    imballaggi_pc_paginator = Paginator(filtered_imballaggi_pc, 50)
+    try:
+        imballaggi_pc_paginator = imballaggi_pc_paginator.page(page_imballaggi_pc)
+    except PageNotAnInteger:
+        imballaggi_pc_paginator = imballaggi_pc_paginator.page(1)
+    except EmptyPage:
+        imballaggi_pc_paginator = imballaggi_pc_paginator.page(imballaggi_pc_paginator.num_pages)
+
+
     context = {
         # Sostanze
         'sostanze': sostanze,
@@ -373,8 +396,14 @@ def tabelle_generiche(request):
         'tot_simboli_ghs': tot_simboli_ghs,
         'simboli_ghs_paginator': simboli_ghs_paginator,
         'filter_simboli_ghs': simboli_ghs_filter,
-        'simboli_ghs_filter_count': simboli_ghs_filter_count
+        'simboli_ghs_filter_count': simboli_ghs_filter_count,
 
+        # Imballaggi PC
+        'imballaggi_pc': imballaggi_pc, 
+        'tot_imballaggi_pc': tot_imballaggi_pc,
+        'imballaggi_pc_paginator': imballaggi_pc_paginator,
+        'filter_imballaggi_pc': imballaggi_pc_filter,
+        'imballaggi_pc_filter_count': imballaggi_pc_filter_count
 
     }
 
@@ -661,6 +690,63 @@ def delete_simbolo_ghs(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('chem_man:tabelle_generiche')
         return redirect(url_match)
+
+
+# Imballaggi PC
+
+class ImballaggioPCCreateView(LoginRequiredMixin,CreateView):
+    model = ImballaggioPC
+    form_class = ImballaggioPCModelForm
+    template_name = 'chem_man/generiche/imballaggio_pc.html'
+    success_message = 'Imballaggio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('chem_man:tabelle_generiche')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class ImballaggioPCUpdateView(LoginRequiredMixin, UpdateView):
+    model = ImballaggioPC
+    form_class = ImballaggioPCModelForm
+    template_name = 'chem_man/generiche/imballaggio_pc.html'
+    success_message = 'Imballaggio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('chem_man:tabelle_generiche')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_imballaggio_pc(request, pk):
+        deleteobject = get_object_or_404(ImballaggioPC, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:tabelle_generiche')
+        return redirect(url_match)
+
+
 
 # Schede di Sicurezza
 class SchedaSicurezzaCreateView(LoginRequiredMixin,CreateView):
@@ -969,8 +1055,33 @@ class Sostanza_SDSCreateView(LoginRequiredMixin,CreateView):
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
+
+
+
+       
+        
+         # Recupera l'ID della sostanza selezionata dal form
+        fk_sostanza_id = self.request.POST.get('fk_sostanza')
+        # Ottieni l'istanza del modello Sostanza corrispondente all'ID
+        fk_sostanza = get_object_or_404(Sostanza, pk=fk_sostanza_id)
+        # Crea un'istanza di Sostanza_SDS senza salvare nel database
+        sostanza_sds = form.save(commit=False)
+        # Assegna l'istanza di Sostanza al campo fk_sostanza del modello Sostanza_SDS
+        sostanza_sds.fk_sostanza = fk_sostanza
+        # Salva l'istanza di Sostanza_SDS nel database
+        sostanza_sds.save()
+
         return super().form_valid(form)
     
+    def form_invalid(self, form):
+        # Stampa gli errori del form nella console
+        print(form.errors)
+
+        # Esegui altre azioni desiderate in caso di form non valido
+
+        # Puoi anche chiamare la versione di default di form_invalid() per eseguire le azioni predefinite
+        return super().form_invalid(form)
+
     def get_initial(self):
         created_by = self.request.user
         fk_sds = self.kwargs['fk_sds']
@@ -997,7 +1108,12 @@ class Sostanza_SDSUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'chem_man/sostanza_sds.html'
     success_message = 'Sostanza modificata correttamente!'
     
-    
+    def get_initial(self):
+        initial = super().get_initial()
+        fk_sostanza = self.object.fk_sostanza.pk
+        initial['fk_sostanza'] = fk_sostanza
+        return initial
+
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
@@ -1006,6 +1122,18 @@ class Sostanza_SDSUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
+
+         # Recupera l'ID della sostanza selezionata dal form
+        fk_sostanza_id = self.request.POST.get('fk_sostanza')
+        # Ottieni l'istanza del modello Sostanza corrispondente all'ID
+        fk_sostanza = get_object_or_404(Sostanza, pk=fk_sostanza_id)
+        # Crea un'istanza di Sostanza_SDS senza salvare nel database
+        sostanza_sds = form.save(commit=False)
+        # Assegna l'istanza di Sostanza al campo fk_sostanza del modello Sostanza_SDS
+        sostanza_sds.fk_sostanza = fk_sostanza
+        # Salva l'istanza di Sostanza_SDS nel database
+        sostanza_sds.save()
+
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):        
@@ -1014,6 +1142,7 @@ class Sostanza_SDSUpdateView(LoginRequiredMixin, UpdateView):
         sds=SchedaSicurezza.objects.get(pk=pk)        
         context['fk_prodottochimico'] = sds.fk_prodottochimico   
         context['fk_sds'] = SchedaSicurezza.objects.get(pk=pk)
+        context['current_fk_sostanza'] = self.object.fk_sostanza.pk
         return context
 
 

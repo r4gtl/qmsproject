@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.views import View
 
-from .models import Sostanza
-from .models import SimboloGHS
+from .models import Sostanza, SostanzaSVHC, SimboloGHS
+
 from django.db.models import Q
 
 
@@ -40,3 +40,29 @@ def search_sostanza(request):
             results.append(result)
 
     return JsonResponse(results, safe=False)
+
+
+
+def get_sostanza_details(request):
+    sostanza_id = request.GET.get('id')
+    
+    try:
+        sostanza = Sostanza.objects.get(pk=sostanza_id)
+    except Sostanza.DoesNotExist:
+        return JsonResponse({'error': 'Sostanza non trovata'}, status=404)
+    
+    # Restituisci i dettagli dell'oggetto Sostanza
+    data = {
+        'id': sostanza.pk,
+        'descrizione': sostanza.descrizione,
+        'num_cas': sostanza.num_cas,
+        'num_ec': sostanza.num_ec,
+    }
+    
+    return JsonResponse(data)
+
+
+def check_if_svhc(request):
+    fk_sostanza_id = request.GET.get('fk_sostanza')
+    exists = SostanzaSVHC.objects.filter(Q(num_cas=fk_sostanza_id) | Q(num_ec=fk_sostanza_id)).exists()
+    return JsonResponse({'exists': exists})

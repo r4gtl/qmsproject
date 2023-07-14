@@ -579,7 +579,111 @@
   <!-- Fine Paginazione -->
     </div>
 
-    
+    <div class="col-6">
+      <div class="row">
+        <div class="col-6">
+          <h5>Imballaggi PC</h5>
+          <p>Inserire/modificare gli imballaggi.</p>                  
+        </div>
+        <div class="col-6 text-end">
+          <a href="{% url 'chem_man:aggiungi_imballaggio_pc' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Imballaggio</a>
+        </div>
+      </div>
+
+      <!-- Inizio filtro -->
+        <div class="row">
+          <div class="col">
+            <div class="card card-body">
+        
+              
+              <form method="get">
+        
+                <div class="table-responsive-sm">
+                  <table class="table table-hover table-striped table-bordered">
+                    <thead class="thead-dark">
+                      <tr>     
+                        <th>Descrizione</th>
+                        
+                        
+                      </tr>
+                    </thead>
+                    
+                    <tbody>
+                    <tr>
+                      <td style="width: 20%">                
+                        {% render_field filter_imballaggi_pc.form.descrizione class="form-control" %}
+                      </td>
+                      
+                      
+                      
+                    </tr>
+              
+                    
+                    
+                  </tbody>
+                  </table>
+                </div>
+                  
+        
+                
+        
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+                <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                
+              </form>
+              
+              
+            </div>
+          </div>
+          
+        </div>
+        <!-- Fine filtro -->
+        <p>Numero Imballaggi PC totale {{ tot_imballaggi_pc }} - Numero Imballaggi pc filtrati {{ imballaggi_pc_filter_count }}</p>
+
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Descrizione</th> 
+              <th>Peso Unitario</th> 
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for imballaggio_pc in imballaggi_pc_paginator %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_imballaggio_pc' pk=imballaggio_pc.pk %}">{{ imballaggio_pc.descrizione }}</a></td>
+              
+              
+              <td class="text-center">{{ imballaggio_pc.peso_unitario }}</td>
+              
+              </td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_imballaggio_pc' pk=imballaggio_pc.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{imballaggio_pc.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    <!-- Paginazione -->
+      <div class="pagination">
+        <span class="step-links">
+          {% if imballaggi_pc_paginator.has_previous %}
+            <a href="?page={{ imballaggi_pc_paginator.previous_page_number }}">precedente</a>
+          {% endif %}
+
+          <span class="current-page">{{ imballaggi_pc_paginator.number }}</span>
+
+          {% if imballaggi_pc_paginator.has_next %}
+            <a href="?page={{ imballaggi_pc_paginator.next_page_number }}">successivo</a>
+          {% endif %}
+        </span>
+      </div>
+      
+  <!-- Fine Paginazione -->
+    </div>
 
 
 

@@ -1,5 +1,6 @@
 from django.db import models
 import os
+from django.db.models import Q
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 from datetime import date
@@ -122,6 +123,8 @@ class Sostanza(models.Model):
         
     def __str__(self):
         return self.descrizione
+    
+    
     
 
 class SostanzaSVHC(models.Model):
@@ -278,6 +281,7 @@ class Sostanza_SDS(models.Model):
             on_delete=models.CASCADE,
             related_name='sostanza_sds'
             )
+    
     fk_sostanza = models.ForeignKey(
             Sostanza,
             on_delete=models.CASCADE,
@@ -288,5 +292,58 @@ class Sostanza_SDS(models.Model):
     created_by = models.ForeignKey(User, related_name='sostanza_sds', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
+
+class ImballaggioPC(models.Model):
+    descrizione = models.CharField(max_length=50)
+    peso_unitario = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='imballaggi_pc', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Tipo Imballaggio: {self.descrizione} - peso unitario: {self.peso_unitario}"
+
+
+
+class OrdineProdottoChimico(models.Model):
+    fk_fornitore = models.ForeignKey(
+        Fornitore, related_name='ordine_prodotti_chimici',
+        limit_choices_to={'categoria': Fornitore.PRODOTTI_CHIMICI},
+        on_delete=models.CASCADE
+    )
+    numero_ordine = models.IntegerField(default=None)
+    data_ordine = models.DateField(default=date.today)
+    data_consegna=models.DateField(null=True, blank=True)
+    is_conforme=models.BooleanField(default=True)
+    note_nc = models.TextField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='ordine_prodotti_chimici', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Se l'oggetto non è ancora stato salvato nel database
+            current_year = date.today().year
+            max_value = OrdineProdottoChimico.objects.filter(created_at__year=current_year).aggregate(models.Max('numero_ordine'))['numero_ordine__max']
+            self.numero_ordine = max_value + 1 if max_value else 1  # Incrementa il valore massimo di 1 o impostalo a 1 se non ci sono oggetti nel corrente anno
+        super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ["-data_ordine"]
+        
+    def __str__(self):
+        return f"Ordine n.: {self.numero_ordine} - Data Ordine: {self.data_inserimento} - Fornitore: {self.fk_fornitore}"
     
 
+class DettaglioOrdineProdottoChimico(models.Model):
+    fk_ordine = models.ForeignKey(OrdineProdottoChimico, related_name='dettagli_ordine', on_delete=models.CASCADE)
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,
+        limit_choices_to=models.Q(fk_fornitore=models.F('fk_ordine__fk_fornitore')),
+        on_delete=models.CASCADE
+    )
+    u_misura = models.CharField(max_length=3)
+    quantity = models.DecimalField(max_digits=8, decimal_places=2)
+    fk_imballaggio = models.ForeignKey(ImballaggioPC, related_name='dettagli_ordine', null=True, blank=True, on_delete=models.SET_NULL)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettagli_ordine', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
