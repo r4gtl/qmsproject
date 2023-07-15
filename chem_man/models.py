@@ -7,6 +7,17 @@ from datetime import date
 
 # Create your models here.
 
+class ImballaggioPC(models.Model):
+    descrizione = models.CharField(max_length=50)
+    peso_unitario = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='imballaggi_pc', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Tipo Imballaggio: {self.descrizione} - peso unitario: {self.peso_unitario}"
+
+
 class ProdottoChimico(models.Model):
     # Reparto
     BAGNATO = 'bagnato'
@@ -52,6 +63,13 @@ class ProdottoChimico(models.Model):
     reparto = models.CharField(max_length=12, choices=CHOICES_REPARTO, null=True, blank=True)
     flame_class = models.CharField(max_length=50, choices=CHOICES_FLAME, null=True, blank=True)
     zdhc_level = models.CharField(max_length=50, choices=CHOICES_ZDHC, null=True, blank=True)
+    fk_imballaggio = models.ForeignKey(
+            ImballaggioPC,
+            on_delete=models.SET_NULL,
+            related_name='prodotto_chimico',
+            null=True,
+            blank=True
+            )
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='prodotto_chimico', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -293,15 +311,7 @@ class Sostanza_SDS(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
 
-class ImballaggioPC(models.Model):
-    descrizione = models.CharField(max_length=50)
-    peso_unitario = models.DecimalField(max_digits=8, decimal_places=2, default=0)
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='imballaggi_pc', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f"Tipo Imballaggio: {self.descrizione} - peso unitario: {self.peso_unitario}"
 
 
 
@@ -314,7 +324,7 @@ class OrdineProdottoChimico(models.Model):
     numero_ordine = models.IntegerField(default=None)
     data_ordine = models.DateField(default=date.today)
     data_consegna=models.DateField(null=True, blank=True)
-    is_conforme=models.BooleanField(default=True)
+    is_conforme=models.BooleanField(default=False)
     note_nc = models.TextField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='ordine_prodotti_chimici', null=True, blank=True, on_delete=models.SET_NULL)

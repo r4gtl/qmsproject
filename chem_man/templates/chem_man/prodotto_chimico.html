@@ -132,7 +132,7 @@
             <tr>        
               
               <td><a href="{% url 'chem_man:modifica_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk pk=prezzo.pk %}">{{ prezzo.data_inserimento }}</a></td>
-              <td>{{ prezzo.prezzo }}</td>
+              <td class="text-end">{{ prezzo.prezzo }}</td>
               <td class="text-center"><a href="{% url 'chem_man:delete_prezzo_prodotto_chimico' pk=prezzo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prezzo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}

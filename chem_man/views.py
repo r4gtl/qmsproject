@@ -829,7 +829,7 @@ class SimboloGHS_SDSCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
-        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico
+        fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
         return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
     
     def form_valid(self, form):        

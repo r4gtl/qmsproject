@@ -191,7 +191,7 @@ $('#option-list').on('click', 'li', function() {
   function handleSaveButtonClick() {
     // Esegui il controllo per verificare se la sostanza è presente nell'altro modello
     $.ajax({
-      url: '{% url "chem_man:check_related_model" %}',
+      url: '{% url "chem_man:check_if_svhc" %}',
       data: { fk_sostanza: $('#id_fk_sostanza').val() },
       dataType: 'json',
       success: function(data) {

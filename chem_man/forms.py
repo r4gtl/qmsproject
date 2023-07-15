@@ -16,20 +16,23 @@ class ProdottoChimicoModelForm(forms.ModelForm):
         queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
         label='Fornitore'
     )
-    
+    fk_imballaggio = forms.ModelChoiceField(
+        queryset=ImballaggioPC.objects.all(),
+        label='Imballaggio di default'
+    )
     class Meta:
         model = ProdottoChimico
         fields= '__all__'
         widgets = {
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci il nome del prodotto chimico'}),
-            'solvente': forms.NumberInput(attrs={'class': 'form-control'}),
+            'solvente': forms.NumberInput(attrs={'class': 'form-control text-end'}),
             
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput()
         }
         labels = {
             'descrizione': 'Nome Prodotto',
-            'solvente': 'Solvente',
+            'solvente': 'Percentuale Solvente',
             'reparto': 'Reparto',
             'flame_class': 'classe di Infiammabilità',
             'zdhc_level': 'ZDHC Level',
@@ -304,7 +307,7 @@ class ImballaggioPCModelForm(forms.ModelForm):
         fields= '__all__'
         widgets = {
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione (Fusto da kg. 30, Cisterna...) '}),
-            'peso_unitario': forms.TextInput(attrs={'placeholder': 'Inserisci peso unitario (30, 1000...)'}),              
+            'peso_unitario': forms.NumberInput(attrs={'class': 'form-control'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput()
         }
@@ -316,3 +319,74 @@ class ImballaggioPCModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+        
+
+     
+class OrdineProdottoChimicoModelForm(forms.ModelForm):    
+    fk_fornitore = forms.ModelChoiceField(
+        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        label='Fornitore'
+    )
+    
+    class Meta:
+        model = OrdineProdottoChimico
+        fields= '__all__'
+        widgets = {
+            'numero_ordine': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'data_ordine': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'data_consegna': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'note_nc': forms.Textarea(attrs={'placeholder': 'Inserisci NC Riscontrate', 'rows':'3'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            
+            'numero_ordine': 'Numero Ordine',
+            'data_ordine': 'Data Ordine',
+            'data_consegna': 'Data Consegna',
+            'is_conforme': 'Ordine conforme',
+            'note_nc': 'NC Riscontrate',
+            'note': 'Note'
+
+        }
+        
+     
+class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):    
+    fk_imballaggio = forms.ModelChoiceField(
+        queryset=ImballaggioPC.objects.all(),
+        label='Imballaggio'
+    )
+    
+    class Meta:
+        model = DettaglioOrdineProdottoChimico
+        fields= '__all__'
+        widgets = {
+            
+            'u_misura': forms.TextInput(),            
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),            
+            
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_ordine': forms.HiddenInput()
+        }
+        labels = {
+            
+            'u_misura': 'Unità di Misura',
+            'quantity': 'Quantità',
+            'fk_prodotto_chimico': 'Prodotto Chimico',
+            
+            'note': 'Note'
+
+        }
+        # La prossima funzione serve per caricare il valore di imballaggio
+        # quando creo una nuova istanza.
+        # Attenzione: ChatGPT dice di caricare il form con
+        # form = DettaglioOrdineProdottoChimicoModelForm(initial={'fk_prodotto_chimico': prodotto_chimico_instance})
+        # quindi valutare nel caso di uso di CBV
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            if not self.instance.pk:  # Controlla se è una nuova istanza
+                fk_prodotto_chimico = self.initial.get('fk_prodotto_chimico')
+                if fk_prodotto_chimico:
+                    self.fields['fk_imballaggio'].initial = fk_prodotto_chimico.fk_imballaggio
