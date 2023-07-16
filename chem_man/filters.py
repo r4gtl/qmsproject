@@ -1,6 +1,10 @@
 import django_filters
 from django import forms
-from .models import ProdottoChimico, Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement, SimboloGHS, ImballaggioPC
+from .models import (ProdottoChimico, Sostanza, 
+                    SostanzaSVHC, HazardStatement,
+                    PrecautionaryStatement, SimboloGHS,
+                    ImballaggioPC, OrdineProdottoChimico
+)
 from anagrafiche.models import Fornitore
 
 
@@ -81,3 +85,23 @@ class ImballaggioPCFilter(django_filters.FilterSet):
     class Meta:
         model = ImballaggioPC
         fields = ['descrizione']
+        
+
+
+class OrdineProdottoChimicoFilter(django_filters.FilterSet):
+    
+    fk_fornitore = django_filters.ModelChoiceFilter(
+        field_name='fk_fornitore',
+        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        label='Fornitore'
+    )
+    numero_ordine=django_filters.NumberFilter(field_name='numero_ordine', lookup_expr='icontains', widget=forms.NumberInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    data_ordine = django_filters.DateFromToRangeFilter()
+    data_consegna = django_filters.DateFromToRangeFilter()
+    is_conforme = django_filters.BooleanFilter(field_name='is_conforme', widget=forms.CheckboxInput())
+    class Meta:
+        model = ProdottoChimico
+        fields = ['fk_fornitore', 'numero_ordine', 
+                'data_ordine', 'data_consegna',
+                'is_conforme'
+                ]

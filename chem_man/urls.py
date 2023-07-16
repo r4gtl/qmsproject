@@ -17,6 +17,8 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     HazardStatement_SDSCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds,
                     PrecautionaryStatement_SDSCreateView, PrecautionaryStatement_SDSUpdateView, delete_precautionary_statement_sds,
                     Sostanza_SDSCreateView, Sostanza_SDSUpdateView, delete_sostanza_sds,
+                    home_acquisti_prodotti_chimici,
+                    OrdineProdottoChimicoCreateView, OrdineProdottoChimicoUpdateView, delete_ordine_prodotto_chimico,
                     
                     )
 
@@ -103,6 +105,14 @@ urlpatterns = [
     path('<int:fk_sds>/modifica_sostanza_sds/<int:pk>/', Sostanza_SDSUpdateView.as_view(), name="modifica_sostanza_sds"), 
     path('delete_sostanza_sds/<int:pk>', delete_sostanza_sds, name="delete_sostanza_sds"),
 
+    # Home Acquisti
+    path('acquisti/', home_acquisti_prodotti_chimici, name="home_acquisti_prodotti_chimici"),
+    
+    # Acquisti - Ordini
+    path('aggiungi_ordine_prodotto_chimico/', OrdineProdottoChimicoCreateView.as_view(), name="aggiungi_ordine_prodotto_chimico"), 
+    path('modifica_ordine_prodotto_chimico/<int:pk>/', OrdineProdottoChimicoUpdateView.as_view(), name="modifica_ordine_prodotto_chimico"), 
+    path('delete_ordine_prodotto_chimico/<int:pk>', delete_ordine_prodotto_chimico, name="delete_ordine_prodotto_chimico"),
+    
     # Utilities
     # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
     path('get_symbol_image_url/', get_symbol_image_url, name="get_symbol_image_url"),
