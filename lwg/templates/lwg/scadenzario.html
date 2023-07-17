@@ -14,8 +14,19 @@
     {% for scadenza in scadenzario %}
         <div class="col-md-4">
             <div class="card shadow-sm">
-                <div class="card-header text-end">
-                    <h3>{{ scadenza.scadenza|date:"d M y" }}</h3>
+                <div class="card-header">
+                    <h3>
+                    <div class='row'>
+                    <div class='col text-start'>
+                    {% if scadenza.icona %}
+                        <i class="{{ scadenza.icona }}"></i>
+                    {% endif %}
+                    </div>
+                    <div class='col text-end'>
+                        {{ scadenza.scadenza|date:"d M y" }}
+                        </div>
+                    </div>
+                    </h3>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">Tipo scadenza: {{ scadenza.nomemodello }}</h5>

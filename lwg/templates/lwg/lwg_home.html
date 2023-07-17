@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+
 {% load static %}
 {% block title %}QMS {% endblock %}
 
@@ -224,7 +225,13 @@
     <div class="col-4">
         <div class="card" >
             <div class="card-body">
-              <h5 class="card-title"><i class="bi bi-moisture"></i> Chemical Management</h5>
+              <h5 class="card-title">
+              {% for app_name, icon_class in app_icons.items %}
+                {% if app_name == "chem_man" %}
+                  <i class="{{ icon_class }}"></i> 
+                {% endif %}
+              {% endfor %}
+               Chemical Management </h5>
               <h6 class="card-subtitle mb-2 text-body-secondary">Gestione Chimica</h6>
               <p class="card-text">Lo scopo di questa sezione è valutare la consapevolezza, la comprensione e la gestione dei prodotti chimici utilizzati nel processo di produzione della pelle.</p>
               <a href="{% url 'chem_man:home_prodotti_chimici' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>
@@ -236,7 +243,13 @@
     <div class="col-4">
       <div class="card" >
           <div class="card-body">
-            <h5 class="card-title"><i class="bi bi-house-check"></i> Operations Management</h5>
+            <h5 class="card-title">
+              {% for app_name, icon_class in app_icons.items %}
+                {% if app_name == "manutenzioni" %}
+                  <i class="{{ icon_class }}"></i> 
+                {% endif %} 
+              {% endfor %}
+               Operations Management</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">Gestione delle Operazioni</h6>
             <p class="card-text">Questa sezione valuta la capacità dell'impianto di controllare i propri processi di produzione, esaminando le migliori pratiche, l'utilizzo delle attrezzature e le calibrazioni, ecc.</p>
             <a href="{% url 'manutenzioni:dashboard_manutenzioni' %}" class="btn btn-sm btn-primary">Vai alla sezione</a>

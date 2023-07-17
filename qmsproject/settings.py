@@ -77,6 +77,8 @@ INSTALLED_APPS = [
     'django_seed',
     
     
+    
+    
 ]
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyABpaqJWTsy7WGjWckbKcjYHJ3sk2AI-Hw'
@@ -127,6 +129,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "qmsproject.context_processors.nome_sito",
                 "qmsproject.context_processors.fk_ward_records",
+                'qmsproject.context_processors.app_icons',
             ],
         },
     },

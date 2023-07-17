@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from datetime import date
 from datetime import timedelta
-
+from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from manualeprocedure.models import Procedura
 from manualeprocedure.filters import ProceduraFilter
@@ -88,7 +88,9 @@ def scadenzario_completo(request):
     '''
 
 def scadenzario_completo(request):
-    scadenzario=get_scadenzario_completo()
+    
+    scadenzario = get_scadenzario_completo()
+    
     context = {
         'scadenzario': scadenzario
     }
