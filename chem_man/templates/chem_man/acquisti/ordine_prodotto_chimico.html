@@ -17,7 +17,7 @@
         <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
         
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ordineprodottochimico.pk }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica ordine n. {{ ordineprodottochimico.numero_ordine }} del {{ ordineprodottochimico.data_ordine }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Ordine Prodotto Chimico</li>
         {% endif %}     
@@ -30,7 +30,7 @@
     
     <div class="container">
       {% if form.instance.id  %}
-          <h3>Modifica {{ ordineprodottochimico.pk }}</h3>
+          <h3>Modifica ordine n. {{ ordineprodottochimico.numero_ordine }} del {{ ordineprodottochimico.data_ordine }}</h3>
       {% else %}
           <h3> Aggiungi Ordine Prodotto Chimico</h3>
       {% endif %}
@@ -107,17 +107,17 @@
     
     <div class="row">
       <!-- Tabella prezzi -->
-      <div class="col-6">
+      <div class="col-12">
         <div class="row">
         
         {% if form.instance.id  %}
         <div class="col-6">
-          <h5>Storico Prezzi</h5>
+          <h5>Dettaglio Ordini</h5>
                     
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Prezzo</a>
+          <a href="{% url 'chem_man:aggiungi_dettaglio_ordine_prodotto_chimico' fk_ordine=ordineprodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
 
         </div>
       </div>
@@ -125,19 +125,23 @@
         <table class="table table-bordered table-striped mt-2">
           <thead>
             <tr>
-              <th>Data Inserimento</th>
-              <th>Prezzo</th>   
+              <th>Prodotto</th>
+              <th>UM</th>   
+              <th>Quantità</th>   
+              <th>Aspetto dei beni</th>   
               <th>Azione</th>
               
             </tr>
           </thead>
           <tbody>
-            {% for prezzo in elenco_prezzi %}
+            {% for dettaglio in elenco_dettagli %}
             <tr>        
               
-              <td><a href="{% url 'chem_man:modifica_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk pk=prezzo.pk %}">{{ prezzo.data_inserimento }}</a></td>
-              <td class="text-end">{{ prezzo.prezzo }}</td>
-              <td class="text-center"><a href="{% url 'chem_man:delete_prezzo_prodotto_chimico' pk=prezzo.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prezzo.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+              <td><a href="{% url 'chem_man:modifica_dettaglio_ordine_prodotto_chimico' fk_ordine=ordineprodottochimico.pk pk=dettaglio.pk %}">{{ dettaglio.fk_prodotto_chimico }}</a></td>
+              <td class="text-end">{{ dettaglio.u_misura }}</td>
+              <td class="text-end">{{ dettaglio.quantity }}</td>
+              <td class="text-end">{{ dettaglio.fk_imballaggio }}</td>
+              <td class="text-center"><a href="{% url 'chem_man:delete_dettaglio_ordine_prodotto_chimico' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
@@ -146,98 +150,7 @@
       {% endif %}
   </div>
 
-  <div class="col-6">
-    <div class="row">
-    
-    {% if form.instance.id  %}
-    <div class="col-6">
-      <h5>Schede Sicurezza</h5>
-                
-    </div>
-
-    <div class="col-6 text-end">
-      
-      <a href="{% url 'chem_man:aggiungi_scheda_sicurezza' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Scheda Sicurezza</a>
-
-    </div>
-  </div>
-  <div class="table-container">
-    <table class="table table-bordered table-striped mt-2">
-      <thead>
-        <tr>
-          <th>Data Revisione</th>
-          <th>Documento</th>           
-          <th>Azione</th>
-          
-        </tr>
-      </thead>
-      <tbody>
-        {% for scheda_sicurezza in elenco_schede_sicurezza %}
-
-        <tr>        
-          <td><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=prodottochimico.pk pk=scheda_sicurezza.pk %}">{{ scheda_sicurezza.data_revisione }}</a></td>
-          {% if scheda_sicurezza.documento %}
-              <td><a href="{{ scheda_sicurezza.documento.url }}" download>{{ scheda_sicurezza.documento.url }}</a></td>
-          {% else %}
-              <td>Nessun documento associato</td>
-          {% endif %}        
-          <td class="text-center"><a href="{% url 'chem_man:delete_scheda_sicurezza' pk=scheda_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scheda_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-        </tr>  
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% endif %}
-</div><!--Fine colonna Schede Sicurezza-->
 </div><!--Fine prima riga tabelle-->
-
-<!--Seconda riga tabelle-->
-<div class="row">
-      <!-- Tabella prezzi -->
-      <div class="col-6">
-    <div class="row">
-    
-    {% if form.instance.id  %}
-    <div class="col-6">
-      <h5>Schede tecniche</h5>
-                
-    </div>
-
-    <div class="col-6 text-end">
-      
-      <a href="{% url 'chem_man:aggiungi_scheda_tecnica' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Scheda tecnica</a>
-
-    </div>
-  </div>
-  <div class="table-container">
-    <table class="table table-bordered table-striped mt-2">
-      <thead>
-        <tr>
-          <th>Data Inserimento</th>
-          <th>Documento</th>           
-          <th>Azione</th>
-          
-        </tr>
-      </thead>
-      <tbody>
-        {% for scheda_tecnica in elenco_schede_tecniche %}
-
-        <tr>        
-          <td><a href="{% url 'chem_man:modifica_scheda_tecnica' fk_prodottochimico=prodottochimico.pk pk=scheda_tecnica.pk %}">{{ scheda_tecnica.data_inserimento }}</a></td>
-          {% if scheda_tecnica.documento %}
-              <td><a href="{{ scheda_tecnica.documento.url }}" download>{{ scheda_tecnica.documento.url }}</a></td>
-          {% else %}
-              <td>Nessun documento associato</td>
-          {% endif %}        
-          <td class="text-center"><a href="{% url 'chem_man:delete_scheda_tecnica' pk=scheda_tecnica.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scheda_tecnica.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-        </tr>  
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  {% endif %}
-</div>
-  </div><!--Fine seconda riga tabelle-->
 
 </div> <!--Fine container-->
 {% endblock content %}

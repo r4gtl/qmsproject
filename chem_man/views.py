@@ -31,7 +31,7 @@ from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
                     SostanzaSVHCModelForm, HazardStatementModelForm,
                     PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
                     SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
-                    ImballaggioPCModelForm, OrdineProdottoChimicoModelForm
+                    ImballaggioPCModelForm, OrdineProdottoChimicoModelForm, DettaglioOrdineProdottoChimicoModelForm,
 )
 
 # Create your views here.
@@ -1169,6 +1169,7 @@ def delete_sostanza_sds(request, pk):
 def home_acquisti_prodotti_chimici(request):
     ordini_pc = OrdineProdottoChimico.objects.all()
     ordini_pc_filter = OrdineProdottoChimicoFilter(request.GET, queryset = ordini_pc)
+    
     page = request.GET.get('page', 1)
     paginator = Paginator(ordini_pc_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
 
@@ -1191,7 +1192,7 @@ def home_acquisti_prodotti_chimici(request):
 '''PRIMA PARTE ORDINI'''
 
 
-# Prodotto Chimico
+# Ordine
 
 class OrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
     model = OrdineProdottoChimico
@@ -1257,4 +1258,67 @@ def delete_ordine_prodotto_chimico(request, pk):
         deleteobject = get_object_or_404(OrdineProdottoChimico, pk = pk)
         deleteobject.delete()
         url_match = reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
+        return redirect(url_match)
+
+
+# Dettaglio Ordine
+
+
+class DettaglioOrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioOrdineProdottoChimico
+    form_class = DettaglioOrdineProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/dettaglio_ordine_prodotto_chimico.html'
+    success_message = 'Dettaglio ordine aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_ordine = self.object.fk_ordine.pk
+        pk_dettaglio=self.object.pk
+        return reverse_lazy('chem_man:modifica_dettaglio_ordine_prodotto_chimico', kwargs={'fk_ordine':fk_ordine, 'pk': pk_dettaglio})
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['created_by'] = self.request.user        
+        return initial
+
+    
+class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioOrdineProdottoChimico
+    form_class = DettaglioOrdineProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/dettaglio_ordine_prodotto_chimico.html'
+    success_message = 'Dettaglio ordine modificato correttamente!'
+
+
+    def get_success_url(self):        
+
+        fk_ordine = self.object.fk_ordine.pk
+        pk_dettaglio=self.object.pk
+        return reverse_lazy('chem_man:modifica_dettaglio_ordine_prodotto_chimico', kwargs={'fk_ordine':fk_ordine, 'pk': pk_dettaglio})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_ordine = self.object.fk_ordine.pk
+        context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=fk_ordine)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_dettaglio_ordine_prodotto_chimico(request, pk):
+        deleteobject = get_object_or_404(DettaglioOrdineProdottoChimico, pk = pk)
+        fk_ordine = deleteobject.fk_ordine.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
         return redirect(url_match)

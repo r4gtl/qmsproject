@@ -1,4 +1,5 @@
 import django_filters
+from django_filters.widgets import BooleanWidget
 from django import forms
 from .models import (ProdottoChimico, Sostanza, 
                     SostanzaSVHC, HazardStatement,
@@ -98,9 +99,9 @@ class OrdineProdottoChimicoFilter(django_filters.FilterSet):
     numero_ordine=django_filters.NumberFilter(field_name='numero_ordine', lookup_expr='icontains', widget=forms.NumberInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
     data_ordine = django_filters.DateFromToRangeFilter()
     data_consegna = django_filters.DateFromToRangeFilter()
-    is_conforme = django_filters.BooleanFilter(field_name='is_conforme', widget=forms.CheckboxInput())
+    is_conforme = django_filters.BooleanFilter(field_name='is_conforme', widget=BooleanWidget())
     class Meta:
-        model = ProdottoChimico
+        model = OrdineProdottoChimico
         fields = ['fk_fornitore', 'numero_ordine', 
                 'data_ordine', 'data_consegna',
                 'is_conforme'

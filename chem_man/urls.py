@@ -19,6 +19,7 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     Sostanza_SDSCreateView, Sostanza_SDSUpdateView, delete_sostanza_sds,
                     home_acquisti_prodotti_chimici,
                     OrdineProdottoChimicoCreateView, OrdineProdottoChimicoUpdateView, delete_ordine_prodotto_chimico,
+                    DettaglioOrdineProdottoChimicoCreateView, DettaglioOrdineProdottoChimicoUpdateView, delete_dettaglio_ordine_prodotto_chimico,
                     
                     )
 
@@ -112,6 +113,11 @@ urlpatterns = [
     path('aggiungi_ordine_prodotto_chimico/', OrdineProdottoChimicoCreateView.as_view(), name="aggiungi_ordine_prodotto_chimico"), 
     path('modifica_ordine_prodotto_chimico/<int:pk>/', OrdineProdottoChimicoUpdateView.as_view(), name="modifica_ordine_prodotto_chimico"), 
     path('delete_ordine_prodotto_chimico/<int:pk>', delete_ordine_prodotto_chimico, name="delete_ordine_prodotto_chimico"),
+    
+    # Dettaglio Ordini
+    path('<int:fk_ordine>/aggiungi_dettaglio_ordine_prodotto_chimico/', DettaglioOrdineProdottoChimicoCreateView.as_view(), name="aggiungi_dettaglio_ordine_prodotto_chimico"), 
+    path('<int:fk_ordine>/modifica_dettaglio_ordine_prodotto_chimico/<int:pk>/', DettaglioOrdineProdottoChimicoUpdateView.as_view(), name="modifica_dettaglio_ordine_prodotto_chimico"), 
+    path('delete_dettaglio_ordine_prodotto_chimico/<int:pk>', delete_dettaglio_ordine_prodotto_chimico, name="delete_dettaglio_ordine_prodotto_chimico"),
     
     # Utilities
     # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
