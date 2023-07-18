@@ -73,5 +73,5 @@ def get_scadenzario_completo():
 
     scadenzario = sorted(scadenzario, key=lambda s: s['scadenza'])  # Ordina per data di scadenza
     
-    print("Scadenzario: " + str(scadenzario))
+    
     return scadenzario

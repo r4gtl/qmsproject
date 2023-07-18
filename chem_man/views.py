@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 import datetime
+from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -757,8 +758,12 @@ class SchedaSicurezzaCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('chem_man:home__prodotti_chimici')
+
         fk_prodottochimico=self.object.fk_prodottochimico.pk
         return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+        
 
 
 
@@ -789,8 +794,13 @@ class SchedaSicurezzaUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            fk_prodottochimico=self.object.fk_prodottochimico.pk
+            return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+
         fk_prodottochimico=self.object.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+        pk_sds=self.object.pk
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':pk_sds})
 
 
     def form_valid(self, form):
@@ -1204,10 +1214,15 @@ class OrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
     def get_initial(self):
-        created_by = self.request.user
-        return {
-            'created_by': created_by,
-        }
+        initial = super().get_initial()
+        initial['created_by'] = self.request.user
+        initial['numero_ordine'] = self.calculate_initial_numero_ordine()
+        return initial
+
+    def calculate_initial_numero_ordine(self):
+        current_year = date.today().year
+        max_value = OrdineProdottoChimico.objects.filter(created_at__year=current_year).aggregate(Max('numero_ordine'))['numero_ordine__max']
+        return (max_value + 1) if max_value else 1
 
 class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     model = OrdineProdottoChimico

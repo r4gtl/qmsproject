@@ -290,12 +290,26 @@
               <small><strong>{{ scadenza.scadenza|date:"d M y" }}</strong></small>
               <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
           </div>
-          <div class="toast-body">              
-              {{ scadenza.descrizione }} 
+          <div class="toast-body">
+            <div class="row">
+              <div class="col-2 text-center">
+              {% if scadenza.icona %}
+                        <h3><i class="{{ scadenza.icona }}"></i></h3>
+                    {% endif %}
+              </div>
+              <div class="col">
+              {{ scadenza.descrizione }}
+              </div>
+            </div>              
+               
               <br>
               <p>da app: <a href="{% url scadenza.url %}"><strong>{{ scadenza.nomemodello }}</strong></a></p>
               
           </div>
+          <div class="mx-2 my-2 pt-2 border-top text-end">
+            <button type="button" class="btn btn-sm btn-success" data-bs-dismiss="toast" aria-label="Close">Chiudi</button>
+          </div>
+          
       </div>
     {% endfor %}
   </div>

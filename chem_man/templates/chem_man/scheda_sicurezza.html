@@ -42,9 +42,13 @@
         
         <br>
 
-
+        
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
+
+
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
 
 
             <div class="row">
@@ -172,9 +176,9 @@
 
 
 </div><!--Fine prima riga tabelle-->
-
+<br>
 <!--Seconda riga tabelle-->
-<div class="row">
+<div class="row mt-2">
       <!-- Tabella Precautionary statement -->
       <div class="col-6">
         <div class="row">

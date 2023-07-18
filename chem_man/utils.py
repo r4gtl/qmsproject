@@ -16,6 +16,7 @@ def get_symbol_image_url(request):
     try:
         simbolo_ghs = SimboloGHS.objects.get(id=fk_simbolo_ghs_id)
         image_url = simbolo_ghs.symbol_image.url
+        print("image_url: " + str(image_url))
         return JsonResponse({'success': True, 'image_url': image_url})
     except SimboloGHS.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Symbol GHS not found'})

@@ -1,5 +1,6 @@
 from django import forms
-
+from datetime import date
+from django.db.models import Max
 
 
 from .models import (
@@ -219,12 +220,13 @@ class SimboloGHS_SDSModelForm(forms.ModelForm):
         model = SimboloGHS_SDS
         fields= '__all__'
 
-        fk_simbolo_ghs = forms.ModelChoiceField(queryset=SimboloGHS.objects.all())
+      
         widgets = {
             
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput(),
-            'fk_sds': forms.HiddenInput()
+            'fk_sds': forms.HiddenInput(),
+            'fk_simbolo_ghs': forms.Select()
         }
         labels = {
             'fk_simbolo_ghs': 'Simbolo GHS',      
@@ -332,8 +334,9 @@ class OrdineProdottoChimicoModelForm(forms.ModelForm):
         model = OrdineProdottoChimico
         fields= '__all__'
         widgets = {
-            'numero_ordine': forms.NumberInput(attrs={'class': 'form-control'}),            
-            'data_ordine': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            #'numero_ordine': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'numero_ordine': forms.TextInput(attrs={'readonly': 'readonly', 'class':'text-end'}),
+            'data_ordine': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),
             'data_consegna': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'note_nc': forms.Textarea(attrs={'placeholder': 'Inserisci NC Riscontrate', 'rows':'3'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
@@ -349,6 +352,8 @@ class OrdineProdottoChimicoModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+
+        
         
      
 class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):    

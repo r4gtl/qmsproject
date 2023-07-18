@@ -84,11 +84,13 @@ function handleImagePreviewOptionOld(selectId, previewImageId) {
 //	handleImagePreviewOption('id_fk_simbolo_ghs', 'preview-image', symbolImageURL);
 // });
 
-function handleImagePreviewOption(selectId, previewImageId, symbolImageURL) {
+function handleImagePreviewOption_Old(selectId, previewImageId, symbolImageURL) {
+  console.log("Funzione eccomi qui")
   var selectField = $('#' + selectId);
   var previewImageElement = $('#' + previewImageId);
   
   selectField.change(function() {
+    console.log("Funzione eccomi qui")
     var selectedOptionValue = $(this).val();
     
     if (selectedOptionValue) {

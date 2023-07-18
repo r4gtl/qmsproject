@@ -72,6 +72,7 @@
 
                 <div class="col-3">
                     {{ form.fk_simbolo_ghs|as_crispy_field }}
+                    
                 </div>
 
                 <div class="col-4">
@@ -107,18 +108,49 @@
 {% block extra_scripts %}
 <script>
 var symbolImageURL = "{% url 'chem_man:get_symbol_image_url' %}";
+
 $(document).ready(function() {
-    
-	handleImagePreviewOption('id_fk_simbolo_ghs', 'preview-image', symbolImageURL);
+    // Gestisci l'evento di cambio del campo fk_simbolo_ghs
+    $('#id_fk_simbolo_ghs').change(function() {
+        handleImagePreviewOption();
+    });
 });
 
+function handleImagePreviewOption() {
+    var selectField = $('#id_fk_simbolo_ghs');
+    var previewImageElement = $('#preview-image');
+    var noImageTextElement = $('#no-image-text');
+    var selectedOptionValue = selectField.val();
 
+    if (selectedOptionValue) {
+        $.ajax({
+            url: symbolImageURL,
+            type: 'GET',
+            data: { fk_simbolo_ghs_id: selectedOptionValue },
+            success: function(response) {
+                if (response.success && response.image_url) {
+                    noImageTextElement.hide();
+                    previewImageElement.attr('src', response.image_url);
+                    previewImageElement.show();
+                } else {
+                    previewImageElement.hide();
+                    noImageTextElement.show();
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Errore AJAX:', errorThrown);
+            }
+        });
+    } else {
+        previewImageElement.hide();
+        noImageTextElement.show();
+    }
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    var fkSimboloField = document.getElementById('id_fk_simbolo_ghs');
-    console.log(fkSimboloField.id);
-  });
-
+// Inizializza l'anteprima dell'immagine quando il form viene caricato per la modifica
+$(window).on('load', function() {
+    handleImagePreviewOption();
+});
 
 </script>
 

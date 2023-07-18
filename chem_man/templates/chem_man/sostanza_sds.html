@@ -5,7 +5,7 @@
 {% block title %}{{ block.super }} | Sostanza SDS {% endblock %}
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_procedure.html" %}
+{% include "core/partials/_sidenav_chem_man.html" %}
 {% endblock %}
 
 {% block content %}
@@ -206,7 +206,17 @@ $('#option-list').on('click', 'li', function() {
     });
   }
 
+function setFocusOnField() {
+        const campoDesiderato = document.getElementById('search-input');
+        if (campoDesiderato) {
+            campoDesiderato.focus();
+        }
+    }
 
+    // Chiamare la funzione setFocusOnField() dopo che la pagina è stata caricata
+    window.onload = function () {
+        setFocusOnField();
+    };
 
 </script>
 

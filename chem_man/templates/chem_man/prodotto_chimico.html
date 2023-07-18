@@ -48,6 +48,9 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             
+            
+
+            
                     <div class="row mb-4">
                       
                       <div class="col-md-12 border rounded shadow-sm">
@@ -74,6 +77,9 @@
                           <div class="col-md-2">
                             {{ form.zdhc_level|as_crispy_field }}
                           </div>  
+                          <div class="col-md-5">
+                            {{ form.fk_imballaggio|as_crispy_field }}
+                          </div> 
                               
                         </div>
                         <div class="row">
