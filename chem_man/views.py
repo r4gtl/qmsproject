@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+import pdb
 import datetime
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -1264,29 +1265,42 @@ def delete_ordine_prodotto_chimico(request, pk):
 # Dettaglio Ordine
 
 
+
 class DettaglioOrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
     model = DettaglioOrdineProdottoChimico
     form_class = DettaglioOrdineProdottoChimicoModelForm
     template_name = 'chem_man/acquisti/dettaglio_ordine_prodotto_chimico.html'
     success_message = 'Dettaglio ordine aggiunto correttamente!'
+    
 
-
-    def get_success_url(self):
-        fk_ordine = self.object.fk_ordine.pk
-        pk_dettaglio=self.object.pk
-        return reverse_lazy('chem_man:modifica_dettaglio_ordine_prodotto_chimico', kwargs={'fk_ordine':fk_ordine, 'pk': pk_dettaglio})
-
-
-
-    def form_valid(self, form):
+    def get_success_url(self):   
+        fk_ordine=self.object.fk_ordine.pk
+        
+        return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
+    
+    def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
-
+    
     def get_initial(self):
-        initial = super().get_initial()
-        initial['created_by'] = self.request.user        
-        return initial
+        created_by = self.request.user
+        fk_ordine = self.kwargs['fk_ordine']
 
+        return {
+            'created_by': created_by,
+            'fk_ordine': fk_ordine
+        }
+
+    def get_context_data(self, **kwargs):
+        
+        
+        context = super().get_context_data(**kwargs)
+        
+        
+        pk = self.kwargs['fk_ordine']         
+        context['ordine_pc'] = pk
+        #pass
+        return context
     
 class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     model = DettaglioOrdineProdottoChimico
@@ -1297,9 +1311,9 @@ class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):        
 
-        fk_ordine = self.object.fk_ordine.pk
+        fk_ordine = self.kwargs['fk_ordine']
         pk_dettaglio=self.object.pk
-        return reverse_lazy('chem_man:modifica_dettaglio_ordine_prodotto_chimico', kwargs={'fk_ordine':fk_ordine, 'pk': pk_dettaglio})
+        return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
 
 
     def form_valid(self, form):
@@ -1308,8 +1322,9 @@ class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fk_ordine = self.object.fk_ordine.pk
+        fk_ordine = self.kwargs['fk_ordine']
         context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=fk_ordine)
+        context['ordine_pc']=fk_ordine
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
 

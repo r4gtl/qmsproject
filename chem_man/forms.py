@@ -355,7 +355,8 @@ class OrdineProdottoChimicoModelForm(forms.ModelForm):
 
         
         
-     
+
+   
 class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):    
     fk_imballaggio = forms.ModelChoiceField(
         queryset=ImballaggioPC.objects.all(),
@@ -389,9 +390,11 @@ class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):
         # Attenzione: ChatGPT dice di caricare il form con
         # form = DettaglioOrdineProdottoChimicoModelForm(initial={'fk_prodotto_chimico': prodotto_chimico_instance})
         # quindi valutare nel caso di uso di CBV
+        '''
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             if not self.instance.pk:  # Controlla se è una nuova istanza
                 fk_prodotto_chimico = self.initial.get('fk_prodotto_chimico')
                 if fk_prodotto_chimico:
                     self.fields['fk_imballaggio'].initial = fk_prodotto_chimico.fk_imballaggio
+        '''

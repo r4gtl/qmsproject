@@ -345,12 +345,12 @@ class OrdineProdottoChimico(models.Model):
     
 
 class DettaglioOrdineProdottoChimico(models.Model):
-    fk_ordine = models.ForeignKey(OrdineProdottoChimico, related_name='dettagli_ordine', on_delete=models.CASCADE)
+    
     fk_prodotto_chimico = models.ForeignKey(
-        ProdottoChimico,
-        limit_choices_to=models.Q(fk_fornitore=models.F('fk_ordine__fk_fornitore')),
+        ProdottoChimico,        
         on_delete=models.CASCADE
     )
+    fk_ordine = models.ForeignKey(OrdineProdottoChimico, related_name='dettagli_ordine', on_delete=models.CASCADE)
     u_misura = models.CharField(max_length=3)
     quantity = models.DecimalField(max_digits=8, decimal_places=2)
     fk_imballaggio = models.ForeignKey(ImballaggioPC, related_name='dettagli_ordine', null=True, blank=True, on_delete=models.SET_NULL)
