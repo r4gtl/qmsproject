@@ -20,10 +20,13 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     home_acquisti_prodotti_chimici,
                     OrdineProdottoChimicoCreateView, OrdineProdottoChimicoUpdateView, delete_ordine_prodotto_chimico,
                     DettaglioOrdineProdottoChimicoCreateView, DettaglioOrdineProdottoChimicoUpdateView, delete_dettaglio_ordine_prodotto_chimico,
+                    stampa_ordine,
                     
                     )
 
-from .utils import get_symbol_image_url, search_sostanza, get_sostanza_details, check_if_svhc
+from .utils import (get_symbol_image_url, search_sostanza, get_sostanza_details, 
+                    check_if_svhc, get_prodotto_chimico,
+)
 
 
 app_name = 'chem_man'
@@ -125,6 +128,11 @@ urlpatterns = [
     path('search_sostanza/', search_sostanza, name="search_sostanza"),
     path('get_sostanza_details/', get_sostanza_details, name="get_sostanza_details"),
     path('check_if_svhc/', check_if_svhc, name='check_if_svhc'),
+    path('get_prodotto_chimico/', get_prodotto_chimico, name='get_prodotto_chimico'),
+
+    # Stampe
+    path('stampa_ordine/<int:pk>/', stampa_ordine, name='stampa_ordine'),
+
     
 
     

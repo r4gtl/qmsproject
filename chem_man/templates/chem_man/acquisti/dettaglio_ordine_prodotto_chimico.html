@@ -10,9 +10,38 @@
 
 {% block content %}
 {% include 'core/modals/delConfirm.html' %}
-ciao
 
-<div class="form-group mt-3">
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine_pc %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Ordine Prodotto Chimico</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica Dettaglio</h3>
+      {% else %}
+          <h3> Aggiungi Dettaglio Ordine Prodotto Chimico</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    
+    <!-- Form nuovo registro -->
+    
+    <div class="form-group mt-3">
         <form class="mt-3" method="POST" >
             {% csrf_token %}
             <input type="hidden" id="previous_page" name="previous_page"
@@ -23,7 +52,9 @@ ciao
                       
                       <div class="col-md-12 border rounded shadow-sm">
                         <div class="row mt-3">
-                          
+                          <div class = "col-md-4">
+                              {{ form.fk_prodotto_chimico|as_crispy_field }}
+                            </div>
                             
                             <div class = "col-md-2">
                               {{ form.u_misura|as_crispy_field }}
@@ -64,4 +95,41 @@ ciao
 
         <!-- fine form -->
         </form>
+
+        
+
+    </div>
+
+    
+
+</div> <!--Fine container-->
 {% endblock content %}
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+  $("#id_fk_prodotto_chimico").change(function() {
+    var selectedProductId = $(this).val();
+    var fkImballaggioSelect = $("#id_fk_imballaggio");
+
+    // Esegui una richiesta AJAX per ottenere il prodotto chimico selezionato
+    $.ajax({
+      url: "{% url 'chem_man:get_prodotto_chimico' %}",
+      data: { 'product_id': selectedProductId },
+      dataType: 'json',
+      success: function(data) {
+        // Imposta il campo fk_imballaggio con il valore associato al prodotto chimico
+        fkImballaggioSelect.val(data.fk_imballaggio);
+      },
+      error: function() {
+        // Gestisci l'errore qui, se necessario
+      }
+    });
+  });
+});
+
+
+
+
+</script>
+{% endblock %}

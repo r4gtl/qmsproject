@@ -1,7 +1,7 @@
 from django import forms
 from datetime import date
 from django.db.models import Max
-
+from django.contrib.admin.widgets import ForeignKeyRawIdWidget
 
 from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
@@ -309,7 +309,7 @@ class ImballaggioPCModelForm(forms.ModelForm):
         fields= '__all__'
         widgets = {
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione (Fusto da kg. 30, Cisterna...) '}),
-            'peso_unitario': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'peso_unitario': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput()
         }
@@ -357,19 +357,22 @@ class OrdineProdottoChimicoModelForm(forms.ModelForm):
         
 
    
-class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):    
+class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):   
+
     fk_imballaggio = forms.ModelChoiceField(
         queryset=ImballaggioPC.objects.all(),
-        label='Imballaggio'
+        label='Imballaggio',
+        widget=forms.Select
     )
-    
+
+   
     class Meta:
         model = DettaglioOrdineProdottoChimico
         fields= '__all__'
         widgets = {
             
             'u_misura': forms.TextInput(),            
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
             
             
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
@@ -391,6 +394,7 @@ class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):
         # form = DettaglioOrdineProdottoChimicoModelForm(initial={'fk_prodotto_chimico': prodotto_chimico_instance})
         # quindi valutare nel caso di uso di CBV
         '''
+        
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             if not self.instance.pk:  # Controlla se è una nuova istanza

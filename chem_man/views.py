@@ -1247,10 +1247,10 @@ class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # pk_prodottochimico = self.object.pk
+        pk_ordine = self.object.pk
         # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=pk_ordine)
 
         return context
 
@@ -1272,6 +1272,14 @@ class DettaglioOrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
     template_name = 'chem_man/acquisti/dettaglio_ordine_prodotto_chimico.html'
     success_message = 'Dettaglio ordine aggiunto correttamente!'
     
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        ordine_id = self.kwargs.get('fk_ordine')
+        ordine = OrdineProdottoChimico.objects.get(pk=ordine_id)
+        form.fields['fk_prodotto_chimico'].queryset = form.fields['fk_prodotto_chimico'].queryset.filter(fk_fornitore=ordine.fk_fornitore)
+        return form
+
 
     def get_success_url(self):   
         fk_ordine=self.object.fk_ordine.pk
@@ -1309,6 +1317,14 @@ class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     success_message = 'Dettaglio ordine modificato correttamente!'
 
 
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        ordine_id = self.kwargs.get('fk_ordine')
+        ordine = OrdineProdottoChimico.objects.get(pk=ordine_id)
+        form.fields['fk_prodotto_chimico'].queryset = form.fields['fk_prodotto_chimico'].queryset.filter(fk_fornitore=ordine.fk_fornitore)
+        return form
+
+
     def get_success_url(self):        
 
         fk_ordine = self.kwargs['fk_ordine']
@@ -1337,3 +1353,19 @@ def delete_dettaglio_ordine_prodotto_chimico(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
         return redirect(url_match)
+
+
+# Stampe
+def stampa_ordine(request, pk):
+
+
+    # Recupera il prodotto con l'id fornito o restituisce 404 se non trovato
+    ordine = get_object_or_404(OrdineProdottoChimico, id=pk)
+    dettagli_ordine=DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=pk)
+    context = {
+        'ordine': ordine,
+        'dettagli_ordine': dettagli_ordine
+    }
+    # Restituisci il prodotto nel template
+    return render(request, 'chem_man/acquisti/stampa_ordine.html', context)
+    

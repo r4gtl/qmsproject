@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 from django.views import View
 
-from .models import Sostanza, SostanzaSVHC, SimboloGHS
+from .models import (Sostanza, SostanzaSVHC, SimboloGHS,
+                     ProdottoChimico, ImballaggioPC
+)
 
 from django.db.models import Q
 
@@ -67,3 +69,16 @@ def check_if_svhc(request):
     fk_sostanza_id = request.GET.get('fk_sostanza')
     exists = SostanzaSVHC.objects.filter(Q(num_cas=fk_sostanza_id) | Q(num_ec=fk_sostanza_id)).exists()
     return JsonResponse({'exists': exists})
+
+
+# Funzione per poter filtrare gli imballaggi nel Dettaglio Ordine PC
+def get_prodotto_chimico(request):
+    product_id = request.GET.get('product_id')
+    if product_id is not None:
+        try:
+            prodotto_chimico = ProdottoChimico.objects.get(pk=product_id)
+            return JsonResponse({'fk_imballaggio': prodotto_chimico.fk_imballaggio.id})
+        except ProdottoChimico.DoesNotExist:
+            pass
+
+    return JsonResponse({'error': 'Invalid request'})

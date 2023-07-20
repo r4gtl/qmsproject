@@ -124,11 +124,11 @@
               <tbody>
                 {% for ordine in ordini_pc_paginator %}
                     
-                    <td class="col-md"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine.pk %}">{{ ordine.pk }}</a></td>
+                    <td class="col-md"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine.pk %}">{{ ordine }}</a></td>
                     
-                    <td class="col-md text-end">{{ ordine.fk_fornitore }}</td>
+                    <td class="col-md">{{ ordine.fk_fornitore }}</td>
                     
-                    <td class="col-md text-end">{{ ordine.data_consegna }}</td>  
+                    <td class="col-md text-center">{{ ordine.data_consegna }}</td>  
                     <td class="col-md">{{ ordine.is_conforme  }} </td>
                     <td class="col-md text-center"><a href="{% url 'chem_man:delete_ordine_prodotto_chimico' pk=ordine.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ordine.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>

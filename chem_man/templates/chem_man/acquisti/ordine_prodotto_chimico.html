@@ -47,6 +47,7 @@
             value="/previous/page/url">
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <a href="{% url 'chem_man:stampa_ordine' pk=ordineprodottochimico.id %}" class="btn btn-sm btn-warning" target="_blank"><span class="bi bi-printer"></span> Stampa Ordine</a>
             
                     <div class="row mb-4">
                       
@@ -138,9 +139,9 @@
             <tr>        
               
               <td><a href="{% url 'chem_man:modifica_dettaglio_ordine_prodotto_chimico' fk_ordine=ordineprodottochimico.pk pk=dettaglio.pk %}">{{ dettaglio.fk_prodotto_chimico }}</a></td>
-              <td class="text-end">{{ dettaglio.u_misura }}</td>
+              <td>{{ dettaglio.u_misura }}</td>
               <td class="text-end">{{ dettaglio.quantity }}</td>
-              <td class="text-end">{{ dettaglio.fk_imballaggio }}</td>
+              <td>{{ dettaglio.fk_imballaggio }}</td>
               <td class="text-center"><a href="{% url 'chem_man:delete_dettaglio_ordine_prodotto_chimico' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}

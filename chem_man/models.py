@@ -15,7 +15,7 @@ class ImballaggioPC(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Tipo Imballaggio: {self.descrizione} - peso unitario: {self.peso_unitario}"
+        return f"{self.descrizione} - peso unitario: {self.peso_unitario}"
 
 
 class ProdottoChimico(models.Model):
@@ -341,13 +341,17 @@ class OrdineProdottoChimico(models.Model):
         ordering = ["-data_ordine"]
         
     def __str__(self):
-        return f"Ordine n.: {self.numero_ordine} - Data Ordine: {self.data_inserimento} - Fornitore: {self.fk_fornitore}"
+        formatted_data_ordine = self.data_ordine.strftime('%d/%m/%Y')
+        return f"Ordine n.: {self.numero_ordine} - Data Ordine: {formatted_data_ordine}"
     
 
 class DettaglioOrdineProdottoChimico(models.Model):
     
+    
+
     fk_prodotto_chimico = models.ForeignKey(
-        ProdottoChimico,        
+        ProdottoChimico,     
+        
         on_delete=models.CASCADE
     )
     fk_ordine = models.ForeignKey(OrdineProdottoChimico, related_name='dettagli_ordine', on_delete=models.CASCADE)
