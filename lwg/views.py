@@ -94,5 +94,8 @@ def scadenzario_completo(request):
     context = {
         'scadenzario': scadenzario
     }
+    
+   
+
 
     return render(request, "lwg/scadenzario.html", context)

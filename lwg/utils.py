@@ -1,5 +1,5 @@
 from datetime import date
-
+from collections import defaultdict
 from autorizzazioni.models import DettaglioScadenzaAutorizzazione
 from manutenzioni.models import Taratura, ManutenzioneOrdinaria
 from human_resources.models import DettaglioRegistroFormazione
@@ -31,7 +31,8 @@ def get_scadenzario_completo():
             'nomemodello': 'autorizzazioni',
             'url': "autorizzazioni:autorizzazioni_home",
             
-            'icona': icona
+            'icona': icona,
+            'mese_anno': scadenza.scadenza_rinnovo.strftime('%B %Y')
         })
 
     scadenze_manutenzioni = ManutenzioneOrdinaria.objects.filter(prossima_scadenza__gte=today)
@@ -43,7 +44,8 @@ def get_scadenzario_completo():
             'descrizione': scadenza.descrizione,
             'nomemodello': 'manutenzioni',
             'url': "manutenzioni:dashboard_manutenzioni",
-            'icona': icona
+            'icona': icona,
+            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y')
         })
 
     scadenze_tarature = Taratura.objects.filter(prossima_scadenza__gte=today)
@@ -54,7 +56,8 @@ def get_scadenzario_completo():
             'descrizione': scadenza.fk_attrezzatura.descrizione,
             'nomemodello': 'tarature',
             'url': "manutenzioni:dashboard_manutenzioni",
-            'icona': icona
+            'icona': icona,
+            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y')
         })
     
     scadenze_risorse_umane = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today)
@@ -65,7 +68,8 @@ def get_scadenzario_completo():
             'descrizione': str(scadenza.fk_hr) + ", " + str(scadenza.fk_registro_formazione.fk_corso.descrizione),
             'nomemodello': 'risorse umane',
             'url': "human_resources:human_resources",
-            'icona': icona
+            'icona': icona,
+            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y')
             
         })
 
@@ -75,3 +79,5 @@ def get_scadenzario_completo():
     
     
     return scadenzario
+    
+    
