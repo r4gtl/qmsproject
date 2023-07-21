@@ -78,6 +78,11 @@
 
 {% endblock %}
 
-{% block scripts %}
 
-{% endblock %} 
+{% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_data_inserimento');
+        });
+    </script>
+{% endblock %}

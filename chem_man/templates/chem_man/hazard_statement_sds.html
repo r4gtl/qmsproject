@@ -86,6 +86,9 @@
 {% endblock %}
 
 {% block extra_scripts %}
-
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_fk_hazard_statement');
+        });
+    </script>
 {% endblock %}

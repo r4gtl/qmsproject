@@ -4,13 +4,6 @@ setTimeout(function() {
 
 
 
-// $(document).ready(function() {
-//   $('.datepicker').datepicker({
-//       format: 'dd-mm-yyyy',
-//       autoclose: true,
-//       todayHighlight: true
-//   });
-// });
 
 
 function getRandomColor() { //generates random colours and puts them in string    
@@ -120,4 +113,14 @@ function handleImagePreviewOption_Old(selectId, previewImageId, symbolImageURL) 
   if (initialOptionValue) {
     selectField.trigger('change');
   }
-}
+};
+
+
+// Settare il focus su un campo predefinito
+// definire l'ID del campo e richiamare la funzione 
+// setFocusOnField('campo_predefinito');
+function setFocusOnField(fieldId) {
+  $(document).ready(function() {
+      $("#" + fieldId).focus();
+  });
+};

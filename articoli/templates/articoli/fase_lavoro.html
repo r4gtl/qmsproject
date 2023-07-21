@@ -45,7 +45,7 @@
         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
         <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             
-                    <div class="row mb-4">
+                    <div class="row mt-3 mb-4">
                       
                       <div class="col-md-12 border rounded shadow-sm">
                         <div class="row">
@@ -75,3 +75,10 @@
 </div>
 
 {% endblock content %}
+{% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_descrizione');
+        });
+    </script>
+{% endblock %}
