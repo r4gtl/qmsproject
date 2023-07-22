@@ -3,6 +3,7 @@ from .views import (gestione_rifiuti_home, tabelle_generiche,
                     MovimentoRifiutiCreateView, MovimentoRifiutiUpdateView, delete_movimento_rifiuti,
                     CodiceCERCreateView, CodiceCERUpdateView, delete_codice_cer,
                     CodiceSmaltRecCreateView, CodiceSmaltRecUpdateView, delete_codice_smaltrec,
+                    performance_triennio,
                     
 )
 
@@ -45,6 +46,8 @@ urlpatterns = [
     # Charts
     path('cer_last_year/', cer_last_year, name='cer_last_year'),
     
+    # Stampe
+    path('performance_triennio/', performance_triennio, name='performance_triennio'),
 
     
 ]

@@ -26,7 +26,7 @@ class CodiceSmaltRec(models.Model):
         (RECUPERO, 'Recupero'),        
     )
     codice = models.CharField(max_length=4, null=False, blank=False)
-    descrizione = models.CharField(max_length=100, null=True, blank=True)
+    descrizione = models.CharField(max_length=200, null=True, blank=True)
     smalt_rec =  models.CharField(max_length=15, choices=CHOICES_SMALT_REC)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='codice_smalt_rec', null=True, blank=True, on_delete=models.SET_NULL)

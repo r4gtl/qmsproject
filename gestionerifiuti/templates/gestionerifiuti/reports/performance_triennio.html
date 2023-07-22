@@ -1,0 +1,94 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+
+{% block title %} Performance triennio {% endblock %}
+
+
+    <style>
+    
+        @page {
+            
+			size: A4 portrait;
+			
+			
+		}
+		@media print {
+			body {
+				margin: 0.1em 0.6em 0.1em 0.6em ;
+								
+				}
+            
+				
+				
+		}
+		
+		
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+<h2>Le performance dell'Azienda</h2>
+<hr>
+
+<table>
+    <thead>
+        <tr>
+            <th>Smaltimento</th>
+            {% for anno in anni %}
+                <th>{{ anno }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for tipo_movimento, dati_per_anno in dati_tabella_smaltimento %}
+        <tr>
+            <td>{{ tipo_movimento }}</td>
+            {% for anno, quantita in dati_per_anno.items %}
+                <td>{{ quantita|default_if_none:0 }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Recupero</th>
+            {% for anno in anni %}
+                <th>{{ anno }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for tipo_movimento, dati_per_anno in dati_tabella_recupero %}
+        <tr>
+            <td>{{ tipo_movimento }}</td>
+            {% for anno, quantita in dati_per_anno.items %}
+                <td>{{ quantita|default_if_none:0 }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+    </div>
+    
+       
+            
+    
+
+
+
+
+{% endblock %}
+
+
+        
