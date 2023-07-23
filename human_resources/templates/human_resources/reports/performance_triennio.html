@@ -1,0 +1,163 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+
+{% block title %} Performance triennio {% endblock %}
+
+
+    <style>
+    
+        @page {
+            
+			size: A4 portrait;
+			
+			
+		}
+		@media print {
+			body {
+				margin: 0.1em 0.6em 0.1em 0.6em ;
+								
+				}
+            
+				
+				
+		}
+		
+		
+			
+
+			
+    </style>
+</head>
+{% block content %}
+<div class="container">
+<h2 class="text-end">Le performance dell'Azienda</h2>
+<br>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <label for="num_tot_dipendenti"><i class="bi bi-person-workspace"></i> Numero totale dipendenti</label>
+            <canvas id="num_tot_dipendenti" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto=""></canvas>
+        </div>
+        <div class="col-sm-4">
+            <label for="num_tot_dipendenti_indeterminato"><i class="bi bi-person-workspace"></i> Numero totale dipendenti a tempo indeterminato</label>
+            <canvas id="num_tot_dipendenti_indeterminato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="indeterminato"></canvas>
+        </div>
+        <div class="col-sm-4">
+            <label for="num_tot_dipendenti_determinato"><i class="bi bi-person-workspace"></i> Numero totale dipendenti a tempo determinato</label>
+            <canvas id="num_tot_dipendenti_determinato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="determinato"></canvas>
+        </div>
+    </div>
+    
+</div>
+    
+
+    
+        
+    
+    
+</div>
+
+
+    </div>
+    
+       
+            
+    
+
+
+
+
+{% endblock %}
+{% block extra_scripts %}
+
+
+<script>
+    // Funzione per ottenere i dati dal server tramite AJAX
+    // Funzione per ottenere i dati dal server tramite AJAX
+
+    function getChartData(canvasId, contratto) {
+        const canvas = document.getElementById(canvasId);
+        const dataUrl = canvas.getAttribute('data-url');
+        const dataType = canvas.getAttribute('data-type');
+        const stacked = canvas.getAttribute('data-stacked');
+
+        fetch(`${dataUrl}?contratto=${contratto}`)
+            .then(response => response.json())
+            .then(data => {
+                // Organizza i dati per il grafico
+                var chartData = {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Maschi',
+                            data: data.male_data,
+                            backgroundColor: '#3d5a80',
+                            stack: 'Stack 0',
+                        },
+                        {
+                            label: 'Femmine',
+                            data: data.female_data,
+                            backgroundColor: '#489fb5',
+                            stack: 'Stack 0',
+                        },
+                    ]
+                };
+
+                // Configura le opzioni del grafico
+                var options = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Triennio - Dipendenti (Maschi/Femmine)'
+                        },
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'center',
+                            align: 'center',
+                            offset: 0,
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                return value;
+                            }
+                        }
+                    },
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                        },
+                    },
+                };
+
+                // Crea il grafico Stacked Bar Chart
+                var ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: dataType,
+                    data: chartData,
+                    options: options
+                });
+            });
+    }
+
+    // Chiamata alla funzione per ottenere i dati e creare i grafici
+    getChartData('num_tot_dipendenti', '');
+    getChartData('num_tot_dipendenti_indeterminato', 'indeterminato');
+    getChartData('num_tot_dipendenti_determinato', 'determinato');
+</script>
+    
+
+
+
+{% endblock %}
+
+        

@@ -19,7 +19,7 @@ from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelFo
                     )
 from .filters import HRFilter
 
-from .charts import get_average_age, get_gender_perc, get_ita_perc
+from .charts import get_average_age, get_gender_perc, get_ita_perc, num_tot_dipendenti
 from core.utils import get_records_with_upcoming_expiry
 
 # Create your views here.
@@ -586,4 +586,21 @@ def stampa_risorse_umane(request):
     }
     
     return render(request, "human_resources/reports/stampa_risorse_umane.html", context)
+
+
+
+
+def performance_triennio(request):
+    
+    
+    
+    context = {
+        'num_tot_dipendenti': num_tot_dipendenti, 
+        
+        
+    }
+    
+    return render(request, 'human_resources/reports/performance_triennio.html', context)
+
+
 '''FINE REPORTS'''

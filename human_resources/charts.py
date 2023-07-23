@@ -1,6 +1,8 @@
 from django.http import JsonResponse
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
+from django.utils import timezone
 from datetime import datetime
+
 
 from .models import (HumanResource, 
                     RegistroFormazione, 
@@ -143,3 +145,121 @@ def age_groups(request):
         'backgroundColor': backgroundColor,
         'borderColor': borderColor
     })
+    
+    
+
+# def num_tot_dipendenti(request):
+#     # Ottieni l'anno attuale
+#     current_date = timezone.now()
+#     current_year = current_date.year
+
+#     # Calcola gli ultimi tre anni escluso l'anno attuale
+#     years = list(range(current_year - 3, current_year))
+
+#     # Organizza i dati per il grafico
+#     labels = []
+#     male_data = []
+#     female_data = []
+    
+#     male_female_data = []
+
+#     for year in years:
+#         labels.append(str(year))
+
+#         # Conta il numero di dipendenti maschi e femmine per l'anno in ciclo
+#         male_count = HumanResource.objects.filter(
+#             dataassunzione__year__lte=year
+#         ).filter(
+#             Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+#             gender='M'
+#         ).count()
+#         female_count = HumanResource.objects.filter(
+#             dataassunzione__year__lte=year
+#         ).filter(
+#             Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+#             gender='F'
+#         ).count()
+
+#         total_count = male_count + female_count
+#         male_data.append(male_count)
+#         female_data.append(total_count)
+#         male_female_data.append([male_count, female_count])
+
+#     chart_data = {
+#         'labels': labels,
+#         'male_female_data': male_female_data,
+        
+#     }
+#     print("Chart_data:" + str(chart_data))
+#     return JsonResponse(chart_data)
+
+def num_tot_dipendenti(request):
+    contratto = request.GET.get('contratto', None)
+    print("Contratto inizio: " + str(contratto))
+    # Ottieni l'anno attuale
+    current_date = datetime.now()
+    current_year = current_date.year
+
+    # Calcola gli ultimi tre anni escluso l'anno attuale
+    years = list(range(current_year - 3, current_year))
+
+     # Organizza i dati per il grafico
+    labels = [str(year) for year in years]
+    male_data = []
+    female_data = []
+
+    for year in years:
+        male_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='M'
+        ).count()
+        female_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='F'
+        ).count()
+        if contratto:
+            male_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='M', contratto=contratto
+            ).count()
+            female_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='F', contratto=contratto
+            ).count()
+    
+            
+        
+        
+        
+        
+        
+        male_data.append(male_count)
+        female_data.append(female_count)
+
+    # Aggiungi gli anni senza dati nel caso in cui ci siano lacune nei dati
+    for year in years:
+        if year not in [int(label) for label in labels]:
+            labels.append(str(year))
+            male_data.append(0)
+            female_data.append(0)
+
+    chart_data = {
+        'labels': labels,
+        'male_data': male_data,
+        'female_data': female_data,
+    }
+    print("Chart_data:" + str(chart_data))
+    print("Contratto_finale:" + str(contratto))
+    return JsonResponse(chart_data)
+
+
+
+

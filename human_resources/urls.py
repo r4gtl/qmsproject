@@ -15,9 +15,9 @@ from .views import (human_resources_home,
                     DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
                     ValutazioneOperatoreCreateView, ValutazioneOperatoreUpdateView, delete_valutazione_operatore, 
                     dashboard_registro_ore, RegistroOreLavoroCreateView, RegistroOreLavoroUpdateView, delete_registro_ore,
-                    stampa_risorse_umane,
+                    stampa_risorse_umane, performance_triennio,
                     )
-from .charts import ore_formazione, operatori_per_reparto, age_groups
+from .charts import ore_formazione, operatori_per_reparto, age_groups, num_tot_dipendenti
 
 
 
@@ -47,6 +47,8 @@ urlpatterns = [
     path('ore_formazione/', ore_formazione, name='ore_formazione'),
     path('hr_count/', operatori_per_reparto, name='hr_count'),
     path('age_groups/', age_groups, name='age_groups'),
+    path('num_tot_dipendenti/', num_tot_dipendenti, name='num_tot_dipendenti'),
+    
 
 
     # Centro di Lavoro 
@@ -91,6 +93,7 @@ urlpatterns = [
     
     # Stampe
     path('stampa_risorse_umane/', stampa_risorse_umane, name="stampa_risorse_umane"), 
+    path('performance_triennio/', performance_triennio, name="performance_triennio"), 
 
     # Scadenzario
     path('scadenzario/', scadenzario, name="scadenzario"), 

@@ -24,6 +24,8 @@ class HumanResourceModelForm(forms.ModelForm):
             'data_nascita': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             #'immagine': forms.ImageField(),
             'gender': forms.Select(attrs={'class': 'form-control'}),
+            'contratto': forms.Select(attrs={'class': 'form-control'}),
+            'orario': forms.Select(attrs={'class': 'form-control'}),
             'dataassunzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'datadimissioni': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'fk_mansione': forms.Select(attrs={'class': 'form-control'}),

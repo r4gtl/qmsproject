@@ -42,7 +42,7 @@ def somma_quantita_per_anno_smaltimento_recupero(tipo_movimento):
     dati_raggruppati = movimenti_carico.values('fk_smaltrec', 'data_movimento__year').annotate(
         totale_quantita=Coalesce(Sum('quantity', output_field=IntegerField()), 0)
     )
-    print('dati_raggruppati: ' + str(dati_raggruppati))
+    
     # Crea un dizionario con le somme delle quantità divise per "smaltimento" e "recupero" e per anno
     risultato = {}
     for dato in dati_raggruppati:
@@ -52,10 +52,10 @@ def somma_quantita_per_anno_smaltimento_recupero(tipo_movimento):
 
         if fk_smaltrec not in risultato:
             risultato[fk_smaltrec] = {anno_movimento: totale_quantita}
-            print("smaltrec not: " + str(risultato))
+            
         else:
             risultato[fk_smaltrec][anno_movimento] = totale_quantita
-            print("smaltrec yes: " + str(risultato))
+            
     
     for fk_smaltrec in risultato:
         for year in last_three_years:
@@ -65,7 +65,7 @@ def somma_quantita_per_anno_smaltimento_recupero(tipo_movimento):
     risultato_ordinato = {}
     for fk_smaltrec, dati_per_anno in risultato.items():
         risultato_ordinato[fk_smaltrec] = dict(sorted(dati_per_anno.items(), key=lambda x: x[0]))
-    print("Risultato: " + str(risultato_ordinato))
+    
     return risultato_ordinato
     
     

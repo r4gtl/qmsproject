@@ -61,12 +61,34 @@ class HumanResource(models.Model):
         ('F', 'Femmina'),
     )
     
+    # Contratto
+    DETERMINATO = 'determinato'
+    INDETERMINATO = 'indeterminato'
+    
+    
+    CHOICES_CONTRATTO = (
+        (DETERMINATO, 'Determinato'),
+        (INDETERMINATO, 'Indeterminato'),        
+    )
+    
+    # Orario
+    PART_TIME = 'part_time'
+    FULL_TIME = 'full_time'
+    
+    
+    CHOICES_ORARIO = (
+        (PART_TIME, 'Part-time'),
+        (FULL_TIME, 'Full-time'),        
+    )
+    
     cognomedipendente = models.CharField(max_length=50, null=False, blank=False)
     nomedipendente = models.CharField(max_length=50, null=False, blank=False)
     data_nascita = models.DateField(null=True, blank=True)
     country = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
     immagine = models.ImageField(upload_to='operator_pictures', default= 'avatar.png',null=True, blank=True)        
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True)    
+    contratto = models.CharField(max_length=13, choices=CHOICES_CONTRATTO, null=True, blank=True)    
+    orario = models.CharField(max_length=9, choices=CHOICES_ORARIO, null=True, blank=True)    
     dataassunzione = models.DateField(null=False, blank=False)
     datadimissioni = models.DateField(null=True, blank=True)
     fk_mansione = models.ForeignKey(Role, null=True, blank=True, on_delete=models.SET_NULL)

@@ -30,47 +30,50 @@
 </head>
 {% block content %}
 <div class="container mt-4">
-<h2>Le performance dell'Azienda</h2>
+<h2 class="text-end">Le performance dell'Azienda</h2>
+<br>
 <hr>
 
-<table>
+<table class="table table-layout-fixed">
     <thead>
         <tr>
-            <th>Smaltimento</th>
+            <th scope="col" style="width: 400px; font-size:large; color: white; background-color:#40916c"><i class="bi bi-recycle"></i> Rifiuti destinati a smaltimento</th>
             {% for anno in anni %}
-                <th>{{ anno }}</th>
+                <th scope="col" style="font-size:large; color: white; background-color:#40916c" class="text-center">{{ anno }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for tipo_movimento, dati_per_anno in dati_tabella_smaltimento %}
         <tr>
-            <td>{{ tipo_movimento }}</td>
+            <td>Peso totale in Kg dei rifiuti destinati a smaltimento suddiviso in base alla composizione dei rifiuti</td>
             {% for anno, quantita in dati_per_anno.items %}
-                <td>{{ quantita|default_if_none:0 }}</td>
+                <td style="font-size:large" class="text-center">{{ quantita|default_if_none:0 }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
+<br>
+<hr>
+<br>
 
-
-<table>
+<table class="table table-layout-fixed">
     <thead>
         <tr>
-            <th>Recupero</th>
+            <th scope="col" style="width: 400px; font-size:large; color: white; background-color:#40916c"><i class="bi bi-recycle"></i> Rifiuti destinati a recupero</th>
             {% for anno in anni %}
-                <th>{{ anno }}</th>
+                <th scope="col" style="font-size:large; color: white; background-color:#40916c" class="text-center">{{ anno }}</th>
             {% endfor %}
         </tr>
     </thead>
     <tbody>
         {% for tipo_movimento, dati_per_anno in dati_tabella_recupero %}
         <tr>
-            <td>{{ tipo_movimento }}</td>
+            <td>Peso totale in Kg dei rifiuti non destinati a smaltimento suddiviso in base alla composizione dei rifiuti</td>
             {% for anno, quantita in dati_per_anno.items %}
-                <td>{{ quantita|default_if_none:0 }}</td>
+                <td style="font-size:large" class="text-center">{{ quantita|default_if_none:0 }}</td>
             {% endfor %}
         </tr>
         {% endfor %}
