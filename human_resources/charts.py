@@ -259,6 +259,159 @@ def num_tot_dipendenti(request):
 
 
 
+def num_tot_dipendenti_orario(request):
+    orario = request.GET.get('orario', None)
+    
+    # Ottieni l'anno attuale
+    current_date = datetime.now()
+    current_year = current_date.year
+
+    # Calcola gli ultimi tre anni escluso l'anno attuale
+    years = list(range(current_year - 3, current_year))
+
+     # Organizza i dati per il grafico
+    labels = [str(year) for year in years]
+    male_data = []
+    female_data = []
+
+    for year in years:
+        male_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='M'
+        ).count()
+        female_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='F'
+        ).count()
+        if orario:
+            male_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='M', orario=orario
+            ).count()
+            female_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='F', orario=orario
+            ).count()
+    
+       
+        
+        male_data.append(male_count)
+        female_data.append(female_count)
+
+    # Aggiungi gli anni senza dati nel caso in cui ci siano lacune nei dati
+    for year in years:
+        if year not in [int(label) for label in labels]:
+            labels.append(str(year))
+            male_data.append(0)
+            female_data.append(0)
+
+    chart_data = {
+        'labels': labels,
+        'male_data': male_data,
+        'female_data': female_data,
+    }
+    
+    return JsonResponse(chart_data)
+
+
+def num_tot_dipendenti_assunti_anno(request):
+    # Ottieni l'anno attuale
+    current_date = datetime.now()
+    current_year = current_date.year
+
+    # Calcola gli ultimi tre anni escluso l'anno attuale
+    years = list(range(current_year - 3, current_year))
+
+    # Organizza i dati per il grafico
+    labels = [str(year) for year in years]
+    male_data = []
+    female_data = []
+
+    for year in years:
+        # Calcola il conteggio di dipendenti maschi con data di assunzione nell'anno in esame
+        male_count = HumanResource.objects.filter(
+            dataassunzione__year=year,
+            gender='M'
+        ).count()
+
+        # Calcola il conteggio di dipendenti femmine con data di assunzione nell'anno in esame
+        female_count = HumanResource.objects.filter(
+            dataassunzione__year=year,
+            gender='F'
+        ).count()
+
+        male_data.append(male_count)
+        female_data.append(female_count)
+
+    # Aggiungi gli anni senza dati nel caso in cui ci siano lacune nei dati
+    for year in years:
+        if year not in [int(label) for label in labels]:
+            labels.append(str(year))
+            male_data.append(0)
+            female_data.append(0)
+
+    chart_data = {
+        'labels': labels,
+        'male_data': male_data,
+        'female_data': female_data,
+    }
+    
+    return JsonResponse(chart_data)
+
+
+def num_tot_dipendenti_dimessi_anno(request):
+    # Ottieni l'anno attuale
+    current_date = datetime.now()
+    current_year = current_date.year
+
+    # Calcola gli ultimi tre anni escluso l'anno attuale
+    years = list(range(current_year - 3, current_year))
+
+    # Organizza i dati per il grafico
+    labels = [str(year) for year in years]
+    male_data = []
+    female_data = []
+
+    for year in years:
+        # Calcola il conteggio di dipendenti maschi con data di assunzione nell'anno in esame
+        male_count = HumanResource.objects.filter(
+            datadimissioni__year=year,
+            gender='M'
+        ).count()
+
+        # Calcola il conteggio di dipendenti femmine con data di assunzione nell'anno in esame
+        female_count = HumanResource.objects.filter(
+            datadimissioni__year=year,
+            gender='F'
+        ).count()
+
+        male_data.append(male_count)
+        female_data.append(female_count)
+
+    # Aggiungi gli anni senza dati nel caso in cui ci siano lacune nei dati
+    for year in years:
+        if year not in [int(label) for label in labels]:
+            labels.append(str(year))
+            male_data.append(0)
+            female_data.append(0)
+
+    chart_data = {
+        'labels': labels,
+        'male_data': male_data,
+        'female_data': female_data,
+    }
+    
+    return JsonResponse(chart_data)
+
+
 
 def num_tot_dipendenti_plot(request):
     contratto = request.GET.get('contratto', None)

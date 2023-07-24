@@ -6,26 +6,65 @@
 
     <style>
     
+        /* Imposta l'orientamento della pagina solo per il template figlio */
         @page {
-            
-			size: A4 portrait;
-			
-			
-		}
-		@media print {
-			body {
-				margin: 0.1em 0.6em 0.1em 0.6em ;
-								
-				}
-            
-				
-				
-		}
-		
-		
-			
-
-			
+            size: A4;
+            margin: 0;
+        }
+    
+        body {
+            /* Imposta i margini del body a 0 */
+            margin: 0;
+            /* Imposta la larghezza massima dei contenuti per adattarli alla pagina */
+            max-width: 100%;
+        }
+    
+        .container {
+            /* Imposta i margini interni per separare il contenuto dai bordi del foglio */
+            padding: 20px;
+        }
+    
+        .row {
+            /* Imposta il layout delle colonne */
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    
+        .col-sm-4 {
+            /* Imposta la larghezza delle colonne */
+            flex-basis: 32%; /* Utilizza un valore inferiore a 33% per evitare sovrapposizioni */
+            margin-bottom: 20px; /* Aggiungi un margine inferiore per spaziare le colonne */
+        }
+    
+        /* Nasconde l'intestazione e il footer durante la stampa */
+        .header,
+        .footer {
+            display: none;
+        }
+    
+        /* Imposta la larghezza fissa per i canvas dei grafici solo durante la stampa */
+        @media print {
+            canvas {
+                width: 450px;
+            }
+    
+            body {
+                font-size: 9px;
+            }
+    
+            .container {
+                max-height: calc(100vh - 40px); /* Imposta l'altezza massima del contenitore per evitare sovrapposizioni con il footer */
+                overflow: auto; /* Aggiungi scrolling al contenuto in caso di overflow */
+            }
+    
+            canvas {
+                display: block;
+                margin: 0 auto; /* Centra i canvas orizzontalmente sulla pagina durante la stampa */
+                max-width: 100%;
+                height: auto !important; /* Imposta l'altezza auto per adattarsi al contenuto scalato */
+            }
+        }
     </style>
 </head>
 {% block content %}
@@ -36,25 +75,52 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-4">
-            <label for="num_tot_dipendenti"><i class="bi bi-person-workspace"></i> Numero totale dipendenti</label>
+            <label for="num_tot_dipendenti" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-person-workspace"></i> Numero totale dipendenti</label>
             <canvas id="num_tot_dipendenti" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto=""></canvas>
         </div>
         <div class="col-sm-4">
-            <label for="num_tot_dipendenti_indeterminato"><i class="bi bi-person-workspace"></i> Numero totale dipendenti a tempo indeterminato</label>
+            <label for="num_tot_dipendenti_indeterminato" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-stopwatch-fill"></i> Numero totale dipendenti a tempo indeterminato</label>
             <canvas id="num_tot_dipendenti_indeterminato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="indeterminato"></canvas>
         </div>
         <div class="col-sm-4">
-            <label for="num_tot_dipendenti_determinato"><i class="bi bi-person-workspace"></i> Numero totale dipendenti a tempo determinato</label>
+            <label for="num_tot_dipendenti_determinato" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-stopwatch"></i> Numero totale dipendenti a tempo determinato</label>
             <canvas id="num_tot_dipendenti_determinato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="determinato"></canvas>
         </div>
     </div>
     
 </div>
-    <div class="row">
-    <div id="num_tot_dipendenti_plot">
-            <!-- Qui verrà visualizzata l'immagine del grafico -->
-        </div>
+<hr>
+<div class="container">
+<div class="row">
+    <div class="col-sm-6">
+        <label for="num_tot_dipendenti_part_time" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-stopwatch"></i> Numero totale dipendenti part-time</label>
+        <canvas id="num_tot_dipendenti_part_time" data-url="{% url 'human_resources:num_tot_dipendenti_orario' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
     </div>
+    <div class="col-sm-6">
+        <label for="num_tot_dipendenti_full_time" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-stopwatch-fill"></i> Numero totale dipendenti a tempo indeterminato</label>
+        <canvas id="num_tot_dipendenti_full_time" data-url="{% url 'human_resources:num_tot_dipendenti_orario' %}" data-type="bar" data-stacked="true" data-orario="full_time"></canvas>
+    </div>
+    
+</div>
+
+</div>
+<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <label for="num_tot_dipendenti_assunti_anno" class="bg-secondary text-white" style="font-size:medium"><i class="bi bi-stopwatch"></i> Nuove assunzioni e turnover</label>
+            <canvas id="num_tot_dipendenti_assunti_anno" data-url="{% url 'human_resources:num_tot_dipendenti_assunti_anno' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
+        </div>
+        <div class="col-sm-6">
+            <label for="num_tot_dipendenti_dimessi_anno" style="font-size:medium" class="bg-secondary text-white"><i class="bi bi-arrow-repeat"></i> Turnover</label>
+            <canvas id="num_tot_dipendenti_dimessi_anno" data-url="{% url 'human_resources:num_tot_dipendenti_dimessi_anno' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
+        </div>
+        
+    </div>
+    
+    </div>
+    <hr>
+
     
 
     
@@ -64,7 +130,7 @@
 </div>
 
 
-    </div>
+
     
        
             
@@ -160,29 +226,247 @@
     getChartData('num_tot_dipendenti_determinato', 'determinato');
 
 
+    //Full-time - Part-time
+    function getChartData_orario(canvasId, orario) {
+        const canvas = document.getElementById(canvasId);
+        const dataUrl = canvas.getAttribute('data-url');
+        const dataType = canvas.getAttribute('data-type');
+        const stacked = canvas.getAttribute('data-stacked');
 
- // Funzione per ottenere l'immagine del grafico utilizzando AJAX
-    function getChartImage(canvasId, contratto) {
-        const imageDiv = document.getElementById(canvasId);
-        const dataUrl = "{% url 'human_resources:num_tot_dipendenti_plot' %}" + "?contratto=" + contratto;
-
-        fetch(dataUrl)
-            .then(response => response.blob())
+        fetch(`${dataUrl}?orario=${orario}`)
+            .then(response => response.json())
             .then(data => {
-                // Crea un URL oggetto per l'immagine
-                const imageUrl = URL.createObjectURL(data);
+                // Organizza i dati per il grafico
+                var chartData = {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Maschi',
+                            data: data.male_data,
+                            backgroundColor: '#3d5a80',
+                            stack: 'Stack 0',
+                        },
+                        {
+                            label: 'Femmine',
+                            data: data.female_data,
+                            backgroundColor: '#489fb5',
+                            stack: 'Stack 0',
+                        },
+                    ]
+                };
 
-                // Crea un elemento immagine e imposta l'URL dell'immagine
-                const imgElement = document.createElement("img");
-                imgElement.src = imageUrl;
+                // Configura le opzioni del grafico
+                var options = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Triennio - Dipendenti (Maschi/Femmine)'
+                        },
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'center',
+                            align: 'center',
+                            offset: 0,
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                return value;
+                            }
+                        }
+                    },
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                        },
+                    },
+                };
 
-                // Aggiungi l'immagine al div dedicato
-                imageDiv.appendChild(imgElement);
+                // Crea il grafico Stacked Bar Chart
+                var ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: dataType,
+                    data: chartData,
+                    options: options
+                });
             });
     }
 
-    // Chiamata alla funzione per ottenere l'immagine del grafico e visualizzarla nel div dedicato
-    getChartImage('num_tot_dipendenti_plot', '');
+    // Chiamata alla funzione per ottenere i dati e creare i grafici
+    
+    getChartData_orario('num_tot_dipendenti_full_time', 'full_time');
+    getChartData_orario('num_tot_dipendenti_part_time', 'part_time');
+
+    //Nuove Assunzioni
+    function getChartData_nuove_assunzioni(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const dataUrl = canvas.getAttribute('data-url');
+        const dataType = canvas.getAttribute('data-type');
+        const stacked = canvas.getAttribute('data-stacked');
+
+        fetch(dataUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Organizza i dati per il grafico
+                var chartData = {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Maschi',
+                            data: data.male_data,
+                            backgroundColor: '#3d5a80',
+                            stack: 'Stack 0',
+                        },
+                        {
+                            label: 'Femmine',
+                            data: data.female_data,
+                            backgroundColor: '#489fb5',
+                            stack: 'Stack 0',
+                        },
+                    ]
+                };
+
+                // Configura le opzioni del grafico
+                var options = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Triennio - Dipendenti (Maschi/Femmine)'
+                        },
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'center',
+                            align: 'center',
+                            offset: 0,
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                return value;
+                            }
+                        }
+                    },
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                        },
+                    },
+                };
+
+                // Crea il grafico Stacked Bar Chart
+                var ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: dataType,
+                    data: chartData,
+                    options: options
+                });
+            });
+    }
+
+    // Chiamata alla funzione per ottenere i dati e creare i grafici
+    
+    getChartData_nuove_assunzioni('num_tot_dipendenti_assunti_anno');
+
+    //Dimissioni
+    function getChartData_dimissioni(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const dataUrl = canvas.getAttribute('data-url');
+        const dataType = canvas.getAttribute('data-type');
+        const stacked = canvas.getAttribute('data-stacked');
+
+        fetch(dataUrl)
+            .then(response => response.json())
+            .then(data => {
+                // Organizza i dati per il grafico
+                var chartData = {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Maschi',
+                            data: data.male_data,
+                            backgroundColor: '#3d5a80',
+                            stack: 'Stack 0',
+                        },
+                        {
+                            label: 'Femmine',
+                            data: data.female_data,
+                            backgroundColor: '#489fb5',
+                            stack: 'Stack 0',
+                        },
+                    ]
+                };
+
+                // Configura le opzioni del grafico
+                var options = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Performance Triennio - Dipendenti (Maschi/Femmine)'
+                        },
+                        datalabels: {
+                            color: 'white',
+                            anchor: 'center',
+                            align: 'center',
+                            offset: 0,
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: (value, context) => {
+                                return value;
+                            }
+                        }
+                    },
+                    responsive: true,
+                    interaction: {
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                        },
+                    },
+                };
+
+                // Crea il grafico Stacked Bar Chart
+                var ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: dataType,
+                    data: chartData,
+                    options: options
+                });
+            });
+    }
+
+    // Chiamata alla funzione per ottenere i dati e creare i grafici
+    
+    getChartData_dimissioni('num_tot_dipendenti_dimessi_anno');
+    
+
+
+
+
+
+
 </script>
     
 

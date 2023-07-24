@@ -17,7 +17,11 @@ from .views import (human_resources_home,
                     dashboard_registro_ore, RegistroOreLavoroCreateView, RegistroOreLavoroUpdateView, delete_registro_ore,
                     stampa_risorse_umane, performance_triennio,
                     )
-from .charts import ore_formazione, operatori_per_reparto, age_groups, num_tot_dipendenti, num_tot_dipendenti_plot
+from .charts import (ore_formazione, operatori_per_reparto, 
+                    age_groups, num_tot_dipendenti,
+                    num_tot_dipendenti_plot, num_tot_dipendenti_orario,
+                    num_tot_dipendenti_assunti_anno, num_tot_dipendenti_dimessi_anno
+)
 
 
 
@@ -49,6 +53,11 @@ urlpatterns = [
     path('age_groups/', age_groups, name='age_groups'),
     path('num_tot_dipendenti/', num_tot_dipendenti, name='num_tot_dipendenti'),
     path('num_tot_dipendenti_plot/', num_tot_dipendenti_plot, name='num_tot_dipendenti_plot'),
+    path('num_tot_dipendenti_orario/', num_tot_dipendenti_orario, name='num_tot_dipendenti_orario'),
+    path('num_tot_dipendenti_assunti_anno/', num_tot_dipendenti_assunti_anno, name='num_tot_dipendenti_assunti_anno'),
+    path('num_tot_dipendenti_dimessi_anno/', num_tot_dipendenti_dimessi_anno, name='num_tot_dipendenti_dimessi_anno'),
+    
+    
     
 
 
