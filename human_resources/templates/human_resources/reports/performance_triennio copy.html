@@ -50,11 +50,6 @@
     </div>
     
 </div>
-    <div class="row">
-    <div id="num_tot_dipendenti_plot">
-            <!-- Qui verrà visualizzata l'immagine del grafico -->
-        </div>
-    </div>
     
 
     
@@ -158,31 +153,6 @@
     getChartData('num_tot_dipendenti', '');
     getChartData('num_tot_dipendenti_indeterminato', 'indeterminato');
     getChartData('num_tot_dipendenti_determinato', 'determinato');
-
-
-
- // Funzione per ottenere l'immagine del grafico utilizzando AJAX
-    function getChartImage(canvasId, contratto) {
-        const imageDiv = document.getElementById(canvasId);
-        const dataUrl = "{% url 'human_resources:num_tot_dipendenti_plot' %}" + "?contratto=" + contratto;
-
-        fetch(dataUrl)
-            .then(response => response.blob())
-            .then(data => {
-                // Crea un URL oggetto per l'immagine
-                const imageUrl = URL.createObjectURL(data);
-
-                // Crea un elemento immagine e imposta l'URL dell'immagine
-                const imgElement = document.createElement("img");
-                imgElement.src = imageUrl;
-
-                // Aggiungi l'immagine al div dedicato
-                imageDiv.appendChild(imgElement);
-            });
-    }
-
-    // Chiamata alla funzione per ottenere l'immagine del grafico e visualizzarla nel div dedicato
-    getChartImage('num_tot_dipendenti_plot', '');
 </script>
     
 

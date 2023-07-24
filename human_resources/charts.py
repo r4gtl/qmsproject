@@ -1,7 +1,9 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from datetime import datetime
+from io import BytesIO
+import matplotlib.pyplot as plt
 
 
 from .models import (HumanResource, 
@@ -195,7 +197,7 @@ def age_groups(request):
 
 def num_tot_dipendenti(request):
     contratto = request.GET.get('contratto', None)
-    print("Contratto inizio: " + str(contratto))
+    
     # Ottieni l'anno attuale
     current_date = datetime.now()
     current_year = current_date.year
@@ -235,11 +237,7 @@ def num_tot_dipendenti(request):
                 gender='F', contratto=contratto
             ).count()
     
-            
-        
-        
-        
-        
+       
         
         male_data.append(male_count)
         female_data.append(female_count)
@@ -256,10 +254,83 @@ def num_tot_dipendenti(request):
         'male_data': male_data,
         'female_data': female_data,
     }
-    print("Chart_data:" + str(chart_data))
-    print("Contratto_finale:" + str(contratto))
+    
     return JsonResponse(chart_data)
 
+
+
+
+def num_tot_dipendenti_plot(request):
+    contratto = request.GET.get('contratto', None)
+    
+    # Ottieni l'anno attuale
+    current_date = datetime.now()
+    current_year = current_date.year
+
+    # Calcola gli ultimi tre anni escluso l'anno attuale
+    years = list(range(current_year - 3, current_year))
+
+     # Organizza i dati per il grafico
+    labels = [str(year) for year in years]
+    male_data = []
+    female_data = []
+
+    for year in years:
+        male_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='M'
+        ).count()
+        female_count = HumanResource.objects.filter(
+            dataassunzione__year__lte=year
+        ).filter(
+            Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+            gender='F'
+        ).count()
+        if contratto:
+            male_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='M', contratto=contratto
+            ).count()
+            female_count = HumanResource.objects.filter(
+                dataassunzione__year__lte=year
+            ).filter(
+                Q(datadimissioni__year__gt=year) | Q(datadimissioni__isnull=True),
+                gender='F', contratto=contratto
+            ).count()
+    
+       
+        
+        male_data.append(male_count)
+        female_data.append(female_count)
+
+    # Aggiungi gli anni senza dati nel caso in cui ci siano lacune nei dati
+    for year in years:
+        if year not in [int(label) for label in labels]:
+            labels.append(str(year))
+            male_data.append(0)
+            female_data.append(0)
+
+     # Crea il grafico utilizzando Matplotlib
+    plt.figure(figsize=(10, 6))
+    plt.bar(labels, male_data, label='Maschi', color='#3d5a80')
+    plt.bar(labels, female_data, bottom=male_data, label='Femmine', color='#489fb5')
+    plt.xlabel('Anno')
+    plt.ylabel('Numero dipendenti')
+    plt.title('Performance Triennio - Dipendenti (Maschi/Femmine)')
+    plt.legend()
+    
+    # Ottieni l'immagine come oggetto BytesIO
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+
+    # Restituisci l'immagine come risposta
+    response = HttpResponse(buf, content_type='image/png')
+    return response
 
 
 
