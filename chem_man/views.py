@@ -17,12 +17,13 @@ from .filters import (ProdottoChimicoFilter, SostanzaFilter,
                     SostanzaSVHCFilter, HazardStatementFilter, 
                     PrecautionaryStatementFilter, SimboloGHSFilter,
                     ImballaggioPCFilter, OrdineProdottoChimicoFilter,
+                    AcquistoProdottoChimicoFilter,
 )
 
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
-                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico
+                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico, AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
                     )
 
 
@@ -33,6 +34,7 @@ from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
                     PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
                     SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
                     ImballaggioPCModelForm, OrdineProdottoChimicoModelForm, DettaglioOrdineProdottoChimicoModelForm,
+                    AcquistoProdottoChimicoModelForm, DettaglioAcquistoProdottoChimicoModelForm
 )
 
 # Create your views here.
@@ -1163,11 +1165,11 @@ def delete_sostanza_sds(request, pk):
         return redirect(url_match)
     
     
-    
+#===========================================================================================================================    
 '''ACQUISTI PRODOTTI CHIMICI'''
 '''HOME PAGE ACQUISTI'''
 
-def home_acquisti_prodotti_chimici(request):
+def dashboard_acquisti_prodotti_chimici(request):
     ordini_pc = OrdineProdottoChimico.objects.all()
     ordini_pc_filter = OrdineProdottoChimicoFilter(request.GET, queryset = ordini_pc)
     
@@ -1193,6 +1195,27 @@ def home_acquisti_prodotti_chimici(request):
 '''PRIMA PARTE ORDINI'''
 
 
+def home_ordini_prodotti_chimici(request):
+    ordini_pc = OrdineProdottoChimico.objects.all()
+    ordini_pc_filter = OrdineProdottoChimicoFilter(request.GET, queryset = ordini_pc)
+    
+    page = request.GET.get('page', 1)
+    paginator = Paginator(ordini_pc_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
+
+    try:
+        ordini_pc_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        ordini_pc_paginator = paginator.page(1)
+    except EmptyPage:
+        ordini_pc_paginator = paginator.page(paginator.num_pages)
+    context = {
+        'ordini_pc': ordini_pc,
+        'ordini_pc_paginator': ordini_pc_paginator,
+        'ordini_pc_filter': ordini_pc_filter
+        
+    }
+    return render(request, 'chem_man/acquisti/home_ordini_prodotti_chimici.html', context)
+
 # Ordine
 
 class OrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
@@ -1204,7 +1227,7 @@ class OrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
+            return reverse_lazy('chem_man:home_ordini_prodotti_chimici')
 
         pk_ordine=self.object.pk
         return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':pk_ordine})
@@ -1235,7 +1258,7 @@ class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
+            return reverse_lazy('chem_man:home_ordini_prodotti_chimici')
 
         pk_ordine=self.object.pk
         return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':pk_ordine})
@@ -1258,7 +1281,7 @@ class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 def delete_ordine_prodotto_chimico(request, pk):
         deleteobject = get_object_or_404(OrdineProdottoChimico, pk = pk)
         deleteobject.delete()
-        url_match = reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
+        url_match = reverse_lazy('chem_man:home_ordini_prodotti_chimici')
         return redirect(url_match)
 
 
@@ -1353,6 +1376,191 @@ def delete_dettaglio_ordine_prodotto_chimico(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
         return redirect(url_match)
+
+
+'''SECONDA PARTE: ACQUISTI'''
+
+
+
+def home_acquisti_prodotti_chimici(request):
+    acquisti_pc = AcquistoProdottoChimico.objects.all()
+    acquisti_pc_filter = AcquistoProdottoChimicoFilter(request.GET, queryset = acquisti_pc)
+    
+    page = request.GET.get('page', 1)
+    paginator = Paginator(acquisti_pc_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
+
+    try:
+        acquisti_pc_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        acquisti_pc_paginator = paginator.page(1)
+    except EmptyPage:
+        acquisti_pc_paginator = paginator.page(paginator.num_pages)
+    context = {
+        'acquisti_pc': acquisti_pc,
+        'acquisti_pc_paginator': acquisti_pc_paginator,
+        'acquisti_pc_filter': acquisti_pc_filter
+        
+    }
+    return render(request, 'chem_man/acquisti/home_acquisti_prodotti_chimici.html', context)
+
+# Acquisto
+
+class AcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
+    model = AcquistoProdottoChimico
+    form_class = AcquistoProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/acquisto_prodotto_chimico.html'
+    success_message = 'Documento aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('chem_man:home_documenti_acquisto_prodotti_chimici')
+
+        pk_acquisto=self.object.pk
+        return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':pk_acquisto})
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['created_by'] = self.request.user
+        
+        return initial
+
+    
+
+class AcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
+    model = AcquistoProdottoChimico
+    form_class = AcquistoProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/acquisto_prodotto_chimico.html'
+    success_message = 'Documento modificato correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('chem_man:home_documenti_acquisto_prodotti_chimici')
+
+        pk_acquisto=self.object.pk
+        return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':pk_acquisto})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_acquisto = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        context['elenco_dettagli'] = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=pk_acquisto)
+
+        return context
+
+
+def delete_acquisto_prodotto_chimico(request, pk):
+        deleteobject = get_object_or_404(AcquistoProdottoChimico, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:home_documenti_acquisto_prodotti_chimici')
+        return redirect(url_match)
+
+
+# Dettaglio Acquisto
+
+
+
+class DettaglioAcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioAcquistoProdottoChimico
+    form_class = DettaglioAcquistoProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/dettaglio_acquisto_prodotto_chimico.html'
+    success_message = 'Dettaglio acquisto aggiunto correttamente!'
+    
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        acquisto_id = self.kwargs.get('fk_acquisto')
+        acquisto = AcquistoProdottoChimico.objects.get(pk=acquisto_id)
+        form.fields['fk_prodotto_chimico'].queryset = form.fields['fk_prodotto_chimico'].queryset.filter(fk_fornitore=acquisto.fk_fornitore)
+        return form
+
+
+    def get_success_url(self):   
+        fk_acquisto=self.object.fk_acquisto.pk
+        
+        return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':fk_acquisto})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_acquisto = self.kwargs['fk_acquisto']
+
+        return {
+            'created_by': created_by,
+            'fk_acquisto': fk_acquisto
+        }
+
+    def get_context_data(self, **kwargs):
+        
+        
+        context = super().get_context_data(**kwargs)
+        
+        
+        pk = self.kwargs['fk_acquisto']         
+        context['acquisto_pc'] = pk
+        #pass
+        return context
+    
+class DettaglioAcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioAcquistoProdottoChimico
+    form_class = DettaglioAcquistoProdottoChimicoModelForm
+    template_name = 'chem_man/acquisti/dettaglio_acquisto_prodotto_chimico.html'
+    success_message = 'Dettaglio acquisto modificato correttamente!'
+
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        acquisto_id = self.kwargs.get('fk_acquisto')
+        acquisto = AcquistoProdottoChimico.objects.get(pk=acquisto_id)
+        form.fields['fk_prodotto_chimico'].queryset = form.fields['fk_prodotto_chimico'].queryset.filter(fk_fornitore=acquisto.fk_fornitore)
+        return form
+
+
+    def get_success_url(self):        
+
+        fk_acquisto = self.kwargs['fk_acquisto']
+        pk_dettaglio=self.object.pk
+        return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':fk_acquisto})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_acquisto = self.kwargs['fk_acquisto']
+        context['elenco_dettagli'] = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=fk_acquisto)
+        context['acquisto_pc']=fk_acquisto
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_dettaglio_acquisto_prodotto_chimico(request, pk):
+        deleteobject = get_object_or_404(DettaglioAcquistoProdottoChimico, pk = pk)
+        fk_acquisto = deleteobject.fk_acquisto.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':fk_acquisto})
+        return redirect(url_match)
+
 
 
 # Stampe

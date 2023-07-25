@@ -1,0 +1,148 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Acquisto Prodotto Chimico{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_chem_man.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:dashboard_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica acquisto n. {{ acquistoprodottochimico.numero_documento }} del {{ ordineprodottochimico.data_ordine }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi acquisto Prodotto Chimico</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica documento n. {{ acquistoprodottochimico.numero_documento }} del {{ acquistoprodottochimico.data_documento }}</h3>
+      {% else %}
+          <h3> Aggiungi acquisto Prodotto Chimico</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    
+    <!-- Form nuovo registro -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row mt-3">
+                          <div class = "col-md-4">
+                              {{ form.fk_fornitore|as_crispy_field }}
+                            </div>
+                            
+                            <div class = "col-md-2">
+                              {{ form.numero_documento|as_crispy_field }}
+                            </div>
+
+                            <div class = "col-md-2">
+                              {{ form.data_documento|as_crispy_field }}
+                            </div>
+                            
+
+                            
+                        </div>
+                        <div class="row">  
+                          
+                          <div class="col-md-6">
+                            {{ form.note|as_crispy_field }} 
+                          </div> 
+                          
+                           <div class="col-md-1">
+                              {{ form.created_by|as_crispy_field }}
+                            </div>
+                          
+                        </div>
+                        
+                        
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    
+    <div class="row">
+      <!-- Tabella prezzi -->
+      <div class="col-12">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Dettaglio Acquisti</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'chem_man:aggiungi_dettaglio_acquisto_prodotto_chimico' fk_acquisto=acquistoprodottochimico.id %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Prodotto</th>
+              <th>UM</th>   
+              <th>Quantità</th>   
+              <th>Azione</th>
+                 
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for dettaglio in elenco_dettagli %}
+            <tr>        
+              
+              <td><a href="{% url 'chem_man:modifica_dettaglio_acquisto_prodotto_chimico' fk_acquisto=acquistoprodottochimico.pk pk=dettaglio.pk %}">{{ dettaglio.fk_prodotto_chimico }}</a></td>
+              <td>{{ dettaglio.u_misura }}</td>
+              <td class="text-end">{{ dettaglio.quantity }}</td>
+              
+              <td class="text-center"><a href="{% url 'chem_man:delete_dettaglio_acquisto_prodotto_chimico' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
+
+</div><!--Fine prima riga tabelle-->
+
+</div> <!--Fine container-->
+{% endblock content %}

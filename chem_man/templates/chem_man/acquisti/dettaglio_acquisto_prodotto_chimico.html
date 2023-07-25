@@ -1,0 +1,113 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Dettaglio Acquisto Prodotto Chimico{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_chem_man.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_acquisto_prodotto_chimico' pk=acquisto_pc %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Acquisto Prodotto Chimico</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica Dettaglio</h3>
+      {% else %}
+          <h3> Aggiungi Dettaglio Acquisto Prodotto Chimico</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    
+    <!-- Form nuovo registro -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row mt-3">
+                          <div class = "col-md-4">
+                              {{ form.fk_prodotto_chimico|as_crispy_field }}
+                            </div>
+                            
+                            <div class = "col-md-2">
+                              {{ form.u_misura|as_crispy_field }}
+                            </div>
+
+                            <div class = "col-md-2">
+                              {{ form.quantity|as_crispy_field }}
+                            </div>
+
+                            
+
+                            
+                        </div>
+                        
+                        <div class="row">
+                        <div class="col-8">
+                            {{ form.note|as_crispy_field }}
+                        </div>
+                          <div class="col-1">
+                            {{ form.fk_acquisto|as_crispy_field }}
+                        </div>
+                            <div class="col-md-1">
+                              {{ form.created_by|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+                      <input type="submit" class="btn btn-success" value="Salva">
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    
+
+</div> <!--Fine container-->
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+
+
+
+
+
+</script>
+{% endblock %}

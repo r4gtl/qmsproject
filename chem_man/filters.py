@@ -4,7 +4,8 @@ from django import forms
 from .models import (ProdottoChimico, Sostanza, 
                     SostanzaSVHC, HazardStatement,
                     PrecautionaryStatement, SimboloGHS,
-                    ImballaggioPC, OrdineProdottoChimico
+                    ImballaggioPC, OrdineProdottoChimico,
+                    AcquistoProdottoChimico,
 )
 from anagrafiche.models import Fornitore
 
@@ -105,4 +106,20 @@ class OrdineProdottoChimicoFilter(django_filters.FilterSet):
         fields = ['fk_fornitore', 'numero_ordine', 
                 'data_ordine', 'data_consegna',
                 'is_conforme'
+                ]
+        
+class AcquistoProdottoChimicoFilter(django_filters.FilterSet):
+    
+    fk_fornitore = django_filters.ModelChoiceFilter(
+        field_name='fk_fornitore',
+        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        label='Fornitore'
+    )
+    numero_documento=django_filters.NumberFilter(field_name='numero_documento', lookup_expr='icontains', widget=forms.NumberInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    data_documento = django_filters.DateFromToRangeFilter()
+    
+    class Meta:
+        model = AcquistoProdottoChimico
+        fields = ['fk_fornitore', 'numero_documento', 
+                'data_documento'
                 ]

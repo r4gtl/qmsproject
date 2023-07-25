@@ -361,3 +361,42 @@ class DettaglioOrdineProdottoChimico(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettagli_ordine', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class AcquistoProdottoChimico(models.Model):
+    fk_fornitore = models.ForeignKey(
+        Fornitore, related_name='acquisto_prodotti_chimici',
+        limit_choices_to={'categoria': Fornitore.PRODOTTI_CHIMICI},
+        on_delete=models.CASCADE
+    )
+    numero_documento = models.CharField(max_length=15)
+    data_documento = models.DateField()   
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='acquisto_prodotti_chimici', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    
+
+    class Meta:
+        ordering = ["-data_documento"]
+        
+    def __str__(self):
+        formatted_data_documento = self.data_documento.strftime('%d/%m/%Y')
+        return f"Documento n.: {self.numero_documento} - Data Ordine: {formatted_data_documento}"
+    
+
+class DettaglioAcquistoProdottoChimico(models.Model):   
+
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,     
+        
+        on_delete=models.CASCADE
+    )
+    fk_acquisto = models.ForeignKey(AcquistoProdottoChimico, related_name='dettagli_acquisto', on_delete=models.CASCADE)
+    u_misura = models.CharField(max_length=3)
+    quantity = models.DecimalField(max_digits=8, decimal_places=2)
+    prezzo = models.DecimalField(max_digits=8, decimal_places=2)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettagli_acquisto', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)

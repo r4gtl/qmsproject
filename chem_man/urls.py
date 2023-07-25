@@ -17,9 +17,11 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     HazardStatement_SDSCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds,
                     PrecautionaryStatement_SDSCreateView, PrecautionaryStatement_SDSUpdateView, delete_precautionary_statement_sds,
                     Sostanza_SDSCreateView, Sostanza_SDSUpdateView, delete_sostanza_sds,
-                    home_acquisti_prodotti_chimici,
+                    dashboard_acquisti_prodotti_chimici, home_ordini_prodotti_chimici, home_acquisti_prodotti_chimici,
                     OrdineProdottoChimicoCreateView, OrdineProdottoChimicoUpdateView, delete_ordine_prodotto_chimico,
                     DettaglioOrdineProdottoChimicoCreateView, DettaglioOrdineProdottoChimicoUpdateView, delete_dettaglio_ordine_prodotto_chimico,
+                    AcquistoProdottoChimicoCreateView, AcquistoProdottoChimicoUpdateView, delete_acquisto_prodotto_chimico,
+                    DettaglioAcquistoProdottoChimicoCreateView, DettaglioAcquistoProdottoChimicoUpdateView, delete_dettaglio_acquisto_prodotto_chimico,
                     stampa_ordine,
                     
                     )
@@ -109,6 +111,12 @@ urlpatterns = [
     path('<int:fk_sds>/modifica_sostanza_sds/<int:pk>/', Sostanza_SDSUpdateView.as_view(), name="modifica_sostanza_sds"), 
     path('delete_sostanza_sds/<int:pk>', delete_sostanza_sds, name="delete_sostanza_sds"),
 
+    # Dashboard Acquisti
+    path('dashboard_acquisti/', dashboard_acquisti_prodotti_chimici, name="dashboard_acquisti_prodotti_chimici"),
+
+    # Home Ordini
+    path('ordini/', home_ordini_prodotti_chimici, name="home_ordini_prodotti_chimici"),
+    
     # Home Acquisti
     path('acquisti/', home_acquisti_prodotti_chimici, name="home_acquisti_prodotti_chimici"),
     
@@ -121,7 +129,17 @@ urlpatterns = [
     path('<int:fk_ordine>/aggiungi_dettaglio_ordine_prodotto_chimico/', DettaglioOrdineProdottoChimicoCreateView.as_view(), name="aggiungi_dettaglio_ordine_prodotto_chimico"), 
     path('<int:fk_ordine>/modifica_dettaglio_ordine_prodotto_chimico/<int:pk>/', DettaglioOrdineProdottoChimicoUpdateView.as_view(), name="modifica_dettaglio_ordine_prodotto_chimico"), 
     path('delete_dettaglio_ordine_prodotto_chimico/<int:pk>', delete_dettaglio_ordine_prodotto_chimico, name="delete_dettaglio_ordine_prodotto_chimico"),
+
+    # Acquisti - Documenti Acquisto
+    path('aggiungi_acquisto_prodotto_chimico/', AcquistoProdottoChimicoCreateView.as_view(), name="aggiungi_acquisto_prodotto_chimico"), 
+    path('modifica_acquisto_prodotto_chimico/<int:pk>/', AcquistoProdottoChimicoUpdateView.as_view(), name="modifica_acquisto_prodotto_chimico"), 
+    path('delete_acquisto_prodotto_chimico/<int:pk>', delete_acquisto_prodotto_chimico, name="delete_acquisto_prodotto_chimico"),
     
+    # Dettaglio Acquisto
+    path('<int:fk_acquisto>/aggiungi_dettaglio_acquisto_prodotto_chimico/', DettaglioAcquistoProdottoChimicoCreateView.as_view(), name="aggiungi_dettaglio_acquisto_prodotto_chimico"), 
+    path('<int:fk_acquisto>/modifica_dettaglio_acquisto_prodotto_chimico/<int:pk>/', DettaglioAcquistoProdottoChimicoUpdateView.as_view(), name="modifica_dettaglio_acquisto_prodotto_chimico"), 
+    path('delete_dettaglio_acquisto_prodotto_chimico/<int:pk>', delete_dettaglio_acquisto_prodotto_chimico, name="delete_dettaglio_acquisto_prodotto_chimico"),
+        
     # Utilities
     # il primo serve per ottenere l'immagine del simbolo di pericolo o comunque cambiando la selezione in un campo options
     path('get_symbol_image_url/', get_symbol_image_url, name="get_symbol_image_url"),

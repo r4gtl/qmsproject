@@ -7,7 +7,8 @@ from .models import (
                     ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
-                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico
+                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico,
+                    AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico
 )
 from anagrafiche.models import Fornitore
 
@@ -402,3 +403,62 @@ class DettaglioOrdineProdottoChimicoModelForm(forms.ModelForm):
                 if fk_prodotto_chimico:
                     self.fields['fk_imballaggio'].initial = fk_prodotto_chimico.fk_imballaggio
         '''
+
+  
+class AcquistoProdottoChimicoModelForm(forms.ModelForm):    
+    fk_fornitore = forms.ModelChoiceField(
+        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        label='Fornitore'
+    )
+    
+    class Meta:
+        model = AcquistoProdottoChimico
+        fields= '__all__'
+        widgets = {
+            #'numero_ordine': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'numero_documento': forms.TextInput(attrs={'class':'text-end'}),
+            'data_documento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+        }
+        labels = {
+            
+            'numero_documento': 'Numero Documento',
+            'data_documento': 'Data Documento',
+            
+            'note': 'Note'
+
+        }
+
+        
+        
+
+   
+class DettaglioAcquistoProdottoChimicoModelForm(forms.ModelForm):   
+
+    
+
+   
+    class Meta:
+        model = DettaglioAcquistoProdottoChimico
+        fields= '__all__'
+        widgets = {
+            
+            'u_misura': forms.TextInput(),            
+            'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
+            
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput(),
+            'fk_acquisto': forms.HiddenInput()
+        }
+        labels = {
+            
+            'u_misura': 'Unità di Misura',
+            'quantity': 'Quantità',
+            'fk_prodotto_chimico': 'Prodotto Chimico',
+            
+            'note': 'Note'
+
+        }
