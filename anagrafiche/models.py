@@ -121,6 +121,39 @@ class LwgFornitore(models.Model):
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
 
 
+'''I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE'''
+class FornitorePelli(models.Model):
+    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pelli')
+    prova = models.CharField(max_length=50, blank=True, null=True)
+
+class FornitoreProdottiChimici(models.Model):
+    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pc')
+    id_zdhc = models.CharField(max_length=50, blank=True, null=True)
+
+class FornitoreLavorazioniEsterne(models.Model):
+    # tipo audit sostenuto
+    NESSUNO = 'not_audited'
+    MANUFACTURER = 'leather_manufacturer_audit_protocol'
+    SUBCONTRACTOR = 'subcontractor_audit_protocol'
+    MINI = 'mini_audit_protocol'
+    
+    
+    CHOICES_AUDIT = (
+        (NESSUNO, 'Nessun Audit'),
+        (MANUFACTURER, 'Leather Manufacturer Audit Protocol'),
+        (SUBCONTRACTOR, 'Subcontractor Audit Protocol'),
+        (MINI, 'Mini-Audit Protocol'),
+        
+    )
+    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_lavorazioni')
+    audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, default=NESSUNO)
+
+class FornitoreServizi(models.Model):
+    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_servizi')
+    prova = models.CharField(max_length=50, blank=True, null=True)
+'''FINE MODELLI CATEGORIE'''
+
+
 class TransferValue(models.Model):
     description = models.CharField(max_length=50)
     unit = models.CharField(max_length=20)

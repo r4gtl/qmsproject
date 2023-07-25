@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.db import models
+from django.apps import apps
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -15,7 +17,8 @@ from .filters import FornitoreFilter, ClienteFilter
 from .models import (Fornitore, Facility, 
                     FacilityContact, LwgFornitore, 
                     TransferValue, XrTransferValueLwgFornitore,
-                    Cliente
+                    Cliente,
+                    FornitorePelli, FornitoreProdottiChimici, FornitoreLavorazioniEsterne, FornitoreServizi
 )
 
 from nonconformity.models import RapportoNC
@@ -58,6 +61,14 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Recupera il modello specifico per la categoria
+        categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
+        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+        
+        # Recupera l'istanza del modello specifico per la categoria
+        if categoria_model:
+            context["modello_categoria"] = categoria_model.objects.filter(fornitore=self.object).first()
         
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
         context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
@@ -76,7 +87,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
     error_message = 'Error saving the Doc, check fields below.'
     
     #fields = "__all__"
-    success_url = reverse_lazy('anagrafiche:home_fornitori')
+    #success_url = reverse_lazy('anagrafiche:home_fornitori')
     
     template_name = "anagrafiche/fornitore.html"
 
@@ -87,12 +98,46 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
             'created_at': datetime.datetime.now() 
         }
         
-        
     
+    def get_success_url(self):          
+          
+          return reverse_lazy('anagrafiche:home_fornitori')
     
+    def form_valid(self, form):
+        # Crea l'istanza del modello Fornitore
+        # Sezione aggiunta per gestire i fornitori dividendo le categorie su altri modelli
+
+        forn = form.save(commit=False)
+        forn.created_by = self.request.user
+        forn.save()
+
+        # Ottieni il nome del modello specifico per la categoria corrente
+        categoria_model_name = f'Fornitore{form.cleaned_data["categoria"].title().replace(" ", "")}'
+        print("Nome modello: " + str(categoria_model_name))
+        # Controlla se il modello specifico esiste
+         
+        if categoria_model_name == 'FornitorePelli':
+            categoria_instance = FornitorePelli.objects.create(fornitore=forn)
+            categoria_instance.save()
+        elif categoria_model_name == 'FornitoreProdottiChimici':
+            categoria_instance = FornitoreProdottiChimici.objects.create(fornitore=forn)
+            categoria_instance.save()
+        elif categoria_model_name == 'FornitoreLavorazioniEsterne':
+            categoria_instance = FornitoreLavorazioniEsterne.objects.create(fornitore=forn)
+            categoria_instance.save()
+        elif categoria_model_name == 'FornitoreServizi':
+            categoria_instance = FornitoreServizi.objects.create(fornitore=forn)
+            categoria_instance.save()
+
+        messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
+        # Redirigi all'URL di successo
+        return HttpResponseRedirect(self.get_success_url())
+    
+    '''
     def form_valid(self, form):        
         messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
         return super().form_valid(form)
+        '''
 
     def form_invalid(self, form):
         messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
@@ -154,6 +199,8 @@ class UpdateLwgCertificate(UpdateView):
         context = super().get_context_data(**kwargs)
         pk = self.object.pk
         print("PK: " + str(pk))
+         
+
         context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
         context['fornitore'] = self.object.fk_fornitore.pk
         context['ragionesociale'] = Fornitore.objects.get(pk=self.object.fk_fornitore.pk)

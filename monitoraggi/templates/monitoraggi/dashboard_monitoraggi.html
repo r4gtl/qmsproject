@@ -90,8 +90,8 @@
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_dato_produzione' pk=dato_produzione.pk %}">{{ dato_produzione.data_inserimento }}</a></td>
               <td>{{ dato_produzione.industries_served }}</td>                           
-              <td>{{ dato_produzione.n_pelli }}</td>
-              <td>{{ dato_produzione.mq|intcomma }}</td>
+              <td class="text-end">{{ dato_produzione.n_pelli }}</td>
+              <td class="text-end">{{ dato_produzione.mq|intcomma }}</td>
               <td class="text-center"><a href="{% url 'monitoraggi:delete_lettura_dato_produzione' pk=dato_produzione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dato_produzione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -121,8 +121,8 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_acqua' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.mc_in|intcomma }}</td>                           
-              <td>{{ lettura.mc_out|intcomma }}</td>                           
+              <td class="text-end">{{ lettura.mc_in|intcomma }}</td>                           
+              <td class="text-end">{{ lettura.mc_out|intcomma }}</td>                           
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_acqua' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -141,7 +141,7 @@
           <thead>
             <tr>
               <th>Data Lettura</th>            
-              <th>Mc in Ingresso</th>            
+              <th class="text-end">Mc in Ingresso</th>            
               <th>Azioni</th>
             </tr>
           </thead>
@@ -151,7 +151,7 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_gas' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.mc_in|intcomma }}</td>                                                                 
+              <td class="text-end">{{ lettura.mc_in|intcomma }}</td>                                                                 
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_gas' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}
@@ -180,7 +180,7 @@
             <tr>        
               
               <td><a href="{% url 'monitoraggi:modifica_lettura_energia_elettrica' pk=lettura.pk %}">{{ lettura.data_lettura }}</a></td>
-              <td>{{ lettura.kwh_in|intcomma }}</td>                                                                 
+              <td class="text-end">{{ lettura.kwh_in|intcomma }}</td>                                                                 
               <td class="text-center"><a href="{% url 'monitoraggi:delete_monitoraggio_energia_elettrica' pk=lettura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lettura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}

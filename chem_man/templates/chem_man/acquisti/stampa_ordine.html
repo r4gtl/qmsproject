@@ -1,6 +1,6 @@
 {% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
 {% load static %}
-{% block title %} Statistiche Risorse Umane {% endblock %}
+{% block title %} {{ ordine }} {% endblock %}
 
 
     <style>
@@ -39,7 +39,7 @@
 
     </div>
     <div class="col-6">
-        <h2>Ordine n. <strong>{{ordine.pk}}</strong></h2>
+        <h2>Ordine n. <strong>{{ordine.numero_ordine}}</strong></h2>
         <h2>Del <strong>{{ ordine.data_ordine }}</strong></h2>
         <h2>{{ ordine.fk_fornitore }}</h2>
 

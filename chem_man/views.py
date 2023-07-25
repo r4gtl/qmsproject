@@ -1414,7 +1414,7 @@ class AcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('chem_man:home_documenti_acquisto_prodotti_chimici')
+            return reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
 
         pk_acquisto=self.object.pk
         return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':pk_acquisto})

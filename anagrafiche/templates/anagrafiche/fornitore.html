@@ -137,6 +137,15 @@
         {% endif %}
             <!-- fine sezione certificati LWG -->
         
+
+
+{% if modello_categoria %}
+    <h2>{{ modello_categoria.id_zdhc }}</h2>
+    
+    <!-- Altri campi del modello specifico... -->
+  {% endif %}
+
+
     </div>
 
 
@@ -170,6 +179,11 @@ function myFunction() {
       x.style.display = "none";
     }
   } 
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_ragionesociale');
+        });
+
 </script>
 
 {% endblock %}
