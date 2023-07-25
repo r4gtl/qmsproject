@@ -448,7 +448,8 @@ class DettaglioAcquistoProdottoChimicoModelForm(forms.ModelForm):
             'u_misura': forms.TextInput(),            
             'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
             
-            
+            'prezzo': forms.NumberInput(attrs={'class': 'form-control text-end'}),
+            'solvente': forms.NumberInput(attrs={'class': 'form-control text-end'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput(),
             'fk_acquisto': forms.HiddenInput()
@@ -458,7 +459,17 @@ class DettaglioAcquistoProdottoChimicoModelForm(forms.ModelForm):
             'u_misura': 'Unità di Misura',
             'quantity': 'Quantità',
             'fk_prodotto_chimico': 'Prodotto Chimico',
-            
+            'prezzo': 'Prezzo',
+            'solvente': '% Solvente',
             'note': 'Note'
 
         }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Verifica se il form è in modalità di creazione di un nuovo record
+            if not self.instance.pk:
+                # Ottieni il prodotto chimico associato al form
+                prodotto_chimico = self.instance.fk_prodotto_chimico if self.instance.fk_prodotto_chimico else None
+                # Imposta il prezzo predefinito solo se il prodotto chimico è valido e ha un prezzo
+                if prodotto_chimico and prodotto_chimico.ultimo_prezzo:
+                    self.fields['prezzo'].initial = prodotto_chimico.ultimo_prezzo

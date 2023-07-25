@@ -17,7 +17,7 @@
         <li class="breadcrumb-item"><a href="{% url 'chem_man:dashboard_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
         
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica acquisto n. {{ acquistoprodottochimico.numero_documento }} del {{ ordineprodottochimico.data_ordine }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica acquisto n. {{ acquistoprodottochimico.numero_documento }} del {{ acquistoprodottochimico.data_documento }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi acquisto Prodotto Chimico</li>
         {% endif %}     
@@ -146,3 +146,15 @@
 
 </div> <!--Fine container-->
 {% endblock content %}
+{% block extra_scripts %}
+<script>
+
+  document.addEventListener("DOMContentLoaded", function() {
+    setFocusOnField('id_fk_fornitore');
+});
+
+
+
+
+</script>
+{% endblock %}

@@ -82,3 +82,26 @@ def get_prodotto_chimico(request):
             pass
 
     return JsonResponse({'error': 'Invalid request'})
+
+
+# Ottenere l'ultimo prezzo quando si inserisce il dettaglio acquisto
+def get_ultimo_prezzo(request):
+    if request.method == 'GET':
+        prodotto_id = request.GET.get('prodotto_id')
+        try:
+            # Recupera l'ultimo prezzo del prodotto associato dall'ID
+            prezzo = ProdottoChimico.objects.get(pk=prodotto_id).ultimo_prezzo
+            return JsonResponse({'ultimo_prezzo': prezzo})
+        except ProdottoChimico.DoesNotExist:
+            return JsonResponse({'ultimo_prezzo': None})
+        
+# Ottenere la percentuale di solvente 
+def get_solvente(request):
+    if request.method == 'GET':
+        prodotto_id = request.GET.get('prodotto_id')
+        try:
+            # Recupera il valore del campo solvente del prodotto associato dall'ID
+            solvente = ProdottoChimico.objects.get(pk=prodotto_id).solvente
+            return JsonResponse({'solvente': solvente})
+        except ProdottoChimico.DoesNotExist:
+            return JsonResponse({'solvente': None})

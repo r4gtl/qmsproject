@@ -27,7 +27,7 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     )
 
 from .utils import (get_symbol_image_url, search_sostanza, get_sostanza_details, 
-                    check_if_svhc, get_prodotto_chimico,
+                    check_if_svhc, get_prodotto_chimico, get_ultimo_prezzo, get_solvente,
 )
 
 
@@ -147,6 +147,8 @@ urlpatterns = [
     path('get_sostanza_details/', get_sostanza_details, name="get_sostanza_details"),
     path('check_if_svhc/', check_if_svhc, name='check_if_svhc'),
     path('get_prodotto_chimico/', get_prodotto_chimico, name='get_prodotto_chimico'),
+    path('get_ultimo_prezzo/', get_ultimo_prezzo, name='get_ultimo_prezzo'),
+    path('get_solvente/', get_solvente, name='get_solvente'),
 
     # Stampe
     path('stampa_ordine/<int:pk>/', stampa_ordine, name='stampa_ordine'),

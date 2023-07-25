@@ -68,6 +68,18 @@
 
                             
                         </div>
+
+                        <div class="row mt-3">
+                          <div class = "col-md-4">
+                              {{ form.prezzo|as_crispy_field }}
+                            </div>
+                            
+                            <div class = "col-md-2">
+                              {{ form.solvente|as_crispy_field }}
+                            </div>
+
+                            
+                        </div>
                         
                         <div class="row">
                         <div class="col-8">
@@ -105,9 +117,72 @@
 {% block extra_scripts %}
 <script>
 
+  document.addEventListener("DOMContentLoaded", function() {
+    setFocusOnField('id_fk_prodotto_chimico');
+});
 
+$(document).ready(function() {
+  // Funzione per ottenere l'ultimo prezzo del prodotto selezionato
+  function updatePrezzo() {
+    var prodottoId = $('#id_fk_prodotto_chimico').val();
+    if (prodottoId) {
+      // Effettua una richiesta AJAX al server per ottenere l'ultimo prezzo del prodotto selezionato
+      $.ajax({
+        type: 'GET',
+        url: '{% url "chem_man:get_ultimo_prezzo" %}',  // Sostituisci con l'URL corretto per ottenere l'ultimo prezzo dal server
+        data: {
+          'prodotto_id': prodottoId,
+        },
+        success: function(data) {
+          $('#id_prezzo').val(data.ultimo_prezzo);
+        },
+        error: function() {
+          console.log('Si è verificato un errore nella richiesta AJAX.');
+        }
+      });
+    } else {
+      $('#id_prezzo').val('');
+    }
+  }
 
+  // Ascolta gli eventi di cambiamento del campo fk_prodotto_chimico
+  $('#id_fk_prodotto_chimico').change(function() {
+    updatePrezzo();
+  });
+});
 
+$(document).ready(function() {
+  // Funzione per ottenere il valore del campo solvente del prodotto selezionato
+  function updateSolvente() {
+    var prodottoId = $('#id_fk_prodotto_chimico').val();
+    if (prodottoId) {
+      // Effettua una richiesta AJAX al server per ottenere il valore del campo solvente del prodotto selezionato
+      $.ajax({
+        type: 'GET',
+        url: '{% url "chem_man:get_solvente" %}',
+        data: {
+          'prodotto_id': prodottoId,
+        },
+        success: function(data) {
+          $('#id_solvente').val(data.solvente);
+        },
+        error: function() {
+          console.log('Si è verificato un errore nella richiesta AJAX.');
+        }
+      });
+    } else {
+      $('#id_solvente').val('');
+    }
+  }
+
+  // Ascolta gli eventi di cambiamento del campo fk_prodotto_chimico
+  $('#id_fk_prodotto_chimico').change(function() {
+    updateSolvente();
+  });
+
+  // Chiamata iniziale per impostare il valore del campo solvente correttamente al caricamento della pagina (se è presente un prodotto selezionato)
+  updateSolvente();
+});
 
 </script>
 {% endblock %}
