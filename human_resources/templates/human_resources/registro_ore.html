@@ -183,7 +183,14 @@ const verificaTesto = document.getElementById("verificaTesto");
 function checkConteggio(){
     var oreLavorabili = parseInt(document.getElementById("id_ore_lavorabili").value)||0;
     var oreLavorate = parseInt(document.getElementById("id_ore_lavorate").value)||0;
-    return oreLavorabili-oreLavorate
+    var oreFeriePermessi = parseInt(document.getElementById("id_ferie_permessi").value)||0;
+    var orePermessiSpec = parseInt(document.getElementById("id_permessi_speciali").value)||0;
+    var orePermessiNR = parseInt(document.getElementById("id_permessi_non_retribuiti").value)||0;
+    var oreAssenzeIng = parseInt(document.getElementById("id_assenze_ingiustificate").value)||0;
+    var oreMatern = parseInt(document.getElementById("id_maternità").value)||0;
+    var oreMalattia = parseInt(document.getElementById("id_malattia").value)||0;
+    var oreInfortunio = parseInt(document.getElementById("id_infortunio").value)||0;
+    return oreLavorabili-oreLavorate-oreFeriePermessi-orePermessiNR-oreAssenzeIng-oreMatern-oreMalattia-oreInfortunio-orePermessiSpec
 }
 const checkConteggio1 = () => {
     if (checkConteggio()==0){
@@ -197,6 +204,8 @@ const checkConteggio1 = () => {
 };
 checkConteggioButton.addEventListener('click', checkConteggio1);
 
-
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_entry_year');
+        });
 </script>
 {% endblock %}

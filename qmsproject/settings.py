@@ -32,13 +32,13 @@ environ.Env.read_env(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 #SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = env('SECRET_KEY')
-SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
+SECRET_KEY = env('SECRET_KEY')
+#SECRET_KEY = "django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-#DEBUG = env('DEBUG')
-DEBUG = True
+DEBUG = env('DEBUG')
+#DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -150,12 +150,35 @@ FIXTURES = [
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.sqlite3",
+#        "NAME": BASE_DIR / "db.sqlite3",
+#    }
+#}
+
+SQLITE_DB_PATH =  os.path.join(BASE_DIR, env('SQLITE_DB_PATH'))
+if env('DATABASE_TYPE') == 'sqlite':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': SQLITE_DB_PATH,
+        }
     }
-}
+elif env('DATABASE_TYPE') == 'postgresql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('POSTGRES_DB_NAME'),
+            'USER': env('POSTGRES_DB_USER'),
+            'PASSWORD': env('POSTGRES_DB_PASSWORD'),
+            'HOST': env('POSTGRES_DB_HOST'),
+            'PORT': env('POSTGRES_DB_HOST'),
+        }
+    }
+else:
+    raise ValueError("Unknown database type specified in DATABASE_TYPE.")
+
 
 
 # Password validation
