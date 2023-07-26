@@ -34,7 +34,7 @@ def get_average_age():
 def get_gender_perc(gender):
     hrs = HumanResource.objects.filter(datadimissioni__isnull=True)
     hrs_count = hrs.count()
-    print("Conto: " + str(hrs_count))
+    
     my_gender = 0
 
     for hr in hrs:
@@ -93,8 +93,7 @@ def operatori_per_reparto(request):
     for entry in queryset:
         labels.append(entry['fk_reparto__description'])
         data.append(entry['hr_count'])
-        print("label: " + str(labels))
-        print("dati: " +str(data))
+        
     
     return JsonResponse(data={
         'labels': labels,

@@ -4,6 +4,7 @@ import datetime
 from django_countries.fields import CountryField # Field from django countries app
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 
 class CentrodiLavoro(models.Model):
@@ -229,6 +230,31 @@ class RegistroOreLavoro(models.Model):
 
     def month_verbose(self):
         return dict(RegistroOreLavoro.MONTH_CHOICE)[self.entry_month]
+    
+    
+    @staticmethod
+    def sum_field_per_year_last_triennium(field_name):
+        # Calcola l'anno corrente
+        current_year = datetime.date.today().year
+
+        # Calcola l'anno di inizio dell'ultimo triennio
+        last_triennium_start_year = current_year - 3
+
+        # Filtra i record per l'ultimo triennio (escludendo l'anno in corso)
+        records_last_triennium = RegistroOreLavoro.objects.filter(
+            entry_year__gte=last_triennium_start_year,
+            entry_year__lt=current_year
+        )
+
+        # Calcola la somma del campo specificato per ogni anno dell'ultimo triennio
+        sum_per_year = {}
+        for year in range(last_triennium_start_year, current_year):
+            sum_per_year[year] = records_last_triennium.filter(
+                entry_year=year
+            ).aggregate(total_field=Sum(field_name))['total_field'] or 0
+
+        return sum_per_year
+    
     
     class Meta:
         ordering = ["-entry_year", "-entry_month"]
