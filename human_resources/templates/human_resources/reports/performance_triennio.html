@@ -1,6 +1,7 @@
 {% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
 {% load static %}
 
+{% load custom_filters %}
 {% block title %} Performance triennio {% endblock %}
 
 
@@ -122,12 +123,113 @@
     <hr>
 
 
-
+<h1>Dati dell'ultimo triennio</h1>
+<!--
+<table class="table table-layout-fixed">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 400px; font-size:large; color: white; background-color:#40916c" >Voce</th>
+      <th scope="col" style="width: 200px; font-size:large; color: white; background-color:#40916c" ></th>
+      
+      {% for year, total in sum_maternita_per_year.items %}
+        <th scope="col" style="font-size:large; color: white; background-color:#40916c" class="text-center">{{ year }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="width: 400px; font-size:large;">Maternità</td>
+      <td style="width: 200px; font-size:large"><span><i class="bi bi-balloon"></i></span></td>
+      {% for year, total in sum_maternita_per_year.items %}
+        <td style="font-size:large" class="text-center">{{ total }}</td>
+      {% endfor %}
+    </tr>
     
+  </tbody>
+</table>
+-->
 
-    
+<!--
+<table class="table table-layout-fixed">
+  <thead>
+    <tr>
+      <th scope="col" style="width: 400px; font-size:large; color: white; background-color:#40916c" >Voce</th>
+      <th scope="col" style="width: 200px; font-size:large; color: white; background-color:#40916c" ></th>
+      {% for year in data_per_field.0.1 %}
+        <th scope="col" style="font-size:large; color: white; background-color:#40916c" class="text-center">{{ year }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for field, data_per_year in data_per_field.items %}
+      <tr>
+        <td style="width: 400px; font-size:large;">{{ field }}</td>
+        {% for year, total in data_per_year.items %}
+          <td>{{ total }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+-->
+
+<!--
+<table class="table table-layout-fixed">
+    <thead>
+        <tr>
+            <th scope="col" style="width: 400px; font-size:large; color: white; background-color:#40916c"><i class="bi bi-recycle"></i> Rifiuti destinati a recupero</th>
+            {% for anno in anni %}
+                <th scope="col" style="font-size:large; color: white; background-color:#40916c" class="text-center">{{ anno }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for tipo_movimento, dati_per_anno in dati_tabella_recupero %}
+        <tr>
+            <td>Peso totale in Kg dei rifiuti non destinati a smaltimento suddiviso in base alla composizione dei rifiuti</td>
+            {% for anno, quantita in dati_per_anno.items %}
+                <td style="font-size:large" class="text-center">{{ quantita|default_if_none:0 }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+-->
+
+
+
+<table>
+  <thead>
+    <tr>
+      <th>Campo</th>
+      {% for year in data_per_field.0.1 %}
+        <th>{{ year }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for field, data_per_year in data_per_field.items %}
+      <tr>
+        <td>
+          
+          
+            
+            {{ fields|get_alias:field }} 
+
+            
+            <i class="{{ fields|get_icon_alias:field }}"></i>
+
         
-    
+
+           
+        </td>
+        {% for year, total in data_per_year.items %}
+          <td>{{ total }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
     
 </div>
 

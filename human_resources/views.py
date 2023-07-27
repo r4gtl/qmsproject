@@ -589,34 +589,41 @@ def stampa_risorse_umane(request):
 
 
 
-
 def performance_triennio(request):
-    
-    sum_maternita_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('maternità')
-    sum_malattia_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('malattia')
-    sum_infortunio_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('infortunio')
-    sum_n_infortuni_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('n_infortuni')
-    sum_n_infortuni_itinere_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('n_infortuni_itinere')
-    sum_n_malattie_professionali_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('n_malattie_professionali')
-    sum_ore_malattie_professionali_per_year = RegistroOreLavoro.sum_field_per_year_last_triennium('ore_malattie_professionali')
+    fields = {
+        'maternità': {
+            'nome': 'maternità',
+            'alias': 'Maternità',
+            'icon_class': 'bi bi-balloon'  # Replace this with the correct icon class
+        },
+        'malattia': {
+            'nome': 'malattia',
+            'alias': 'Malattia',
+            'icon_class': 'bi bi-prescription2'  # Replace this with the correct icon class
+        },
+        'infortunio': {
+            'nome': 'infortunio',
+            'alias': 'Infortunio',
+            'icon_class': 'bi bi-bandaid'  # Replace this with the correct icon class
+        },
+        # Add other fields with their respective alias and icon
+    }
+
+    data_per_field = {}
+    for field, field_data in fields.items():
+        alias = field_data['alias']
+        data_per_field[field] = RegistroOreLavoro.sum_field_per_year_last_triennium(field)
 
     
     context = {
         'num_tot_dipendenti': num_tot_dipendenti, 
-        'sum_maternita_per_year': sum_maternita_per_year,
-        'sum_malattia_per_year': sum_malattia_per_year,
-        'sum_infortunio_per_year': sum_infortunio_per_year,
-        'sum_n_infortuni_per_year': sum_n_infortuni_per_year,
-        'sum_n_infortuni_itinere_per_year': sum_n_infortuni_itinere_per_year,
-        'sum_n_malattie_professionali_per_year': sum_n_malattie_professionali_per_year,
-        'sum_ore_malattie_professionali_per_year': sum_ore_malattie_professionali_per_year,       
+        'data_per_field': data_per_field,
+        'fields': fields,
     }
-    
-    print('Maternità: ' + str(sum_maternita_per_year))
-    print('Malattia: ' + str(sum_malattia_per_year))
-    print(sum_infortunio_per_year)
-    
+
     return render(request, 'human_resources/reports/performance_triennio.html', context)
+
+
 
 
 '''FINE REPORTS'''
