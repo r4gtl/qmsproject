@@ -10,7 +10,7 @@
         /* Imposta l'orientamento della pagina solo per il template figlio */
         @page {
             size: 210mm 297mm; 
-            margin: 10mm;
+            margin: 3mm;
         }
     
         body {
@@ -60,7 +60,9 @@
             .page-break {
                 page-break-after: always;
             }
-
+            label{
+                font-size:5px;
+            }
             body {
                 font-size: 9px;
             }
@@ -87,15 +89,15 @@
 <div class="container">
     <div class="row">
         <div class="col-4">
-            <label for="num_tot_dipendenti" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-person-workspace"></i> Numero totale dipendenti</label>
+            <label for="num_tot_dipendenti" style="font-size:large" class="chart-label"><i class="bi bi-person-workspace"></i> Numero totale dipendenti</label>
             <canvas id="num_tot_dipendenti" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto=""></canvas>
         </div>
         <div class="col-4">
-            <label for="num_tot_dipendenti_indeterminato" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-stopwatch-fill"></i> Totale dipendenti tempo indeterminato</label>
+            <label for="num_tot_dipendenti_indeterminato" style="font-size:large" id="chart-label"><i class="bi bi-stopwatch-fill"></i> Totale dipendenti tempo indeterminato</label>
             <canvas id="num_tot_dipendenti_indeterminato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="indeterminato"></canvas>
         </div>
         <div class="col-4">
-            <label for="num_tot_dipendenti_determinato" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-stopwatch"></i> Totale dipendenti tempo determinato</label>
+            <label for="num_tot_dipendenti_determinato" style="font-size:large" id="chart-label" ><i class="bi bi-stopwatch"></i> Totale dipendenti tempo determinato</label>
             <canvas id="num_tot_dipendenti_determinato" data-url="{% url 'human_resources:num_tot_dipendenti' %}" data-type="bar" data-stacked="true" data-contratto="determinato"></canvas>
         </div>
     </div>
@@ -105,11 +107,11 @@
 <div class="container">
 <div class="row">
     <div class="col-6">
-        <label for="num_tot_dipendenti_part_time" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-stopwatch"></i> Numero totale dipendenti part-time</label>
+        <label for="num_tot_dipendenti_part_time" style="font-size:large" id="chart-label" ><i class="bi bi-stopwatch"></i> Numero totale dipendenti part-time</label>
         <canvas id="num_tot_dipendenti_part_time" data-url="{% url 'human_resources:num_tot_dipendenti_orario' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
     </div>
     <div class="col-6">
-        <label for="num_tot_dipendenti_full_time" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-stopwatch-fill"></i> Numero totale dipendenti a tempo indeterminato</label>
+        <label for="num_tot_dipendenti_full_time" style="font-size:large" id="chart-label" ><i class="bi bi-stopwatch-fill"></i> Numero totale dipendenti a tempo indeterminato</label>
         <canvas id="num_tot_dipendenti_full_time" data-url="{% url 'human_resources:num_tot_dipendenti_orario' %}" data-type="bar" data-stacked="true" data-orario="full_time"></canvas>
     </div>
     
@@ -120,11 +122,11 @@
 <div class="container">
     <div class="row">
         <div class="col-6">
-            <label for="num_tot_dipendenti_assunti_anno" class="bg-secondary text-white" style="font-size:small"><i class="bi bi-stopwatch"></i> Nuove assunzioni e turnover</label>
+            <label for="num_tot_dipendenti_assunti_anno" style="font-size:large" id="chart-label" class="text-center"><i class="bi bi-stopwatch"></i> Nuove assunzioni e turnover</label>
             <canvas id="num_tot_dipendenti_assunti_anno" data-url="{% url 'human_resources:num_tot_dipendenti_assunti_anno' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
         </div>
         <div class="col-6">
-            <label for="num_tot_dipendenti_dimessi_anno" style="font-size:small" class="bg-secondary text-white"><i class="bi bi-arrow-repeat"></i> Turnover</label>
+            <label for="num_tot_dipendenti_dimessi_anno" style="font-size:large" id="chart-label" class="text-center"><i class="bi bi-arrow-repeat"></i> Turnover</label>
             <canvas id="num_tot_dipendenti_dimessi_anno" data-url="{% url 'human_resources:num_tot_dipendenti_dimessi_anno' %}" data-type="bar" data-stacked="true" data-orario="part_time"></canvas>
         </div>
         
@@ -194,14 +196,23 @@
     function resizeChart(canvasId) {
         const canvas = document.getElementById(canvasId);
         canvas.style.width = '100%';  // Imposta la larghezza desiderata (ad esempio, 100%)
-        canvas.style.height = '200px';  // Imposta l'altezza desiderata (ad esempio, 400px)
+        canvas.style.height = '150px';  // Imposta l'altezza desiderata (ad esempio, 400px)
       }
 
       function resizeChart_2_col(canvasId) {
         const canvas = document.getElementById(canvasId);
         canvas.style.width = '100%';  // Imposta la larghezza desiderata (ad esempio, 100%)
         canvas.style.height = '250px';  // Imposta l'altezza desiderata (ad esempio, 400px)
-      }
+      };
+
+    function resizeChartLabels(chartId, fontSize) {
+        const chart = document.getElementById(chartId);
+        const labels = chart.getElementsByClassName('chart-label'); // Sostituisci 'chart-label' con la classe delle etichette del tuo grafico
+      
+        for (let i = 0; i < labels.length; i++) {
+          labels[i].style.fontSize = fontSize; // Imposta la dimensione del font desiderata per le etichette
+        }
+      };
     // Funzione per ottenere i dati dal server tramite AJAX
     // Funzione per ottenere i dati dal server tramite AJAX
 
@@ -525,7 +536,7 @@
     
     getChartData_dimissioni('num_tot_dipendenti_dimessi_anno');
     
-
+    document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('beforeprint', function() {
         resizeChart('num_tot_dipendenti');
         resizeChart('num_tot_dipendenti_indeterminato');
@@ -535,8 +546,14 @@
         resizeChart_2_col('num_tot_dipendenti_assunti_anno');
         resizeChart_2_col('num_tot_dipendenti_dimessi_anno');
         // Puoi ridimensionare gli altri grafici in modo simile se necessario
-      });
 
+
+        resizeChartLabels('num_tot_dipendenti', '3px'); // Imposta la dimensione del font desiderata (ad esempio, 10px)
+        resizeChartLabels('num_tot_dipendenti_indeterminato', '3px');
+        resizeChartLabels('num_tot_dipendenti_determinato', '3px');
+
+      });
+    });
 
 </script>
     
