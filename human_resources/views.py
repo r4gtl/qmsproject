@@ -613,7 +613,7 @@ def performance_triennio(request):
     for field, field_data in fields.items():
         alias = field_data['alias']
         data_per_field[field] = RegistroOreLavoro.sum_field_per_year_last_triennium(field)
-
+    print("data_per_field: " + str(data_per_field))
     
     context = {
         'num_tot_dipendenti': num_tot_dipendenti, 
