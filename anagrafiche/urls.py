@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (home_fornitori,
                     # aggiungi_fornitore,
-                    CreateSupplier,                    
+                    CreateSupplier,   
+                    aggiungi_fornitore_with_category,                 
                     # vedi_fornitore,
                     ListaFornitoriView,
                     FacilityCreateView,
@@ -46,7 +47,8 @@ urlpatterns = [
     
     # Fornitori
     path("home_fornitori/", home_fornitori, name="home_fornitori"),    
-    path("aggiungi_fornitore/", CreateSupplier.as_view(), name="aggiungi_fornitore"),    
+    path("aggiungi_fornitore/", CreateSupplier.as_view(), name="aggiungi_fornitore"),
+    path('aggiungi_fornitore_with_category/<str:category>/', aggiungi_fornitore_with_category, name='aggiungi_fornitore_with_category'),    
     path("vedi_fornitore/<int:pk>", UpdateSupplier.as_view(), name="vedi_fornitore"),
     path("fornitore/<int:fk_fornitore>/aggiungi_lwg/", AddLwgCertificate.as_view(), name="aggiungi_lwg"),
     path("modifica_lwg/<int:pk>", UpdateLwgCertificate.as_view(), name="modifica_lwg"),    

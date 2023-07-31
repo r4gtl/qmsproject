@@ -40,6 +40,10 @@
 
         <form method="post">
             {% csrf_token %}
+
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
             <div class="row">
                 <div class="col">
                     {{ form.ragionesociale|as_crispy_field }}
@@ -63,6 +67,13 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-5 mb-3">
+                    {{ form.sito_web|as_crispy_field }}
+                    <button type="button" class="btn btn-sm btn-success" onclick="openWebSite()"><i class="bi bi-globe2"></i> Visita Sito</button>
+                </div>
+
+               
+                
                 <div class="col-3">
                     {{ form.categoria|as_crispy_field }}
                 </div>
@@ -78,7 +89,7 @@
             </div>
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
+            
         </form>
         <hr>
 
@@ -137,6 +148,7 @@
         {% endif %}
             <!-- fine sezione certificati LWG -->
         
+        
 
 
 {% if modello_categoria %}
@@ -183,6 +195,19 @@ function myFunction() {
 document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_ragionesociale');
         });
+
+
+function openWebSite() {
+        var website = document.getElementById("id_sito_web").value;
+        
+
+        if (website) {
+            var url = website;
+            window.open(url);
+        } else {
+            alert("Manca indirizzo web!");
+        }
+    }
 
 </script>
 

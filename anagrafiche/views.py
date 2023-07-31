@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db import models
+from django.forms.models import modelform_factory
 from django.apps import apps
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -26,7 +27,8 @@ from nonconformity.models import RapportoNC
 from .forms import (FormFornitore, FormFacility,
                     FormFacilityContact, FormLwgFornitore,
                     FormXrTransferValueLwgFornitore, FormTransferValue,
-                    FormCliente
+                    FormCliente, FormFornitorePelli, FormFornitoreLavorazioniEsterne,
+                    FormFornitoreServizi, FormFornitoreProdottiChimici
 )
 
 # Create your views here.
@@ -48,7 +50,8 @@ def home_fornitori(request):
     context = {
         #'fornitori': filterset_class,
         'fornitori_paginator': fornitori_paginator,
-        'filter': fornitori_filter
+        'filter': fornitori_filter,
+        'CHOICES_CATEGORY': Fornitore.CHOICES_CATEGORY
     }
     return render(request, 'anagrafiche/home_fornitori.html', context)
 
@@ -57,7 +60,29 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
     model = Fornitore
     template_name = 'anagrafiche/fornitore.html'
     form_class = FormFornitore
-    success_url = reverse_lazy('anagrafiche:home_fornitori')
+    
+    def get_form_class(self):
+        categoria_model_mapping = {
+            Fornitore.PELLI: FornitorePelli,
+            Fornitore.PRODOTTI_CHIMICI: FornitoreProdottiChimici,
+            # Aggiungi altri modelli specifici per le altre categorie
+        }
+
+        categoria_model = categoria_model_mapping.get(self.object.categoria, None)
+
+        if categoria_model:
+            # Se esiste un modello specifico per la categoria, crea un form personalizzato per il modello
+            return modelform_factory(categoria_model, fields='__all__', form=FormFornitore)
+        else:
+            # Altrimenti, usa il form di base per Fornitore
+            return FormFornitore
+
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('anagrafiche:home_fornitori')
+        
+        pk_fornitore=self.object.pk
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk_fornitore})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -79,29 +104,52 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         messages.info(self.request, 'Il fornitore è stato modificato!') # Compare sul success_url
         return super().form_valid(form)
     
+
+
+def aggiungi_fornitore_with_category(request, category):
+    context = {
+        'category': category,
+        'CHOICES_CATEGORY': Fornitore.CHOICES_CATEGORY,
+    }
+    return render(request, 'anagrafiche/aggiungi_fornitore_modal.html', context)
+
+
+
 class CreateSupplier(LoginRequiredMixin, CreateView):
     
     model = Fornitore
     form_class = FormFornitore
     success_message = 'Fornitore aggiunto correttamente!'
     error_message = 'Error saving the Doc, check fields below.'
-    
-    #fields = "__all__"
-    #success_url = reverse_lazy('anagrafiche:home_fornitori')
-    
     template_name = "anagrafiche/fornitore.html"
 
+    #def get_initial(self):
+    #    created_by = self.request.user
+    #    return {
+    #        'created_by': created_by,
+    #        'created_at': datetime.datetime.now() 
+    #    }
+
     def get_initial(self):
+        initial = super().get_initial()
         created_by = self.request.user
-        return {
-            'created_by': created_by,
-            'created_at': datetime.datetime.now() 
-        }
+        categoria = self.request.GET.get('categoria')
+        if categoria in dict(Fornitore.CHOICES_CATEGORY):
+            initial['categoria'] = categoria
+        initial['created_by']= created_by
+        initial['created_at']= datetime.datetime.now()
+        return initial
         
+    def get_success_url(self):        
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('anagrafiche:home_fornitori')
+        pk_fornitore=self.object.pk
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk_fornitore})
     
-    def get_success_url(self):          
-          
-          return reverse_lazy('anagrafiche:home_fornitori')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['CHOICES_CATEGORY'] = Fornitore.CHOICES_CATEGORY
+        return context
     
     def form_valid(self, form):
         # Crea l'istanza del modello Fornitore
@@ -133,11 +181,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         # Redirigi all'URL di successo
         return HttpResponseRedirect(self.get_success_url())
     
-    '''
-    def form_valid(self, form):        
-        messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
-        return super().form_valid(form)
-        '''
+    
 
     def form_invalid(self, form):
         messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')

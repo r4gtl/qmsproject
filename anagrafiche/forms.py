@@ -4,7 +4,7 @@ from django_countries.fields import CountryField
 from .models import (Fornitore, Facility,
                     FacilityContact, LwgFornitore,
                     XrTransferValueLwgFornitore, TransferValue,
-                    Cliente
+                    Cliente, FornitorePelli, FornitoreLavorazioniEsterne, FornitoreProdottiChimici, FornitoreServizi
 )
 
 class FormFornitore(forms.ModelForm):
@@ -20,16 +20,19 @@ class FormFornitore(forms.ModelForm):
         country = CountryField().formfield()
         categoria = forms.CharField()
         is_lwg = forms.BooleanField(widget=forms.CheckboxInput(attrs={'onClick': 'myFunction();'}))
+        sito_web = forms.CharField()
         
         widgets = {'country': CountrySelectWidget(),
                     'created_by': forms.HiddenInput(),
-                    'created_at': forms.HiddenInput()
+                    'created_at': forms.HiddenInput(),
+                    'categoria': forms.TextInput(attrs={'readonly': 'readonly'})
                 }
         labels = {
             'ragionesociale': 'Ragione Sociale',
             'country': 'Paese',
             'city': 'Città',
-            'is_lwg': 'LWG'
+            'is_lwg': 'LWG',
+            'sito_web': 'Sito Web'
             
         }
 
@@ -50,6 +53,39 @@ class FormLwgFornitore(forms.ModelForm):
             'lwg_expiry': 'Scadenza Certificato'
 
         }
+
+class FormFornitorePelli(forms.ModelForm):
+    class Meta:
+        model = FornitorePelli
+        fields = '__all__'
+        labels = {
+            'is_lwg': 'LWG',
+            'urn': 'URN',
+            'tipo_fornitore': 'Tipo Fornitore',
+            'latitude': 'Latitudine',
+            'longitude': 'Longitudine'
+        }
+        widgets = {
+            'fornitore': forms.HiddenInput()
+            
+        }
+
+
+class FormFornitoreLavorazioniEsterne(forms.ModelForm):
+    class Meta:
+        model = FornitoreLavorazioniEsterne
+        fields = '__all__'
+
+class FormFornitoreProdottiChimici(forms.ModelForm):
+    class Meta:
+        model = FornitoreProdottiChimici
+        fields = '__all__'
+
+class FormFornitoreServizi(forms.ModelForm):
+    class Meta:
+        model = FornitoreServizi
+        fields = '__all__'
+
 
 class FormXrTransferValueLwgFornitore(forms.ModelForm):
     class Meta:

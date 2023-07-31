@@ -10,6 +10,31 @@
 {% block content %}
 
 
+<div class="modal fade" id="aggiungiModal" tabindex="-1" role="dialog" aria-labelledby="aggiungiModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aggiungiModalLabel"><i class="bi bi-diagram-3"></i> Seleziona una categoria </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        
+      </div>
+      <div class="modal-body">
+        <ol>
+          {% for choice in CHOICES_CATEGORY %}
+            <li><a href="{% url 'anagrafiche:aggiungi_fornitore' %}?categoria={{ choice.0 }}">{{ choice.1 }}</a></li>
+          {% endfor %}
+        </ol>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
@@ -84,8 +109,10 @@
         <!-- Fine filtro -->
 
         <hr>
-        <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="{% url 'anagrafiche:aggiungi_fornitore' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Fornitore</a>
+        <div class="d-flex flex-row-reverse bd-highlight">        
+        <a href="#" class="btn btn-success p-2 bd-highlight" data-bs-toggle="modal" data-bs-target="#aggiungiModal">
+    <i class="bi bi-person-plus"></i> Aggiungi Fornitore 
+</a>
         </div>  
         <br>
 

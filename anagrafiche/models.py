@@ -84,13 +84,15 @@ class Fornitore(models.Model):
     PRODOTTI_CHIMICI = 'prodotti chimici'
     LAVORAZIONI_ESTERNE = 'lavorazioni esterne'
     SERVIZI = 'servizi'
+    MANUTENZIONI = 'manutenzioni'
     
     CHOICES_CATEGORY = (
         (NESSUNA, 'Manca categoria'),
         (PELLI, 'Pelli'),
         (PRODOTTI_CHIMICI, 'Prodotti Chimici'),
         (LAVORAZIONI_ESTERNE, 'Lavorazioni Esterne'),
-        (SERVIZI, 'Servizi')
+        (SERVIZI, 'Servizi'),
+        (MANUTENZIONI, 'Manutenzioni')
     )
     ragionesociale = models.CharField(max_length=50, blank=False, null=False)
     indirizzo = models.CharField(max_length=100, blank=True, null=True)
@@ -98,6 +100,7 @@ class Fornitore(models.Model):
     city = models.CharField(max_length=50, blank=True, null=True)
     provincia = models.CharField(max_length=50, blank=True, null=True)
     country = CountryField(blank_label='(seleziona Paese)')
+    sito_web = models.CharField(max_length=200, blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
     is_lwg = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, related_name='fornitori', null=True, blank=True, on_delete=models.SET_NULL)
@@ -123,8 +126,25 @@ class LwgFornitore(models.Model):
 
 '''I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE'''
 class FornitorePelli(models.Model):
+     # Tipo Fornitore
+    MACELLO = 'macello'
+    COMMERCIANTE = 'commerciante'
+    ALTRO  = 'altro'
+    
+    
+    CHOICES_SUPPLIER_TYPE = (
+        (MACELLO, 'Macello'),
+        (COMMERCIANTE, 'Commerciante'),
+        (ALTRO, 'Altro')
+        
+    )
     fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pelli')
-    prova = models.CharField(max_length=50, blank=True, null=True)
+    is_lwg = models.BooleanField(default=False)
+    urn = models.CharField(max_length=50, blank=True, null=True)
+    tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True )
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+
 
 class FornitoreProdottiChimici(models.Model):
     fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pc')
@@ -146,6 +166,7 @@ class FornitoreLavorazioniEsterne(models.Model):
         
     )
     fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_lavorazioni')
+    is_lwg = models.BooleanField(default=False)
     audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, default=NESSUNO)
 
 class FornitoreServizi(models.Model):
