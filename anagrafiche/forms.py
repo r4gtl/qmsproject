@@ -40,6 +40,7 @@ class FormLwgFornitore(forms.ModelForm):
     class Meta:
         model = LwgFornitore
         fields= '__all__'
+        
         widgets = {
             'lwg_date': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'lwg_expiry': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
@@ -53,11 +54,17 @@ class FormLwgFornitore(forms.ModelForm):
             'lwg_expiry': 'Scadenza Certificato'
 
         }
+        
 
 class FormFornitorePelli(forms.ModelForm):
     class Meta:
         model = FornitorePelli
         fields = '__all__'
+        is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
+        
+        widgets = {
+            #'fornitore': forms.HiddenInput(),
+        }
         labels = {
             'is_lwg': 'LWG',
             'urn': 'URN',
@@ -65,9 +72,27 @@ class FormFornitorePelli(forms.ModelForm):
             'latitude': 'Latitudine',
             'longitude': 'Longitudine'
         }
-        widgets = {
-            'fornitore': forms.HiddenInput()
+        error_messages = {
+            'is_lwg': {
+                'required': 'Il campo LWG è obbligatorio.',
+            },
+            'urn': {
+                'required': 'Il campo URN è obbligatorio.',
+            },
+            'tipo_fornitore': {
+                'required': 'Il campo URN è obbligatorio.',
+            },
+            'latitude': {
+                'required': 'Il campo URN è obbligatorio.',
+            },
+            'longitude': {
+                'required': 'Il campo URN è obbligatorio.',
+            },
+            'fornitore': {
+                'required': 'Il campo URN è obbligatorio.',
+            },
             
+            # Aggiungi altri messaggi di errore per i campi desiderati
         }
 
 

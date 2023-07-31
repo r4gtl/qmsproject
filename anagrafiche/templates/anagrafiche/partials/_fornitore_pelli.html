@@ -1,0 +1,52 @@
+{% load crispy_forms_tags %}
+
+<form method="post">
+    {% csrf_token %}
+
+    {% if modello_form.errors %}
+       {% for field in modello_form %}
+           {% for error in field.errors %} 
+              <div class="alert alert-danger">
+                   <strong>{{ error|escape }}</strong>
+              </div>
+           {% endfor %}
+       {% endfor %}
+    {% endif %}
+    <div class="row">
+        <div class="col-2">
+            {{ modello_form.is_lwg|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {{ modello_form.urn|as_crispy_field }}
+        </div>
+    </div>
+    <div class="row">
+        
+        <div class="col-3">
+            {{ modello_form.tipo_fornitore|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {{ modello_form.latitude|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            {{ modello_form.longitude|as_crispy_field }}
+        </div>
+        <div class="col-3">
+            <p>prova</p>
+            <p><strong>Fornitore:</strong> {{ modello_form.fornitore.value }}</p>
+        </div>
+        
+    </div>
+    <div class="row text-end">
+        <div class="col-12 text-end">
+        <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+    <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+</div>
+
+    </div>
+   
+
+    
+    
+</form>
+<hr>

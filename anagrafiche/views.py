@@ -61,21 +61,23 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
     template_name = 'anagrafiche/fornitore.html'
     form_class = FormFornitore
     
-    def get_form_class(self):
-        categoria_model_mapping = {
-            Fornitore.PELLI: FornitorePelli,
-            Fornitore.PRODOTTI_CHIMICI: FornitoreProdottiChimici,
-            # Aggiungi altri modelli specifici per le altre categorie
-        }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        categoria_model = categoria_model_mapping.get(self.object.categoria, None)
-
+        categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
+        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)        
         if categoria_model:
-            # Se esiste un modello specifico per la categoria, crea un form personalizzato per il modello
-            return modelform_factory(categoria_model, fields='__all__', form=FormFornitore)
-        else:
-            # Altrimenti, usa il form di base per Fornitore
-            return FormFornitore
+            categoria_instance = get_object_or_404(categoria_model, fornitore=self.object)
+            CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+            nome_form_secondario = CategoriaForm.__name__            
+            context["nome_form_secondario"] = nome_form_secondario            
+            modello_form = CategoriaForm(instance=categoria_instance)            
+            context["modello_form"] = modello_form
+         
+        context["form"] = FormFornitore(instance=self.object)
+        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
+        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
+        return context
 
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
@@ -84,26 +86,34 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         pk_fornitore=self.object.pk
         return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk_fornitore})
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Recupera il modello specifico per la categoria
-        categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
-        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
-        
-        # Recupera l'istanza del modello specifico per la categoria
-        if categoria_model:
-            context["modello_categoria"] = categoria_model.objects.filter(fornitore=self.object).first()
-        
-        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
-        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
-        
-        return context
     
     def form_valid(self, form):        
         messages.info(self.request, 'Il fornitore è stato modificato!') # Compare sul success_url
         return super().form_valid(form)
     
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
+        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+        print('categoria_model: ' + str(categoria_model))
+        if form.is_valid():
+            print("eccomi")
+            if categoria_model:
+                categoria_instance = get_object_or_404(categoria_model, fornitore=self.object)
+                CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+                categoria_form = CategoriaForm(request.POST, instance=categoria_instance)
+                if categoria_form.is_valid():
+                    categoria_form.save()
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
+    def form_invalid(self, form):
+        #messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+        return super().form_invalid(form)
+
 
 
 def aggiungi_fornitore_with_category(request, category):
@@ -143,6 +153,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
             return reverse_lazy('anagrafiche:home_fornitori')
+        
         pk_fornitore=self.object.pk
         return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk_fornitore})
     

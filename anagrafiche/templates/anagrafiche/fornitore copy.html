@@ -40,15 +40,7 @@
 
         <form method="post">
             {% csrf_token %}
-            {% if form.errors %}
-       {% for field in form %}
-           {% for error in field.errors %} 
-              <div class="alert alert-danger">
-                   <strong>{{ error|escape }}</strong>
-              </div>
-           {% endfor %}
-       {% endfor %}
-    {% endif %}
+
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
@@ -99,11 +91,6 @@
             
             
         </form>
-
-        {% if nome_form_secondario == "FornitorePelliForm" %}            
-            {% include "anagrafiche/partials/_fornitore_pelli.html" %}
-            
-        {% endif %}
         <hr>
 
         <!-- sezione certificati LWG -->
@@ -164,7 +151,11 @@
         
 
 
-
+{% if modello_categoria %}
+    <h2>{{ modello_categoria.id_zdhc }}</h2>
+    
+    <!-- Altri campi del modello specifico... -->
+  {% endif %}
 
 
     </div>
