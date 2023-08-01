@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.db import models
+from django.db.utils import IntegrityError
 from django.forms.models import modelform_factory
 from django.apps import apps
 import datetime
@@ -61,23 +62,32 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
     template_name = 'anagrafiche/fornitore.html'
     form_class = FormFornitore
     
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()  # Utilizza il form principale per Fornitore
 
+        # Ottieni l'istanza di FornitorePelli correlata al Fornitore attuale
         categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
-        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)        
-        if categoria_model:
-            categoria_instance = get_object_or_404(categoria_model, fornitore=self.object)
-            CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
-            nome_form_secondario = CategoriaForm.__name__            
-            context["nome_form_secondario"] = nome_form_secondario            
-            modello_form = CategoriaForm(instance=categoria_instance)            
-            context["modello_form"] = modello_form
-         
-        context["form"] = FormFornitore(instance=self.object)
+        print("Categoria_model_name: " + str(categoria_model_name))
+        if categoria_model_name != 'FornitoreNessuna':
+            categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+            print("categoria_model:" + str(categoria_model))
+            
+            if categoria_model:
+                categoria_instance = get_object_or_404(categoria_model,  fornitore_ptr=self.object)
+                CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+                nome_form_secondario = CategoriaForm.__name__            
+                context["nome_form_secondario"] = nome_form_secondario            
+                modello_form = CategoriaForm(instance=categoria_instance)            
+                context["modello_form"] = modello_form
+
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
         context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
+
         return context
+    
+    
 
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
@@ -94,14 +104,11 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
-        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
-        print('categoria_model: ' + str(categoria_model))
+        
         if form.is_valid():
-            print("eccomi")
-            if categoria_model:
-                categoria_instance = get_object_or_404(categoria_model, fornitore=self.object)
-                CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+            if self.categoria_model:
+                categoria_instance = get_object_or_404(self.categoria_model, fornitore_ptr=self.object)
+                CategoriaForm = modelform_factory(self.categoria_model, exclude=['fornitore'])
                 categoria_form = CategoriaForm(request.POST, instance=categoria_instance)
                 if categoria_form.is_valid():
                     categoria_form.save()
@@ -132,13 +139,8 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
     success_message = 'Fornitore aggiunto correttamente!'
     error_message = 'Error saving the Doc, check fields below.'
     template_name = "anagrafiche/fornitore.html"
-
-    #def get_initial(self):
-    #    created_by = self.request.user
-    #    return {
-    #        'created_by': created_by,
-    #        'created_at': datetime.datetime.now() 
-    #    }
+    
+    
 
     def get_initial(self):
         initial = super().get_initial()
@@ -146,6 +148,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         categoria = self.request.GET.get('categoria')
         if categoria in dict(Fornitore.CHOICES_CATEGORY):
             initial['categoria'] = categoria
+            print("categoria initial: " + str(categoria))
         initial['created_by']= created_by
         initial['created_at']= datetime.datetime.now()
         return initial
@@ -155,6 +158,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
             return reverse_lazy('anagrafiche:home_fornitori')
         
         pk_fornitore=self.object.pk
+        print("pk_fornitore: " + str(pk_fornitore))
         return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk_fornitore})
     
     def get_context_data(self, **kwargs):
@@ -163,36 +167,76 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         return context
     
     def form_valid(self, form):
-        # Crea l'istanza del modello Fornitore
-        # Sezione aggiunta per gestire i fornitori dividendo le categorie su altri modelli
-
         forn = form.save(commit=False)
         forn.created_by = self.request.user
+        forn.created_at = datetime.datetime.now()
+        categoria = form.cleaned_data["categoria"]
         forn.save()
 
-        # Ottieni il nome del modello specifico per la categoria corrente
-        categoria_model_name = f'Fornitore{form.cleaned_data["categoria"].title().replace(" ", "")}'
-        print("Nome modello: " + str(categoria_model_name))
-        # Controlla se il modello specifico esiste
-         
-        if categoria_model_name == 'FornitorePelli':
-            categoria_instance = FornitorePelli.objects.create(fornitore=forn)
-            categoria_instance.save()
-        elif categoria_model_name == 'FornitoreProdottiChimici':
-            categoria_instance = FornitoreProdottiChimici.objects.create(fornitore=forn)
-            categoria_instance.save()
-        elif categoria_model_name == 'FornitoreLavorazioniEsterne':
-            categoria_instance = FornitoreLavorazioniEsterne.objects.create(fornitore=forn)
-            categoria_instance.save()
-        elif categoria_model_name == 'FornitoreServizi':
-            categoria_instance = FornitoreServizi.objects.create(fornitore=forn)
-            categoria_instance.save()
+        #categoria = form.cleaned_data["categoria"]
+        print("categoria: " + str(categoria))
 
-        messages.info(self.request, 'Il fornitore è stato aggiunto!') # Compare sul success_url
-        # Redirigi all'URL di successo
+        if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
+            forn.save()#
+            messages.info(self.request, 'Il fornitore è stato aggiunto!')
+            self.object = forn
+            return HttpResponseRedirect(self.get_success_url())
+
+        categoria_model_name = f'Fornitore{categoria.title().replace(" ", "")}'
+        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+
+        if categoria_model:
+            try:
+                # Crea l'istanza del modello specifico per la categoria senza salvarla
+                
+                categoria_instance = categoria_model(fornitore_ptr=forn)
+                # Collega l'istanza del modello specifico all'istanza del modello generico
+                forn.fornitore_ptr_pelli = categoria_instance
+                categoria_instance = categoria_model.objects.create(fornitore_ptr=forn)
+                forn.save()  # Salva l'istanza del modello generico con la relazione
+            except IntegrityError as e:
+                forn.delete()
+                messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+                return super().form_invalid(form)
+
+        self.object = forn
+        messages.info(self.request, 'Il fornitore è stato aggiunto!')
         return HttpResponseRedirect(self.get_success_url())
-    
-    
+        
+    '''
+    def form_valid(self, form):
+        forn = form.save(commit=False)
+        forn.created_by = self.request.user
+        forn.created_at = datetime.datetime.now()
+        categoria = form.cleaned_data["categoria"]
+        print("categoria: " + str(categoria))
+
+        if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
+            forn.save()
+            messages.info(self.request, 'Il fornitore è stato aggiunto!')
+            return HttpResponseRedirect(self.get_success_url())
+
+        categoria_model_name = f'Fornitore{categoria.title().replace(" ", "")}'
+        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+
+        if categoria_model:
+            try:
+                forn.save()  # Salva l'istanza del modello generico per ottenere un ID valido
+                # Crea l'istanza del modello specifico per la categoria e collegala all'istanza del modello generico
+                categoria_instance = categoria_model.objects.create(fornitore_ptr=forn)
+                messages.info(self.request, 'Il fornitore è stato aggiunto!')
+                return HttpResponseRedirect(self.get_success_url())
+            except IntegrityError as e:
+                forn.delete()
+                messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+                return super().form_invalid(form)
+
+        messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+        return super().form_invalid(form)
+        '''
+
+
+
 
     def form_invalid(self, form):
         messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')

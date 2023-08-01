@@ -7,25 +7,30 @@ from .models import (Fornitore, Facility,
                     Cliente, FornitorePelli, FornitoreLavorazioniEsterne, FornitoreProdottiChimici, FornitoreServizi
 )
 
+
 class FormFornitore(forms.ModelForm):
     class Meta:
         model = Fornitore
-        exclude=()
-        #fields='__all__'
+        #exclude=()
+        fields='__all__'
         ragionesociale = forms.CharField(max_length=100, label="Facility Name")
         indirizzo = forms.CharField()
         cap = forms.CharField()
         city = forms.CharField()
         provincia = forms.CharField()
         country = CountryField().formfield()
-        categoria = forms.CharField()
+        categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)
+        #categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY)
+        #categoria = forms.CharField()
         is_lwg = forms.BooleanField(widget=forms.CheckboxInput(attrs={'onClick': 'myFunction();'}))
         sito_web = forms.CharField()
+        created_at=forms.DateInput()
         
         widgets = {'country': CountrySelectWidget(),
                     'created_by': forms.HiddenInput(),
-                    'created_at': forms.HiddenInput(),
-                    'categoria': forms.TextInput(attrs={'readonly': 'readonly'})
+                    #'created_at': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+                    #'created_at': forms.HiddenInput(),
+                    #'categoria': forms.TextInput(attrs={'readonly': 'readonly'})
                 }
         labels = {
             'ragionesociale': 'Ragione Sociale',
@@ -35,6 +40,9 @@ class FormFornitore(forms.ModelForm):
             'sito_web': 'Sito Web'
             
         }
+        
+
+
 
 class FormLwgFornitore(forms.ModelForm):
     class Meta:
@@ -66,16 +74,14 @@ class FormFornitorePelli(forms.ModelForm):
             #'fornitore': forms.HiddenInput(),
         }
         labels = {
-            'is_lwg': 'LWG',
+            
             'urn': 'URN',
             'tipo_fornitore': 'Tipo Fornitore',
             'latitude': 'Latitudine',
             'longitude': 'Longitudine'
         }
         error_messages = {
-            'is_lwg': {
-                'required': 'Il campo LWG è obbligatorio.',
-            },
+            
             'urn': {
                 'required': 'Il campo URN è obbligatorio.',
             },
@@ -88,9 +94,7 @@ class FormFornitorePelli(forms.ModelForm):
             'longitude': {
                 'required': 'Il campo URN è obbligatorio.',
             },
-            'fornitore': {
-                'required': 'Il campo URN è obbligatorio.',
-            },
+            
             
             # Aggiungi altri messaggi di errore per i campi desiderati
         }

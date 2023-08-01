@@ -41,14 +41,14 @@
         <form method="post">
             {% csrf_token %}
             {% if form.errors %}
-       {% for field in form %}
-           {% for error in field.errors %} 
-              <div class="alert alert-danger">
-                   <strong>{{ error|escape }}</strong>
-              </div>
-           {% endfor %}
-       {% endfor %}
-    {% endif %}
+                {% for field in form %}
+                    {% for error in field.errors %} 
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
@@ -87,6 +87,10 @@
                 </div>
                 <div class="col-2">
                     {{ form.created_by|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                <p>Data creazione</p>
+                    {{ form.created_at }}
                 </div>
                 
             </div>

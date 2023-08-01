@@ -104,7 +104,7 @@ class Fornitore(models.Model):
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
     is_lwg = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, related_name='fornitori', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
     
     class Meta:
         ordering =['ragionesociale']
@@ -125,6 +125,7 @@ class LwgFornitore(models.Model):
 
 
 '''I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE'''
+'''
 class FornitorePelli(models.Model):
      # Tipo Fornitore
     MACELLO = 'macello'
@@ -142,6 +143,24 @@ class FornitorePelli(models.Model):
     is_lwg = models.BooleanField(default=False)
     urn = models.CharField(max_length=50, blank=True, null=True)
     tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True )
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+'''
+class FornitorePelli(Fornitore):
+    # Campi aggiuntivi specifici per FornitorePelli
+    MACELLO = 'macello'
+    COMMERCIANTE = 'commerciante'
+    ALTRO  = 'altro'
+    
+    CHOICES_SUPPLIER_TYPE = (
+        (MACELLO, 'Macello'),
+        (COMMERCIANTE, 'Commerciante'),
+        (ALTRO, 'Altro')
+    )
+    
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_pelli')
+    urn = models.CharField(max_length=50, blank=True, null=True)
+    tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
 
