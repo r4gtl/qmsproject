@@ -31,20 +31,11 @@
         <div class="col-3">
             {{ modello_form.longitude|as_crispy_field }}
         </div>
-        <div class="col-3">
-            <p>prova</p>
-            <p><strong>Fornitore:</strong> {{ modello_form.fornitore.value }}</p>
+        <div class="col-3 d-flex align-items-center pt-3">
+            <button type="button" class="btn btn-sm btn-success" onclick="openGoogleMaps()"><i class="bi bi-geo-alt"></i> Apri su Google Maps</button>
         </div>
-        
     </div>
-    <div class="row text-end">
-        <div class="col-12 text-end">
-        <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
-    <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
-</div>
-
-    </div>
-   
+    
 
     
     

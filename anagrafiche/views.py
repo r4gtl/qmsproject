@@ -105,6 +105,7 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         self.object = self.get_object()
         form = self.get_form()
         
+        '''
         if form.is_valid():
             if self.categoria_model:
                 categoria_instance = get_object_or_404(self.categoria_model, fornitore_ptr=self.object)
@@ -116,6 +117,22 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+            '''
+        if form.is_valid():
+            categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
+            if categoria_model_name != 'FornitoreNessuna':
+                categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+                if categoria_model:
+                    categoria_instance = get_object_or_404(categoria_model, fornitore_ptr=self.object)
+                    CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+                    categoria_form = CategoriaForm(request.POST, instance=categoria_instance)
+                    if categoria_form.is_valid():
+                        categoria_form.save()
+
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+        
         
     def form_invalid(self, form):
         #messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
