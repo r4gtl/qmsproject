@@ -93,18 +93,19 @@
                 </div>
                 
                 
-            </div>
-            <div class="row">
-                <div class="col-2">
-                    {{ form.is_lwg|as_crispy_field }}
-                </div>
-            </div>
+            </div>            
 
             <br>
-            {% if nome_form_secondario == "FornitorePelliForm" %}            
-            {% include "anagrafiche/partials/_fornitore_pelli.html" %}
-            
-        {% endif %}
+            {% if categoria_instance_missing %}
+                <p>Il fornitore non è presente nei sottodati della categoria.</p>
+                <p>Salvare e riprovare.</p>
+
+            {% else %}
+                {% if nome_form_secondario == "FornitorePelliForm" %}            
+                    {% include "anagrafiche/partials/_fornitore_pelli.html" %}
+                
+                {% endif %}
+            {% endif %}
 
             
         </form>
@@ -181,6 +182,7 @@
 
 {% block extra_scripts %}
 <script>
+/*
 const isLwg = document.getElementById("id_is_lwg");
 const lwgSection = document.getElementById("lwg-section");
 window.onload = hideLwgSection;
@@ -206,7 +208,7 @@ function myFunction() {
       x.style.display = "none";
     }
   } 
-
+*/
 document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_ragionesociale');
         });

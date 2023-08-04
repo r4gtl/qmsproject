@@ -65,26 +65,28 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = self.get_form()  # Utilizza il form principale per Fornitore
-
-        # Ottieni l'istanza di FornitorePelli correlata al Fornitore attuale
+        context["form"] = self.get_form()  # Utilizza il form principale per Fornitore        
+        # Ottieni l'istanza di Categoria correlata al Fornitore attuale
         categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
-        print("Categoria_model_name: " + str(categoria_model_name))
+        
         if categoria_model_name != 'FornitoreNessuna':
             categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
-            print("categoria_model:" + str(categoria_model))
+            
             
             if categoria_model:
-                categoria_instance = get_object_or_404(categoria_model,  fornitore_ptr=self.object)
-                CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
-                nome_form_secondario = CategoriaForm.__name__            
-                context["nome_form_secondario"] = nome_form_secondario            
-                modello_form = CategoriaForm(instance=categoria_instance)            
-                context["modello_form"] = modello_form
-
+                print("categoria_model:" + str(categoria_model))
+                categoria_instance = categoria_model.objects.filter(fornitore_ptr=self.object).first() 
+                if categoria_instance:
+                    CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
+                    nome_form_secondario = CategoriaForm.__name__            
+                    context["nome_form_secondario"] = nome_form_secondario            
+                    modello_form = CategoriaForm(instance=categoria_instance)            
+                    context["modello_form"] = modello_form
+                else:
+                    context["categoria_instance_missing"] = True  # Aggiungi questa chiave al contesto
+                    
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
         context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
-
         return context
     
     
@@ -101,29 +103,21 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         messages.info(self.request, 'Il fornitore è stato modificato!') # Compare sul success_url
         return super().form_valid(form)
     
+    
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.get_form()
-        
-        '''
-        if form.is_valid():
-            if self.categoria_model:
-                categoria_instance = get_object_or_404(self.categoria_model, fornitore_ptr=self.object)
-                CategoriaForm = modelform_factory(self.categoria_model, exclude=['fornitore'])
-                categoria_form = CategoriaForm(request.POST, instance=categoria_instance)
-                if categoria_form.is_valid():
-                    categoria_form.save()
 
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
-            '''
         if form.is_valid():
             categoria_model_name = f'Fornitore{self.object.categoria.title().replace(" ", "")}'
             if categoria_model_name != 'FornitoreNessuna':
                 categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
                 if categoria_model:
-                    categoria_instance = get_object_or_404(categoria_model, fornitore_ptr=self.object)
+                    categoria_instance = categoria_model.objects.filter(fornitore_ptr=self.object).first()
+
+                    if not categoria_instance:
+                        categoria_instance = categoria_model.objects.create(fornitore_ptr=self.object)
+
                     CategoriaForm = modelform_factory(categoria_model, exclude=['fornitore'])
                     categoria_form = CategoriaForm(request.POST, instance=categoria_instance)
                     if categoria_form.is_valid():
@@ -132,7 +126,7 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-        
+
         
     def form_invalid(self, form):
         #messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
@@ -219,40 +213,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         self.object = forn
         messages.info(self.request, 'Il fornitore è stato aggiunto!')
         return HttpResponseRedirect(self.get_success_url())
-        
-    '''
-    def form_valid(self, form):
-        forn = form.save(commit=False)
-        forn.created_by = self.request.user
-        forn.created_at = datetime.datetime.now()
-        categoria = form.cleaned_data["categoria"]
-        print("categoria: " + str(categoria))
-
-        if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
-            forn.save()
-            messages.info(self.request, 'Il fornitore è stato aggiunto!')
-            return HttpResponseRedirect(self.get_success_url())
-
-        categoria_model_name = f'Fornitore{categoria.title().replace(" ", "")}'
-        categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
-
-        if categoria_model:
-            try:
-                forn.save()  # Salva l'istanza del modello generico per ottenere un ID valido
-                # Crea l'istanza del modello specifico per la categoria e collegala all'istanza del modello generico
-                categoria_instance = categoria_model.objects.create(fornitore_ptr=forn)
-                messages.info(self.request, 'Il fornitore è stato aggiunto!')
-                return HttpResponseRedirect(self.get_success_url())
-            except IntegrityError as e:
-                forn.delete()
-                messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
-                return super().form_invalid(form)
-
-        messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
-        return super().form_invalid(form)
-        '''
-
-
+    
 
 
     def form_invalid(self, form):
@@ -267,16 +228,14 @@ class AddLwgCertificate(CreateView):
     success_message = 'Certificato aggiunto correttamente!'
     error_message = 'Error saving the Doc, check fields below.'
     
-    #fields = "__all__"
-    #success_url = reverse_lazy('anagrafiche:vedi_fornitore')
     
     template_name = "anagrafiche/lwg.html"
 
 
     def get_success_url(self):          
-          fornitore=self.object.fk_fornitore
-          print("Fornitore: " + str(fornitore))
-          return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+        fornitore=self.object.fk_fornitore
+        print("Fornitore: " + str(fornitore))
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
 
     def get_initial(self):
         fk_fornitore = self.kwargs['fk_fornitore']
@@ -297,30 +256,25 @@ class UpdateLwgCertificate(UpdateView):
     model = LwgFornitore
     form_class = FormLwgFornitore
     success_message = 'Certificato modificato correttamente!'
-    error_message = 'Error saving the Doc, check fields below.'
-    
-    #fields = "__all__"
-    #success_url = reverse_lazy('anagrafiche:vedi_fornitore')
+    error_message = 'Certificato non salvato. Controlla.'    
     
     template_name = "anagrafiche/lwg.html"
 
 
     def get_success_url(self):
-          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-          fornitore=self.object.fk_fornitore.pk
-          return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+        # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+        # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+        fornitore=self.object.fk_fornitore.pk
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         pk = self.object.pk
-        print("PK: " + str(pk))
-         
 
         context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
         context['fornitore'] = self.object.fk_fornitore.pk
         context['ragionesociale'] = Fornitore.objects.get(pk=self.object.fk_fornitore.pk)
-        print("Context: " + str(context['ragionesociale']))
+        
         return context
 
 
@@ -373,26 +327,21 @@ class XrTransferValueUpdateView(LoginRequiredMixin,UpdateView):
 
 
     def get_success_url(self):
-          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-          lwgcertificate=self.object.fk_lwgfornitore.pk
-          return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
+        # if you are passing 'pk' from 'urls' to 'DeleteView' for company
+        # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
+        lwgcertificate=self.object.fk_lwgfornitore.pk
+        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
     
 
 class XrTransferValueDeleteView(LoginRequiredMixin, DeleteView):
-    # specify the model you want to use
+    
     model = XrTransferValueLwgFornitore
-     
-    # can specify success url
-    # url to redirect after successfully
-    # deleting object
-    def get_success_url(self):
-          # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-          # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-          lwgcertificate=self.object.fk_lwgfornitore.pk
-          return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
-     
-    #template_name = "geeks/geeksmodel_confirm_delete.html"
+    
+    def get_success_url(self):        
+        lwgcertificate=self.object.fk_lwgfornitore.pk
+        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
+    
+    
 
 
 class ListaFornitoriView(FilterView):
@@ -432,26 +381,6 @@ class FacilityUpdateView(UpdateView):
         context['facility_contacts'] = FacilityContact.objects.filter(fk_facility=self.object.pk)        
         return context
 
-# def edit_facility_details(request, pk):
-#     facility = get_object_or_404(Facility, pk=pk)
-#     # print("Facility:" + str(facility))
-#     facility_contacts = FacilityContact.objects.filter(fk_facility=pk)
-#     form = FormFacility()
-#     # print("Facility contacts:" + str(facility_contacts))
-#     if request.method == "POST":
-#         form = FormFacility(request.POST)
-#         if form.is_valid():
-#             form.save(commit=False)
-#             form.instance.facility = facility
-#         else:
-#             form = FormFacility()
-
-#     context = {'facility': facility, 
-#                 'form': form,
-#                 'facility_contacts': facility_contacts
-#                 }
-    
-#     return render(request, "anagrafiche/facility.html", context)
     
 
 def add_facility_contact(request, pk):

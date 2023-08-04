@@ -135,7 +135,7 @@
               <tbody>
                 {% for fornitore in fornitori_paginator %}
                     
-                    <td class="col-md-1"><a href="{{ fornitore.get_absolute_url }}">{{ fornitore.ragionesociale }}</a></td>
+                    <td class="col-md-1"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore.pk %}">{{ fornitore.ragionesociale }}</a></td>
                     <td class="col-md-2">{{ fornitore.indirizzo }}</td>  
                     <td class="col-md-2">{{ fornitore.country  }} <img class="country-select-flag" id="{ flag_id }" style="max-height: 24px;" src="{{ fornitore.country.flag  }}"></td>
                     <td class="col-md-2">{{ fornitore.categoria }}</td> 

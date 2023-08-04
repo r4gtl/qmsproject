@@ -101,8 +101,7 @@ class Fornitore(models.Model):
     provincia = models.CharField(max_length=50, blank=True, null=True)
     country = CountryField(blank_label='(seleziona Paese)')
     sito_web = models.CharField(max_length=200, blank=True, null=True)
-    categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
-    is_lwg = models.BooleanField(default=False)
+    categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)    
     created_by = models.ForeignKey(User, related_name='fornitori', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     
@@ -159,6 +158,7 @@ class FornitorePelli(Fornitore):
     )
     
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_pelli')
+    is_lwg = models.BooleanField(default=False)
     urn = models.CharField(max_length=50, blank=True, null=True)
     tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True)
     latitude = models.FloatField(blank=True, null=True)

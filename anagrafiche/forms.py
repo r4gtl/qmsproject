@@ -19,10 +19,7 @@ class FormFornitore(forms.ModelForm):
         city = forms.CharField()
         provincia = forms.CharField()
         country = CountryField().formfield()
-        categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)
-        #categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY)
-        #categoria = forms.CharField()
-        is_lwg = forms.BooleanField(widget=forms.CheckboxInput(attrs={'onClick': 'myFunction();'}))
+        categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
         sito_web = forms.CharField()
         created_at=forms.DateInput()
         
@@ -35,8 +32,7 @@ class FormFornitore(forms.ModelForm):
         labels = {
             'ragionesociale': 'Ragione Sociale',
             'country': 'Paese',
-            'city': 'Città',
-            'is_lwg': 'LWG',
+            'city': 'Città',            
             'sito_web': 'Sito Web'
             
         }
@@ -63,16 +59,13 @@ class FormLwgFornitore(forms.ModelForm):
 
         }
         
-
+'''
 class FormFornitorePelli(forms.ModelForm):
+    is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
+    
     class Meta:
         model = FornitorePelli
         fields = '__all__'
-        is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
-        
-        widgets = {
-            #'fornitore': forms.HiddenInput(),
-        }
         labels = {
             
             'urn': 'URN',
@@ -80,24 +73,20 @@ class FormFornitorePelli(forms.ModelForm):
             'latitude': 'Latitudine',
             'longitude': 'Longitudine'
         }
-        error_messages = {
-            
-            'urn': {
-                'required': 'Il campo URN è obbligatorio.',
-            },
-            'tipo_fornitore': {
-                'required': 'Il campo URN è obbligatorio.',
-            },
-            'latitude': {
-                'required': 'Il campo URN è obbligatorio.',
-            },
-            'longitude': {
-                'required': 'Il campo URN è obbligatorio.',
-            },
-            
-            
-            # Aggiungi altri messaggi di errore per i campi desiderati
-        }
+'''
+class FormFornitorePelli(forms.ModelForm):
+    is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
+    
+    urn = forms.CharField(label='URN')
+    tipo_fornitore = forms.CharField(label='Tipo Fornitore')
+    latitude = forms.FloatField(label='Latitudine')
+    longitude = forms.FloatField(label='Longitudine')
+
+    class Meta:
+        model = FornitorePelli
+        fields = '__all__'
+        
+        
 
 
 class FormFornitoreLavorazioniEsterne(forms.ModelForm):
