@@ -4,7 +4,9 @@ from django_countries.fields import CountryField
 from .models import (Fornitore, Facility,
                     FacilityContact, LwgFornitore,
                     XrTransferValueLwgFornitore, TransferValue,
-                    Cliente, FornitorePelli, FornitoreLavorazioniEsterne, FornitoreProdottiChimici, FornitoreServizi
+                    Cliente, FornitorePelli, FornitoreLavorazioniEsterne, 
+                    FornitoreProdottiChimici, FornitoreServizi,
+                    FornitoreRifiuti, FornitoreManutenzioni
 )
 
 
@@ -59,21 +61,7 @@ class FormLwgFornitore(forms.ModelForm):
 
         }
         
-'''
-class FormFornitorePelli(forms.ModelForm):
-    is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
-    
-    class Meta:
-        model = FornitorePelli
-        fields = '__all__'
-        labels = {
-            
-            'urn': 'URN',
-            'tipo_fornitore': 'Tipo Fornitore',
-            'latitude': 'Latitudine',
-            'longitude': 'Longitudine'
-        }
-'''
+'''FORMS PER LA GESTIONE DEI MODELLI ASSOCIATI ALLE CATEGORIE'''
 class FormFornitorePelli(forms.ModelForm):
     is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label='LWG')
     
@@ -85,9 +73,6 @@ class FormFornitorePelli(forms.ModelForm):
     class Meta:
         model = FornitorePelli
         fields = '__all__'
-        
-        
-
 
 class FormFornitoreLavorazioniEsterne(forms.ModelForm):
     class Meta:
@@ -103,7 +88,18 @@ class FormFornitoreServizi(forms.ModelForm):
     class Meta:
         model = FornitoreServizi
         fields = '__all__'
+        
+class FormFornitoreRifiuti(forms.ModelForm):
+    class Meta:
+        model = FornitoreRifiuti
+        fields = '__all__'
 
+class FormFornitoreManutenzioni(forms.ModelForm):
+    class Meta:
+        model = FornitoreManutenzioni
+        fields = '__all__'
+
+'''FINE FORMS PER LA GESTIONE DEI MODELLI DELLE CATEGORIE ASSOCIATE'''
 
 class FormXrTransferValueLwgFornitore(forms.ModelForm):
     class Meta:

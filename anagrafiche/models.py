@@ -85,6 +85,7 @@ class Fornitore(models.Model):
     LAVORAZIONI_ESTERNE = 'lavorazioni esterne'
     SERVIZI = 'servizi'
     MANUTENZIONI = 'manutenzioni'
+    RIFIUTI = 'rifiuti'
     
     CHOICES_CATEGORY = (
         (NESSUNA, 'Manca categoria'),
@@ -92,7 +93,8 @@ class Fornitore(models.Model):
         (PRODOTTI_CHIMICI, 'Prodotti Chimici'),
         (LAVORAZIONI_ESTERNE, 'Lavorazioni Esterne'),
         (SERVIZI, 'Servizi'),
-        (MANUTENZIONI, 'Manutenzioni')
+        (MANUTENZIONI, 'Manutenzioni'),
+        (RIFIUTI, 'Rifiuti'),
     )
     ragionesociale = models.CharField(max_length=50, blank=False, null=False)
     indirizzo = models.CharField(max_length=100, blank=True, null=True)
@@ -124,27 +126,7 @@ class LwgFornitore(models.Model):
 
 
 '''I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE'''
-'''
-class FornitorePelli(models.Model):
-     # Tipo Fornitore
-    MACELLO = 'macello'
-    COMMERCIANTE = 'commerciante'
-    ALTRO  = 'altro'
-    
-    
-    CHOICES_SUPPLIER_TYPE = (
-        (MACELLO, 'Macello'),
-        (COMMERCIANTE, 'Commerciante'),
-        (ALTRO, 'Altro')
-        
-    )
-    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pelli')
-    is_lwg = models.BooleanField(default=False)
-    urn = models.CharField(max_length=50, blank=True, null=True)
-    tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True )
-    latitude = models.FloatField(blank=True, null=True)
-    longitude = models.FloatField(blank=True, null=True)
-'''
+
 class FornitorePelli(Fornitore):
     # Campi aggiuntivi specifici per FornitorePelli
     MACELLO = 'macello'
@@ -166,7 +148,7 @@ class FornitorePelli(Fornitore):
 
 
 class FornitoreProdottiChimici(models.Model):
-    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_pc')
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_prodottichimici')
     id_zdhc = models.CharField(max_length=50, blank=True, null=True)
 
 class FornitoreLavorazioniEsterne(models.Model):
@@ -184,13 +166,22 @@ class FornitoreLavorazioniEsterne(models.Model):
         (MINI, 'Mini-Audit Protocol'),
         
     )
-    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_lavorazioni')
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_lavorazioniesterne')
     is_lwg = models.BooleanField(default=False)
     audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, default=NESSUNO)
 
 class FornitoreServizi(models.Model):
-    fornitore = models.OneToOneField(Fornitore, on_delete=models.CASCADE, related_name='fornitore_servizi')
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_servizi')
     prova = models.CharField(max_length=50, blank=True, null=True)
+    
+class FornitoreRifiuti(models.Model):
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_rifiuti')
+    prova = models.CharField(max_length=50, blank=True, null=True)
+
+class FornitoreManutenzioni(models.Model):
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_manutenzioni')
+    prova = models.CharField(max_length=50, blank=True, null=True)
+    
 '''FINE MODELLI CATEGORIE'''
 
 

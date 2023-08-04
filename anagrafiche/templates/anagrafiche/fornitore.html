@@ -103,7 +103,17 @@
             {% else %}
                 {% if nome_form_secondario == "FornitorePelliForm" %}            
                     {% include "anagrafiche/partials/_fornitore_pelli.html" %}
-                
+                {% elif nome_form_secondario == "FornitoreProdottiChimiciForm" %}
+                    {% include "anagrafiche/partials/_fornitore_prodotti_chimici.html" %}
+                {% elif nome_form_secondario == "FornitoreLavorazioniEsterneForm" %}
+                    {% include "anagrafiche/partials/_fornitore_lavorazioni_esterne.html" %}
+                {% elif nome_form_secondario == "FornitoreServiziForm" %}
+                    {% include "anagrafiche/partials/_fornitore_servizi.html" %}
+                {% elif nome_form_secondario == "FornitoreManutenzioniForm" %}
+                    {% include "anagrafiche/partials/_fornitore_manutenzioni.html" %}
+                {% elif nome_form_secondario == "FornitoreRifiutiForm" %}
+                    {% include "anagrafiche/partials/_fornitore_rifiuti.html" %}
+
                 {% endif %}
             {% endif %}
 
