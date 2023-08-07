@@ -14,13 +14,17 @@ class FornitoreFilter(django_filters.FilterSet):
     PRODOTTI_CHIMICI = 'prodotti chimici'
     LAVORAZIONI_ESTERNE = 'lavorazioni esterne'
     SERVIZI = 'servizi'
+    MANUTENZIONI = 'manutenzioni'
+    RIFIUTI = 'rifiuti'
     
     CHOICES_CATEGORY = (
         (NESSUNA, 'Manca categoria'),
         (PELLI, 'Pelli'),
         (PRODOTTI_CHIMICI, 'Prodotti Chimici'),
         (LAVORAZIONI_ESTERNE, 'Lavorazioni Esterne'),
-        (SERVIZI, 'Servizi')
+        (SERVIZI, 'Servizi'),
+        (MANUTENZIONI, 'Manutenzioni'),
+        (RIFIUTI, 'Rifiuti'),
     )
     ragionesociale=django_filters.CharFilter(field_name='ragionesociale', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
     categoria=django_filters.ChoiceFilter(choices=CHOICES_CATEGORY)

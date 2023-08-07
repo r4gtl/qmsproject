@@ -10,7 +10,13 @@ from .models import (Fornitore, Facility,
 )
 
 
+
+
+        
+        
 class FormFornitore(forms.ModelForm):
+    categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+
     class Meta:
         model = Fornitore
         #exclude=()
@@ -21,7 +27,8 @@ class FormFornitore(forms.ModelForm):
         city = forms.CharField()
         provincia = forms.CharField()
         country = CountryField().formfield()
-        categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
+        # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
+        
         sito_web = forms.CharField()
         created_at=forms.DateInput()
         
