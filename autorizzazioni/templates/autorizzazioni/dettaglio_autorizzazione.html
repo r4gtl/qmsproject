@@ -73,7 +73,7 @@
                     {{ form.is_rinnovata|as_crispy_field }}
                 </div>
                 <div class="col-2">
-                    {{ form.fk_autorizzazione|as_crispy_field }}
+                    {{ form.fk_autorizzazione.as_hidden }}
                 </div>
                 <div class="col-2">
                     {{ form.created_by|as_crispy_field }}

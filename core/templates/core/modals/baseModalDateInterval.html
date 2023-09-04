@@ -39,6 +39,42 @@ inserire in un tag <a>
 </div>
 
 <script>
+   // Funzione per validare i campi del form prima del submit
+   function validateForm() {
+    // Ottieni i valori dei campi from_date e to_date
+    var fromDate = document.getElementById('from_date').value;
+    var toDate = document.getElementById('to_date').value;
+
+    // Verifica se i campi sono vuoti
+    if (fromDate === "" || toDate === "") {
+      // Mostra un messaggio di avviso
+      alert("Si prega di compilare entrambi i campi 'Dalla data' e 'Alla data' prima di generare il report.");
+      return false; // Impedisce l'invio del form
+    }
+
+    // Converte le date in oggetti Date
+    var fromDateObj = new Date(fromDate);
+    var toDateObj = new Date(toDate);
+
+    // Verifica se from_date è più recente di to_date
+    if (fromDateObj > toDateObj) {
+      // Mostra un messaggio di avviso
+      alert("La data 'Dalla data' non può essere più recente della data 'Alla data'.");
+      return false; // Impedisce l'invio del form
+    }
+
+    // Se tutti i controlli passano, permetti l'invio del form
+    return true;
+  }
+
+  // Aggiungi un gestore di eventi al form per chiamare la funzione di validazione prima del submit
+  document.getElementById('date_form').addEventListener('submit', function (e) {
+    if (!validateForm()) {
+      e.preventDefault(); // Impedisce l'invio del form se la validazione fallisce
+    }
+  });
+
+
   function setModalUrl(url, title) {
     // Imposta l'URL nel campo azione del form nel modal
     document.getElementById('date_form').action = url;

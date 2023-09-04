@@ -14,17 +14,19 @@ from .utils import get_scadenzario_completo
 # Create your views here.
 
 def lwg_home(request):
-    scadenze_autorizzazioni =count_records_with_upcoming_expiry(DettaglioScadenzaAutorizzazione, "scadenza_rinnovo", 30)
-    scadenze_manutenzioni = count_records_with_upcoming_expiry(Taratura, "prossima_scadenza", 30) + count_records_with_upcoming_expiry(ManutenzioneOrdinaria, "prossima_scadenza", 30)
-    scadenzario=get_scadenzario_completo()
-
+    # 04/09/2023 - disattivato perchè utilizzo la funzione get_scadenzario_completo
+    #scadenze_autorizzazioni =count_records_with_upcoming_expiry(DettaglioScadenzaAutorizzazione, "scadenza_rinnovo", 30)
+    #scadenze_manutenzioni = count_records_with_upcoming_expiry(Taratura, "prossima_scadenza", 30) + count_records_with_upcoming_expiry(ManutenzioneOrdinaria, "prossima_scadenza", 30)
+    
+    # Ricavo tutte le scadenze per visualizzarle nei toast
+    scadenzario=get_scadenzario_completo()    
     today = date.today()
     thirty_days_from_today = today + timedelta(days=30)
     
     scadenzario = [scadenza for scadenza in scadenzario if scadenza['scadenza'] <= thirty_days_from_today]
     context = {
-        'scadenze_autorizzazioni': scadenze_autorizzazioni,
-        'scadenze_manutenzioni': scadenze_manutenzioni,
+        #'scadenze_autorizzazioni': scadenze_autorizzazioni,
+        #'scadenze_manutenzioni': scadenze_manutenzioni,
         'scadenzario':scadenzario
     }
     return render(request, 'lwg/lwg_home.html', context)

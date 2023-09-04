@@ -118,7 +118,7 @@
                     {% for scadenza in elenco_dettaglio_scadenze %}
                     <tr>        
                         
-                        <td><a href="{% url 'autorizzazioni:modifica_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk pk=scadenza.pk%}">{{ scadenza.descrizione }}</a></td>
+                        <td><a href="{% url 'autorizzazioni:modifica_dettaglio_autorizzazione' fk_autorizzazione=autorizzazione.pk pk=scadenza.pk%}">{{ scadenza.n_rinnovo }}</a></td>
                         <td>{{ scadenza.data_rinnovo }}</td>
                         <td>{{ scadenza.scadenza_rinnovo }}</td>
                         <td>{{ scadenza.is_rinnovata }}</td>

@@ -144,7 +144,12 @@ WSGI_APPLICATION = "qmsproject.wsgi.application"
 
 FIXTURES = [
     'autorizzazioni/fixtures/data.json',
-    'manualeprocedure/fixtures/data.json'
+    'manualeprocedure/fixtures/data.json',
+    'acquistopelli/fixtures/tipoanimale.json',
+    'acquistopelli/fixtures/tipogrezzo.json',
+    'chem_man/fixtures/hazard.json',
+    'chem_man/fixtures/precautionary.json',
+    'chem_man/fixtures/simbologhs.json',
 ]
 
 # Database

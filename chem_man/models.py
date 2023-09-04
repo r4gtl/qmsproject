@@ -176,8 +176,8 @@ class HazardStatement(models.Model):
         (SUPPLEMENTARI, 'Pericoli Supplementari')       
     )
     
-    hazard_statement = models.CharField(max_length=20)
-    descrizione = models.CharField(max_length=100, null=True, blank=True)
+    hazard_statement = models.CharField(max_length=50)
+    descrizione = models.CharField(max_length=200, null=True, blank=True)
     hazard_category = models.CharField(max_length=50, choices=CHOICES_HAZARD_CAT, null=True, blank=True)
     is_dangerous = models.BooleanField(default=False)
     note = models.TextField(null=True, blank=True)

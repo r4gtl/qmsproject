@@ -15,7 +15,7 @@
         <li class="breadcrumb-item"><a href="{% url 'monitoraggi:dashboard_monitoraggi' %}">Dashboard Monitoraggi</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica inserimento {{ datiproduzione.data_inserimento }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica inserimento {{ datoproduzione.data_inserimento }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi inserimento</li>
         {% endif %}             
@@ -26,7 +26,7 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica inserimento {{ datiproduzione.data_inserimento }}</h3>
+            <h3>Modifica inserimento {{ datoproduzione.data_inserimento }}</h3>
         {% else %}
             <h3> Aggiungi inserimento</h3>
         {% endif %}
@@ -52,10 +52,10 @@
                 <div class="col-3">
                     {{ form.industries_served|as_crispy_field }}
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {{ form.n_pelli|as_crispy_field }}
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {{ form.mq|as_crispy_field }}
                 </div>
                 

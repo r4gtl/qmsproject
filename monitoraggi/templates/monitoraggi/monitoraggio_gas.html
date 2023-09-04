@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
+
+{% load widget_tweaks %}
 {% block title %}{{ block.super }} | Monitoraggio Acqua {% endblock %}
 
 {% block sidenav %}
@@ -50,7 +52,7 @@
                     {{ form.data_lettura|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.mc_in|as_crispy_field }}
+                    {{ form.mc_in|as_crispy_field  }}
                 </div>
                 
                 
