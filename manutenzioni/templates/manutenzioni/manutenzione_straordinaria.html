@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block title %}{{ block.super }} | Manutenzione Ordinaria {% endblock %}
 
 {% block sidenav %}
@@ -88,6 +89,7 @@
 
             
             <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         
@@ -100,4 +102,5 @@
 
 {% block scripts %}
 
+<script src="{% static '/js/main.js' %}"></script>
 {% endblock %} 

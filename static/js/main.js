@@ -124,3 +124,7 @@ function setFocusOnField(fieldId) {
       $("#" + fieldId).focus();
   });
 };
+
+function goBack() {
+  window.history.back();
+}

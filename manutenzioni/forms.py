@@ -104,14 +104,15 @@ class TaraturaModelForm(forms.ModelForm):
         }
         
 class ManutenzioneOrdinariaModelForm(forms.ModelForm):
+    fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all(),  label='Fornitore')
     class Meta:
         model = ManutenzioneOrdinaria
         fields = '__all__'
-        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all(),  label='Fornitore')
+        
         widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
-            'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),                        
+            #'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),                        
             'is_eseguita': forms.CheckboxInput(),
             'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
