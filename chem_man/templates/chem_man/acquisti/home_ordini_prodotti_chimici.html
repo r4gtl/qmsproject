@@ -114,6 +114,7 @@
                 <th>Fornitore</th>
                 <th>Data Consegna</th>
                 <th>In sospeso/NC</th>
+                <th>Sospeso da</th>
                 <th>Azione</th>
 
                 
@@ -128,8 +129,15 @@
                     
                     <td class="col-md">{{ ordine.fk_fornitore }}</td>
                     
-                    <td class="col-md text-center">{{ ordine.data_consegna }}</td>  
-                    <td class="col-md">{{ ordine.is_conforme  }} </td>
+                    <td class="col-md text-center">{{ ordine.data_consegna|default_if_none:"Nessuna data consegna" }}</td>  
+                    <td class="col-md text-center"><input type="checkbox" {% if ordine.is_conforme %}checked{% endif %} disabled> </td>
+                    <td class="col-md text-center">
+                      {% if ordine.data_ordine %}
+                          {{ ordine.calcola_differenza_date|default:"N/A" }} giorni
+                      {% else %}
+                          N/A
+                      {% endif %}
+                  </td>
                     <td class="col-md text-center"><a href="{% url 'chem_man:delete_ordine_prodotto_chimico' pk=ordine.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ordine.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 

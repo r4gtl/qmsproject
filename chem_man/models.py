@@ -336,7 +336,13 @@ class OrdineProdottoChimico(models.Model):
             max_value = OrdineProdottoChimico.objects.filter(created_at__year=current_year).aggregate(models.Max('numero_ordine'))['numero_ordine__max']
             self.numero_ordine = max_value + 1 if max_value else 1  # Incrementa il valore massimo di 1 o impostalo a 1 se non ci sono oggetti nel corrente anno
         super().save(*args, **kwargs)
-
+    
+    def calcola_differenza_date(self):
+        if self.data_ordine:
+            today = date.today()
+            return (today - self.data_ordine).days
+        return None
+    
     class Meta:
         ordering = ["-data_ordine"]
         

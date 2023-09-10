@@ -10,15 +10,17 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Max
 
-from django_filters.views import FilterView
+# from django_filters.views import FilterView
 
 
-from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
-                    SostanzaSVHCFilter, HazardStatementFilter, 
-                    PrecautionaryStatementFilter, SimboloGHSFilter,
-                    ImballaggioPCFilter, OrdineProdottoChimicoFilter,
-                    AcquistoProdottoChimicoFilter,
-)
+# from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
+#                     SostanzaSVHCFilter, HazardStatementFilter, 
+#                     PrecautionaryStatementFilter, SimboloGHSFilter,
+#                     ImballaggioPCFilter, OrdineProdottoChimicoFilter,
+#                     AcquistoProdottoChimicoFilter,
+# )
+
+from .filters import *
 
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
@@ -42,8 +44,7 @@ from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
 def home_prodotti_chimici(request):
     prodotti_chimici = ProdottoChimico.objects.all()
     prodotti_chimici_filter = ProdottoChimicoFilter(request.GET, queryset=prodotti_chimici)
-    ultimo_agg_svhc = SostanzaSVHC.objects.aggregate(max_date=Max('data_inclusione'))['max_date']
-    #filterset_class = FornitoreFilter
+    ultimo_agg_svhc = SostanzaSVHC.objects.aggregate(max_date=Max('data_inclusione'))['max_date']    
     page = request.GET.get('page', 1)
     paginator = Paginator(prodotti_chimici_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
 
@@ -55,7 +56,7 @@ def home_prodotti_chimici(request):
         prodotti_chimici_paginator = paginator.page(paginator.num_pages)
 
     context = {
-        #'fornitori': filterset_class,
+        
         'prodotti_chimici_paginator': prodotti_chimici_paginator,
         'filter': prodotti_chimici_filter,
         'ultimo_agg_svhc': ultimo_agg_svhc
@@ -1196,7 +1197,7 @@ def dashboard_acquisti_prodotti_chimici(request):
 
 
 def home_ordini_prodotti_chimici(request):
-    ordini_pc = OrdineProdottoChimico.objects.all()
+    ordini_pc = OrdineProdottoChimico.objects.all().order_by('-data_ordine')
     ordini_pc_filter = OrdineProdottoChimicoFilter(request.GET, queryset = ordini_pc)
     
     page = request.GET.get('page', 1)
@@ -1274,7 +1275,7 @@ class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
         # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=pk_ordine)
-
+        
         return context
 
 
@@ -1364,6 +1365,7 @@ class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
         fk_ordine = self.kwargs['fk_ordine']
         context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=fk_ordine)
         context['ordine_pc']=fk_ordine
+        context['dettagli_ordine'] = get_object_or_404(OrdineProdottoChimico, pk=fk_ordine)
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
 
@@ -1577,3 +1579,9 @@ def stampa_ordine(request, pk):
     # Restituisci il prodotto nel template
     return render(request, 'chem_man/acquisti/stampa_ordine.html', context)
     
+    
+def controlla_dettagli_ordine(request, pk):
+    ordine = get_object_or_404(OrdineProdottoChimico, id=pk)
+    dettagli_presenti = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=ordine).exists()
+
+    return JsonResponse({'dettagli_presenti': dettagli_presenti})

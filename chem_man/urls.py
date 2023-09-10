@@ -22,9 +22,10 @@ from .views import (home_prodotti_chimici, tabelle_generiche,
                     DettaglioOrdineProdottoChimicoCreateView, DettaglioOrdineProdottoChimicoUpdateView, delete_dettaglio_ordine_prodotto_chimico,
                     AcquistoProdottoChimicoCreateView, AcquistoProdottoChimicoUpdateView, delete_acquisto_prodotto_chimico,
                     DettaglioAcquistoProdottoChimicoCreateView, DettaglioAcquistoProdottoChimicoUpdateView, delete_dettaglio_acquisto_prodotto_chimico,
-                    stampa_ordine,
+                    stampa_ordine, controlla_dettagli_ordine
                     
                     )
+#from .views import *
 
 from .utils import (get_symbol_image_url, search_sostanza, get_sostanza_details, 
                     check_if_svhc, get_prodotto_chimico, get_ultimo_prezzo, get_solvente,
@@ -152,6 +153,9 @@ urlpatterns = [
 
     # Stampe
     path('stampa_ordine/<int:pk>/', stampa_ordine, name='stampa_ordine'),
+    
+    # Controllo dettaglio ordine    
+    path('controlla_dettagli_ordine/<int:pk>/', controlla_dettagli_ordine, name='controlla_dettagli_ordine'),
 
     
 

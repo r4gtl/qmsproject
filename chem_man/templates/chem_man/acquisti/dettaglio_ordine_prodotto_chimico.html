@@ -15,7 +15,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
-        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine_pc %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine_pc %}">{{ dettagli_ordine }}</a></li>     
         
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
