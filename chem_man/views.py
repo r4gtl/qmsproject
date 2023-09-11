@@ -763,12 +763,12 @@ class SchedaSicurezzaCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('chem_man:home__prodotti_chimici')
+            fk_prodottochimico=self.object.fk_prodottochimico.pk
+            return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
 
-        fk_prodottochimico=self.object.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
-        
-
+        pk=self.object.pk
+        fk_prodottochimico= self.object.fk_prodottochimico.pk
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':pk})
 
 
     def form_valid(self, form):

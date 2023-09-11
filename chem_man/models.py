@@ -1,9 +1,10 @@
 from django.db import models
 import os
 from django.db.models import Q
-from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 from datetime import date
+from anagrafiche.models import Fornitore
+from articoli.models import Articolo, Colore
 
 # Create your models here.
 
@@ -407,3 +408,16 @@ class DettaglioAcquistoProdottoChimico(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettagli_acquisto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+# Ricette
+# Tabelle Generiche
+
+class OperazioneBagnato(models.Model):
+    descrizione = models.CharField(max_length=100)
+    
+class OperazioneRifinizione(models.Model):
+    descrizione = models.CharField(max_length=100)
+    
+class RicettaBagnato(models.Model):
+    pass
+    
