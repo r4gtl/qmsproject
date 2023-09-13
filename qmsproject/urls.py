@@ -42,6 +42,7 @@ urlpatterns = [
     path('nonconformity/', include('nonconformity.urls')),
     path('chem_man/', include('chem_man.urls')),
     path('antincendio/', include('antincendio.urls')),
+    path('ricette/', include('ricette.urls')),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
 ]

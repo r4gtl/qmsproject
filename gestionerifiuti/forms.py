@@ -71,7 +71,7 @@ class CodiceSmaltRecModelForm(forms.ModelForm):
             'created_at': forms.HiddenInput()
         }
         labels = {
-            'codice': 'Codice Cer',
+            'codice': 'Codice Smaltimento/Recupero',
             'descrizione': 'Descrizione',   
             'smalt_rec': 'Smaltimento/Recupero',
             'note': 'Annotazioni'

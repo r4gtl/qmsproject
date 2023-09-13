@@ -4,12 +4,12 @@ from django.db.models import Max
 from django.contrib.auth.models import User
 from datetime import date
 from anagrafiche.models import Fornitore
-from articoli.models import Articolo, Colore
-from acquistopelli.models import TipoAnimale, TipoGrezzo
 
-# Create your models here.
+
+
 
 class ImballaggioPC(models.Model):
+    # Genera un elenco di imballaggi standard da associare poi al prodotto chimico
     descrizione = models.CharField(max_length=50)
     peso_unitario = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     note = models.TextField(null=True, blank=True)
@@ -314,8 +314,9 @@ class Sostanza_SDS(models.Model):
     
 
 
-
-
+####################################################
+# ACQUISTI PRODOTTI CHIMICI
+####################################################
 
 class OrdineProdottoChimico(models.Model):
     fk_fornitore = models.ForeignKey(
@@ -354,9 +355,6 @@ class OrdineProdottoChimico(models.Model):
     
 
 class DettaglioOrdineProdottoChimico(models.Model):
-    
-    
-
     fk_prodotto_chimico = models.ForeignKey(
         ProdottoChimico,     
         
@@ -409,141 +407,4 @@ class DettaglioAcquistoProdottoChimico(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettagli_acquisto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-    
-# Ricette
-# Tabelle Generiche
 
-class OperazioneRicette(models.Model):
-    # Reparto riferimento
-    BAGNATO = 'Bagnato'
-    RIFINIZIONE = 'Rifinizione' 
-    
-    CHOICES_WARD = (
-        (BAGNATO, 'Bagnato'),
-        (RIFINIZIONE, 'Rifinizione')
-    )
-    descrizone = models.CharField(max_length=100)
-    ward_ref = models.CharField(max_length=11, choices=CHOICES_WARD, null=False, blank=False)
-
-    
-class RicettaBagnato(models.Model):
-    numero_ricetta = models.IntegerField(default=None)
-    data_ricetta = models.DateField(default=date.today)
-    fk_articolo = models.ForeignKey(Articolo, related_name='ricette_bagnato', on_delete=models.CASCADE)
-    fk_tipoanimale = models.ForeignKey(TipoAnimale, null=True, blank=True, on_delete=models.SET_NULL, related_name='ricette_bagnato')
-    fk_tipogrezzo = models.ForeignKey(TipoGrezzo, null=True, blank=True, on_delete=models.SET_NULL, related_name='ricette_bagnato')
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    def save(self, *args, **kwargs):
-        if self.numero_ricetta is None:
-            # Trova il valore massimo esistente in numero_ricetta
-            max_numero_ricetta = RicettaBagnato.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            
-            if max_numero_ricetta is not None:
-                self.numero_ricetta = max_numero_ricetta + 1
-            else:
-                # Se non ci sono ancora elementi, imposta il default a 1
-                self.numero_ricetta = 1
-        
-        super().save(*args, **kwargs)
-    
-    class Meta:
-        ordering = ["-data_ricetta"]
-        
-    def __str__(self):
-        formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
-        return f"Ricetta n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
-        
-class RevisioneRicettaBagnato(models.Model):
-    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='revisione_ricette_bagnato', on_delete=models.CASCADE)
-    numero_revisione = models.IntegerField(default=None)
-    data_revisione = models.DateField(default=date.today)
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='revisione_ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ["-data_revisione"]
-        
-    def __str__(self):
-        formatted_data_revisione = self.data_revisione.strftime('%d/%m/%Y')
-        return f"Revisione n.: {self.numero_revisione} - Data Revisione: {formatted_data_revisione}"
-
-    def save(self, *args, **kwargs):
-        if self.numero_revisione is None:
-            # Trova il valore massimo esistente in numero_revisione per la stessa fk_ricetta_bagnato
-            max_numero_revisione = RevisioneRicettaBagnato.objects.filter(fk_ricetta_bagnato=self.fk_ricetta_bagnato).aggregate(Max('numero_revisione'))['numero_revisione__max']
-            
-            if max_numero_revisione is not None:
-                self.numero_revisione = max_numero_revisione + 1
-            else:
-                # Se non ci sono ancora elementi per la stessa fk_ricetta_bagnato, imposta il default a 1
-                self.numero_revisione = 1
-        
-        super().save(*args, **kwargs)
-        
-        
-class RicettaFondo(models.Model):
-    numero_ricetta = models.IntegerField(default=None)
-    data_ricetta = models.DateField(default=date.today)
-    fk_colore = models.ForeignKey(Colore, related_name='ricette_fondo', on_delete=models.CASCADE)
-    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_fondo', on_delete=models.CASCADE)
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='ricette_fondo', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-        
-    def save(self, *args, **kwargs):
-        if self.numero_ricetta is None:
-            # Trova il valore massimo esistente in numero_ricetta
-            max_numero_ricetta = RicettaFondo.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            
-            if max_numero_ricetta is not None:
-                self.numero_ricetta = max_numero_ricetta + 1
-            else:
-                # Se non ci sono ancora elementi, imposta il default a 1
-                self.numero_ricetta = 1
-        
-        super().save(*args, **kwargs)
-    
-    class Meta:
-        ordering = ["-data_ricetta"]
-        
-    def __str__(self):
-        formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
-        return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
-
-class RevisioneRicettaFondo(models.Model):
-    fk_ricetta_fondo = models.ForeignKey(RicettaFondo, related_name='revisione_ricette_fondo', on_delete=models.CASCADE)
-    numero_revisione = models.IntegerField(default=None)
-    data_revisione = models.DateField(default=date.today)
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='revisione_ricette_fondo', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        ordering = ["-data_revisione"]
-        
-    def __str__(self):
-        formatted_data_revisione = self.data_revisione.strftime('%d/%m/%Y')
-        return f"Revisione Fondo n.: {self.numero_revisione} - Data Revisione: {formatted_data_revisione}"
-
-    def save(self, *args, **kwargs):
-        if self.numero_revisione is None:
-            # Trova il valore massimo esistente in numero_revisione per la stessa fk_ricetta_bagnato
-            max_numero_revisione = RevisioneRicettaFondo.objects.filter(fk_ricetta_fondo=self.fk_ricetta_fondo).aggregate(Max('numero_revisione'))['numero_revisione__max']
-            
-            if max_numero_revisione is not None:
-                self.numero_revisione = max_numero_revisione + 1
-            else:
-                # Se non ci sono ancora elementi per la stessa fk_ricetta_bagnato, imposta il default a 1
-                self.numero_revisione = 1
-        
-        super().save(*args, **kwargs)
-        
-    
-class RicettaRifinizione(models.Model):
-    pass
-    

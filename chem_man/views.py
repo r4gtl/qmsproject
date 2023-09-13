@@ -22,6 +22,7 @@ from django.db.models import Max
 
 from .filters import *
 
+
 from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
@@ -30,16 +31,19 @@ from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
 
 
 
-from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
-                    SchedaTecnicaModelForm, SostanzaModelForm,
-                    SostanzaSVHCModelForm, HazardStatementModelForm,
-                    PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
-                    SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
-                    ImballaggioPCModelForm, OrdineProdottoChimicoModelForm, DettaglioOrdineProdottoChimicoModelForm,
-                    AcquistoProdottoChimicoModelForm, DettaglioAcquistoProdottoChimicoModelForm
-)
+# from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
+#                     SchedaTecnicaModelForm, SostanzaModelForm,
+#                     SostanzaSVHCModelForm, HazardStatementModelForm,
+#                     PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
+#                     SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
+#                     ImballaggioPCModelForm, OrdineProdottoChimicoModelForm, DettaglioOrdineProdottoChimicoModelForm,
+#                     AcquistoProdottoChimicoModelForm, DettaglioAcquistoProdottoChimicoModelForm
+# )
 
-# Create your views here.
+from .forms import *
+
+
+
 
 def home_prodotti_chimici(request):
     prodotti_chimici = ProdottoChimico.objects.all()
@@ -1472,9 +1476,6 @@ def delete_acquisto_prodotto_chimico(request, pk):
 
 
 # Dettaglio Acquisto
-
-
-
 class DettaglioAcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
     model = DettaglioAcquistoProdottoChimico
     form_class = DettaglioAcquistoProdottoChimicoModelForm
@@ -1567,8 +1568,6 @@ def delete_dettaglio_acquisto_prodotto_chimico(request, pk):
 
 # Stampe
 def stampa_ordine(request, pk):
-
-
     # Recupera il prodotto con l'id fornito o restituisce 404 se non trovato
     ordine = get_object_or_404(OrdineProdottoChimico, id=pk)
     dettagli_ordine=DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=pk)
@@ -1585,3 +1584,5 @@ def controlla_dettagli_ordine(request, pk):
     dettagli_presenti = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=ordine).exists()
 
     return JsonResponse({'dettagli_presenti': dettagli_presenti})
+
+
