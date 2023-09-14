@@ -50,6 +50,56 @@ class ControlloPeriodicoEstintore(models.Model):
     class Meta:
         ordering = ["-scadenza"]
 
+class Idrante(models.Model):
+    
+     # Tipo Idrante
+    IP = 'idrante a parete'
+    ISS = 'Idrante soprasuolo'
+    ICS = 'Idrante a colonna soprasuolo'
+    GFS = 'Gruppo fisso schiuma'
+    GMS = 'Gruppo mobile schiuma'
+    AVVF = 'Attacco autopompa VVF'
+    AQ = 'Alimentazione acquedotto'
+    AP = 'Alimentazione con pompe'
+    EVF = 'Evacuatori di fumo'
+    N = 'Naspo'
+        
+    CHOICES_TYPE = (
+        (IP, 'Interno'),
+        (ISS, 'Idrante soprasuolo'),     
+        (ICS, 'Idrante a colonna soprasuolo'),     
+        (GFS, 'Gruppo fisso schiuma'),     
+        (GMS, 'Gruppo mobile schiuma'),     
+        (AVVF, 'Attacco autopompa VVF'),     
+        (AQ, 'Alimentazione acquedotto'),     
+        (AP, 'Alimentazione con pompe'),     
+        (EVF, 'Evacuatori di fumo'),     
+        (N, 'Naspo'),     
+    )
+
+    numero_posizione = models.IntegerField()
+    tipo_idrante = models.CharField(max_length=35, choices=CHOICES_TYPE)
+    uni = models.CharField(max_length=4, blank=True, null=True)
+    metri = models.CharField(max_length=4, blank=True, null=True)
+    anno = models.CharField(max_length=4)
+    data_dismissione = models.DateField(null=True, blank=True)
+    scadenza_schiuma = models.DateField(null=True, blank=True)
+    scadenza_collaudo = models.DateField()
+    ubicazione = models.CharField(max_length=200)
+
+
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='idrante', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["numero_posizione"]
+
+    def __str__(self):
+        return f"{self.numero_posizione} - {self.tipo_idrante}"
+    
+
+
 
 
     

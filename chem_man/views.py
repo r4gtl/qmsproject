@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.db.models import Max
 
-# from django_filters.views import FilterView
+
 
 
 # from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
