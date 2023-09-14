@@ -7,18 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 from django.db.models import Max
-
-
-
-
-# from .filters import (ProdottoChimicoFilter, SostanzaFilter, 
-#                     SostanzaSVHCFilter, HazardStatementFilter, 
-#                     PrecautionaryStatementFilter, SimboloGHSFilter,
-#                     ImballaggioPCFilter, OrdineProdottoChimicoFilter,
-#                     AcquistoProdottoChimicoFilter,
-# )
 
 from .filters import *
 
@@ -27,18 +17,9 @@ from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
                     Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
                     SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
                     ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico, AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
+                    
                     )
 
-
-
-# from .forms import (ProdottoChimicoModelForm, PrezzoProdottoModelForm,
-#                     SchedaTecnicaModelForm, SostanzaModelForm,
-#                     SostanzaSVHCModelForm, HazardStatementModelForm,
-#                     PrecautionaryStatementModelForm, SimboloGHSModelForm, SchedaSicurezzaModelForm,
-#                     SimboloGHS_SDSModelForm, PrecautionaryStatement_SDSModelForm, HazardStatement_SDSModelForm, Sostanza_SDSModelForm,
-#                     ImballaggioPCModelForm, OrdineProdottoChimicoModelForm, DettaglioOrdineProdottoChimicoModelForm,
-#                     AcquistoProdottoChimicoModelForm, DettaglioAcquistoProdottoChimicoModelForm
-# )
 
 from .forms import *
 

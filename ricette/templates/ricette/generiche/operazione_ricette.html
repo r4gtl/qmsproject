@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ block.super }} | Generiche - Operazioni {% endblock %}
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_ricette.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb" class="mt-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette' %}">Home Ricette</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'ricette:tabelle_generiche' %}">Tabelle Generiche</a></li>
+
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ operazione }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Operazione</li>
+        {% endif %}             
+        
+        
+    </ol>
+</nav>
+
+    <div class="container">
+        {% if form.instance.id  %}
+            <h3>Modifica {{ operazione }}</h3>
+        {% else %}
+            <h3> Aggiungi Operazione</h3>
+        {% endif %}
+        
+        
+        <hr>
+        
+        
+        
+        
+        <br>
+
+
+        <form method="post">
+            {% csrf_token %}
+
+            
+
+            <div class="row">
+                <div class="col-5">
+                    {{ form.descrizione|as_crispy_field }}
+                </div>
+                <div class="col-5">
+                    {{ form.ward_ref|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.created_by|as_crispy_field }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    {{ form.note|as_crispy_field }}
+                </div>
+                
+            </div>
+
+            
+            
+
+            
+            <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+        </form>
+        <hr>
+        
+        
+    </div>
+
+
+
+{% endblock %}
+
+{% block extra_scripts %}
+
+{% endblock %} 

@@ -24,8 +24,11 @@ class OperazioneRicette(models.Model):
         (BAGNATO, 'Bagnato'),
         (RIFINIZIONE, 'Rifinizione')
     )
-    descrizone = models.CharField(max_length=100)
+    descrizione = models.CharField(max_length=100)
     ward_ref = models.CharField(max_length=11, choices=CHOICES_WARD, null=False, blank=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='operazione_ricette', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 # Ricette bagnato    
 class RicettaBagnato(models.Model):

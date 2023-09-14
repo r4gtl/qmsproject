@@ -4,24 +4,10 @@
         
         <ul>
             <li class="border-top my-3"></li>
-            <li><a href="{% url 'chem_man:tabelle_generiche' %}">Tabelle Generiche</a></li>
+            <li><a href="{% url 'chem_man:home_prodotti_chimici' %}">Prodotti Chimici</a></li>
             <li class="border-top my-3"></li>
-            <li><a href="{% url 'chem_man:home_prodotti_chimici' %}">Lista Prodotti</a></li>
+            <li><a href="{% url 'ricette:tabelle_generiche' %}">Tabelle Generiche</a></li>
 
-            <li class="mb-1">
-                        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#acquisti-collapse" aria-expanded="false">
-                            Acquisti
-                        </button>
-                        <div class="collapse" id="acquisti-collapse">
-                            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="{% url 'chem_man:dashboard_acquisti_prodotti_chimici' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Dashboard Acquisti</a></li>
-                            <li><a href="{% url 'chem_man:home_ordini_prodotti_chimici' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ordini</a></li>
-                            <li><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ddt in ingresso</a></li>
-                            
-                            
-                            </ul>
-                        </div>
-                        </li>
             <!-- Ricette -->
             
             
