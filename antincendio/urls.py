@@ -12,6 +12,21 @@ urlpatterns = [
 
     # Home
     path("", antincendio_home, name="antincendio_home"), 
+
+    # Estintori
+    path('aggiungi_estintore/', EstintoreCreateView.as_view(), name="aggiungi_estintore"), 
+    path('modifica_estintore/<int:pk>/', EstintoreUpdateView.as_view(), name="modifica_estintore"), 
+    path('delete_estintore/<int:pk>', delete_estintore, name="delete_estintore"),
+
+    # Idranti
+    path('aggiungi_idrante/', IdranteCreateView.as_view(), name="aggiungi_idrante"), 
+    path('modifica_idrante/<int:pk>/', IdranteUpdateView.as_view(), name="modifica_idrante"), 
+    path('delete_idrante/<int:pk>', delete_idrante, name="delete_idrante"),
+
+    # POrte/Uscite
+    path('aggiungi_porta_uscita/', PortaUscitaCreateView.as_view(), name="aggiungi_porta_uscita"), 
+    path('modifica_porta_uscita/<int:pk>/', PortaUscitaUpdateView.as_view(), name="modifica_porta_uscita"), 
+    path('delete_porta_uscita/<int:pk>', delete_porta_uscita, name="delete_porta_uscita"),
     
 
     

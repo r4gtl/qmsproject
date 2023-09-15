@@ -15,12 +15,13 @@ from .forms import *
 
 
 def antincendio_home(request):
+
+    # Estintori
     estintori = Estintore.objects.all()
     tot_estintori = Estintore.objects.filter(data_dismissione__isnull=True).count()
     estintori_filter = EstintoreFilter(request.GET, queryset=estintori)
     filtered_estintori = estintori_filter.qs
     estintori_filter_count = filtered_estintori.count()
-
     
     # Paginazione Estintori
     page_estintori = request.GET.get('page', 1)
@@ -33,6 +34,42 @@ def antincendio_home(request):
         estintori_paginator = paginator_estintori.page(paginator_estintori.num_pages)
 
 
+     # Idranti
+    idranti = Idrante.objects.all()
+    tot_idranti = Idrante.objects.filter(data_dismissione__isnull=True).count()
+    idranti_filter = IdranteFilter(request.GET, queryset=idranti)
+    filtered_idranti = idranti_filter.qs
+    idranti_filter_count = filtered_idranti.count()
+    
+    # Paginazione Idranti
+    page_idranti = request.GET.get('page', 1)
+    paginator_idranti = Paginator(filtered_idranti, 50)
+    try:
+        idranti_paginator = paginator_idranti.page(page_idranti)
+    except PageNotAnInteger:
+        idranti_paginator = paginator_idranti.page(1)
+    except EmptyPage:
+        idranti_paginator = paginator_idranti.page(paginator_idranti.num_pages)
+
+    
+     # Porte/Uscite
+    porte_uscite = PortaUscita.objects.all()
+    tot_porte_uscite = PortaUscita.objects.count()
+    porte_uscite_filter = PortaUscitaFilter(request.GET, queryset=porte_uscite)
+    filtered_porte_uscite = porte_uscite_filter.qs
+    porte_uscite_filter_count = filtered_porte_uscite.count()
+    
+    # Paginazione Idranti
+    page_porte_uscite = request.GET.get('page', 1)
+    paginator_porte_uscite = Paginator(filtered_porte_uscite, 50)
+    try:
+        porte_uscite_paginator = paginator_porte_uscite.page(page_porte_uscite)
+    except PageNotAnInteger:
+        porte_uscite_paginator = paginator_porte_uscite.page(1)
+    except EmptyPage:
+        porte_uscite_paginator = paginator_porte_uscite.page(paginator_porte_uscite.num_pages)
+
+
 
 
     context = {
@@ -42,11 +79,25 @@ def antincendio_home(request):
         'tot_estintori': tot_estintori,
         'filter_estintori': estintori_filter,
         'estintori_filter_count': estintori_filter_count,
+
+        # Idranti
+        'idranti': idranti,
+        'idranti_paginator': idranti_paginator,
+        'tot_idranti': tot_idranti,
+        'filter_idranti': idranti_filter,
+        'idranti_filter_count': idranti_filter_count,
+
+        # Porte/Uscite
+        'porte_uscite': porte_uscite,
+        'porte_uscite_paginator': porte_uscite_paginator,
+        'tot_porte_uscite': tot_porte_uscite,
+        'filter_porte_uscite': porte_uscite_filter,
+        'porte_uscite_filter_count': porte_uscite_filter_count,
         
 
     }
 
-    return render(request, 'antincendio/home_antincendio.html', context)
+    return render(request, 'antincendio/antincendio_home.html', context)
 
 
 
@@ -60,7 +111,7 @@ class EstintoreCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('antincendio:home_antincendio')
+        return reverse_lazy('antincendio:antincendio_home')
 
 
 
@@ -82,7 +133,7 @@ class EstintoreUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('antincendio:home_antincendio')
+        return reverse_lazy('antincendio:antincendio_home')
 
 
     def form_valid(self, form):
@@ -101,5 +152,116 @@ class EstintoreUpdateView(LoginRequiredMixin, UpdateView):
 def delete_estintore(request, pk):
         deleteobject = get_object_or_404(Estintore, pk = pk)
         deleteobject.delete()
-        url_match = reverse_lazy('antincendio:home_antincendio')
+        url_match = reverse_lazy('antincendio:antincendio_home')
+        return redirect(url_match)
+
+
+# Idranti
+
+class IdranteCreateView(LoginRequiredMixin,CreateView):
+    model = Idrante
+    form_class = IdranteModelForm
+    template_name = 'antincendio/idrante.html'
+    success_message = 'Idrante aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class IdranteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Idrante
+    form_class = IdranteModelForm
+    template_name = 'antincendio/idrante.html'
+    success_message = 'Idrante modificato correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_idrante(request, pk):
+        deleteobject = get_object_or_404(Idrante, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('antincendio:antincendio_home')
+        return redirect(url_match)
+
+
+
+# Porte/Uscite
+
+class PortaUscitaCreateView(LoginRequiredMixin,CreateView):
+    model = PortaUscita
+    form_class = PortaUscitaModelForm
+    template_name = 'antincendio/porta_uscita.html'
+    success_message = 'Porta/Uscita aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class PortaUscitaUpdateView(LoginRequiredMixin, UpdateView):
+    model = PortaUscita
+    form_class = PortaUscitaModelForm
+    template_name = 'antincendio/porta_uscita.html'
+    success_message = 'Porta/Uscita modificata correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_porta_uscita(request, pk):
+        deleteobject = get_object_or_404(PortaUscita, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('antincendio:antincendio_home')
         return redirect(url_match)

@@ -99,6 +99,80 @@ class Idrante(models.Model):
         return f"{self.numero_posizione} - {self.tipo_idrante}"
     
 
+    
+class PortaUscita(models.Model):
+
+    # Porte/Uscite
+    AS = 'portone scorrevole'
+    N = 'normale'
+    TF = 'tagliafuoco'
+    US = 'uscita di sicurezza'
+    
+        
+    CHOICES_DOOR = (
+        (AS, 'Portone scorrevole'),
+        (N, 'Normale'),     
+        (TF, 'Tagliafuoco'),     
+        (US, 'Uscita di sicurezza')  
+           
+    )
+
+    # Maniglioni
+    MAP = 'maniglione antipanico'
+    MAN = 'maniglia'  
+        
+    CHOICES_HANDLE = (
+        (MAP, 'Maniglione Antipanico'),
+        (MAN, 'Maniglia')
+    )
+
+    # Ante
+    A = 'anta normale'
+    A2 = 'due ante'  
+    AS = 'portone scorrevole'  
+        
+    CHOICES_ANTE = (
+        (A, 'Anta normale'),
+        (A2, 'Due ante'),
+        (AS, 'Portone scorrevole'),
+    )
+
+    numero_posizione = models.IntegerField()
+    tipo_porta = models.CharField(max_length=35, choices=CHOICES_DOOR)
+    marcatura_ce = models.BooleanField(default=False)
+    maniglia = models.CharField(max_length=35, choices=CHOICES_HANDLE)
+    anta = models.CharField(max_length=35, choices=CHOICES_ANTE)
+    matricola = models.CharField(max_length=100, null=True, blank=True)
+    ubicazione = models.CharField(max_length=200, null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='porta', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["numero_posizione"]
+
+    def __str__(self):
+        return f"{self.numero_posizione} - {self.tipo_porta}"
+    
+    
+class ImpiantoSpegnimento(models.Model):
+    numero_posizione = models.IntegerField()
+    ubicazione = models.CharField(max_length=200, null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='impianto', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["numero_posizione"]
+
+
+
+class AttrezzaturaAntincendio(models.Model):
+    descrizione = models.CharField(max_length=200, null=True, blank=True)
+    
+
+
+
 
 
 
