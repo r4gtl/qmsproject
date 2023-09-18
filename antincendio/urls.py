@@ -28,6 +28,10 @@ urlpatterns = [
     path('modifica_porta_uscita/<int:pk>/', PortaUscitaUpdateView.as_view(), name="modifica_porta_uscita"), 
     path('delete_porta_uscita/<int:pk>', delete_porta_uscita, name="delete_porta_uscita"),
     
-
+    # Registri Antincendio
+    path("registri_antincendio/", registro_controlli_home, name="registro_controlli_home"),
+    path('registri_antincendio/aggiungi_registro_controlli/', RegistroControlliAntincendioCreateView.as_view(), name="aggiungi_registro_controlli"), 
+    path('registri_antincendio/modifica_registro_controlli/<int:pk>/', RegistroControlliAntincendioUpdateView.as_view(), name="modifica_registro_controlli"), 
+    path('registri_antincendio/delete_registro_controlli/<int:pk>', delete_registro_controlli, name="delete_registro_controlli"),
     
 ]

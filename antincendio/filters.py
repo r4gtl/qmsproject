@@ -2,6 +2,9 @@ import django_filters
 from django_filters.widgets import BooleanWidget
 from django import forms
 from .models import *
+from anagrafiche.models import Fornitore
+from human_resources.models import HumanResource
+
 
 
 
@@ -39,3 +42,30 @@ class PortaUscitaFilter(django_filters.FilterSet):
     class Meta:
         model = PortaUscita
         fields = ['numero_posizione', 'tipo_porta']
+
+
+
+class RegistroControlliAntincendioFilter(django_filters.FilterSet):
+    
+    interno_esterno = django_filters.ChoiceFilter(
+        field_name='interno_esterno',
+        lookup_expr='icontains',
+        widget=forms.Select(attrs={'style': 'width: 90%; margin-left: 5%'}),
+        choices=RegistroControlliAntincendio.CHOICES_INT_EST  # Usa le scelte definite nel modello
+    )
+    fk_fornitore = django_filters.ModelChoiceFilter(
+        field_name='fk_fornitore',
+        queryset=Fornitore.objects.all(),
+        label='Fornitore'
+    )
+    fk_operatore= django_filters.ModelChoiceFilter(
+        field_name='fk_operatore',
+        queryset=HumanResource.objects.all(),
+        label='Operatore'
+    )
+    data_intervento=django_filters.DateFromToRangeFilter()
+    
+    
+    class Meta:
+        model = RegistroControlliAntincendio
+        fields = ['interno_esterno', 'fk_fornitore', 'fk_operatore', 'data_intervento']

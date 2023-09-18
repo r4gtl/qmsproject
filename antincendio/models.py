@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from anagrafiche.models import Fornitore
+from human_resources.models import HumanResource
 
 
 # Create your models here.
@@ -173,7 +175,95 @@ class AttrezzaturaAntincendio(models.Model):
 
 
 
+# Registro Manutenzioni e Controlli
+class RegistroControlliAntincendio(models.Model):
+
+    # Controllo Interno/Esterno
+    INTERNO = 'interno'
+    ESTERNO = 'esterno'  
+        
+    CHOICES_INT_EST = (
+        (INTERNO, 'Interno'),
+        (ESTERNO, 'Esterno')
+    )
+
+    interno_esterno = models.CharField(max_length=35, choices=CHOICES_INT_EST)
+    fk_fornitore = models.ForeignKey(Fornitore, related_name='registro_controlli_antincendio', null=True, blank=True, on_delete=models.CASCADE)
+    fk_operatore = models.ForeignKey(HumanResource, related_name='registro_controlli_antincendio', null=True, blank=True, on_delete=models.CASCADE)
+    numero_intervento = models.CharField(max_length=10, null=True, blank=True)
+    data_intervento = models.DateField()
+    prossima_scadenza = models.DateField()
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='registro_controlli_antincendio', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
+# Creo un dettaglio registro per ogni tipologia di attrezzatura
+class DettaglioRegistroEstintore(models.Model):
+    fk_registro = models.ForeignKey(Fornitore, related_name='dettaglio_registro_estintore', on_delete=models.CASCADE)
+    fk_estintore = models.ForeignKey(Estintore, related_name='dettaglio_registro_estintore', on_delete=models.CASCADE)
+    manutenzione_effettuata = models.BooleanField(default=False)
+    controllo_effettuato = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_registro_estintore', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Dettaglio del registro per {self.fk_estintore}"
     
+
+class DettaglioRegistroIdrante(models.Model):
+    fk_registro = models.ForeignKey(Fornitore, related_name='dettaglio_registro_idrante', on_delete=models.CASCADE)
+    fk_idrante = models.ForeignKey(Idrante, related_name='dettaglio_registro_idrante', on_delete=models.CASCADE)
+    manutenzione_effettuata = models.BooleanField(default=False)
+    controllo_effettuato = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_registro_idrante', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Dettaglio del registro per {self.fk_idrante}"
+    
+
+class DettaglioRegistroPortaUscita(models.Model):
+    fk_registro = models.ForeignKey(Fornitore, related_name='dettaglio_registro_porta_uscita', on_delete=models.CASCADE)
+    fk_porta_uscita = models.ForeignKey(PortaUscita, related_name='dettaglio_registro_porta_uscita', on_delete=models.CASCADE)
+    manutenzione_effettuata = models.BooleanField(default=False)
+    controllo_effettuato = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_registro_porta_uscita', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Dettaglio del registro per {self.fk_porta_uscita}"
+    
+
+class DettaglioRegistroImpiangoSpegnimento(models.Model):
+    fk_registro = models.ForeignKey(Fornitore, related_name='dettaglio_registro_impianto_spegnimento', on_delete=models.CASCADE)
+    fk_impianto = models.ForeignKey(ImpiantoSpegnimento, related_name='dettaglio_registro_impianto_spegnimento', on_delete=models.CASCADE)
+    manutenzione_effettuata = models.BooleanField(default=False)
+    controllo_effettuato = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_registro_impianto_spegnimento', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Dettaglio del registro per {self.fk_impianto}"
+    
+
+class DettaglioRegistroAttrezzaturaAntincendio(models.Model):
+    fk_registro = models.ForeignKey(Fornitore, related_name='dettaglio_registro_attrezzatura_antincendio', on_delete=models.CASCADE)
+    fk_attrezzatura = models.ForeignKey(AttrezzaturaAntincendio, related_name='dettaglio_registro_attrezzatura_antincendio', on_delete=models.CASCADE)
+    manutenzione_effettuata = models.BooleanField(default=False)
+    controllo_effettuato = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_registro_attrezzatura_antincendio', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Dettaglio del registro per {self.fk_attrezzatura}"
+
+
+
+
+

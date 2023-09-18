@@ -265,3 +265,83 @@ def delete_porta_uscita(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('antincendio:antincendio_home')
         return redirect(url_match)
+
+# Registro controlli attrezzature antincendio
+def registro_controlli_home(request):
+
+    registri_controlli = RegistroControlliAntincendio.objects.all()
+    registri_controlli_filter = RegistroControlliAntincendioFilter(request.GET, queryset=registri_controlli)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(registri_controlli_filter.qs, 50)  
+
+    try:
+        registri_controlli_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        registri_controlli_paginator = paginator.page(1)
+    except EmptyPage:
+        registri_controlli_paginator = paginator.page(paginator.num_pages)
+
+
+    context = {
+        'registri_controlli_paginator': registri_controlli_paginator,
+        'filter': registri_controlli_filter,
+
+    }
+
+    return render(request, 'antincendio/registri_antincendio/registri_antincendio_home.html', context)
+
+
+# Registro Controlli
+
+class RegistroControlliAntincendioCreateView(LoginRequiredMixin,CreateView):
+    model = RegistroControlliAntincendio
+    form_class = RegistroControlliAntincendioModelForm
+    template_name = 'antincendio/registri_antincendio/registro_antincendio.html'
+    success_message = 'Registro aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:registro_controlli_home')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class RegistroControlliAntincendioUpdateView(LoginRequiredMixin, UpdateView):
+    model = RegistroControlliAntincendio
+    form_class = RegistroControlliAntincendioModelForm
+    template_name = 'antincendio/registri_antincendio/registro_antincendio.html'
+    success_message = 'Registro modificato correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:registro_controlli_home')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_registro_controlli(request, pk):
+        deleteobject = get_object_or_404(RegistroControlliAntincendio, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('antincendio:registro_controlli_home')
+        return redirect(url_match)
+

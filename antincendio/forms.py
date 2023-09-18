@@ -21,10 +21,10 @@ class EstintoreModelForm(forms.ModelForm):
             'matricola': forms.TextInput(attrs={'placeholder': 'Inserisci il numero di matricola'}),
             'anno': forms.TextInput(attrs={'placeholder': 'Inserisci l\'anno di fabbricazione'}),
             'ubicazione': forms.TextInput(attrs={'placeholder': 'Inserisci la posizione o il reparto'}),
-            'data_dismissione': forms.TextInput(attrs={'placeholder': 'Inserisci eventuale data di dismissione'}),
-            'numero_posizione': forms.TextInput(attrs={'placeholder': 'Inserisci il numero assegnato'}),
-            'scadenza_revisione': forms.TextInput(attrs={'placeholder': 'Inserisci/modifica la scadenza di revisione'}),
-            'scadenza_collaudo': forms.TextInput(attrs={'placeholder': 'Inserisci/modifica la scadenza di collaudo'}),
+            'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'numero_posizione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'scadenza_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'scadenza_collaudo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput()
         }
@@ -47,6 +47,7 @@ class EstintoreModelForm(forms.ModelForm):
 
 class IdranteModelForm(forms.ModelForm):   
     
+    
     class Meta:
         model = Idrante
         fields= '__all__'
@@ -56,9 +57,9 @@ class IdranteModelForm(forms.ModelForm):
             'uni': forms.TextInput(attrs={'placeholder': 'Uni'}),
             'metri': forms.TextInput(attrs={'placeholder': 'Metri'}),
             'anno': forms.TextInput(attrs={'placeholder': 'Inserisci l\'anno di fabbricazione'}),
-            'data_dismissione': forms.TextInput(attrs={'placeholder': 'Inserisci eventuale data di dismissione'}),
-            'scadenza_schiuma': forms.TextInput(attrs={'placeholder': 'Inserisci eventuale data di dismissione'}),
-            'scadenza_collaudo': forms.TextInput(attrs={'placeholder': 'Inserisci eventuale data di dismissione'}),
+            'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'scadenza_schiuma': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'scadenza_collaudo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'ubicazione': forms.TextInput(attrs={'placeholder': 'Inserisci la posizione o il reparto'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
             'created_by': forms.HiddenInput()
@@ -108,6 +109,40 @@ class PortaUscitaModelForm(forms.ModelForm):
                        
                      
 
+        }
+
+
+
+class RegistroControlliAntincendioModelForm(forms.ModelForm):   
+    fk_fornitore = forms.ModelChoiceField(
+        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        label='Fornitore'
+    )
+    fk_operatore = forms.ModelChoiceField(
+        queryset=HumanResource.objects.all(),
+        label='Operatore'
+    )
+
+    class Meta:
+        model = RegistroControlliAntincendio
+        fields= '__all__'
+        widgets = {
+            'interno_esterno': forms.Select(),
+            'numero_intervento': forms.TextInput(attrs={'placeholder': 'Inserisci il numero intervento, se presente...'}),
+            
+            'data_intervento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+            
+        }
+        labels = {
+            'interno_esterno': 'Interno/Esterno',            
+            'numero_intervento': 'Numero intervento',
+            'data_intervento': 'Data intervento',
+            'prossima_scadenza': 'Prossima scadenza',                      
+            'note': 'Note'
         }
 
 
