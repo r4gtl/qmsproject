@@ -23,10 +23,15 @@ urlpatterns = [
     path('modifica_idrante/<int:pk>/', IdranteUpdateView.as_view(), name="modifica_idrante"), 
     path('delete_idrante/<int:pk>', delete_idrante, name="delete_idrante"),
 
-    # POrte/Uscite
+    # Porte/Uscite
     path('aggiungi_porta_uscita/', PortaUscitaCreateView.as_view(), name="aggiungi_porta_uscita"), 
     path('modifica_porta_uscita/<int:pk>/', PortaUscitaUpdateView.as_view(), name="modifica_porta_uscita"), 
     path('delete_porta_uscita/<int:pk>', delete_porta_uscita, name="delete_porta_uscita"),
+    
+    # Attrezzatura
+    path('aggiungi_attrezzatura_antincendio/', AttrezzaturaAntincendioCreateView.as_view(), name="aggiungi_attrezzatura_antincendio"), 
+    path('modifica_attrezzatura_antincendio/<int:pk>/', AttrezzaturaAntincendioUpdateView.as_view(), name="modifica_attrezzatura_antincendio"), 
+    path('delete_attrezzatura_antincendio/<int:pk>', delete_attrezzatura_antincendio, name="delete_attrezzatura_antincendio"),
     
     # Registri Antincendio
     path("registri_antincendio/", registro_controlli_home, name="registro_controlli_home"),

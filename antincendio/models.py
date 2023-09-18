@@ -171,6 +171,9 @@ class ImpiantoSpegnimento(models.Model):
 
 class AttrezzaturaAntincendio(models.Model):
     descrizione = models.CharField(max_length=200, null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='attrezzatura_antincendio', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
     
 
 

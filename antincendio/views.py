@@ -265,6 +265,60 @@ def delete_porta_uscita(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('antincendio:antincendio_home')
         return redirect(url_match)
+    
+# Attrezzatura antincendio
+
+class AttrezzaturaAntincendioCreateView(LoginRequiredMixin,CreateView):
+    model = AttrezzaturaAntincendio
+    form_class = AttrezzaturaAntincendioModelForm
+    template_name = 'antincendio/attrezzatura_antincendio.html'
+    success_message = 'Attrezzatura aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+        }
+
+class AttrezzaturaAntincendioUpdateView(LoginRequiredMixin, UpdateView):
+    model = AttrezzaturaAntincendio
+    form_class = AttrezzaturaAntincendioModelForm
+    template_name = 'antincendio/attrezzatura_antincendio.html'
+    success_message = 'Attrezzatura modificata correttamente!'
+
+
+    def get_success_url(self):
+        return reverse_lazy('antincendio:antincendio_home')
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # pk_prodottochimico = self.object.pk
+        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+
+        return context
+
+
+def delete_attrezzatura_antincendio(request, pk):
+        deleteobject = get_object_or_404(AttrezzaturaAntincendio, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('antincendio:antincendio_home')
+        return redirect(url_match)
 
 # Registro controlli attrezzature antincendio
 def registro_controlli_home(request):

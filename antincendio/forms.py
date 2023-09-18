@@ -106,9 +106,23 @@ class PortaUscitaModelForm(forms.ModelForm):
             'matricola': 'Matricola',            
             'ubicazione': 'Ubicazione',            
             'note': 'Note'
-                       
-                     
+        }
+        
 
+class AttrezzaturaAntincendioModelForm(forms.ModelForm):   
+    
+    class Meta:
+        model = AttrezzaturaAntincendio
+        fields= '__all__'
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci la descrizione'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+            
+        }
+        labels = {
+            'descrizione': 'Descrizione', 
+            'note': 'Note'
         }
 
 
@@ -116,11 +130,13 @@ class PortaUscitaModelForm(forms.ModelForm):
 class RegistroControlliAntincendioModelForm(forms.ModelForm):   
     fk_fornitore = forms.ModelChoiceField(
         queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
-        label='Fornitore'
+        label='Fornitore',
+        required=False
     )
     fk_operatore = forms.ModelChoiceField(
         queryset=HumanResource.objects.all(),
-        label='Operatore'
+        label='Operatore', 
+        required=False
     )
 
     class Meta:

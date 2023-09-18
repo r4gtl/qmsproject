@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Antincendio - Estintore {% endblock %}
+{% block title %}{{ block.super }} | Antincendio - Registro Antincendio {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_antincendio.html" %}
@@ -13,12 +13,12 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'antincendio:antincendio_home' %}">Home Antincendio</a></li>
-        
+        <li class="breadcrumb-item"><a href="{% url 'antincendio:registro_controlli_home' %}">Home Registri Antincendio</a></li>
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ estintore.matricola }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica Registro del {{ registro.data_intervento }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Estintore</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Registro</li>
         {% endif %}             
         
         
@@ -27,9 +27,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica {{ estintore.matricola }}</h3>
+            <h3>Modifica Registro del {{ registro.data_intervento }}</h3>
         {% else %}
-            <h3> Aggiungi Estintore</h3>
+            <h3> Aggiungi Registro</h3>
         {% endif %}
         
         
@@ -48,16 +48,16 @@
 
             <div class="row">
                 <div class="col-3">
-                    {{ form.tipo_estinguente|as_crispy_field }}
+                    {{ form.interno_esterno|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.classe|as_crispy_field }}
+                    {{ form.numero_intervento|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.peso|as_crispy_field }}
+                    {{ form.data_intervento|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.matricola|as_crispy_field }}
+                    {{ form.prossima_scadenza|as_crispy_field }}
                 </div>
 
                 
@@ -65,34 +65,20 @@
             </div>
 
             <div class="row">
-                <div class="col-3">
-                    {{ form.anno|as_crispy_field }}
+                <div class="col-6">
+                    {{ form.fk_fornitore|as_crispy_field }}
                 </div>
                 <div class="col-3">
-                    {{ form.ubicazione|as_crispy_field }}
+                    {{ form.fk_operatore|as_crispy_field }}
                 </div>
-                <div class="col-3">
-                    {{ form.data_dismissione|as_crispy_field }}
-                </div>
-                <div class="col-3">
-                    {{ form.numero_posizione|as_crispy_field }}
-                </div>
-
-                
                 
             </div>
 
             <div class="row">
-                <div class="col-2">
-                    {{ form.scadenza_revisione|as_crispy_field }}
-                </div>
-                <div class="col-2">
-                    {{ form.scadenza_collaudo|as_crispy_field }}
-                </div>
-                <div class="col-7">
+                <div class="col-6">
                     {{ form.note|as_crispy_field }}
                 </div>
-                <div class="col-1">
+                <div class="col-3">
                     {{ form.created_by|as_crispy_field }}
                 </div>
                 

@@ -4,7 +4,7 @@
 {% block title %}{{ block.super }} | Home - Antincendio {% endblock %}
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_anagrafiche.html" %}
+{% include "core/partials/_sidenav_antincendio.html" %}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
         <!-- Riga grafici e statistiche -->
         <div class="row">
           <div class="col-4">        
-            <canvas id="country_count" data-url=""></canvas>
+            
           </div>
         </div>
         <!-- Fine riga grafici e statistiche -->
@@ -487,38 +487,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-  
 
-  document.addEventListener('DOMContentLoaded', function() {
-        var ctx = document.getElementById('country_count').getContext('2d');
-        
-        fetch('{% url 'anagrafiche:get_country_count_client' %}')
-            .then(response => response.json())
-            .then(data => {
-                var myChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'Conteggio Clienti per Nazione',
-                            data: data.data,
-                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                precision: 0
-                            }
-                        }
-                    }
-                });
-            });
-    });
-
-</script>
 {% endblock %}

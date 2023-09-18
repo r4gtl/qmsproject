@@ -4,7 +4,7 @@
 {% block title %}{{ block.super }} | Home - Registri Antincendio {% endblock %}
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_anagrafiche.html" %}
+{% include "core/partials/_sidenav_antincendio.html" %}
 {% endblock %}
 
 {% block content %}
@@ -96,7 +96,7 @@
 
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="{% url 'antincendio:aggiungi_registro_antincendio' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Registro Antincendio</a>
+        <a href="{% url 'antincendio:aggiungi_registro_controlli' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Registro Antincendio</a>
         </div>  
         <br>
 
@@ -120,12 +120,12 @@
               <tbody>
                 {% for registro in registri_controlli_paginator %}
                     
-                    <td class="col-md"><a href="{% url 'antincendio:modifica_registro_antincendio' pk=registro.pk %}">{{ registro.interno_esterno }}</a></td>
+                    <td class="col-md"><a href="{% url 'antincendio:modifica_registro_controlli' pk=registro.pk %}">{{ registro.interno_esterno }}</a></td>
                      
-                    <td class="col-md text-end">{{ registro.fk_fornitore }}</td>  
-                    <td class="col-md">{{ registro.fk_operatore  }} </td>
+                    <td class="col-md text-end">{{ registro.fk_fornitore|default_if_none:"" }}</td>  
+                    <td class="col-md">{{ registro.fk_operatore|default_if_none:""  }} </td>
                     <td class="col-md">{{ registro.data_intervento  }} </td>
-                    <td class="col-md text-center"><a href="{% url 'antincendio:delete_registro_antincendio' pk=registro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                    <td class="col-md text-center"><a href="{% url 'antincendio:delete_registro_controlli' pk=registro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{registro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
