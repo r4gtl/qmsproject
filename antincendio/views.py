@@ -69,8 +69,42 @@ def antincendio_home(request):
     except EmptyPage:
         porte_uscite_paginator = paginator_porte_uscite.page(paginator_porte_uscite.num_pages)
 
-
-
+    
+    # Attrezzatura antincendio
+    attrezzature_antincendio = AttrezzaturaAntincendio.objects.all()
+    tot_attrezzature_antincendio = AttrezzaturaAntincendio.objects.count()
+    attrezzature_antincendio_filter = AttrezzaturaAntincendioFilter(request.GET, queryset=porte_uscite)
+    filtered_attrezzature_antincendio = attrezzature_antincendio_filter.qs
+    attrezzature_antincendio_filter_count = filtered_attrezzature_antincendio.count()
+    
+    # Paginazione Attrezzatura antincendio
+    page_attrezzature_antincendio = request.GET.get('page', 1)
+    paginator_attrezzature_antincendio = Paginator(filtered_attrezzature_antincendio, 50)
+    try:
+        attrezzature_antincendio_paginator = paginator_attrezzature_antincendio.page(page_attrezzature_antincendio)
+    except PageNotAnInteger:
+        attrezzature_antincendio_paginator = paginator_attrezzature_antincendio.page(1)
+    except EmptyPage:
+        attrezzature_antincendio_paginator = paginator_attrezzature_antincendio.page(paginator_attrezzature_antincendio.num_pages)
+        
+    
+    # Impianto Spegnimento
+    impianti_spegnimento = ImpiantoSpegnimento.objects.all()
+    tot_impianti_spegnimento = ImpiantoSpegnimento.objects.count()
+    impianti_spegnimento_filter = ImpiantoSpegnimentoFilter(request.GET, queryset=porte_uscite)
+    filtered_impianti_spegnimento = impianti_spegnimento_filter.qs
+    impianti_spegnimento_filter_count = filtered_impianti_spegnimento.count()
+    
+    # Paginazione Attrezzatura antincendio
+    page_impianti_spegnimento = request.GET.get('page', 1)
+    paginator_impianti_spegnimento = Paginator(filtered_impianti_spegnimento, 50)
+    try:
+        impianti_spegnimento_paginator = paginator_impianti_spegnimento.page(page_impianti_spegnimento)
+    except PageNotAnInteger:
+        impianti_spegnimento_paginator = paginator_impianti_spegnimento.page(1)
+    except EmptyPage:
+        impianti_spegnimento_paginator = paginator_impianti_spegnimento.page(paginator_impianti_spegnimento.num_pages)
+    
 
     context = {
         # Estintori
@@ -94,7 +128,20 @@ def antincendio_home(request):
         'filter_porte_uscite': porte_uscite_filter,
         'porte_uscite_filter_count': porte_uscite_filter_count,
         
-
+        # Attrezzatura Antincendio
+        'attrezzature_antincendio': attrezzature_antincendio,
+        'attrezzature_antincendio_paginator': attrezzature_antincendio_paginator,
+        'tot_attrezzature_antincendio': tot_attrezzature_antincendio,
+        'filter_attrezzature_antincendio': attrezzature_antincendio_filter,
+        'attrezzature_antincendio_filter_count': attrezzature_antincendio_filter_count,
+        
+        # Impianto Spegnimento
+        'impianti_spegnimento': impianti_spegnimento,
+        'impianti_spegnimento_paginator': impianti_spegnimento_paginator,
+        'tot_impianti_spegnimento': tot_impianti_spegnimento,
+        'filter_impianti_spegnimento': impianti_spegnimento_filter,
+        'impianti_spegnimento_filter_count': impianti_spegnimento_filter_count,
+        
     }
 
     return render(request, 'antincendio/antincendio_home.html', context)
@@ -320,7 +367,7 @@ def delete_attrezzatura_antincendio(request, pk):
         url_match = reverse_lazy('antincendio:antincendio_home')
         return redirect(url_match)
 
-# Impianto antincendio
+# Impianto spegnimento
 
 class ImpiantoSpegnimentoCreateView(LoginRequiredMixin,CreateView):
     model = ImpiantoSpegnimento
