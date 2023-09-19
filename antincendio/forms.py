@@ -125,6 +125,24 @@ class AttrezzaturaAntincendioModelForm(forms.ModelForm):
             'note': 'Note'
         }
 
+class ImpiantoSpegnimentoModelForm(forms.ModelForm):   
+    
+    class Meta:
+        model = ImpiantoSpegnimento
+        fields= '__all__'
+        widgets = {
+            'numero_posizione': forms.TextInput(attrs={'placeholder': 'Inserisci numero/posizione'}),            
+            'ubicazione': forms.TextInput(attrs={'placeholder': 'Inserisci la posizione o il reparto'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
+            'created_by': forms.HiddenInput()
+            
+        }
+        labels = {
+            'numero_posizione': 'Numero/Posizione',
+            'ubicazione': 'Ubicazione',          
+            'note': 'Note'
+        }
+
 
 
 class RegistroControlliAntincendioModelForm(forms.ModelForm):   

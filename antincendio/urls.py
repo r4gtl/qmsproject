@@ -33,6 +33,11 @@ urlpatterns = [
     path('modifica_attrezzatura_antincendio/<int:pk>/', AttrezzaturaAntincendioUpdateView.as_view(), name="modifica_attrezzatura_antincendio"), 
     path('delete_attrezzatura_antincendio/<int:pk>', delete_attrezzatura_antincendio, name="delete_attrezzatura_antincendio"),
     
+    # Impianto Spegnimento
+    path('aggiungi_impianto_spegnimento/', AttrezzaturaAntincendioCreateView.as_view(), name="aggiungi_impianto_spegnimento"), 
+    path('modifica_impianto_spegnimento/<int:pk>/', AttrezzaturaAntincendioUpdateView.as_view(), name="modifica_impianto_spegnimento"), 
+    path('delete_impianto_spegnimento/<int:pk>', delete_impianto_spegnimento, name="delete_impianto_spegnimento"),
+
     # Registri Antincendio
     path("registri_antincendio/", registro_controlli_home, name="registro_controlli_home"),
     path('registri_antincendio/aggiungi_registro_controlli/', RegistroControlliAntincendioCreateView.as_view(), name="aggiungi_registro_controlli"), 

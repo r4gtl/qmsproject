@@ -43,6 +43,21 @@ class PortaUscitaFilter(django_filters.FilterSet):
         model = PortaUscita
         fields = ['numero_posizione', 'tipo_porta']
 
+class AttrezzaturaAntincendioFilter(django_filters.FilterSet):
+    
+    descrizione = django_filters.CharFilter(field_name='descrizione', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    class Meta:
+        model = AttrezzaturaAntincendio
+        fields = ['descrizione']
+
+class ImpiantoSpegnimentoFilter(django_filters.FilterSet):
+    
+    numero_posizione = django_filters.CharFilter(field_name='numero_posizione', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    ubicazione = django_filters.CharFilter(field_name='ubicazione', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    class Meta:
+        model = ImpiantoSpegnimento
+        fields = ['numero_posizione', 'ubicazione']
+
 
 
 class RegistroControlliAntincendioFilter(django_filters.FilterSet):
