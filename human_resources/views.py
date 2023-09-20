@@ -6,17 +6,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (HumanResource, CentrodiLavoro, Ward, Role, 
-                    AreaFormazione, CorsoFormazione,
-                    RegistroFormazione, DettaglioRegistroFormazione,
-                    RegistroOreLavoro, ValutazioneOperatore
-                    )
-from .forms import (HumanResourceModelForm, CentrodiLavoroModelForm, WardModelForm, RoleModelForm,
-                    AreaFormazioneModelForm, CorsoFormazioneModelForm,
-                    RegistroFormazioneModelForm, DettaglioRegistroFormazioneModelForm,
-                    RegistroOreLavoroModelForm, ValutazioneOperatoreModelForm,
-                    )
+from django.views.generic.edit import CreateView, UpdateView
+from .models import *
+from .forms import *
 from .filters import HRFilter
 
 from .charts import get_average_age, get_gender_perc, get_ita_perc, num_tot_dipendenti
@@ -123,6 +115,7 @@ class HRUpdateView(LoginRequiredMixin,UpdateView):
             context['immagine'] = False
         context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
         context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
+        context['elenco_incarichi_sicurezza'] = HR_Safety.objects.filter(fk_hr=self.object.pk)
         return context
 
 
@@ -146,9 +139,19 @@ class ValutazioneOperatoreCreateView(LoginRequiredMixin,CreateView):
             'created_at': datetime.datetime.now()
         }
     
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_hr = self.kwargs['pk']
+        
+        context['fk_hr'] = fk_hr  
+        context['operatore'] = HumanResource.objects.get(pk=fk_hr)     
+        return context    
+
     def get_success_url(self):        
         pk_hr=self.object.fk_hr.pk
         return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+
     
 class ValutazioneOperatoreUpdateView(LoginRequiredMixin, UpdateView):
     model = ValutazioneOperatore
@@ -177,7 +180,69 @@ def delete_valutazione_operatore(request, pk):
         pk_hr=deleteobject.fk_hr.pk       
         deleteobject.delete()
         url_match= reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
-        return redirect(url_match)    
+        return redirect(url_match)  
+
+
+# XR Incarichi sicurezza-Operatore
+class HR_SafetyCreateView(LoginRequiredMixin,CreateView):
+    model = HR_Safety
+    form_class = HR_SafetyModelForm
+    template_name = 'human_resources/safety_role_operatore.html'
+    success_message = 'Incarico aggiunto correttamente!'
+    #success_url = reverse_lazy('human_resources:update_human_resource')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)    
+    
+    def get_initial(self):        
+        fk_hr = self.kwargs['pk']  
+        created_by = self.request.user      
+        return {
+            'fk_hr': fk_hr,
+            'created_by': created_by,            
+        }
+    
+    def get_success_url(self):        
+        pk_hr=self.object.fk_hr.pk
+        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_hr = self.kwargs['pk']
+        
+        context['fk_hr'] = fk_hr  
+        context['operatore'] = HumanResource.objects.get(pk=fk_hr)     
+        return context
+    
+class HR_SafetyUpdateView(LoginRequiredMixin, UpdateView):
+    model = HR_Safety
+    form_class = HR_SafetyModelForm
+    template_name = 'human_resources/safety_role_operatore.html'
+    success_message = 'Incarico modificato correttamente!'
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)    
+    
+    def get_success_url(self):        
+        pk_hr=self.object.fk_hr.pk
+        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        
+        context['fk_hr'] = self.object.fk_hr.pk  
+        context['operatore'] = HumanResource.objects.get(pk=self.object.fk_hr.pk)     
+        return context
+
+def delete_hr_safety(request, pk): 
+        deleteobject = get_object_or_404(HR_Safety, pk = pk)         
+        pk_hr=deleteobject.fk_hr.pk       
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return redirect(url_match)  
 
 
 '''SEZIONE TABELLE GENERICHE'''
@@ -186,11 +251,13 @@ def tabelle_generiche(request):
     wards = Ward.objects.all()
     roles = Role.objects.all()
     centridilavoro = CentrodiLavoro.objects.all()
+    safety_roles = Safety_Role.objects.all()
     
 
     context = {'wards': wards, 
                 'roles': roles,  
-                'centridilavoro': centridilavoro              
+                'centridilavoro': centridilavoro,
+                'safety_roles': safety_roles              
                 }
     
     return render(request, "human_resources/tabelle_generiche_hr.html", context)
@@ -281,6 +348,36 @@ class RoleUpdateView(LoginRequiredMixin,UpdateView):
     
 def delete_role(request, pk): 
         deleteobject = get_object_or_404(Role, pk = pk)          
+        deleteobject.delete()
+        url_match= reverse_lazy('human_resources:tabelle_generiche')
+        return redirect(url_match)
+
+# Creazione, Update e Delete Incarico Sicurezza
+class Safety_RoleCreateView(LoginRequiredMixin,CreateView):
+    model = Safety_Role
+    form_class = Safety_RoleModelForm
+    template_name = 'human_resources/safety_role.html'
+    success_message = 'Incarico aggiunto correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+class Safety_RoleUpdateView(LoginRequiredMixin,UpdateView):
+    model = Safety_Role
+    form_class = Safety_RoleModelForm
+    template_name = 'human_resources/safety_role.html'
+    success_message = 'Incarico modificato correttamente!'
+    success_url = reverse_lazy('human_resources:tabelle_generiche')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    
+def delete_safety_role(request, pk): 
+        deleteobject = get_object_or_404(Safety_Role, pk = pk)          
         deleteobject.delete()
         url_match= reverse_lazy('human_resources:tabelle_generiche')
         return redirect(url_match)

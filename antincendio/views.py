@@ -4,7 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+
 from .models import *
+from human_resources.models import HumanResource, HR_Safety
 from .filters import *
 from .forms import *
 
@@ -15,6 +17,8 @@ from .forms import *
 
 
 def antincendio_home(request):
+
+    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)
 
     # Estintori
     estintori = Estintore.objects.all()
@@ -107,6 +111,9 @@ def antincendio_home(request):
     
 
     context = {
+
+        'squadra_antincendio': squadra_antincendio,
+
         # Estintori
         'estintori': estintori,
         'estintori_paginator': estintori_paginator,

@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Valutazione Operatore {% endblock %}
+{% block title %}{{ block.super }} | Incarichi Sicurezza Operatore {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_human_resources.html" %}
@@ -15,9 +15,9 @@
         <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Risorse Umane</a></li>        
         <li class="breadcrumb-item"><a href="{% url 'human_resources:update-human-resource' pk=fk_hr %}">{{ operatore.cognomedipendente }} {{ operatore.nomedipendente }}</a></li>
         {% if form.instance.id  %}
-        <li class="breadcrumb-item active" aria-current="page">Valutazione</li>
+        <li class="breadcrumb-item active" aria-current="page">Modifica {{ hr_safety.fk_safety_role }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Valutazione</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Incarico</li>
         {% endif %}             
         
         
@@ -26,9 +26,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica Valutazione</h3>
+            <h3>Modifica {{ hr_safety.fk_safety_role }}</h3>
         {% else %}
-            <h3> Aggiungi Valutazione</h3>
+            <h3> Aggiungi Incarico</h3>
         {% endif %}
         
         
@@ -46,15 +46,40 @@
             
 
             <div class="row">
+                
+                <div class="col-6">
+                    {{ form.fk_safety_role|as_crispy_field }}
+                </div>
+                <div class="col-3">                    
+                    {{ form.data_inizio_incarico|as_crispy_field }}
+                </div>
+
                 <div class="col-3">
-                    {{ form.fk_hr|as_crispy_field }}
-                    {{ form.fk_centro_di_lavoro|as_crispy_field }}
-                    {{ form.valutazione|as_crispy_field }}
+                    {{ form.data_fine_incarico|as_crispy_field }}
+                </div>
+                
+                
+                
+            </div>
+
+            <hr>
+            <div class="row">
+                
+                
+                <div class="col-6">                    
                     {{ form.note|as_crispy_field }}
+                </div>
+
+                <div class="col-1">
+                    {{ form.fk_hr|as_crispy_field }}
+                </div>
+                <div class="col-1">
+                    {{ form.created_by|as_crispy_field }}
                 </div>
                 
                 
             </div>
+
             
             
 

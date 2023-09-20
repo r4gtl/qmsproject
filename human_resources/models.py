@@ -281,5 +281,45 @@ class ValutazioneOperatore(models.Model):
     note = models.TextField(null=True, blank=True) 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+
+##############################################################################
+# SAFETY
+##############################################################################
+
+class Safety_Role(models.Model):
+    descrizione = models.CharField(max_length=100)    
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='safety_role', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["descrizione"]
+
+    def __str__(self):
+        return self.descrizione
+    
+class HR_Safety(models.Model):
+    fk_hr = models.ForeignKey(HumanResource, related_name='hr_safety', on_delete=models.CASCADE)
+    fk_safety_role = models.ForeignKey(Safety_Role, related_name='hr_safety', on_delete=models.CASCADE)
+    data_inizio_incarico = models.DateField()
+    data_fine_incarico = models.DateField(null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='hr_safety', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["fk_hr"]
+
+    def __str__(self):
+        return f"Operatore: {self.fk_hr} - Incarico: {self.fk_safety_role}"
+
+
+
+
+
+
     
     

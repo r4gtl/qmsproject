@@ -26,7 +26,11 @@
         <!-- Riga grafici e statistiche -->
         <div class="row">
           <div class="col-4">        
-            
+              <p>Squadra Antincendio</p>
+                {% for operatore in squadra_antincendio %}
+                  <p>{{ operatore.fk_hr }}</p>
+                {% endfor %}
+
           </div>
         </div>
         <!-- Fine riga grafici e statistiche -->

@@ -2,11 +2,10 @@ from cProfile import label
 from django import forms
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-from .models import (HumanResource, CentrodiLavoro, Ward, Role,
-                    AreaFormazione, CorsoFormazione,
-                    RegistroFormazione, DettaglioRegistroFormazione,
-                    RegistroOreLavoro, ValutazioneOperatore, 
-                    )
+
+
+
+from .models import *
 from anagrafiche.models import Fornitore
 
 
@@ -65,6 +64,23 @@ class RoleModelForm(forms.ModelForm):
     class Meta:
         model = Role
         fields = '__all__'
+
+
+class Safety_RoleModelForm(forms.ModelForm):
+    class Meta:
+        model = Safety_Role
+        fields= '__all__'
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci il nome dell\'incarico sicurezza'}), 
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+        }
+        labels = {
+            'descrizione': 'Descrizione',                       
+            'note': 'Note'
+
+        }
+
 
 
 '''SEZIONE FORMAZIONE'''        
@@ -196,7 +212,7 @@ class RegistroOreLavoroModelForm(forms.ModelForm):
             
         }
 
-# Valutazione
+# XR Valutazione-Operatore
 class ValutazioneOperatoreModelForm(forms.ModelForm):
     class Meta:
         model = ValutazioneOperatore
@@ -212,6 +228,29 @@ class ValutazioneOperatoreModelForm(forms.ModelForm):
         labels = {
             'fk_centro_di_lavoro': 'Centro di Lavoro',
             'valutazione': 'Valutazione',
+            'note': 'Annotazioni'
+            
+        }
+
+# XR Safety_Role-Operatore
+class HR_SafetyModelForm(forms.ModelForm):
+    class Meta:
+        model = HR_Safety
+        fields = '__all__' 
+        fk_safety_role = forms.ModelChoiceField(queryset=Safety_Role.objects.all())     
+        widgets = {
+            'fk_hr': forms.HiddenInput(),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}), 
+            'data_inizio_incarico': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'data_fine_incarico': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+
+            'created_by': forms.HiddenInput(),
+            
+        }
+        labels = {
+            'fk_safety_role': 'Incarico Sicurezza',            
+            'data_inizio_incarico': 'Data Inizio Incarico',
+            'data_fine_incarico': 'Data Fine Incarico',
             'note': 'Annotazioni'
             
         }

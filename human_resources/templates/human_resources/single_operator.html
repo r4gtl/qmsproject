@@ -57,6 +57,9 @@
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="valutazione-tab" data-bs-toggle="tab" data-bs-target="#valutazione-tab-pane" type="button" role="tab" aria-controls="valutazione-tab-pane" aria-selected="false">Valutazione</button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="incarichi-tab" data-bs-toggle="tab" data-bs-target="#incarichi-tab-pane" type="button" role="tab" aria-controls="incarichi-tab-pane" aria-selected="false">Altri Incarichi</button>
+      </li>
       
     </ul>
 
@@ -178,6 +181,7 @@
       
       </div>
       
+      <!-- Inizio Tab Valutazione-->
       <div class="tab-pane fade" id="valutazione-tab-pane" role="tabpanel" aria-labelledby="valutazione-tab" tabindex="0">
         <div class="row">
           <div class="col text-end">
@@ -215,6 +219,49 @@
           </table>
         {% endif %}
       </div>
+      <!-- Fine Tab Valutazione-->
+
+      <!-- Inizio Tab Altri Incarichi-->
+      <div class="tab-pane fade" id="incarichi-tab-pane" role="tabpanel" aria-labelledby="incarichi-tab" tabindex="0">
+        <div class="row">
+          <div class="col text-end">
+            {% if form.instance.id  %}
+              <a href="{% url 'human_resources:crea_hr_safety' pk=humanresource.pk %}" class="btn btn-success mt-2 "><i class="bi bi-file-earmark-plus"></i> Aggiungi Incarico Sicurezza</a>
+            {% else %}
+              <button class="btn btn-outline-success">Salvare per aggiungere</button>
+            {% endif %}
+          </div>
+        </div>
+        
+        <div class="row">
+          
+        </div>
+        {% if form.instance.id  %}
+          <table class="table table-bordered table-striped mt-2">
+            <thead>
+              <tr>
+                <th>Incarico Sicurezza</th>            
+                <th>Data Inizio Incarico</th>
+                <th>Data Fine Incarico</th>
+                <th>Azione</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              {% for incarico_sicurezza in elenco_incarichi_sicurezza %}
+              <tr>        
+                
+                <td><a href="{% url 'human_resources:modifica_hr_safety' pk=humanresource.pk id=incarico_sicurezza.pk %}">{{ incarico_sicurezza.fk_safety_role.descrizione }}</a></td>
+                <td>{{ incarico_sicurezza.data_inizio_incarico }}</td>                           
+                <td>{{ incarico_sicurezza.data_fine_incarico }}</td>                           
+                <td class="text-center"><a href="{% url 'human_resources:delete_hr_safety' pk=incarico_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{incarico_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
+              </tr>  
+              {% endfor %}
+            </tbody>
+          </table>
+        {% endif %}
+      </div>
+      <!-- Fine Tab Altri Incarichi-->
       
     </div>
     

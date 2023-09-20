@@ -1,22 +1,6 @@
 from django.urls import path
 
-from .views import (human_resources_home,
-                    HumanResourceCreateView, HRUpdateView,
-                    add_new_operator,
-                    tabelle_generiche,
-                    tabelle_generiche_formazione,
-                    dashboard_formazione, scadenzario,
-                    CentrodiLavoroCreateView, CentrodiLavoroUpdateView, delete_centro_di_lavoro,
-                    WardCreateView, WardUpdateView, delete_ward,
-                    RoleCreateView, RoleUpdateView, delete_role,
-                    AreaFormazioneCreateView, AreaFormazioneUpdateView, delete_area_formazione,
-                    CorsoFormazioneCreateView, CorsoFormazioneUpdateView, delete_corso_formazione,
-                    RegistroFormazioneCreateView, RegistroFormazioneUpdateView, delete_registro_formazione,
-                    DettaglioRegistroFormazioneCreateView, DettaglioRegistroFormazioneUpdateView, delete_dettaglio_registro_formazione, 
-                    ValutazioneOperatoreCreateView, ValutazioneOperatoreUpdateView, delete_valutazione_operatore, 
-                    dashboard_registro_ore, RegistroOreLavoroCreateView, RegistroOreLavoroUpdateView, delete_registro_ore,
-                    stampa_risorse_umane, performance_triennio,
-                    )
+from .views import *
 from .charts import (ore_formazione, operatori_per_reparto, 
                     age_groups, num_tot_dipendenti,
                     num_tot_dipendenti_plot, num_tot_dipendenti_orario,
@@ -75,6 +59,11 @@ urlpatterns = [
     path('create_role/', RoleCreateView.as_view(), name="create_role"),  
     path('update_role/<int:pk>', RoleUpdateView.as_view(), name="update_role"),  
     path('delete_role/<int:pk>', delete_role, name="delete_role"),
+
+    # Safety Role
+    path('create_safety_role/', Safety_RoleCreateView.as_view(), name="create_safety_role"),  
+    path('update_safety_role/<int:pk>', Safety_RoleUpdateView.as_view(), name="update_safety_role"),  
+    path('delete_safety_role/<int:pk>', delete_safety_role, name="delete_safety_role"),
     
     # Area Formazione
     path('crea_area_formazione/', AreaFormazioneCreateView.as_view(), name="crea_area_formazione"),  
@@ -96,10 +85,16 @@ urlpatterns = [
     path('<int:fk_registro_formazione>/modifica_dettaglio_registro_formazione/<int:pk>/', DettaglioRegistroFormazioneUpdateView.as_view(), name="modifica_dettaglio_registro_formazione"),  
     path('delete_dettaglio_registro_formazione/<int:pk>', delete_dettaglio_registro_formazione, name="delete_dettaglio_registro_formazione"),
     #path('<int:fk_attrezzatura>/modifica_manutenzione_straordinaria/<int:pk>/', ManutenzioneStraordinariaUpdateView.as_view(), name="modifica_manutenzione_straordinaria"), 
+
     # Valutazione operatori
     path('<int:pk>/crea_valutazione_operatore/', ValutazioneOperatoreCreateView.as_view(), name="crea_valutazione_operatore"),  
     path('<int:pk>/modifica_valutazione_operatore/<int:id>', ValutazioneOperatoreUpdateView.as_view(), name="modifica_valutazione_operatore"),  
     path('delete_valutazione_operatore/<int:pk>', delete_valutazione_operatore, name="delete_valutazione_operatore"),
+
+    # XR Safety_roles-Operatori
+    path('<int:pk>/crea_hr_safety/', HR_SafetyCreateView.as_view(), name="crea_hr_safety"),  
+    path('<int:pk>/modifica_hr_safety/<int:id>', HR_SafetyUpdateView.as_view(), name="modifica_hr_safety"),  
+    path('delete_hr_safety/<int:pk>', delete_hr_safety, name="delete_hr_safety"),
     
     # Stampe
     path('stampa_risorse_umane/', stampa_risorse_umane, name="stampa_risorse_umane"), 
