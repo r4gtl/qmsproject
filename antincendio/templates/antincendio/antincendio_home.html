@@ -25,14 +25,46 @@
 
         <!-- Riga grafici e statistiche -->
         <div class="row">
-          <div class="col-4">        
-              <p>Squadra Antincendio</p>
+          <hr>
+          <div class="col-4"> 
+            {% if squadra_antincendio %}
+            <div class="card mb-4 shadow">
+              <h5 class="card-header">Squadra Antincendio</h5>
+              <div class="card-body">
                 {% for operatore in squadra_antincendio %}
-                  <p>{{ operatore.fk_hr }}</p>
-                {% endfor %}
-
+                  <p class="card-text">{{ operatore.fk_hr }} in squadra dal {{ operatore.data_inizio_incarico }}</p>
+                  {% endfor %}
+              </div>
+            </div>
+              
+            {% else %}
+              <p style="color: red;">Non è ancora stata assegnata la Squadra Antincendio</p>
+            
+            {% endif %}
           </div>
+          <div class="col-4">
+            {% if scadenzario %}
+            <div class="card mb-4 shadow">
+              <h5 class="card-header">Prossime scadenze formazione</h5>
+                
+              <div class="card-body">
+                {% for scadenza in scadenzario %}
+                  <p class="card-text mb-0">{{ scadenza.descrizione }}</p>
+                  <p class="card-text">Scadenza prevista: {{ scadenza.mese_anno }}</p>
+                  {% endfor %}
+              </div>
+            </div>
+              
+            {% else %}
+              <p style="color: red;">Non è ancora presente formazione</p>            
+            {% endif %}
+          </div>
+
+          <br>
+          <br>
+          <hr>
         </div>
+        
         <!-- Fine riga grafici e statistiche -->
         
         

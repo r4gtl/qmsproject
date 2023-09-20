@@ -4,9 +4,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib import messages
+from datetime import date
 
 from .models import *
-from human_resources.models import HumanResource, HR_Safety
+from human_resources.models import HR_Safety, DettaglioRegistroFormazione
 from .filters import *
 from .forms import *
 
@@ -19,7 +20,24 @@ from .forms import *
 def antincendio_home(request):
 
     squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)
-
+    # Per quanto riguarda lo scadenzario specifico, valutare se generare un elenco di fixture in cui
+    # non si possano modificare le descrizioni in modo da potersi fidare delle descrizioni
+    today = date.today()
+    scadenzario = []
+    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')
+    for scadenza in scadenze_antincendio:
+        
+        scadenzario.append({
+            'scadenza': scadenza.prossima_scadenza,
+            'descrizione': str(scadenza.fk_hr) + ", " + str(scadenza.fk_registro_formazione.fk_corso.descrizione),            
+            'url': "human_resources:human_resources",            
+            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y')
+            
+        })
+    
+    
+    
+    
     # Estintori
     estintori = Estintore.objects.all()
     tot_estintori = Estintore.objects.filter(data_dismissione__isnull=True).count()
@@ -113,6 +131,7 @@ def antincendio_home(request):
     context = {
 
         'squadra_antincendio': squadra_antincendio,
+        'scadenzario': scadenzario,
 
         # Estintori
         'estintori': estintori,

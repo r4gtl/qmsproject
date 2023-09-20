@@ -36,6 +36,7 @@
             value="/previous/page/url">
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
             
                     <div class="row mb-4">
                       
@@ -122,3 +123,7 @@
 </div>
 
 {% endblock content %}
+
+{% block extra_scripts %}
+
+{% endblock %} 

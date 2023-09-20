@@ -13,15 +13,8 @@ from core.configuration_apps import get_app_icons
 
 
 def get_scadenzario_completo():
-    
     today = date.today()
     scadenzario = []
-
-    
-    
-    
-
-
     scadenze_autorizzazioni = DettaglioScadenzaAutorizzazione.objects.filter(scadenza_rinnovo__gte=today).filter(is_rinnovata=False)
     for scadenza in scadenze_autorizzazioni:
         icona = get_app_icons('autorizzazioni')
