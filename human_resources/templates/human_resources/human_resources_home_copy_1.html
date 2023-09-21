@@ -27,38 +27,23 @@
 <div class="container">
   <div class="row mt-3">
 
-    <div class="col-4">
-      <div class="card shadow">
-      <h5 class="card-header">Statistiche</h5>
-      <div class="card-body">        
-        {% if hr_active %}
-          <h5 class="card-text text-start">Operatori attivi: {{ hr_active }}</h5>
-        {% else %}
-          <h5 class="card-text text-start">Operatori attivi: 0</h5>
-        {% endif %}        
-        {% if hr_average_age %}
-        <h5 class="card-text text-start">Età media: {{ hr_average_age|floatformat:2 }}</h5>
+    <div class="col-2 d-flex justify-content-center text-center">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title text-center">Operatori attivi</h5>
+          {% if hr_active %}          
+            <h1 class="card-text text-center">{{ hr_active }}</h1>
           {% else %}
-            <h5 class="card-text text-start">Età media: N/D</h5>
+            <h1 class="card-text text-center">0</h1>
           {% endif %}
-          {% if hr_female %}          
-            <h5 class="card-text text-start"><i class="bi bi-person-standing-dress"></i> F: {{ hr_female|floatformat:0 }}%</h5>
+          <h5 class="card-title text-center">Età media</h5>
+          {% if hr_average_age %}          
+            <h1 class="card-text text-center">{{ hr_average_age|floatformat:2 }}</h1>
           {% else %}
-            <h5 class="card-text text-start"><i class="bi bi-person-standing-dress"></i> F: 0</h5>
+            <h1 class="card-text text-center">0</h1>
           {% endif %}
-          {% if hr_male %}          
-            <h5 class="card-text text-start"><i class="bi bi-person-standing"></i> M: {{ hr_male|floatformat:0 }}%</h5>
-          {% else %}
-            <h5 class="card-text text-start"><i class="bi bi-person-standing"></i> M: 0</h5>
-          {% endif %}          
-          {% if hr_ita %}          
-            <h5 class="card-text text-start"><i class="bi bi-flag"></i> Ita: {{ hr_ita|floatformat:0 }}%</h5>
-          {% else %}
-            <h5 class="card-text text-start"><i class="bi bi-flag"></i> Ita: 0</h5>
-          {% endif %}
+        </div>
       </div>
-    </div>
-      
     </div>
 
     <div class="col-4">        
@@ -66,7 +51,29 @@
     </div>
     
 
-    
+    <div class="col-2 d-flex justify-content-center text-center">
+      <div class="text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-text text-center">Maschi/Femmine</h5>
+          {% if hr_female %}          
+            <h4 class="card-text text-center">F: {{ hr_female|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">F: 0</h4>
+          {% endif %}
+          {% if hr_male %}          
+            <h4 class="card-text text-center">M: {{ hr_male|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">M: 0</h4>
+          {% endif %}
+          <h5 class="card-text text-center">Origine</h5>
+          {% if hr_ita %}          
+            <h4 class="card-text text-center">Ita: {{ hr_ita|floatformat:0 }}%</h4>
+          {% else %}
+            <h4 class="card-text text-center">Ita: 0</h4>
+          {% endif %}
+        </div>
+      </div>
+    </div>
 
     <div class="col-4">        
       <canvas id="age_groups" data-url="{% url 'human_resources:age_groups' %}"></canvas>
