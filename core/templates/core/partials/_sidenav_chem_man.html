@@ -27,14 +27,14 @@
             
             <li class="border-top my-3"></li>
             
-            <li><a href="{% url 'ricette:home_ricette' %}">Ricette</a></li>
+            <li><a href="#">Ricette</a></li>
             <li class="mb-1">
                         <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#ricette-rifinizione-collapse" aria-expanded="false">
-                            Bagnato
+                            Rifinizione
                         </button>
                         <div class="collapse" id="ricette-rifinizione-collapse">
                             <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                            <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ricette articoli</a></li>
+                            <li><a href="{% url 'ricette:home_ricette_rifinizione' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ricette articoli</a></li>
                             <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Ricette Colori</a></li>
                             </ul>
                         </div>
@@ -42,7 +42,7 @@
             
             <li class="mb-1">
                 <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#ricette-bagnato-collapse" aria-expanded="false">
-                    Rifinizione
+                    Bagnato
                 </button>
                 <div class="collapse" id="ricette-bagnato-collapse">
                     <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">

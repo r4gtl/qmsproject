@@ -69,7 +69,7 @@
                         {% render_field filter.form.numero_revisione class="form-control" %}
                       </td>
 
-                      <td style="width: 20%">
+                      <td style="width: 60%">
                         {% render_field filter.form.descrizione_articolo class="form-control" %}
                       </td>
                       
@@ -95,24 +95,24 @@
           
         </div>
         <!-- Fine filtro -->
-
+        
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="#" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Prodotto</a>
+        <a href="{% url 'ricette:aggiungi_ricetta_rifinizione' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Ricetta</a>
         </div>  
         <br>
 
 
         <div class="container-fluid">
             <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered">
+            <table class="table table-hover table-striped table-bordered" id="TabellaRicetteRifinizione">
               <thead class="thead-dark">
               <tr>        
+                <th>Descrizione Articolo</th>
                 <th>Numero Ricetta</th>
                 <th>Data Ricetta</th>
                 <th>Numero Revisione</th>
                 <th>Data Revisione</th>
-                <th>Descrizione Articolo</th>
                 <th>Azione</th>
 
                 
@@ -122,13 +122,13 @@
               
               <tbody>
                 {% for ricetta in ricette_rifinizione_paginator %}
-                    
-                    <td class="col-md"><a href="#">{{ ricetta.numero_ricetta }}</a></td>                    
+                
+                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_rifinizione' pk=ricetta.pk %}">{{ ricetta.fk_articolo }}</a></td>                    
+                    <td class="col-md text-end">{{ ricetta.numero_ricetta }}</td>
                     <td class="col-md text-end">{{ ricetta.data_ricetta }}</td>                    
-                    <td class="col-md text-center">{{ ricetta.numero_revisione }}</td>                    
+                    <td class="col-md text-end">{{ ricetta.numero_revisione }}</td>                    
                     <td class="col-md text-end">{{ ricetta.data_revisione }}</td>  
-                    <td class="col-md">{{ ricetta.fk_articolo  }} </td>
-                    <td class="col-md text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ricetta.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                    <td class="col-md text-center"><a href="{% url 'ricette:delete_ricetta_rifinizione' pk=ricetta.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ricetta.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
@@ -198,7 +198,10 @@
 {% endblock %}
 {% block extra_scripts %}
 <script>
+  let table = new DataTable('#TabellaRicetteRifinizione');
   
+ 
+// #myInput is a <input type="text"> element
 
 </script>
 {% endblock %}

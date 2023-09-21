@@ -39,7 +39,7 @@ def home_ricette_rifinizione(request):
         # Operazioni
         'ricette_rifinizione': ricette_rifinizione,
         'ricette_rifinizione_paginator': ricette_rifinizione_paginator,        
-        'filter_ricette_rifinizione': ricette_rifinizione_filter,        
+        'filter': ricette_rifinizione_filter,        
         
 
     }
@@ -147,29 +147,53 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('ricette:home_ricette')
+        return reverse_lazy('ricette:home_ricette_rifinizione')
 
 
+
+    # def form_valid(self, form):
+    #     messages.info(self.request, self.success_message) # Compare sul success_url
+    #     return super().form_valid(form)
 
     def form_valid(self, form):
-        messages.info(self.request, self.success_message) # Compare sul success_url
+        # Imposta numero_ricetta solo se stai creando un nuovo record
+        if not form.instance.numero_ricetta:
+            max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            form.instance.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+            form.instance.numero_revisione = 1
+        
+        # Imposta l'utente creatore
+        form.instance.created_by = self.request.user
+        
+        messages.info(self.request, self.success_message)  # Compare sul success_url
         return super().form_valid(form)
 
+
     def get_initial(self):
-        created_by = self.request.user
-        return {
-            'created_by': created_by,
-        }
+        initial = super().get_initial()
+        if not self.object:
+            max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            next_numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+            initial['numero_ricetta'] = next_numero_ricetta
+            initial['numero_revisione'] = 1
+        initial['created_by'] = self.request.user
+        initial['ricetta_per_pelli'] = 100
+        return initial
+        # created_by = self.request.user
+        # return {
+        #     'created_by': created_by,
+            
+        # }
 
 class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
     model = RicettaRifinizione
     form_class = RicettaRifinizioneModelForm
-    template_name = 'rricette/ricetta_rifinizione.html'
+    template_name = 'ricette/ricetta_rifinizione.html'
     success_message = 'Ricetta modificata correttamente!'
 
 
     def get_success_url(self):
-        return reverse_lazy('ricette:home_ricette')
+        return reverse_lazy('ricette:home_ricette_rifinizione')
 
 
     def form_valid(self, form):
@@ -189,5 +213,5 @@ class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 def delete_ricetta_rifinizione(request, pk):
         deleteobject = get_object_or_404(RicettaRifinizione, pk = pk)
         deleteobject.delete()
-        url_match = reverse_lazy('ricette:home_ricette')
+        url_match = reverse_lazy('ricette:home_ricette_rifinizione')
         return redirect(url_match)
