@@ -8,6 +8,7 @@ urlpatterns = [
     
     # Home Ricette
     path('', home_ricette, name='home_ricette'),  
+    path('ricette_rifinizione/', home_ricette_rifinizione, name='home_ricette_rifinizione'),  
     
     # Tabelle Generiche
     path('tabelle_generiche/', tabelle_generiche, name='tabelle_generiche'), 
@@ -17,6 +18,11 @@ urlpatterns = [
     path('aggiungi_operazione/', OperazioneRicetteCreateView.as_view(), name="aggiungi_operazione"), 
     path('modifica_operazione/<int:pk>/', OperazioneRicetteUpdateView.as_view(), name="modifica_operazione"), 
     path('delete_operazione/<int:pk>', delete_operazione, name="delete_operazione"),
+
+    # Ricette Rifinizione
+    path('aggiungi_ricetta_rifinizione/', RicettaRifinizioneCreateView.as_view(), name="aggiungi_ricetta_rifinizione"), 
+    path('modifica_ricetta_rifinizione/<int:pk>/', RicettaRifinizioneUpdateView.as_view(), name="modifica_ricetta_rifinizione"), 
+    path('delete_ricetta_rifinizione/<int:pk>', delete_ricetta_rifinizione, name="delete_ricetta_rifinizione"),
     
 
     

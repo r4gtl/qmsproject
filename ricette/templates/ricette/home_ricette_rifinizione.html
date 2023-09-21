@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Ricette {% endblock %}
+{% block title %}{{ block.super }} | Ricette Rifinizione {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_ricette.html" %}
@@ -13,7 +13,7 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item active" aria-current="page">Ricette</li>
+        <li class="breadcrumb-item active" aria-current="page">Ricette Rifinizione</li>
     </ol>
 </nav>
 
@@ -51,8 +51,10 @@
                   <table class="table table-hover table-striped table-bordered">
                     <thead class="thead-dark">
                       <tr>     
-                        <th>Ricetta PROVA</th>
-                        <th>PROVA</th>
+                        <th>Numero Ricetta</th>
+                        <th>Numero Revisione</th>
+                        <th>Descrizione Articolo</th>
+
                         
                       </tr>
                     </thead>
@@ -60,11 +62,15 @@
                     <tbody>
                     <tr>
                       <td style="width: 20%">                
-                        {% render_field filter.form.descrizione class="form-control" %}
+                        {% render_field filter.form.numero_ricetta class="form-control" %}
                       </td>
                       
                       <td style="width: 20%">
-                        {% render_field filter.form.fk_fornitore class="form-control" %}
+                        {% render_field filter.form.numero_revisione class="form-control" %}
+                      </td>
+
+                      <td style="width: 20%">
+                        {% render_field filter.form.descrizione_articolo class="form-control" %}
                       </td>
                       
                     </tr>
@@ -79,7 +85,7 @@
                 
         
                 <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                <a class="btn btn-success" href="{% url 'ricette:home_ricette' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                <a class="btn btn-success" href="{% url 'ricette:home_ricette_rifinizione' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
                 
               </form>
               
@@ -102,10 +108,11 @@
             <table class="table table-hover table-striped table-bordered">
               <thead class="thead-dark">
               <tr>        
-                <th>Prodotto Chimico</th>
-                <th>Prezzo Corrente</th>
-                <th>Solvente</th>
-                <th>Fornitore</th>
+                <th>Numero Ricetta</th>
+                <th>Data Ricetta</th>
+                <th>Numero Revisione</th>
+                <th>Data Revisione</th>
+                <th>Descrizione Articolo</th>
                 <th>Azione</th>
 
                 
@@ -114,17 +121,14 @@
             </thead>
               
               <tbody>
-                {% for prodotto in prodotti_chimici_paginator %}
+                {% for ricetta in ricette_rifinizione_paginator %}
                     
-                    <td class="col-md"><a href="#">{{ prodotto.descrizione }}</a></td>
-                     {% if prodotto.ultimo_prezzo %}
-                        <td class="col-md text-end">{{ prodotto.ultimo_prezzo }}</td>
-                    {% else %}
-                        <td class="col-md text-center">Nessun prezzo</td>
-                    {% endif %}
-                    <td class="col-md text-end">{{ prodotto.solvente }}</td>  
-                    <td class="col-md">{{ prodotto.fk_fornitore  }} </td>
-                    <td class="col-md text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prodotto.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                    <td class="col-md"><a href="#">{{ ricetta.numero_ricetta }}</a></td>                    
+                    <td class="col-md text-end">{{ ricetta.data_ricetta }}</td>                    
+                    <td class="col-md text-center">{{ ricetta.numero_revisione }}</td>                    
+                    <td class="col-md text-end">{{ ricetta.data_revisione }}</td>  
+                    <td class="col-md">{{ ricetta.fk_articolo  }} </td>
+                    <td class="col-md text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ricetta.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
@@ -137,12 +141,12 @@
 
 
     <!-- Pagination -->
-{% if prodotti_chimici_paginator.has_other_pages %}
+{% if ricette_rifinizione_paginator.has_other_pages %}
 <nav>
   <ul class="pagination justify-content-center">
-    {% if prodotti_chimici_paginator.has_previous %}
+    {% if ricette_rifinizione_paginator.has_previous %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ prodotti_chimici_paginator.previous_page_number }}" aria-label="Previous">
+        <a class="page-link" href="?page={{ ricette_rifinizione_paginator.previous_page_number }}" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -152,8 +156,8 @@
       </li>
     {% endif %}
 
-    {% for page in prodotti_chimici_paginator.paginator.page_range %}
-      {% if page == prodotti_chimici_paginator.number %}
+    {% for page in ricette_rifinizione_paginator.paginator.page_range %}
+      {% if page == ricette_rifinizione_paginator.number %}
         <li class="page-item active">
           <span class="page-link">{{ page }}</span>
         </li>
@@ -164,9 +168,9 @@
       {% endif %}
     {% endfor %}
 
-    {% if prodotti_chimici_paginator.has_next %}
+    {% if ricette_rifinizione_paginator.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ prodotti_chimici_paginator.next_page_number }}" aria-label="Next">
+        <a class="page-link" href="?page={{ ricette_rifinizione_paginator.next_page_number }}" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

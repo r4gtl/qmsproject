@@ -224,7 +224,82 @@ class DettaglioRevisioneRicettaFondo(models.Model):
         ordering = ["numero_riga"]
         
 # Ricette Rifinizione    
+# Faccio una prova per vedere di gestire numero ricetta e revisione in un'unico modello
 class RicettaRifinizione(models.Model):
-    pass
+    numero_ricetta = models.IntegerField()
+    data_ricetta = models.DateField(default=date.today)
+    numero_revisione = models.IntegerField()
+    data_revisione = models.DateField(default=date.today)
+    fk_articolo = models.ForeignKey(Articolo, related_name='ricette_rifinizione', on_delete=models.CASCADE)    
+    ricetta_per_pelli = models.DecimalField(max_digits=4, decimal_places=0)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='ricette_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    
+    def save(self, *args, **kwargs):
+        if self.numero_ricetta is None:
+            # Trova il valore massimo esistente in numero_ricetta
+            max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            
+            if max_numero_ricetta is not None:
+                self.numero_ricetta = max_numero_ricetta + 1
+            else:
+                # Se non ci sono ancora elementi, imposta il default a 1
+                self.numero_ricetta = 1
+            self.numero_revisione = 1
+        else:
+            # Se stai aggiornando un record esistente, mantieni il numero_revisione invariato
+            if not self.pk:  # Controlla se il record è nuovo
+                self.numero_revisione = 1
+        
+        super().save(*args, **kwargs)
+    
+    class Meta:
+        ordering = ["-data_ricetta"]
+        
+    def __str__(self):
+        formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
+        return f"Ricetta Rifinizione n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
+    
+
+class DettaglioRicettaRifinizione(models.Model):
+    fk_ricetta_rifinizione = models.ForeignKey(RicettaRifinizione, related_name='dettaglio_ricette_rifinizione', on_delete=models.CASCADE)
+
+    def get_choices_operations(self):
+        return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+    
+    fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
+                                            related_name='dettaglio_ricette_rifinizione', 
+                                            on_delete=models.CASCADE,                                            
+                                            limit_choices_to=get_choices_operations,
+                                            )
+    numero_riga = models.IntegerField()
+    quantity = models.DecimalField(max_digits=8, decimal_places=2)
+
+    def get_choices_chemical(self):
+        return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
+
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,
+        related_name='dettaglio_ricette_rifinizione',
+        on_delete=models.CASCADE,
+        limit_choices_to=get_choices_chemical,
+    )
+
+    def save(self, *args, **kwargs):
+        # Controllo se il campo numero_riga è già stato assegnato, altrimenti lo calcolo
+        if not self.numero_riga:
+            # Trova il numero più alto in base alla fk_revisione
+            max_numero_riga = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=self.fk_revisione).aggregate(models.Max('numero_riga'))['numero_riga__max']
+            # Se non ci sono righe esistenti per questa revisione, inizia da 1, altrimenti incrementa di 1
+            self.numero_riga = 1 if max_numero_riga is None else max_numero_riga + 1
+
+        super().save(*args, **kwargs)
+    
+    class Meta:
+        ordering = ["numero_riga"]
+
+
     
 
