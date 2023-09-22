@@ -2,10 +2,10 @@
 {% load static %}
 {% load crispy_forms_tags %} 
 {% load widget_tweaks %}
-{% block head_title %}{{ block.super }} - Dettaglio Ordine Prodotto Chimico{% endblock head_title %} 
+{% block head_title %}{{ block.super }} - Dettaglio Ricetta Rifinizione{% endblock head_title %} 
 
 {% block sidenav %}
-{% include "core/partials/_sidenav_chem_man.html" %}
+{% include "core/partials/_sidenav_ricette.html" %}
 {% endblock %}
 
 {% block content %}
@@ -14,13 +14,13 @@
 <nav aria-label="breadcrumb" class="mt-3"> 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
-        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_ordine_prodotto_chimico' pk=ordine_pc %}">{{ dettagli_ordine }}</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_rifinizione' %}">Home Ricette Rifinizione</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:modifica_ricetta_rifinizione' pk=ricetta_rifinizione %}">{{ dettagli_ricetta }}</a></li>     
         
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Ordine Prodotto Chimico</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Ricetta Rifinizione</li>
         {% endif %}     
     </ol>
 
@@ -33,7 +33,7 @@
       {% if form.instance.id  %}
           <h3>Modifica Dettaglio</h3>
       {% else %}
-          <h3> Aggiungi Dettaglio Ordine Prodotto Chimico</h3>
+          <h3> Aggiungi Dettaglio Ricetta Rifinizione</h3>
       {% endif %}
     <hr>
     <br>
@@ -52,20 +52,20 @@
                       
                       <div class="col-md-12 border rounded shadow-sm">
                         <div class="row mt-3">
-                          <div class = "col-md-4">
-                              {{ form.fk_prodotto_chimico|as_crispy_field }}
+                          <div class = "col-md-1">
+                              {{ form.numero_riga|as_crispy_field }}
                             </div>
                             
                             <div class = "col-md-2">
-                              {{ form.u_misura|as_crispy_field }}
+                              {{ form.fk_operazione_ricette|as_crispy_field }}
+                            </div>
+
+                            <div class = "col-md-7">
+                              {{ form.fk_prodotto_chimico|as_crispy_field }}
                             </div>
 
                             <div class = "col-md-2">
                               {{ form.quantity|as_crispy_field }}
-                            </div>
-
-                            <div class = "col-md-4">
-                              {{ form.fk_imballaggio|as_crispy_field }}
                             </div>
                             
 
@@ -77,7 +77,7 @@
                             {{ form.note|as_crispy_field }}
                         </div>
                           <div class="col-1">
-                            {{ form.fk_ordine|as_crispy_field }}
+                            {{ form.fk_ricetta_rifinizione|as_crispy_field }}
                         </div>
                             <div class="col-md-1">
                               {{ form.created_by|as_crispy_field }}

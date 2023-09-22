@@ -125,6 +125,34 @@ function setFocusOnField(fieldId) {
   });
 };
 
+// Per gestire il pulsanta Annulla
 function goBack() {
   window.history.back();
+};
+
+// Inizializzare le tabelle di DataTable con le labels in Italiano
+// Si usa con initializeDataTable('id_tabella');
+function initializeDataTable(tableId) {
+  $(document).ready(function() {
+      $(`#${tableId}`).DataTable({
+          "language": {
+              "sProcessing": "Elaborazione in corso...",
+              "sLengthMenu": "Mostra _MENU_ voci",
+              "sZeroRecords": "Nessun risultato trovato",
+              "sEmptyTable": "Nessun dato disponibile",
+              "sInfo": "Voci da _START_ a _END_ di _TOTAL_ voci",
+              "sInfoEmpty": "Voci da 0 a 0 di 0 voci",
+              "sInfoFiltered": "(filtrato da _MAX_ voci totali)",
+              "sInfoPostFix": "",
+              "sSearch": "Cerca:",
+              "sUrl": "",
+              "oPaginate": {
+                  "sFirst": "Prima",
+                  "sPrevious": "Precedente",
+                  "sNext": "Successiva",
+                  "sLast": "Ultima"
+              }
+          }
+      });
+  });
 }

@@ -266,7 +266,9 @@ class RicettaRifinizione(models.Model):
 class DettaglioRicettaRifinizione(models.Model):
     fk_ricetta_rifinizione = models.ForeignKey(RicettaRifinizione, related_name='dettaglio_ricette_rifinizione', on_delete=models.CASCADE)
 
-    def get_choices_operations(self):
+    
+    
+    def get_choices_operations():
         return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
     
     fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
@@ -277,7 +279,8 @@ class DettaglioRicettaRifinizione(models.Model):
     numero_riga = models.IntegerField()
     quantity = models.DecimalField(max_digits=8, decimal_places=2)
 
-    def get_choices_chemical(self):
+    
+    def get_choices_chemical():
         return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
 
     fk_prodotto_chimico = models.ForeignKey(
@@ -286,6 +289,8 @@ class DettaglioRicettaRifinizione(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to=get_choices_chemical,
     )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_ricette_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         # Controllo se il campo numero_riga è già stato assegnato, altrimenti lo calcolo
@@ -296,6 +301,14 @@ class DettaglioRicettaRifinizione(models.Model):
             self.numero_riga = 1 if max_numero_riga is None else max_numero_riga + 1
 
         super().save(*args, **kwargs)
+
+    def calcola_totale(self):
+        if self.fk_prodotto_chimico:
+            # Ottieni l'ultimo prezzo dal modello ProdottoChimico
+            ultimo_prezzo = self.fk_prodotto_chimico.ultimo_prezzo
+            if ultimo_prezzo is not None:
+                return self.quantity * ultimo_prezzo
+        return 0  # Restituisci 0 se non c'è un prezzo disponibile o un prodotto chimico associato
     
     class Meta:
         ordering = ["numero_riga"]

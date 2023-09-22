@@ -4,11 +4,12 @@ from django.contrib import messages
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.db.models import Max
+from django.db.models import Max, Sum
 from django.views.generic.edit import CreateView, UpdateView
 from .models import *
 from .forms import *
 from .filters import *
+from .utils import calcola_totale_prezzi
 
 
 
@@ -23,7 +24,12 @@ def home_ricette_rifinizione(request):
     ricette_rifinizione_filter = RicettaRifinizioneFilter(request.GET, queryset=ricette_rifinizione)
     filtered_ricette_rifinizione = ricette_rifinizione_filter.qs  # Ottieni i record filtrati
     
+     # Calcola il totale dei prezzi
+    totale_prezzi = ProdottoChimico.objects.filter(
+        dettaglio_ricette_rifinizione__fk_ricetta_rifinizione__in=ricette_rifinizione
+    ).aggregate(Sum('prezzo'))['prezzo__sum'] or 0.0
     
+
     # Paginazione operazioni
     page_ricette_rifinizione = request.GET.get('page', 1)
     paginator_ricette_rifinizione = Paginator(filtered_ricette_rifinizione, 50)
@@ -39,7 +45,8 @@ def home_ricette_rifinizione(request):
         # Operazioni
         'ricette_rifinizione': ricette_rifinizione,
         'ricette_rifinizione_paginator': ricette_rifinizione_paginator,        
-        'filter': ricette_rifinizione_filter,        
+        'filter': ricette_rifinizione_filter,  
+        'totale_prezzi': totale_prezzi,      
         
 
     }
@@ -139,6 +146,7 @@ def delete_operazione(request, pk):
 
 
 # Ricette Rifinizione
+# Ricetta
 class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
     model = RicettaRifinizione
     form_class = RicettaRifinizioneModelForm
@@ -147,7 +155,11 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('ricette:home_ricette_rifinizione')
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_rifinizione')
+
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':pk_ricetta})
 
 
 
@@ -193,7 +205,13 @@ class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
-        return reverse_lazy('ricette:home_ricette_rifinizione')
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_rifinizione')
+
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':pk_ricetta})
+    
+        
 
 
     def form_valid(self, form):
@@ -202,16 +220,82 @@ class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk_operazione = self.object.pk
-        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        pk_ricetta_rifinizione = self.object.pk        
+        context['elenco_dettagli'] = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=pk_ricetta_rifinizione)
 
         return context
 
 
 def delete_ricetta_rifinizione(request, pk):
         deleteobject = get_object_or_404(RicettaRifinizione, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:home_ricette_rifinizione')
+        return redirect(url_match)
+
+
+# Dettaglio
+class DettaglioRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioRicettaRifinizione
+    form_class = DettaglioRicettaRifinizioneModelForm
+    template_name = 'ricette/dettaglio_ricetta_rifinizione.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk        
+        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if not self.object:
+            max_numero_riga = DettaglioRicettaRifinizione.objects.aggregate(Max('numero_riga'))['numero_riga__max']
+            next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+            initial['numero_riga'] = next_numero_riga
+            
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_rifinizione']         
+        context['ricetta_rifinizione'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaRifinizione, pk=pk_ricetta)
+        return context
+        
+
+class DettaglioRicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioRicettaRifinizione
+    form_class = DettaglioRicettaRifinizioneModelForm
+    template_name = 'ricette/dettaglio_ricetta_rifinizione.html'
+    success_message = 'Dettaglio modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk        
+        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_rifinizione']         
+        context['ricetta_rifinizione'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaRifinizione, pk=pk_ricetta)
+        return context
+
+
+def delete_dettaglio_ricetta_rifinizione(request, pk):
+        deleteobject = get_object_or_404(DettaglioRicettaRifinizione, pk = pk)
         deleteobject.delete()
         url_match = reverse_lazy('ricette:home_ricette_rifinizione')
         return redirect(url_match)

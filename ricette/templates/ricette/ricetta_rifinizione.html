@@ -17,7 +17,7 @@
         <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_rifinizione' %}">Home Ricette</a></li>     
         
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettarifinizione.pk }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettarifinizione }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Rifinizione</li>
         {% endif %}     
@@ -30,7 +30,7 @@
     
     <div class="container">
       {% if form.instance.id  %}
-          <h3>Modifica {{ ricettarifinizione.pk }}</h3>
+          <h3>Modifica {{ ricettarifinizione }}</h3>
       {% else %}
           <h3> Aggiungi Ricetta Rifinizione</h3>
       {% endif %}
@@ -103,6 +103,23 @@
         
 
     </div>
+
+
+
+    <div class="row">
+      
+
+      {% if form.instance.id  %}
+          {% include 'ricette/partials/_dettaglio_ricetta_rifinizione_table.html' %}
+      {% else %}
+          <h3> Non sono presenti righe di dettaglio.</h3>
+      {% endif %}
+
+
+      
+
+</div>
+
 
     
 

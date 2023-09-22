@@ -61,28 +61,28 @@ class RicettaRifinizioneModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+
+class DettaglioRicettaRifinizioneModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = DettaglioRicettaRifinizione
+        fields= '__all__'
         
-# class RicettaRifinizioneModelForm(forms.ModelForm):
-#     class Meta:
-#         model = RicettaRifinizione
-#         fields = '__all__'
+        widgets = {
+            'numero_riga': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'fk_operazione_ricette': forms.Select(),
+            'fk_prodotto_chimico': forms.Select(),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'fk_ricetta_rifinizione': forms.HiddenInput()
+        }
+        labels = {
+            'numero_riga': 'Ordinale',
+            'fk_operazione_ricette': 'Operazione',
+            'fk_prodotto_chimico': 'Prodotto Chimico',
+            'quantity': 'Quantità',
+            'note': 'Note'
 
-#     def __init__(self, *args, **kwargs):
-#         super(RicettaRifinizioneModelForm, self).__init__(*args, **kwargs)       
-#         self.fields['numero_ricetta'].widget.attrs['readonly'] = True
-#         self.fields['numero_revisione'].widget.attrs['readonly'] = True
-            
-#         # Nascondi i campi "created_by" se sono già impostati
-#         if self.instance.created_by:
-#             self.fields['created_by'].widget = forms.HiddenInput()
+        }
 
-    # def clean(self):
-    #     cleaned_data = super(RicettaRifinizioneModelForm, self).clean()
-        
-    #     # Imposta numero_ricetta solo se stai creando un nuovo record
-    #     if not self.instance.pk:
-    #         max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-    #         cleaned_data['numero_ricetta'] = max_numero_ricetta + 1 if max_numero_ricetta else 1
-    #         cleaned_data['numero_revisione'] = 1
-
-    #     return cleaned_data
