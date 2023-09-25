@@ -4,12 +4,12 @@ from django.contrib import messages
 from datetime import date
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.db.models import Max, Sum
+from django.db.models import Max, Sum, FloatField, F, OuterRef, Subquery
 from django.views.generic.edit import CreateView, UpdateView
 from .models import *
 from .forms import *
 from .filters import *
-from .utils import calcola_totale_prezzi
+
 
 
 
@@ -23,11 +23,6 @@ def home_ricette_rifinizione(request):
     
     ricette_rifinizione_filter = RicettaRifinizioneFilter(request.GET, queryset=ricette_rifinizione)
     filtered_ricette_rifinizione = ricette_rifinizione_filter.qs  # Ottieni i record filtrati
-    
-     # Calcola il totale dei prezzi
-    totale_prezzi = ProdottoChimico.objects.filter(
-        dettaglio_ricette_rifinizione__fk_ricetta_rifinizione__in=ricette_rifinizione
-    ).aggregate(Sum('prezzo'))['prezzo__sum'] or 0.0
     
 
     # Paginazione operazioni
@@ -46,7 +41,7 @@ def home_ricette_rifinizione(request):
         'ricette_rifinizione': ricette_rifinizione,
         'ricette_rifinizione_paginator': ricette_rifinizione_paginator,        
         'filter': ricette_rifinizione_filter,  
-        'totale_prezzi': totale_prezzi,      
+            
         
 
     }
@@ -163,16 +158,12 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
 
-    # def form_valid(self, form):
-    #     messages.info(self.request, self.success_message) # Compare sul success_url
-    #     return super().form_valid(form)
-
     def form_valid(self, form):
         # Imposta numero_ricetta solo se stai creando un nuovo record
-        if not form.instance.numero_ricetta:
-            max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            form.instance.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
-            form.instance.numero_revisione = 1
+        #if not form.instance.numero_ricetta:
+         #   max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+          #  form.instance.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+           # form.instance.numero_revisione = 1
         
         # Imposta l'utente creatore
         form.instance.created_by = self.request.user
@@ -183,11 +174,11 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        if not self.object:
-            max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            next_numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
-            initial['numero_ricetta'] = next_numero_ricetta
-            initial['numero_revisione'] = 1
+        #if not self.object:
+            #max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            #next_numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+            #initial['numero_ricetta'] = next_numero_ricetta
+            #initial['numero_revisione'] = 1
         initial['created_by'] = self.request.user
         initial['ricetta_per_pelli'] = 100
         return initial

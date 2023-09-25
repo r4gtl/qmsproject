@@ -1,10 +1,13 @@
 from django.db import models
 from datetime import date
-from django.db.models import Max
+from django.db.models import Max, Q
 from django.contrib.auth.models import User
 from articoli.models import Articolo, Colore
 from acquistopelli.models import TipoAnimale, TipoGrezzo
-from chem_man.models import ProdottoChimico
+from chem_man.models import ProdottoChimico, PrezzoProdotto
+
+import locale
+from decimal import Decimal
 
 
 
@@ -232,9 +235,9 @@ class DettaglioRevisioneRicettaFondo(models.Model):
 # Ricette Rifinizione    
 # Faccio una prova per vedere di gestire numero ricetta e revisione in un'unico modello
 class RicettaRifinizione(models.Model):
-    numero_ricetta = models.IntegerField()
+    numero_ricetta = models.IntegerField(blank=True, null=True)
     data_ricetta = models.DateField(default=date.today)
-    numero_revisione = models.IntegerField()
+    numero_revisione = models.IntegerField(blank=True, null=True)
     data_revisione = models.DateField(default=date.today)
     fk_articolo = models.ForeignKey(Articolo, related_name='ricette_rifinizione', on_delete=models.CASCADE)    
     ricetta_per_pelli = models.DecimalField(max_digits=4, decimal_places=0)
@@ -242,24 +245,81 @@ class RicettaRifinizione(models.Model):
     created_by = models.ForeignKey(User, related_name='ricette_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def calcola_totale_prezzi(self):
+        # Ottieni tutti i dettagli delle ricette associati a questa RicettaRifinizione
+        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
+
+        # Inizializza il totale a zero
+        totale_prezzi = 0.0
+
+        for dettaglio_ricetta in dettagli_ricette:
+            recent_prezzi = PrezzoProdotto.objects.filter(
+                fk_prodottochimico=dettaglio_ricetta.fk_prodotto_chimico
+            ).order_by('-data_inserimento').values('prezzo')[:1]
+
+            # Verifica se ci sono prezzi disponibili
+            if recent_prezzi:
+                # Converti il prezzo da Decimal a float
+                prezzo_float = float(recent_prezzi[0]['prezzo'])
+
+                # Converte quantity in float e moltiplica
+                totale_prezzi += float(dettaglio_ricetta.quantity) * prezzo_float
+
+        locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')  # Imposta la localizzazione italiana
+        totale_prezzi = locale.currency(totale_prezzi, grouping=True, symbol=True)
+
+        
+        return totale_prezzi
     
     def save(self, *args, **kwargs):
+
         if self.numero_ricetta is None:
-            # Trova il valore massimo esistente in numero_ricetta
             max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            
-            if max_numero_ricetta is not None:
-                self.numero_ricetta = max_numero_ricetta + 1
+            if self.pk:
+                # Stai modificando una ricetta esistente
+                previous_instance = RicettaRifinizione.objects.get(pk=self.pk)
+                if self.fk_articolo != previous_instance.fk_articolo:
+                    # L'articolo è stato cambiato, controlla se esiste già una ricetta per il nuovo articolo
+                    existing_ricetta = RicettaRifinizione.objects.filter(
+                        fk_articolo=self.fk_articolo
+                    ).exclude(pk=self.pk).order_by('-numero_revisione').first()
+
+                    if existing_ricetta:
+                        print("Modifica: la ricetta esiste. Existing ricetta numero ricetta: " + str(existing_ricetta.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(existing_ricetta.numero_revisione))
+                        # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
+                        self.numero_ricetta = existing_ricetta.numero_ricetta
+                        self.numero_revisione = existing_ricetta.numero_revisione + 1
+                    else:
+                        print("Modifica: la ricetta NON esiste. Existing ricetta numero ricetta: " + str(existing_ricetta.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(existing_ricetta.numero_revisione))
+                        # Non esiste ancora una ricetta per il nuovo articolo, quindi incrementa solo il numero_revisione
+                        self.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+                        self.numero_revisione = previous_instance.numero_revisione + 1
             else:
-                # Se non ci sono ancora elementi, imposta il default a 1
-                self.numero_ricetta = 1
-            self.numero_revisione = 1
-        else:
-            # Se stai aggiornando un record esistente, mantieni il numero_revisione invariato
-            if not self.pk:  # Controlla se il record è nuovo
-                self.numero_revisione = 1
-        
+                # Stai creando una nuova ricetta
+
+                # Stai creando una nuova ricetta
+                existing_ricetta = RicettaRifinizione.objects.filter(
+                    fk_articolo=self.fk_articolo
+                ).order_by('-numero_revisione').first()
+                print("Articolo: " + str(self.fk_articolo))
+                print("Ricetta: " + str(existing_ricetta))
+                #existing_ricetta = RicettaRifinizione.objects.order_by('-numero_revisione').first()
+
+                if existing_ricetta:
+                    print("Creazione: la ricetta esiste. Existing ricetta numero ricetta: " + str(existing_ricetta.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(existing_ricetta.numero_revisione))
+                    # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
+                    self.numero_ricetta = existing_ricetta.numero_ricetta
+                    self.numero_revisione = existing_ricetta.numero_revisione + 1
+                else:
+                    # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi
+                    self.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
+                    #self.numero_ricetta = 1
+                    self.numero_revisione = 1
+                    print("Creazione: la ricetta NON esiste. Existing ricetta numero ricetta: " + str(self.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(self.numero_revisione))
+
         super().save(*args, **kwargs)
+
+
     
     class Meta:
         ordering = ["-data_ricetta"]

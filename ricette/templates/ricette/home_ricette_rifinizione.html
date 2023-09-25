@@ -129,7 +129,8 @@
                     <td class="col-md text-end">{{ ricetta.data_ricetta }}</td>                    
                     <td class="col-md text-end">{{ ricetta.numero_revisione }}</td>                    
                     <td class="col-md text-end">{{ ricetta.data_revisione }}</td>  
-                     <td class="col-md text-end">{{ totale_prezzi }}</td>
+                    <td class="col-md text-end">{{ ricetta.calcola_totale_prezzi }}</td>
+
                     <td class="col-md text-center"><a href="{% url 'ricette:delete_ricetta_rifinizione' pk=ricetta.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ricetta.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
