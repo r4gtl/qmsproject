@@ -257,7 +257,10 @@ class DettaglioRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
             max_numero_riga = DettaglioRicettaRifinizione.objects.aggregate(Max('numero_riga'))['numero_riga__max']
             next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
             initial['numero_riga'] = next_numero_riga
-            
+
+        ricetta_id = self.kwargs.get('fk_ricetta_rifinizione')
+        
+        initial['fk_ricetta_rifinizione'] = ricetta_id
         initial['created_by'] = self.request.user        
         return initial
     

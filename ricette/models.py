@@ -30,6 +30,12 @@ class OperazioneRicette(models.Model):
     created_by = models.ForeignKey(User, related_name='operazione_ricette', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["descrizione"]
+
+    def __str__(self):        
+        return self.descrizione
+
 # Ricette bagnato    
 class RicettaBagnato(models.Model):
     numero_ricetta = models.IntegerField(default=None)
@@ -269,7 +275,8 @@ class DettaglioRicettaRifinizione(models.Model):
     
     
     def get_choices_operations():
-        return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+        #return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+        return {'ward_ref': "Rifinizione"}
     
     fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
                                             related_name='dettaglio_ricette_rifinizione', 
