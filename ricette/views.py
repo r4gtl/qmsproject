@@ -158,14 +158,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
 
-    def form_valid(self, form):
-        # Imposta numero_ricetta solo se stai creando un nuovo record
-        #if not form.instance.numero_ricetta:
-         #   max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-          #  form.instance.numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
-           # form.instance.numero_revisione = 1
-        
-        # Imposta l'utente creatore
+    def form_valid(self, form):        
         form.instance.created_by = self.request.user
         
         messages.info(self.request, self.success_message)  # Compare sul success_url
@@ -173,20 +166,11 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_initial(self):
-        initial = super().get_initial()
-        #if not self.object:
-            #max_numero_ricetta = RicettaRifinizione.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            #next_numero_ricetta = max_numero_ricetta + 1 if max_numero_ricetta else 1
-            #initial['numero_ricetta'] = next_numero_ricetta
-            #initial['numero_revisione'] = 1
+        initial = super().get_initial()        
         initial['created_by'] = self.request.user
         initial['ricetta_per_pelli'] = 100
         return initial
-        # created_by = self.request.user
-        # return {
-        #     'created_by': created_by,
-            
-        # }
+        
 
 class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
     model = RicettaRifinizione
@@ -243,11 +227,11 @@ class DettaglioRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
     
 
     def get_initial(self):
-        initial = super().get_initial()
-        if not self.object:
-            max_numero_riga = DettaglioRicettaRifinizione.objects.aggregate(Max('numero_riga'))['numero_riga__max']
-            next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
-            initial['numero_riga'] = next_numero_riga
+        initial = super().get_initial()        
+        ricetta_id = self.kwargs.get('fk_ricetta_rifinizione')
+        max_numero_riga = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga
 
         ricetta_id = self.kwargs.get('fk_ricetta_rifinizione')
         

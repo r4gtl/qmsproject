@@ -126,7 +126,60 @@
       
 
       {% if form.instance.id  %}
-          {% include 'ricette/partials/_dettaglio_ricetta_rifinizione_table.html' %}
+          <!-- Tabella dettaglio -->
+          <div class="col-12">
+        <div class="row">
+        
+        
+        <div class="col-6">
+          <h5>Dettaglio Ricetta</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'ricette:aggiungi_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Riga</th>
+              <th>Selezione</th>
+              <th>Operazione</th>
+              <th>Prodotto</th>                
+              <th>Quantità</th>   
+              <th>Sposta</th>
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody id="tabella_dettaglio">
+            {% for dettaglio in elenco_dettagli %}
+            <tr>        
+              
+              <td><a  href="{% url 'ricette:modifica_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk pk=dettaglio.pk %}" id="numero_riga_{{ dettaglio.pk }}">{{ dettaglio.numero_riga }}</a></td>
+              <td>
+                <input type="checkbox" class="select-instance" data-id="{{ dettaglio.pk }}">
+              </td> 
+              <td>{{ dettaglio.fk_operazione_ricette }}</td>
+              <td>{{ dettaglio.fk_prodotto_chimico }}</td>
+              <td class="text-end">{{ dettaglio.quantity }}</td>
+              <td>
+                <button class="move-up">Riga su</button>
+                <button class="move-down">Riga giù</button>
+              </td>
+              <td class="text-center"><a href="{% url 'ricette:delete_dettaglio_ricetta_rifinizione' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+  </div><!--Fine tabella dettaglio -->
+
+  
       {% else %}
           <h3> Non sono presenti righe di dettaglio.</h3>
       {% endif %}
@@ -143,5 +196,150 @@
 {% endblock content %}
 
 {% block extra_scripts %}
+<script>
+var searchURL = "{% url 'ricette:update_numero_riga' %}";
+var pk_ricetta_rifinizione = {{ ricettarifinizione.pk }};
 
+$(document).ready(function() {
+  $(".move-up").click(function() {
+    moveRow("up");
+  });
+
+  $(".move-down").click(function() {
+    moveRow("down");
+  });
+
+  function moveRow(direction) {
+    const selectedInstance = $(".select-instance:checked");
+    if (selectedInstance.length === 0) {
+      alert("Seleziona un'istanza prima di spostarla.");
+      return;
+    }
+
+    const currentRow = selectedInstance.closest("tr");
+    const targetRow = direction === "up" ? currentRow.prev() : currentRow.next();
+    console.log(JSON.stringify(currentRow, null, 2));
+    console.log("targetRow: " + targetRow);
+
+    if (targetRow.length === 0) {
+      // Non puoi spostarti oltre i limiti della tabella
+      return;
+    }
+
+    const currentNumber = currentRow.find("a[id^='numero_riga_']").text();
+    const targetNumber = targetRow.find("a[id^='numero_riga_']").text();
+    console.log("currentNumber: " + currentNumber);
+    console.log("targetNumber: " + targetNumber);
+
+    if (isNaN(currentNumber) || isNaN(targetNumber)) {
+      alert("Il numero di riga non è valido.");
+      return;
+    }
+
+    currentRow.find("a[id^='numero_riga_']").text(targetNumber);
+    targetRow.find("a[id^='numero_riga_']").text(currentNumber);
+
+    // Aggiorna i valori nel form e invia eventuali modifiche al server
+    const currentInstanceId = selectedInstance.data("id");
+    const targetInstanceId = targetRow.find(".select-instance").data("id");
+    console.log("Instance id: " + currentInstanceId);
+    console.log("targetInstanceId: " + targetInstanceId);
+
+    // Esegui una richiesta AJAX per aggiornare il numero di riga nel server
+    $.ajax({
+      url: searchURL, // Sostituisci con l'URL effettivo della tua vista
+      headers: {
+        "Accept": "application/json", // Imposta l'header "Accept" a "application/json"
+      },
+      method: 'POST',
+      data: {
+        instance_id: currentInstanceId,
+        new_numero_riga: currentNumber,
+        csrfmiddlewaretoken: '{{ csrf_token }}' // Assicurati di includere il token CSRF se necessario
+      },
+      success: function(response) {
+        if (response.success === true) {
+          // L'operazione è riuscita
+          console.log("Successo!");
+        }
+
+        if (response.success) {
+          console.log("response: " + response);
+          // Aggiornamento riuscito, puoi eseguire ulteriori azioni qui se necessario
+          currentRow.find("a[id^='numero_riga_']").text(targetNumber);
+          console.log("currentRow: " + currentRow.find("a[id^='numero_riga_']").text(currentNumber));
+          // Aggiorna il numero di riga nella riga di destinazione
+          targetRow.find("a[id^='numero_riga_']").text(currentNumber);
+          console.log("targetRow: " + targetRow.find("#id_numero_riga").text(targetNumber));
+
+          // Deseleziona tutte le caselle di controllo
+          $(".select-instance:checked").prop("checked", false);
+
+          // Ora invia una seconda richiesta AJAX per aggiornare il numero di riga della riga di destinazione
+          $.ajax({
+            url: searchURL,
+            headers: {
+              "Accept": "application/json",
+            },
+            method: 'POST',
+            data: {
+              instance_id: targetInstanceId,  // Usa l'ID della riga di destinazione
+              new_numero_riga: targetNumber,   // Usa il nuovo numero di riga della riga di destinazione
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(response) {
+              if (response.success) {
+                console.log("Aggiornamento della riga di destinazione riuscito.");
+                refreshTable(pk_ricetta_rifinizione);
+              } else {
+                console.log("Errore nell'aggiornamento della riga di destinazione: " + response.error_message);
+              }
+            },
+            error: function() {
+              console.log("Errore durante la richiesta AJAX per l'aggiornamento della riga di destinazione.");
+            }
+          });
+        } else {
+          console.log("Errore durante l'aggiornamento del numero di riga: " + response.error_message);
+        }
+      },
+      error: function() {
+        alert("Si è verificato un errore durante la richiesta AJAX.");
+      }
+    });
+
+    // Dopo l'aggiornamento, puoi aggiornare la vista se necessario
+  }
+});
+
+
+function refreshTable(pk_ricetta_rifinizione) {
+  // Effettua una richiesta AJAX per ottenere i dati aggiornati
+  $.ajax({
+    url: "{% url 'ricette:get_updated_table_data' %}",
+    method: 'GET',  // Utilizza il metodo HTTP GET
+    dataType: 'json',
+    data: {
+      pk_ricetta_rifinizione: pk_ricetta_rifinizione
+    },
+    success: function(response) {
+      if (response.success) {
+        // Aggiorna la tabella con i nuovi dati
+        var tableBody = $("#tabella_dettaglio");  // Sostituisci con l'ID corretto del corpo della tabella
+        tableBody.html(response.table_html); // Assume che il server restituisca l'HTML della tabella aggiornata
+      } else {
+        console.log("Errore nell'ottenere i dati aggiornati.");
+      }
+    },
+    error: function() {
+      console.log("Errore durante la richiesta AJAX per i dati aggiornati.");
+    }
+  });
+}
+
+// Chiamare la funzione refreshTable() dopo aver completato con successo la seconda richiesta AJAX
+
+
+
+</script>
 {% endblock %}

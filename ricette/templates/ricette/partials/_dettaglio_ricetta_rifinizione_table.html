@@ -18,9 +18,11 @@
           <thead>
             <tr>
               <th>Riga</th>
+              <th>Selezione</th>
               <th>Operazione</th>
               <th>Prodotto</th>                
               <th>Quantità</th>   
+              <th>Sposta</th>
               <th>Azione</th>
               
             </tr>
@@ -30,9 +32,16 @@
             <tr>        
               
               <td><a href="{% url 'ricette:modifica_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
+              <td>
+                <input type="checkbox" class="select-instance" data-id="{{ dettaglio.pk }}">
+              </td> 
               <td>{{ dettaglio.fk_operazione_ricette }}</td>
               <td>{{ dettaglio.fk_prodotto_chimico }}</td>
               <td class="text-end">{{ dettaglio.quantity }}</td>
+              <td>
+                <button class="move-up">Riga su</button>
+                <button class="move-down">Riga giù</button>
+              </td>
               <td class="text-center"><a href="{% url 'ricette:delete_dettaglio_ricetta_rifinizione' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
@@ -41,3 +50,5 @@
       </div>
       
   </div><!--Fine tabella dettaglio -->
+
+  
