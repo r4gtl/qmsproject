@@ -1,54 +1,53 @@
 <!-- Tabella dettaglio -->
-          <div class="col-12">
-        <div class="row">
-        
-        
-        <div class="col-6">
-          <h5>Dettaglio Ricetta</h5>
-                    
-        </div>
-        <div class="col-6 text-end">
-          
-          <a href="{% url 'ricette:aggiungi_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
-
-        </div>
-      </div>
-      <div class="table-container">
-        <table class="table table-bordered table-striped mt-2">
-          <thead>
-            <tr>
-              <th>Riga</th>
-              <th>Selezione</th>
-              <th>Operazione</th>
-              <th>Prodotto</th>                
-              <th>Quantità</th>   
-              <th>Sposta</th>
-              <th>Azione</th>
-              
-            </tr>
-          </thead>
-          <tbody>
-            {% for dettaglio in elenco_dettagli %}
-            <tr>        
-              
-              <td><a href="{% url 'ricette:modifica_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
-              <td>
-                <input type="checkbox" class="select-instance" data-id="{{ dettaglio.pk }}">
-              </td> 
-              <td>{{ dettaglio.fk_operazione_ricette }}</td>
-              <td>{{ dettaglio.fk_prodotto_chimico }}</td>
-              <td class="text-end">{{ dettaglio.quantity }}</td>
-              <td>
-                <button class="move-up">Riga su</button>
-                <button class="move-down">Riga giù</button>
-              </td>
-              <td class="text-center"><a href="{% url 'ricette:delete_dettaglio_ricetta_rifinizione' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-            </tr>  
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      
-  </div><!--Fine tabella dettaglio -->
-
+<div class="col-12">
+  <div class="row">
   
+  
+  <div class="col-6">
+    <h5>Dettaglio Ricetta</h5>
+              
+  </div>
+  <div class="col-6 text-end">
+    
+    <a href="{% url 'ricette:aggiungi_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+
+  </div>
+</div>
+<div class="table-container">
+  <table class="table table-bordered table-striped mt-2">
+    <thead>
+      <tr>
+        <th>Riga</th>
+        <th>Selezione</th>
+        <th>Operazione</th>
+        <th>Prodotto</th>                
+        <th>Quantità</th>   
+        <th>Sposta</th>
+        <th>Azione</th>
+        
+      </tr>
+    </thead>
+    <tbody id="tabella_dettaglio">
+      {% for dettaglio in elenco_dettagli %}
+      <tr>        
+        
+        <td><a  href="{% url 'ricette:modifica_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk pk=dettaglio.pk %}" id="numero_riga_{{ dettaglio.pk }}">{{ dettaglio.numero_riga }}</a></td>
+        <td>
+          <input type="checkbox" class="select-instance" data-id="{{ dettaglio.pk }}">
+        </td> 
+        <td>{{ dettaglio.fk_operazione_ricette }}</td>
+        <td>{{ dettaglio.fk_prodotto_chimico }}</td>
+        <td class="text-end">{{ dettaglio.quantity }}</td>
+        <td>
+          <button class="move-up">Riga su</button>
+          <button class="move-down">Riga giù</button>
+        </td>
+        <td class="text-center"><a href="{% url 'ricette:delete_dettaglio_ricetta_rifinizione' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+      </tr>  
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</div><!--Fine tabella dettaglio -->
+

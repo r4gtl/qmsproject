@@ -126,59 +126,8 @@
       
 
       {% if form.instance.id  %}
-          <!-- Tabella dettaglio -->
-          <div class="col-12">
-        <div class="row">
-        
-        
-        <div class="col-6">
-          <h5>Dettaglio Ricetta</h5>
-                    
-        </div>
-        <div class="col-6 text-end">
           
-          <a href="{% url 'ricette:aggiungi_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
-
-        </div>
-      </div>
-      <div class="table-container">
-        <table class="table table-bordered table-striped mt-2">
-          <thead>
-            <tr>
-              <th>Riga</th>
-              <th>Selezione</th>
-              <th>Operazione</th>
-              <th>Prodotto</th>                
-              <th>Quantità</th>   
-              <th>Sposta</th>
-              <th>Azione</th>
-              
-            </tr>
-          </thead>
-          <tbody id="tabella_dettaglio">
-            {% for dettaglio in elenco_dettagli %}
-            <tr>        
-              
-              <td><a  href="{% url 'ricette:modifica_dettaglio_ricetta_rifinizione' fk_ricetta_rifinizione=ricettarifinizione.pk pk=dettaglio.pk %}" id="numero_riga_{{ dettaglio.pk }}">{{ dettaglio.numero_riga }}</a></td>
-              <td>
-                <input type="checkbox" class="select-instance" data-id="{{ dettaglio.pk }}">
-              </td> 
-              <td>{{ dettaglio.fk_operazione_ricette }}</td>
-              <td>{{ dettaglio.fk_prodotto_chimico }}</td>
-              <td class="text-end">{{ dettaglio.quantity }}</td>
-              <td>
-                <button class="move-up">Riga su</button>
-                <button class="move-down">Riga giù</button>
-              </td>
-              <td class="text-center"><a href="{% url 'ricette:delete_dettaglio_ricetta_rifinizione' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-            </tr>  
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      
-  </div><!--Fine tabella dettaglio -->
-
+      {% include "ricette/partials/_dettaglio_ricetta_rifinizione_table.html" %}
   
       {% else %}
           <h3> Non sono presenti righe di dettaglio.</h3>
@@ -199,6 +148,7 @@
 <script>
 var searchURL = "{% url 'ricette:update_numero_riga' %}";
 var pk_ricetta_rifinizione = {{ ricettarifinizione.pk }};
+console.log("pk_ricetta: " + pk_ricetta_rifinizione)
 
 $(document).ready(function() {
   $(".move-up").click(function() {
@@ -218,7 +168,7 @@ $(document).ready(function() {
 
     const currentRow = selectedInstance.closest("tr");
     const targetRow = direction === "up" ? currentRow.prev() : currentRow.next();
-    console.log(JSON.stringify(currentRow, null, 2));
+    console.log("currentRow: " + currentRow);
     console.log("targetRow: " + targetRow);
 
     if (targetRow.length === 0) {
@@ -255,6 +205,8 @@ $(document).ready(function() {
       data: {
         instance_id: currentInstanceId,
         new_numero_riga: currentNumber,
+        target_instance_id: targetInstanceId,
+        target_new_numero_riga: targetNumber,
         csrfmiddlewaretoken: '{{ csrf_token }}' // Assicurati di includere il token CSRF se necessario
       },
       success: function(response) {
@@ -283,14 +235,16 @@ $(document).ready(function() {
             },
             method: 'POST',
             data: {
-              instance_id: targetInstanceId,  // Usa l'ID della riga di destinazione
+              instance_id: targetInstanceId,  // Usa l'ID della riga di destinazione -->
+              //target_instance_id: targetInstanceId,
               new_numero_riga: targetNumber,   // Usa il nuovo numero di riga della riga di destinazione
+              //target_new_numero_riga: targetNumber,
               csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function(response) {
               if (response.success) {
                 console.log("Aggiornamento della riga di destinazione riuscito.");
-                refreshTable(pk_ricetta_rifinizione);
+                //refreshTable(pk_ricetta_rifinizione);
               } else {
                 console.log("Errore nell'aggiornamento della riga di destinazione: " + response.error_message);
               }
@@ -300,6 +254,7 @@ $(document).ready(function() {
             }
           });
         } else {
+          console.log("Fail!");
           console.log("Errore durante l'aggiornamento del numero di riga: " + response.error_message);
         }
       },
@@ -335,9 +290,35 @@ function refreshTable(pk_ricetta_rifinizione) {
       console.log("Errore durante la richiesta AJAX per i dati aggiornati.");
     }
   });
-}
+};
 
 // Chiamare la funzione refreshTable() dopo aver completato con successo la seconda richiesta AJAX
+
+var updateURL = "{% url 'ricette:get_updated_table_data' %}";
+var pk_ricetta_rifinizione = {{ ricettarifinizione.pk }};
+$(document).ready(function () {
+  // Aggiorna la tabella quando la pagina è pronta
+  updateTable();
+
+  // Funzione per aggiornare la tabella
+  function updateTable() {
+      //var pk_ricetta_rifinizione = // Ottieni il valore appropriato
+
+      $.ajax({
+          url: updateURL,
+          type: 'GET',
+          data: {'pk_ricetta_rifinizione': pk_ricetta_rifinizione},
+          success: function (data) {
+              // Aggiorna il contenuto della tabella con i dati ricevuti dalla chiamata AJAX
+              $('#tabella_dettaglio').html(data);
+          },
+          error: function (xhr, status, error) {
+              console.error(error);
+          }
+      });
+  }
+});
+
 
 
 

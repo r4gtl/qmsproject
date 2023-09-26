@@ -77,7 +77,15 @@ def get_prodotto_chimico(request):
     if product_id is not None:
         try:
             prodotto_chimico = ProdottoChimico.objects.get(pk=product_id)
-            return JsonResponse({'fk_imballaggio': prodotto_chimico.fk_imballaggio.id})
+            print("prodotto_chimico: " + str(prodotto_chimico))
+            if prodotto_chimico.fk_imballaggio:
+                print("Imballaggio: " + str(prodotto_chimico.fk_imballaggio.id))
+                return JsonResponse({'fk_imballaggio': prodotto_chimico.fk_imballaggio.id})
+            else:
+                print("Imballaggio: vuoto" )
+                pass
+            
+            
         except ProdottoChimico.DoesNotExist:
             pass
 
