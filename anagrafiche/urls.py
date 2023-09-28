@@ -1,29 +1,5 @@
 from django.urls import path
-from .views import (home_fornitori,
-                    # aggiungi_fornitore,
-                    CreateSupplier,   
-                    aggiungi_fornitore_with_category,                 
-                    # vedi_fornitore,
-                    ListaFornitoriView,
-                    FacilityCreateView,
-                    aggiungi_facility_details,
-                    # edit_facility_details,
-                    FacilityUpdateView,
-                    delete_facility_contact,
-                    add_facility_contact,
-                    FacilityContactUpdateView,
-                    UpdateSupplier,
-                    AddLwgCertificate,
-                    UpdateLwgCertificate,                    
-                    delete_certificato,
-                    XrTransferValueCreateView,
-                    XrTransferValueUpdateView,
-                    XrTransferValueDeleteView,
-                    TransferValueListView,
-                    TransferValueCreateView,
-                    TransferValueUpdateView,
-                    ClienteCreateView, ClienteListView, ClienteUpdateView, ListaClienteView
-                    )
+from .views import *
 from .charts import get_country_count, get_country_count_client
 
 

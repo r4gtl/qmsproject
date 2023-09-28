@@ -282,7 +282,8 @@ class AddLwgCertificate(CreateView):
 
 
     def get_success_url(self):          
-        fornitore=self.object.fk_fornitore
+        #fornitore=self.object.fk_fornitore.pk
+        fornitore = self.kwargs['fk_fornitore']
         print("Fornitore: " + str(fornitore))
         return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
 
@@ -297,7 +298,9 @@ class AddLwgCertificate(CreateView):
         context = super().get_context_data(**kwargs)
         fornitore=self.kwargs['fk_fornitore']
         print("Fornitore: " + str(fornitore))
-        context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
+        #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
+        context['ragionesociale'] = Fornitore.objects.get(pk=fornitore)
+        context['fornitore'] = fornitore
         return context
 
 class UpdateLwgCertificate(UpdateView):
@@ -319,7 +322,7 @@ class UpdateLwgCertificate(UpdateView):
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         pk = self.object.pk
-
+        print("pk fornitore: " + str(self.object.fk_fornitore.pk))
         context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
         context['fornitore'] = self.object.fk_fornitore.pk
         context['ragionesociale'] = Fornitore.objects.get(pk=self.object.fk_fornitore.pk)
