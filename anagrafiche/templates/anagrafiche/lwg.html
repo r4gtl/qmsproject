@@ -14,7 +14,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        
-        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore %}">{{ ragionesociale }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore.pk %}">{{ ragionesociale }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">Certificato LWG</li>
         
     </ol>
