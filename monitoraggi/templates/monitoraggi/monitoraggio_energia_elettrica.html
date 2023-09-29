@@ -69,6 +69,7 @@
 
             
             <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         
@@ -79,6 +80,12 @@
 
 {% endblock %}
 
-{% block scripts %}
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_data_lettura');
+        });
 
+    
+</script>
 {% endblock %} 
