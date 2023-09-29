@@ -54,16 +54,27 @@ class CentrodiLavoroModelForm(forms.ModelForm):
     class Meta:
         model = CentrodiLavoro
         fields = '__all__'
+        labels = {
+            'description': 'Descrizione',    
+        }
 
 class WardModelForm(forms.ModelForm):
     class Meta:
         model = Ward
         fields = '__all__'
+        labels = {
+            'description': 'Descrizione',    
+        }
+
 
 class RoleModelForm(forms.ModelForm):
     class Meta:
         model = Role
         fields = '__all__'
+        labels = {
+            'description': 'Descrizione',    
+        }
+
 
 
 class Safety_RoleModelForm(forms.ModelForm):
