@@ -399,7 +399,7 @@ def piano_manutenzioni(request):
                 fk_attrezzatura__fk_ward=fk_ward_id
             ).order_by('-prossima_scadenza')
         
-        print("request: " + str(request))
+        print(f"request: {request}")
         
         context = {
             'manutenzioni_ordinarie': manutenzioni_ordinarie,

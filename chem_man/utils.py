@@ -18,7 +18,7 @@ def get_symbol_image_url(request):
     try:
         simbolo_ghs = SimboloGHS.objects.get(id=fk_simbolo_ghs_id)
         image_url = simbolo_ghs.symbol_image.url
-        print("image_url: " + str(image_url))
+        print(f"image_url: {image_url}")
         return JsonResponse({'success': True, 'image_url': image_url})
     except SimboloGHS.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Symbol GHS not found'})
@@ -39,7 +39,7 @@ def search_sostanza(request):
                 'num_cas': sostanza.num_cas,
                 'num_ec': sostanza.num_ec
             }
-            print("Result: " + str(result))
+            print(f"Result: {result}")
             results.append(result)
 
     return JsonResponse(results, safe=False)
@@ -77,9 +77,9 @@ def get_prodotto_chimico(request):
     if product_id is not None:
         try:
             prodotto_chimico = ProdottoChimico.objects.get(pk=product_id)
-            print("prodotto_chimico: " + str(prodotto_chimico))
+            print(f"prodotto_chimico: {prodotto_chimico}")
             if prodotto_chimico.fk_imballaggio:
-                print("Imballaggio: " + str(prodotto_chimico.fk_imballaggio.id))
+                print(f"Imballaggio: {prodotto_chimico.fk_imballaggio.id}")
                 return JsonResponse({'fk_imballaggio': prodotto_chimico.fk_imballaggio.id})
             else:
                 print("Imballaggio: vuoto" )

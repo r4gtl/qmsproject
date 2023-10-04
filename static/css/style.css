@@ -45,7 +45,7 @@ html {
     z-index: 1; /* Stay on top */
     top: 20; /* Stay at the top */
     left: 0;
-    background-color: #197086; /* Black */
+    background-color: #0c7c59; 
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
 }
@@ -92,7 +92,7 @@ html {
 
 /* CSS Navbar */
 .navbar {
-    background-color: #198754;
+    background-color: #0c7c59;
 }
 
 .navbar a {

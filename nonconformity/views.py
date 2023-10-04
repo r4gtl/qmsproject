@@ -1,21 +1,20 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, UpdateView
 
 
 
-from .models import Processo, RapportoNC, RapportoAudit, ProcessoAudit
-from .forms import ProcessoModelForm, RapportoNCModelForm, RapportoAuditModelForm, ProcessoAuditModelForm
-from .filters import RapportoAuditFilter, RapportoNCFilter
+from .models import *
+from .forms import *
+from .filters import *
 
 
 def home_rapporti_nc(request): 
     rapporti_nc = RapportoNC.objects.all()
-    rapporti_nc_filter = RapportoNCFilter(request.GET, queryset=rapporti_nc)
-    #filterset_class = FornitoreFilter
+    rapporti_nc_filter = RapportoNCFilter(request.GET, queryset=rapporti_nc)    
     page = request.GET.get('page', 1)
     paginator = Paginator(rapporti_nc_filter.qs, 50)  # Utilizza rapporti_nc_filter.qs per la paginazione
             

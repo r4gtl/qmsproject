@@ -46,8 +46,9 @@ def update_numero_riga(request):
             # Esegui l'aggiornamento della riga di destinazione
             instance_id = request.POST.get("instance_id")
             new_numero_riga = request.POST.get("new_numero_riga")
-            print("target_instance_id (riga 45): " + str(instance_id))
-            print("target_new_numero_riga: " + str(new_numero_riga))
+            
+            print(f"target_instance_id (riga 45): {instance_id}")
+            print(f"target_new_numero_riga: {new_numero_riga}")
 
             try:
                 target_dettaglio = DettaglioRicettaRifinizione.objects.get(pk=instance_id)
