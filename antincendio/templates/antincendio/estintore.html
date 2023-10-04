@@ -114,5 +114,9 @@
 {% endblock %}
 
 {% block extra_scripts %}
-
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_tipo_estinguente');
+        });
+</script>
 {% endblock %} 

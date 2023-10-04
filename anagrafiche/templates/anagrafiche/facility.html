@@ -162,6 +162,7 @@
 
             
             <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
     </div>
 
@@ -182,5 +183,9 @@
             alert("Completa i campi Latitudine e Longitudine prima di aprire Google Maps.");
         }
     }
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_nome_sito');
+        });
 </script>
 {% endblock %}

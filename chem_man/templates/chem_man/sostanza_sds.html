@@ -107,6 +107,7 @@
 
             
             <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         
@@ -114,7 +115,7 @@
     </div>
 
 
-<!-- Aggiungi questo modal al tuo template -->
+<!-- Modal per controllare se la sostanza è svhc -->
 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -125,7 +126,7 @@
         </button>
       </div>
       <div class="modal-body">
-        La sostanza è presente in un altro modello. Confermi di voler procedere con il salvataggio?
+        La sostanza è presente nella lista SVHC. Confermi di voler procedere con il salvataggio?
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>

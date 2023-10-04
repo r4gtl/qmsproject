@@ -46,6 +46,7 @@
             
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
             <div class="row mt-2">
                 <div class="col-3">
                     {{ form.descrizione|as_crispy_field }}
@@ -150,4 +151,11 @@
    
 
 
+{% endblock %}
+{% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_descrizione');
+        });
+    </script>
 {% endblock %}
