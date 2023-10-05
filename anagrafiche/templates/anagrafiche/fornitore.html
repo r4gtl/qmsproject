@@ -51,6 +51,7 @@
             {% endif %}
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
             <input type="hidden" name="categoria" value="{{ request.GET.categoria }}">
             <div class="row">
                 <div class="col-9">
@@ -85,6 +86,10 @@
                 </div>
                 <div class="col-3 mb-1 d-flex align-items-center pt-1">
                     <button type="button" class="btn btn-sm btn-success" onclick="openWebSite()"><i class="bi bi-globe2"></i> Visita Sito</button>
+                </div>
+                <div class="col-3">
+                    {{ form.e_mail|as_crispy_field }}
+                    
                 </div>
                 
                 

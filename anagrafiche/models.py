@@ -103,6 +103,7 @@ class Fornitore(models.Model):
     provincia = models.CharField(max_length=50, blank=True, null=True)
     country = CountryField(blank_label='(seleziona Paese)')
     sito_web = models.CharField(max_length=200, blank=True, null=True)
+    e_mail = models.EmailField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)    
     created_by = models.ForeignKey(User, related_name='fornitori', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True, null=True)

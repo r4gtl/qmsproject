@@ -71,7 +71,7 @@ class LottoModelForm(forms.ModelForm):
 
         widgets = {
             'data_acquisto': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci scelta'}),            
+            'identificativo': forms.TextInput(attrs={'placeholder': 'Inserisci identificativo lotto'}),            
             'fk_tipoanimale': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_tipogrezzo': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),

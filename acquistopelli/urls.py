@@ -25,7 +25,8 @@ urlpatterns = [
     path('crea_lotto/', LottoCreateView.as_view(), name="crea_lotto"),
     path('modifica_lotto/<int:pk>/', LottoUpdateView.as_view(), name="modifica_lotto"),
     path('<int:pk>/crea_scelta_lotto/', SceltaLottoCreateView.as_view(), name="crea_scelta_lotto"),
-    path('<int:pk>/modifica_scelta_lotto/<int:id>', SceltaLottoUpdateView.as_view(), name="modifica_scelta_lotto"),
+    #path('<int:pk>/modifica_scelta_lotto/<int:id>', SceltaLottoUpdateView.as_view(), name="modifica_scelta_lotto"),
+    path('modifica_scelta_lotto/<int:pk>', SceltaLottoUpdateView.as_view(), name="modifica_scelta_lotto"),
     path('delete_scelta_lotto/<int:pk>', delete_scelta_lotto, name="delete_scelta_lotto"),
 
     

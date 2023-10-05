@@ -135,6 +135,7 @@ function goBack() {
 function initializeDataTable(tableId) {
   $(document).ready(function() {
       $(`#${tableId}`).DataTable({
+          "pageLength": 50,
           "language": {
               "sProcessing": "Elaborazione in corso...",
               "sLengthMenu": "Mostra _MENU_ voci",
@@ -145,6 +146,7 @@ function initializeDataTable(tableId) {
               "sInfoFiltered": "(filtrato da _MAX_ voci totali)",
               "sInfoPostFix": "",
               "sSearch": "Cerca:",
+              
               "sUrl": "",
               "oPaginate": {
                   "sFirst": "Prima",

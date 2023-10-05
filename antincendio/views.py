@@ -515,9 +515,9 @@ class RegistroControlliAntincendioUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # pk_prodottochimico = self.object.pk
-        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        pk_registro = self.object.pk        
+        context['registro'] = RegistroControlliAntincendio.objects.get(pk=pk_registro)
+        
 
         return context
 

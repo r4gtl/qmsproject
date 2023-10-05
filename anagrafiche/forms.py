@@ -30,6 +30,7 @@ class FormFornitore(forms.ModelForm):
         # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
         
         sito_web = forms.CharField()
+        e_mail = forms.EmailField()
         created_at=forms.DateInput()
         
         widgets = {'country': CountrySelectWidget(),
@@ -41,7 +42,8 @@ class FormFornitore(forms.ModelForm):
         labels = {
             'ragionesociale': 'Ragione Sociale',
             'country': 'Paese',
-            'city': 'Città',            
+            'city': 'Città',    
+            'e_mail': 'E-Mail',        
             'sito_web': 'Sito Web'
             
         }

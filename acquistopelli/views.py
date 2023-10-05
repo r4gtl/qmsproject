@@ -3,23 +3,16 @@ from django.contrib import messages
 import datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.db.models import Count
 from django.views.generic.edit import CreateView, UpdateView
-from django.http import JsonResponse
+from django.db.models import Sum
+
 
 from .filters import LottoFilter
-from anagrafiche.models import Fornitore
-from .models import (TipoAnimale, TipoGrezzo, 
-                    Scelta, Lotto, 
-                    SceltaLotto
-)
 
-from .forms import (LottoModelForm, SceltaModelForm,
-                    SceltaLottoModelForm, TipoAnimaleModelForm,
-                    TipoGrezzoModelForm
-)
+from .models import *
+
+from .forms import *
 
 from .utils import filtro_lotti
 
@@ -94,8 +87,18 @@ class LottoUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk = self.object.pk        
+        pk = self.object.pk   
+        totale_pezzi = SceltaLotto.objects.filter(fk_lotto=pk).aggregate(Sum('pezzi'))['pezzi__sum'] or 0
         context['scelte_effettuate'] = SceltaLotto.objects.filter(fk_lotto=pk) 
+        scelte_effettuate=SceltaLotto.objects.filter(fk_lotto=pk) 
+        for scelta in scelte_effettuate:
+            print(f"scelta {scelta.fk_scelta.pk}")
+            print(f"scelta pezzi {scelta.pezzi}")
+            print(f"scelta pk {scelta.pk}")
+        context['totale_pezzi'] = totale_pezzi
+        lotto = Lotto.objects.get(pk=pk)
+        pezzi_rimanenti = lotto.pezzi - totale_pezzi
+        context['pezzi_rimanenti'] = pezzi_rimanenti
         return context
 
 

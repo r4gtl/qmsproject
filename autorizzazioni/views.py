@@ -6,18 +6,9 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 
-from .models import (Autorizzazione, 
-                     DettaglioScadenzaAutorizzazione, 
-                     ParametroAutorizzazione,
-                     CampoApplicazione,
-                     DettaglioCampoApplicazione
-                     )
+from .models import *
+from .forms import *
 from .filters import AutorizzazioneFilter
-from .forms import (AutorizzazioneModelForm, 
-                    DettaglioScadenzaAutorizzazioneModelForm, 
-                    ParametroAutorizzazioneModelForm,
-                    CampoApplicazioneModelForm, DettaglioCampoApplicazioneModelForm,
-                    )
 
 
 def autorizzazioni_home(request):

@@ -177,42 +177,6 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         context['CHOICES_CATEGORY'] = Fornitore.CHOICES_CATEGORY
         return context
     
-    # def form_valid(self, form):
-    #     forn = form.save(commit=False)
-    #     forn.created_by = self.request.user
-    #     forn.created_at = datetime.datetime.now()
-    #     categoria = form.cleaned_data["categoria"]
-    #     forn.save()
-
-    #     #categoria = form.cleaned_data["categoria"]
-    #     print("categoria: " + str(categoria))
-
-    #     if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
-    #         forn.save()#
-    #         messages.info(self.request, 'Il fornitore è stato aggiunto!')
-    #         self.object = forn
-    #         return HttpResponseRedirect(self.get_success_url())
-
-    #     categoria_model_name = f'Fornitore{categoria.title().replace(" ", "")}'
-    #     categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
-
-    #     if categoria_model:
-    #         try:
-    #             # Crea l'istanza del modello specifico per la categoria senza salvarla
-                
-    #             categoria_instance = categoria_model(fornitore_ptr=forn)
-    #             # Collega l'istanza del modello specifico all'istanza del modello generico
-    #             forn.fornitore_ptr_pelli = categoria_instance
-    #             categoria_instance = categoria_model.objects.create(fornitore_ptr=forn)
-    #             forn.save()  # Salva l'istanza del modello generico con la relazione
-    #         except IntegrityError as e:
-    #             forn.delete()
-    #             messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
-    #             return super().form_invalid(form)
-
-    #     self.object = forn
-    #     messages.info(self.request, 'Il fornitore è stato aggiunto!')
-    #     return HttpResponseRedirect(self.get_success_url())
     
     def form_valid(self, form):
         forn = form.save(commit=False)
