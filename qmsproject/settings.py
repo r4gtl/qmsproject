@@ -182,7 +182,7 @@ elif env('DATABASE_TYPE') == 'postgresql':
             'USER': env('POSTGRES_DB_USER'),
             'PASSWORD': env('POSTGRES_DB_PASSWORD'),
             'HOST': env('POSTGRES_DB_HOST'),
-            'PORT': env('POSTGRES_DB_HOST'),
+            'PORT': env('POSTGRES_DB_PORT'),
         }
     }
 else:
@@ -228,10 +228,23 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
     ]
-MEDIA_ROOT='/home/stefano/Documenti/dev/QMSProject/media-serve/'
+#MEDIA_ROOT='/home/stefano/Documenti/dev/QMSProject/media-serve/'
 #MEDIA_ROOT = os.path.join(BASE_DIR, '/media-serve')
 #MEDIA_ROOT = '/home/django/media-serve/'
+
 MEDIA_URL = '/media/'
+
+# Imposta il percorso predefinito per STATIC_ROOT e MEDIA_ROOT
+STATIC_ROOT = env("STATIC_ROOT")
+MEDIA_ROOT = env("MEDIA_ROOT")
+
+# Verifica se DEBUG è True e sovrascrivi i percorsi se necessario
+if not DEBUG:
+    # Controlla se le variabili d'ambiente sono impostate per STATIC_ROOT e MEDIA_ROOT
+    if env("STATIC_ROOT", default=None):
+        STATIC_ROOT = env("STATIC_ROOT")
+    if env("MEDIA_ROOT", default=None):
+        MEDIA_ROOT = env("MEDIA_ROOT")
 
 
 

@@ -21,7 +21,12 @@ class EstintoreFilter(django_filters.FilterSet):
 class IdranteFilter(django_filters.FilterSet):
     
     numero_posizione=django_filters.CharFilter(field_name='numero_posizione', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
-    tipo_idrante=django_filters.CharFilter(field_name='tipo_idrante', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    tipo_idrante=django_filters.ChoiceFilter(
+        field_name='tipo_idrante', 
+        lookup_expr='icontains', 
+        widget=forms.Select(attrs={'style': 'width: 90%; margin-left: 5%'}),
+        choices=Idrante.CHOICES_TYPE  # Usa le scelte definite nel modello
+        )
     
     class Meta:
         model = Idrante
