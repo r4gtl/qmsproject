@@ -7,10 +7,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (Articolo, Colore, FaseLavoro
+from .models import (Articolo, Colore, FaseLavoro, ElencoTest
                     )
-from .forms import ArticoloModelForm, ColoreModelForm, FaseLavoroModelForm
-from .filters import ArticoloFilter, ColoreFilter, FaseLavoroFilter
+from .forms import *
+from .filters import *
 
 
 
@@ -166,6 +166,61 @@ def delete_colore(request, pk):
 
 
 
+def tabelle_generiche(request):
+
+    # Fasi di Lavoro
+    fasi_lavoro = FaseLavoro.objects.all()
+    tot_fasi = FaseLavoro.objects.count()
+    fasi_lavoro_filter = FaseLavoroFilter(request.GET, queryset=fasi_lavoro)
+    filtered_fasi_lavoro = fasi_lavoro_filter.qs
+    fase_lavoro_filter_count = filtered_fasi_lavoro.count()
+    
+    # Paginazione Fasi di Lavoro
+    page_fasi_lavoro = request.GET.get('page', 1)
+    paginator_fasi_lavoro = Paginator(filtered_fasi_lavoro, 50)
+    try:
+        fasi_lavoro_paginator = paginator_fasi_lavoro.page(page_fasi_lavoro)
+    except PageNotAnInteger:
+        fasi_lavoro_paginator = paginator_fasi_lavoro.page(1)
+    except EmptyPage:
+        fasi_lavoro_paginator = paginator_fasi_lavoro.page(paginator_fasi_lavoro.num_pages)
+
+
+    # Elenco Test
+    elenco_test = ElencoTest.objects.all()
+    tot_test = ElencoTest.objects.count()
+    elenco_test_filter = ElencoTestFilter(request.GET, queryset=elenco_test)
+    filtered_elenco_test = elenco_test_filter.qs
+    elenco_test_filter_count = filtered_elenco_test.count()
+    
+    # Paginazione Elenco Test
+    page_elenco_test = request.GET.get('page', 1)
+    paginator_elenco_test = Paginator(filtered_elenco_test, 50)
+    try:
+        elenco_test_paginator = paginator_elenco_test.page(page_elenco_test)
+    except PageNotAnInteger:
+        elenco_test_paginator = paginator_elenco_test.page(1)
+    except EmptyPage:
+        elenco_test_paginator = paginator_elenco_test.page(paginator_elenco_test.num_pages)
+
+
+
+    context={
+        
+        'filter': fasi_lavoro_filter,
+        'tot_fasi': tot_fasi,
+        'fase_lavoro_filter_count': fase_lavoro_filter_count,
+        'fasi_lavoro_paginator': fasi_lavoro_paginator,
+        'elenco_test_filter': elenco_test_filter,
+        'tot_test': tot_test,
+        'elenco_test_filter_count': elenco_test_filter_count,
+        'elenco_test_paginator': elenco_test_paginator,
+        
+    }
+    return render(request, "articoli/tabelle_generiche.html", context)
+
+
+
 def fasi_lavoro_home(request):
     fasi_lavoro = FaseLavoro.objects.all()
     fase_lavoro_filter = FaseLavoroFilter
@@ -219,7 +274,7 @@ class FaseLavoroUpdateView(LoginRequiredMixin,UpdateView):
     
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('articoli:fasi_lavoro_home')
+            return reverse_lazy('articoli:tabelle_generiche')
         
         pk_fase=self.object.pk
         return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})
@@ -233,5 +288,57 @@ class FaseLavoroUpdateView(LoginRequiredMixin,UpdateView):
 def delete_fase_lavoro(request, pk): 
         deleteobject = get_object_or_404(FaseLavoro, pk = pk)        
         deleteobject.delete()
-        url_match= reverse_lazy('articoli:fasi_lavoro_home')
+        url_match= reverse_lazy('articoli:tabelle_generiche')
+        return redirect(url_match)
+
+
+
+class ElencoTestCreateView(LoginRequiredMixin,CreateView):
+    model = ElencoTest
+    form_class = ElencoTestModelForm
+    template_name = 'articoli/elenco_test.html'
+    success_message = 'Test aggiunto correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):        
+        #if 'salva_esci' in self.request.POST:
+        return reverse_lazy('articoli:tabelle_generiche')
+        
+        #pk_fase=self.object.pk
+        #return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+
+class ElencoTestUpdateView(LoginRequiredMixin,UpdateView):
+    model = ElencoTest
+    form_class = ElencoTestModelForm
+    template_name = 'articoli/elenco_test.html'
+    success_message = 'Test modificato correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_success_url(self):        
+        #if 'salva_esci' in self.request.POST:
+        return reverse_lazy('articoli:tabelle_generiche')
+        
+        #pk_fase=self.object.pk
+        #return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        # context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
+        return context
+    
+def delete_test(request, pk): 
+        deleteobject = get_object_or_404(ElencoTest, pk = pk)        
+        deleteobject.delete()
+        url_match= reverse_lazy('articoli:tabelle_generiche')
         return redirect(url_match)

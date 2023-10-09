@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import (articoli_home, colori_home, fasi_lavoro_home,
-                    ArticoloCreateView, ArticoloUpdateView, delete_articolo,
-                    ColoreCreateView, ColoreUpdateView, delete_colore,
-                    FaseLavoroCreateView, FaseLavoroUpdateView, delete_fase_lavoro,
-                    
-                    )
+from .views import *
 
 app_name="articoli"
 
@@ -24,13 +19,18 @@ urlpatterns = [
     path("colori/modifica_colore/<int:pk>", ColoreUpdateView.as_view(), name="modifica_colore"),    
     path("colori/delete_colore/<int:pk>", delete_colore, name="delete_colore"),    
     
+    # Tabelle Generiche
+    path("tabelle_generiche/", tabelle_generiche, name="tabelle_generiche"),
+
+    # Fasi di Lavoro       
+    path("crea_fase_lavoro/", FaseLavoroCreateView.as_view(), name="crea_fase_lavoro"),    
+    path("modifica_fase_lavoro/<int:pk>", FaseLavoroUpdateView.as_view(), name="modifica_fase_lavoro"),    
+    path("delete_fase_lavoro/<int:pk>", delete_fase_lavoro, name="delete_fase_lavoro"), 
     
-    # Home fasi di Lavoro
-    path("fasi/", fasi_lavoro_home, name="fasi_lavoro_home"),    
-    path("fasi/crea_fase_lavoro/", FaseLavoroCreateView.as_view(), name="crea_fase_lavoro"),    
-    path("fasi/modifica_fase_lavoro/<int:pk>", FaseLavoroUpdateView.as_view(), name="modifica_fase_lavoro"),    
-    path("fasi/delete_fase_lavoro/<int:pk>", delete_fase_lavoro, name="delete_fase_lavoro"), 
-    
+    # Elenco Test      
+    path("crea_test/", ElencoTestCreateView.as_view(), name="crea_test"),    
+    path("modifica_test/<int:pk>", ElencoTestUpdateView.as_view(), name="modifica_test"),    
+    path("delete_test/<int:pk>", delete_test, name="delete_test"), 
 
     
 ]

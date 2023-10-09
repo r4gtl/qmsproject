@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import (Articolo, 
-                    Colore, FaseLavoro
+                    Colore, FaseLavoro, ElencoTest
                 )
 from acquistopelli.models import TipoAnimale, TipoGrezzo
 
@@ -49,5 +49,21 @@ class FaseLavoroModelForm(forms.ModelForm):
         }
         labels = {
             'descrizione': 'Fase di Lavoro',
+            
+        }
+
+class ElencoTestModelForm(forms.ModelForm):
+    class Meta:
+        model = ElencoTest
+        fields = '__all__'
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci Nome Test'}),   
+            'norma_riferimento': forms.TextInput(attrs={'placeholder': 'Inserisci norma di riferimento'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'descrizione': 'Test',
+            'norma_riferimento': 'Norma di Riferimento',
             
         }

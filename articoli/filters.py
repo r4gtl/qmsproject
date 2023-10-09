@@ -1,7 +1,6 @@
 import django_filters
 from django import forms
-from .models import Articolo, Colore, FaseLavoro
-
+from .models import *
 
 class ArticoloFilter(django_filters.FilterSet):
     descrizione=django_filters.CharFilter(lookup_expr='icontains', label='Descrizione')
@@ -29,5 +28,15 @@ class FaseLavoroFilter(django_filters.FilterSet):
     
     class Meta:
         model = FaseLavoro
+        fields = ['descrizione'
+                ] 
+        
+
+class ElencoTestFilter(django_filters.FilterSet):
+    descrizione=django_filters.CharFilter(lookup_expr='icontains', label='Descrizione')
+    
+    
+    class Meta:
+        model = ElencoTest
         fields = ['descrizione'
                 ] 
