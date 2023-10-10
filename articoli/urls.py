@@ -26,11 +26,22 @@ urlpatterns = [
     path("crea_fase_lavoro/", FaseLavoroCreateView.as_view(), name="crea_fase_lavoro"),    
     path("modifica_fase_lavoro/<int:pk>", FaseLavoroUpdateView.as_view(), name="modifica_fase_lavoro"),    
     path("delete_fase_lavoro/<int:pk>", delete_fase_lavoro, name="delete_fase_lavoro"), 
+
+    # Attributo fasi di lavoro
+    path('<int:fk_fase_lavoro>/aggiungi_attributo/', DettaglioFaseLavoroCreateView.as_view(), name="aggiungi_attributo"), 
+    path('<int:fk_fase_lavoro>/modifica_attributo/<int:pk>/', DettaglioFaseLavoroUpdateView.as_view(), name="modifica_attributo"), 
+    path('delete_attributo/<int:pk>', delete_dettaglio_fase_lavoro, name="delete_attributo"),
     
     # Elenco Test      
     path("crea_test/", ElencoTestCreateView.as_view(), name="crea_test"),    
     path("modifica_test/<int:pk>", ElencoTestUpdateView.as_view(), name="modifica_test"),    
     path("delete_test/<int:pk>", delete_test, name="delete_test"), 
 
+    # Test Articolo
+    path('<int:fk_articolo>/aggiungi_test_articolo/', TestArticoloCreateView.as_view(), name="aggiungi_test_articolo"), 
+    path('<int:fk_articolo>/modifica_test_articolo/<int:pk>/', TestArticoloUpdateView.as_view(), name="modifica_test_articolo"), 
+    path('delete_test_articolo/<int:pk>', delete_test_articolo, name="delete_test_articolo"),
+
+    
     
 ]

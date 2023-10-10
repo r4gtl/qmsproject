@@ -1,7 +1,8 @@
 from django import forms
 
 from .models import (Articolo, 
-                    Colore, FaseLavoro, ElencoTest
+                    Colore, FaseLavoro, ElencoTest, TestArticolo,
+                    DettaglioFaseLavoro
                 )
 from acquistopelli.models import TipoAnimale, TipoGrezzo
 
@@ -49,8 +50,26 @@ class FaseLavoroModelForm(forms.ModelForm):
         }
         labels = {
             'descrizione': 'Fase di Lavoro',
+            'interno_esterno': 'Interno/Esterno'
             
         }
+
+class DettaglioFaseLavoroModelForm(forms.ModelForm):
+    class Meta:
+        model = DettaglioFaseLavoro
+        fields = '__all__'
+        widgets = {
+            'attributo': forms.TextInput(attrs={'placeholder': 'Inserisci attributo fase (Temperatura, Codice,...)'}),            
+            'fk_fase_lavoro': forms.HiddenInput(),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'attributo': 'Attributo',
+            'note': 'Note'
+            
+        }
+
 
 class ElencoTestModelForm(forms.ModelForm):
     class Meta:
@@ -65,5 +84,27 @@ class ElencoTestModelForm(forms.ModelForm):
         labels = {
             'descrizione': 'Test',
             'norma_riferimento': 'Norma di Riferimento',
+            
+        }
+
+class TestArticoloModelForm(forms.ModelForm):
+    class Meta:
+        model = TestArticolo
+        fields = '__all__'
+        
+        fk_test = forms.ModelChoiceField(queryset=ElencoTest.objects.all())
+        widgets = {
+
+            'valore': forms.TextInput(attrs={'placeholder': 'Inserisci valore'}), 
+
+            'fk_articolo': forms.HiddenInput(), 
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'valore': 'Valore',
+            'fk_test': 'Test',
+            'note': 'Note',
+            'interno_esterno': 'Interno/Esterno'
             
         }

@@ -2,29 +2,7 @@ from django.urls import path
 
 
 
-from .views import (home_prodotti_chimici, tabelle_generiche,
-                    ProdottoChimicoCreateView, ProdottoChimicoUpdateView, delete_prodotto_chimico,
-                    PrezzoProdottoCreateView, PrezzoProdottoUpdateView, delete_prezzo_prodotto_chimico,
-                    SchedaTecnicaCreateView, SchedaTecnicaUpdateView, delete_scheda_tecnica,
-                    SostanzaCreateView, SostanzaUpdateView, delete_sostanza,
-                    SostanzaSVHCCreateView, SostanzaSVHCUpdateView, delete_sostanza_svhc,
-                    HazardStatementCreateView, HazardStatementUpdateView, delete_hazard_statement,
-                    PrecautionaryStatementCreateView, PrecautionaryStatementUpdateView, delete_precautionary_statement,
-                    SimboloGHSCreateView, SimboloGHSUpdateView, delete_simbolo_ghs,
-                    ImballaggioPCCreateView, ImballaggioPCUpdateView, delete_imballaggio_pc,
-                    SchedaSicurezzaCreateView, SchedaSicurezzaUpdateView, delete_scheda_sicurezza,
-                    SimboloGHS_SDSCreateView, SimboloGHS_SDSUpdateView, delete_simbolo_ghs_sds,
-                    HazardStatement_SDSCreateView, HazardStatement_SDSUpdateView, delete_hazard_statement_sds,
-                    PrecautionaryStatement_SDSCreateView, PrecautionaryStatement_SDSUpdateView, delete_precautionary_statement_sds,
-                    Sostanza_SDSCreateView, Sostanza_SDSUpdateView, delete_sostanza_sds,
-                    dashboard_acquisti_prodotti_chimici, home_ordini_prodotti_chimici, home_acquisti_prodotti_chimici,
-                    OrdineProdottoChimicoCreateView, OrdineProdottoChimicoUpdateView, delete_ordine_prodotto_chimico,
-                    DettaglioOrdineProdottoChimicoCreateView, DettaglioOrdineProdottoChimicoUpdateView, delete_dettaglio_ordine_prodotto_chimico,
-                    AcquistoProdottoChimicoCreateView, AcquistoProdottoChimicoUpdateView, delete_acquisto_prodotto_chimico,
-                    DettaglioAcquistoProdottoChimicoCreateView, DettaglioAcquistoProdottoChimicoUpdateView, delete_dettaglio_acquisto_prodotto_chimico,
-                    stampa_ordine, controlla_dettagli_ordine
-                    
-                    )
+from .views import *
 #from .views import *
 
 from .utils import (get_symbol_image_url, search_sostanza, get_sostanza_details, 

@@ -56,6 +56,17 @@ class Colore(models.Model):
         return self.descrizione
     
 class FaseLavoro(models.Model):
+
+    # Interno/Esterno
+    INTERNO = 'interno'
+    ESTERNO = 'esterno'
+    
+    CHOICES_INT_EST = (
+        (INTERNO, 'Interno'),
+        (ESTERNO, 'Esterno')
+    )
+
+
     # Unità di misura
     MQ = 'mq'
     NUMERO = 'Nr.'
@@ -68,7 +79,8 @@ class FaseLavoro(models.Model):
         (PESO_KG, 'Kg.'),
         
     )
-    descrizione = models.CharField(max_length=100)    
+    descrizione = models.CharField(max_length=100)
+    interno_esterno =  models.CharField(max_length=10, choices=CHOICES_INT_EST, null=True, blank=True)    
     um =  models.CharField(max_length=100, choices=CHOICES_UM, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='faselavoro', null=True, blank=True, on_delete=models.SET_NULL)
@@ -81,6 +93,14 @@ class FaseLavoro(models.Model):
     def __str__(self):
         return self.descrizione
     
+
+class DettaglioFaseLavoro(models.Model):
+    fk_fase_lavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)
+    attributo = models.CharField(max_length=100)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettagliofaselavoro', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     
 class Procedura(models.Model):
     fk_articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
@@ -109,4 +129,35 @@ class ElencoTest(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='elenco_test', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.descrizione
+    
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "elenco test"
+
+
+
+class TestArticolo(models.Model):
+
+    # Interno/Esterno
+    INTERNO = 'interno'
+    ESTERNO = 'esterno'
+    
+    CHOICES_INT_EST = (
+        (INTERNO, 'Interno'),
+        (ESTERNO, 'Esterno')
+    )
+
+    fk_articolo = models.ForeignKey(Articolo, related_name='test_articolo', on_delete=models.CASCADE)
+    fk_test = models.ForeignKey(ElencoTest, related_name='test_articolo', on_delete=models.CASCADE)
+    valore = models.CharField(max_length=100, blank=True, null=True)
+    interno_esterno =  models.CharField(max_length=10, choices=CHOICES_INT_EST, null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='test_articolo', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    
+
     

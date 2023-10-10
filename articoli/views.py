@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (Articolo, Colore, FaseLavoro, ElencoTest
+from .models import (Articolo, Colore, FaseLavoro, ElencoTest, TestArticolo
                     )
 from .forms import *
 from .filters import *
@@ -81,7 +81,7 @@ class ArticoloUpdateView(LoginRequiredMixin,UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        # context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        context['elenco_test'] = TestArticolo.objects.filter(fk_articolo=self.object.pk)
         # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
         return context
     
@@ -281,7 +281,7 @@ class FaseLavoroUpdateView(LoginRequiredMixin,UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        # context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        context['elenco_attributi'] = DettaglioFaseLavoro.objects.filter(fk_fase_lavoro=self.object.pk)
         # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
         return context
     
@@ -289,6 +289,73 @@ def delete_fase_lavoro(request, pk):
         deleteobject = get_object_or_404(FaseLavoro, pk = pk)        
         deleteobject.delete()
         url_match= reverse_lazy('articoli:tabelle_generiche')
+        return redirect(url_match)
+
+
+# Dettaglio Fasi di Lavoro
+
+class DettaglioFaseLavoroCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioFaseLavoro
+    form_class = DettaglioFaseLavoroModelForm
+    template_name = 'articoli/dettaglio_fase_lavoro.html'
+    success_message = 'Attributo aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_fase_lavoro=self.object.fk_fase_lavoro.pk
+        return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':fk_fase_lavoro})
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        fk_fase_lavoro = self.kwargs['fk_fase_lavoro']
+        return {
+            'created_by': created_by,
+            'fk_fase_lavoro': fk_fase_lavoro
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_fase_lavoro = self.kwargs['fk_fase_lavoro']
+        context['fk_fase_lavoro'] = FaseLavoro.objects.get(pk=fk_fase_lavoro)
+
+        return context
+
+
+class DettaglioFaseLavoroUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioFaseLavoro
+    form_class = DettaglioFaseLavoroModelForm
+    template_name = 'articoli/dettaglio_fase_lavoro.html'
+    success_message = 'Attributo modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_fase_lavoro=self.object.fk_fase_lavoro.pk
+        return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':fk_fase_lavoro})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_fase_lavoro = self.kwargs['fk_fase_lavoro']
+        context['fk_fase_lavoro'] = DettaglioFaseLavoro.objects.get(pk=fk_fase_lavoro)
+
+        return context
+
+
+def delete_dettaglio_fase_lavoro(request, pk):
+        deleteobject = get_object_or_404(DettaglioFaseLavoro, pk = pk)
+        fk_fase_lavoro = deleteobject.fk_fase_lavoro.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':fk_fase_lavoro})
         return redirect(url_match)
 
 
@@ -341,4 +408,71 @@ def delete_test(request, pk):
         deleteobject = get_object_or_404(ElencoTest, pk = pk)        
         deleteobject.delete()
         url_match= reverse_lazy('articoli:tabelle_generiche')
+        return redirect(url_match)
+
+
+# Associa Test agli articoli
+
+class TestArticoloCreateView(LoginRequiredMixin,CreateView):
+    model = TestArticolo
+    form_class = TestArticoloModelForm
+    template_name = 'articoli/test_articolo.html'
+    success_message = 'Test aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_articolo=self.object.fk_articolo.pk
+        return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        fk_articolo = self.kwargs['fk_articolo']
+        return {
+            'created_by': created_by,
+            'fk_articolo': fk_articolo
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_articolo = self.kwargs['fk_articolo']
+        context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+
+        return context
+
+
+class TestArticoloUpdateView(LoginRequiredMixin, UpdateView):
+    model = TestArticolo
+    form_class = TestArticoloModelForm
+    template_name = 'articoli/test_articolo.html'
+    success_message = 'Test modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_articolo=self.object.fk_articolo.pk
+        return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_articolo = self.kwargs['fk_articolo']
+        context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+
+        return context
+
+
+def delete_test_articolo(request, pk):
+        deleteobject = get_object_or_404(TestArticolo, pk = pk)
+        fk_articolo = deleteobject.fk_articolo.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
         return redirect(url_match)
