@@ -27,6 +27,8 @@
         </ol>
     </nav>    
     <hr>
+    <!-- Inseriamo il partial dei messaggi per visualizzare il messaggio su Salva e Continua -->
+    {% include "core/partials/_messages.html" %}
     <br>
     {% if form.instance.id  %}
             <h5 class="text-end">{{ articolo.descrizione }}</h5>
@@ -54,8 +56,11 @@
                               {{ form.descrizione|as_crispy_field }}
                             </div>
                             
-                            <div class="col-md-9">
+                            <div class="col-md-6">
                               {{ form.scheda_tecnica|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                              {{ form.industries_served|as_crispy_field }}
                             </div>
                              
                         </div>

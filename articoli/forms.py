@@ -1,9 +1,6 @@
 from django import forms
 
-from .models import (Articolo, 
-                    Colore, FaseLavoro, ElencoTest, TestArticolo,
-                    DettaglioFaseLavoro
-                )
+from .models import *
 from acquistopelli.models import TipoAnimale, TipoGrezzo
 
 
@@ -21,7 +18,8 @@ class ArticoloModelForm(forms.ModelForm):
         labels = {
             'descrizione': 'Articolo',
             'fk_tipoanimale': 'Tipo Animale',
-            'fk_tipogrezzo': 'Tipo Grezzo'
+            'fk_tipogrezzo': 'Tipo Grezzo',
+            'industries_served': 'Industries Served'
             
         }
         
@@ -106,5 +104,33 @@ class TestArticoloModelForm(forms.ModelForm):
             'fk_test': 'Test',
             'note': 'Note',
             'interno_esterno': 'Interno/Esterno'
+            
+        }
+        
+
+
+class ProceduraModelForm(forms.ModelForm):
+    class Meta:
+        model = Procedura
+        fields = '__all__'
+        
+        
+        widgets = {
+
+            'nr_procedura': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'data_procedura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
+            'nr_revisione': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
+            'fk_articolo': forms.HiddenInput(), 
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'nr_procedura': 'N. Procedura',
+            'data_procedura': 'Data procedura',
+            'nr_revisione': 'N. Revisione',
+            'data_revisione': 'Data Revisione',
+            'note': 'Note',
+            
             
         }

@@ -1,13 +1,14 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-from django.urls import reverse, reverse_lazy
-from django.db.models import Sum, Count
-import datetime
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (Articolo, Colore, FaseLavoro, ElencoTest, TestArticolo
+from django.views.generic.edit import CreateView, UpdateView
+from .models import (Articolo, Colore, FaseLavoro, ElencoTest, TestArticolo,
+                    Procedura, DettaglioProcedura
                     )
 from .forms import *
 from .filters import *
@@ -221,24 +222,24 @@ def tabelle_generiche(request):
 
 
 
-def fasi_lavoro_home(request):
-    fasi_lavoro = FaseLavoro.objects.all()
-    fase_lavoro_filter = FaseLavoroFilter
-    page = request.GET.get('page', 1)
-    paginator = Paginator(fasi_lavoro, 50)
+# def fasi_lavoro_home(request):
+#     fasi_lavoro = FaseLavoro.objects.all()
+#     fase_lavoro_filter = FaseLavoroFilter
+#     page = request.GET.get('page', 1)
+#     paginator = Paginator(fasi_lavoro, 50)
     
-    try:
-        fasi_lavoro_home = paginator.page(page)
-    except PageNotAnInteger:
-        fasi_lavoro_home = paginator.page(1)
-    except EmptyPage:
-        fasi_lavoro_home = paginator.page(paginator.num_pages)
-    context={
-        'fasi_lavoro_home': fasi_lavoro_home,
-        'filter': fase_lavoro_filter,
+#     try:
+#         fasi_lavoro_home = paginator.page(page)
+#     except PageNotAnInteger:
+#         fasi_lavoro_home = paginator.page(1)
+#     except EmptyPage:
+#         fasi_lavoro_home = paginator.page(paginator.num_pages)
+#     context={
+#         'fasi_lavoro_home': fasi_lavoro_home,
+#         'filter': fase_lavoro_filter,
         
-    }
-    return render(request, "articoli/fasi_lavoro_home.html", context)
+#     }
+#     return render(request, "articoli/fasi_lavoro_home.html", context)
 
 
 class FaseLavoroCreateView(LoginRequiredMixin,CreateView):
@@ -472,6 +473,80 @@ class TestArticoloUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_test_articolo(request, pk):
         deleteobject = get_object_or_404(TestArticolo, pk = pk)
+        fk_articolo = deleteobject.fk_articolo.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+        return redirect(url_match)
+    
+    
+# Procedure di Lavorazione
+
+
+class ProceduraCreateView(LoginRequiredMixin,CreateView):
+    model = Procedura
+    form_class = ProceduraModelForm
+    template_name = 'articoli/procedura.html'
+    success_message = 'Procedura aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            fk_articolo=self.object.fk_articolo.pk
+            return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+
+        pk_procedura=self.object.pk
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':pk_procedura})
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        fk_articolo = self.kwargs['fk_articolo']
+        return {
+            'created_by': created_by,
+            'fk_articolo': fk_articolo
+        }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_articolo = self.kwargs['fk_articolo']
+        context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+
+        return context
+
+
+class ProceduraUpdateView(LoginRequiredMixin, UpdateView):
+    model = Procedura
+    form_class = ProceduraModelForm
+    template_name = 'articoli/procedura.html'
+    success_message = 'Procedura modificata correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            fk_articolo=self.object.fk_articolo.pk
+            return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+
+        pk_procedura=self.object.pk
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':pk_procedura})
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_articolo = self.kwargs['fk_articolo']
+        context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+
+        return context
+
+
+def delete_procedura(request, pk):
+        deleteobject = get_object_or_404(Procedura, pk = pk)
         fk_articolo = deleteobject.fk_articolo.pk
         deleteobject.delete()
         url_match = reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
