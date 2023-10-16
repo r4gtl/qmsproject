@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Max
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
 from datetime import datetime
@@ -104,16 +105,108 @@ class DettaglioFaseLavoro(models.Model):
     
 class Procedura(models.Model):
     fk_articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
-    nr_procedura = models.IntegerField()
+    nr_procedura = models.IntegerField(blank=True, null=True)
     data_procedura = models.DateField(default=timezone.now)
-    nr_revisione = models.IntegerField()
+    nr_revisione = models.IntegerField(blank=True, null=True)
     data_revisione = models.DateField(default=timezone.now)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='procedure', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    
+    def save(self, *args, **kwargs):
+        # Se il numero ricetta è vuoto
+        if self.nr_procedura is None:
+            max_nr_procedura = Procedura.objects.aggregate(Max('nr_procedura'))['nr_procedura__max']
+            if self.pk:
+                # Stai modificando una ricetta esistente
+                previous_instance = Procedura.objects.get(pk=self.pk)
+                print("Previous instance: " + str(previous_instance))
+                if self.fk_articolo != previous_instance.fk_articolo:
+                    # L'articolo è stato cambiato, controlla se esiste già una ricetta per il nuovo articolo
+                    #existing_ricetta = RicettaRifinizione.objects.filter(
+                    #    fk_articolo=self.fk_articolo
+                    #).exclude(pk=self.pk).order_by('-numero_revisione').first()
+
+                    existing_procedura = Procedura.objects.filter(
+                    fk_articolo=self.fk_articolo
+                    ).order_by('-nr_revisione').first()
+                    print("Articolo: " + str(self.fk_articolo))
+                    print("Ricetta: " + str(existing_procedura))
+
+                    if existing_procedura:
+                        print("Modifica: la procedura esiste. Existing ricetta numero ricetta: " + str(existing_procedura.nr_procedura) + "existing_procedura.numero_revisione: " + str(existing_procedura.nr_revisione))
+                        # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
+                        self.nr_procedura = existing_procedura.nr_procedura                       
+                        self.nr_revisione = existing_procedura.nr_revisione + 1
+                    else:
+                        print("Modifica: la procedura NON esiste. Existing procedura numero riproceduracetta: " + str(existing_procedura.nr_procedura) + "existing_procedura.numero_revisione: " + str(existing_procedura.nr_revisione))
+                        # Non esiste ancora una ricetta per il nuovo articolo, quindi incrementa solo il numero_revisione
+                        self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1
+                        self.nr_revisione = previous_instance.nr_revisione + 1
+            else:
+                # Stai creando una nuova ricetta
+
+                # Stai creando una nuova ricetta
+                existing_procedura = Procedura.objects.filter(
+                    fk_articolo=self.fk_articolo
+                ).order_by('-nr_revisione').first()
+                print("Articolo: " + str(self.fk_articolo))
+                print("Ricetta: " + str(existing_procedura))
+                #existing_ricetta = RicettaRifinizione.objects.order_by('-numero_revisione').first()
+
+                if existing_procedura:
+                    print("Creazione: la procedura esiste. Existing procedura numero procedura: " + str(existing_procedura.nr_procedura) + "existing_procedura.nr_revisione: " + str(existing_procedura.nr_revisione))
+                    # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
+                    self.nr_procedura = existing_procedura.nr_procedura
+                    self.nr_revisione = existing_procedura.nr_revisione + 1
+                else:
+                    # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi
+                    self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1
+                    #self.numero_ricetta = 1
+                    self.nr_revisione = 1
+                    #print("Creazione: la ricetta NON esiste. Existing ricetta numero ricetta: " + str(self.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(self.numero_revisione))
+        else:
+            # Se il numero ricetta non è vuoto
+            max_nr_procedura = Procedura.objects.aggregate(Max('nr_procedura'))['nr_procedura__max']
+            if self.pk:
+                # Stai modificando una ricetta esistente
+                previous_instance = Procedura.objects.get(pk=self.pk)
+                print("Previous instance: " + str(previous_instance))
+                if self.fk_articolo != previous_instance.fk_articolo:
+                    existing_procedura = Procedura.objects.filter(
+                    fk_articolo=self.fk_articolo
+                    ).order_by('-nr_revisione').first()                    
+
+                    if existing_procedura:                        
+                        # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
+                        self.nr_procedura = existing_procedura.nr_procedura                        
+                        self.nr_revisione = existing_procedura.nr_revisione + 1
+                    else:
+                        
+                        # Non esiste ancora una ricetta per il nuovo articolo, quindi incrementa solo il numero_revisione
+                        self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1
+                        self.nr_revisione = previous_instance.nr_revisione + 1
+            else:
+                # Stai creando una nuova ricetta
+                existing_procedura = Procedura.objects.filter(
+                    fk_articolo=self.fk_articolo
+                ).order_by('-nr_revisione').first()               
+
+                if existing_procedura:                    
+                    # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
+                    self.nr_procedura = existing_procedura.nr_procedura
+                    self.nr_revisione = existing_procedura.nr_revisione + 1
+                else:
+                    # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi
+                    self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1                    
+                    self.nr_revisione = 1
+                    
+        super().save(*args, **kwargs)
+    
+    
     def __str__(self):
-        return self.fk_articolo + " Procedura Nr. " + str(self.nr_procedura) + " del " + str(self.data_procedura) + " Revisione nr. " + str(self.nr_revisione) + " del " + str(self.data_revisione)
+        return (f'{self.fk_articolo} Procedura Nr. {self.nr_procedura} del {self.data_procedura} Revisione nr. {self.nr_revisione} del {self.data_revisione}')
     
 class DettaglioProcedura(models.Model):
     fk_procedura = models.ForeignKey(Procedura, on_delete=models.CASCADE)

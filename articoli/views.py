@@ -56,6 +56,7 @@ class ArticoloCreateView(LoginRequiredMixin,CreateView):
     
     def get_initial(self):
         created_by = self.request.user
+        
         return {
             'created_by': created_by,
         }
@@ -83,6 +84,7 @@ class ArticoloUpdateView(LoginRequiredMixin,UpdateView):
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         context['elenco_test'] = TestArticolo.objects.filter(fk_articolo=self.object.pk)
+        context['elenco_revisioni'] = Procedura.objects.filter(fk_articolo=self.object.pk).order_by('-data_procedura')
         # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
         return context
     
