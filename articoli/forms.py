@@ -134,3 +134,27 @@ class ProceduraModelForm(forms.ModelForm):
             
             
         }
+        
+        
+
+class DettaglioProceduraModelForm(forms.ModelForm):
+    class Meta:
+        model = DettaglioProcedura
+        fields = '__all__'
+        fk_faselavoro = forms.ModelChoiceField(
+            queryset=FaseLavoro.objects.all(),            
+            widget=forms.Select
+            )
+        
+        widgets = {
+            'numero_riga': forms.HiddenInput(), 
+            'fk_procedura': forms.HiddenInput(), 
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'fk_faselavoro': 'Fase di Lavoro',            
+            'note': 'Note',
+            
+            
+        }

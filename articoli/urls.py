@@ -46,6 +46,11 @@ urlpatterns = [
     path('<int:fk_articolo>/aggiungi_procedura/', ProceduraCreateView.as_view(), name="aggiungi_procedura"), 
     path('<int:fk_articolo>/modifica_procedura/<int:pk>/', ProceduraUpdateView.as_view(), name="modifica_procedura"), 
     path('delete_procedura/<int:pk>', delete_procedura, name="delete_procedura"),
+    
+    # Dettaglio Procedura
+    path('<int:fk_procedura>/aggiungi_dettaglio_procedura/', DettaglioProceduraCreateView.as_view(), name="aggiungi_dettaglio_procedura"), 
+    path('<int:fk_procedura>/modifica_dettaglio_procedura/<int:pk>/', DettaglioProceduraUpdateView.as_view(), name="modifica_dettaglio_procedura"), 
+    path('delete_dettaglio_procedura/<int:pk>', delete_dettaglio_procedura, name="delete_dettaglio_procedura"),
 
     
     

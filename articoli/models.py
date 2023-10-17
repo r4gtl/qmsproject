@@ -210,7 +210,8 @@ class Procedura(models.Model):
     
 class DettaglioProcedura(models.Model):
     fk_procedura = models.ForeignKey(Procedura, on_delete=models.CASCADE)
-    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)    
+    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)  
+    numero_riga = models.IntegerField()  
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglioprocedura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

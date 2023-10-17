@@ -492,12 +492,13 @@ class ProceduraCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
+        fk_articolo=self.object.fk_articolo.pk
         if 'salva_esci' in self.request.POST:
-            fk_articolo=self.object.fk_articolo.pk
+            
             return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
 
         pk_procedura=self.object.pk
-        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':pk_procedura})
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo':fk_articolo, 'pk':pk_procedura})
 
     def form_valid(self, form):
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -514,7 +515,9 @@ class ProceduraCreateView(LoginRequiredMixin,CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fk_articolo = self.kwargs['fk_articolo']
+        
         context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+        
 
         return context
 
@@ -527,12 +530,13 @@ class ProceduraUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
+        fk_articolo=self.object.fk_articolo.pk
         if 'salva_esci' in self.request.POST:
-            fk_articolo=self.object.fk_articolo.pk
+            
             return reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
 
         pk_procedura=self.object.pk
-        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':pk_procedura})
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo':fk_articolo, 'pk':pk_procedura})
 
 
     def form_valid(self, form):
@@ -542,7 +546,9 @@ class ProceduraUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fk_articolo = self.kwargs['fk_articolo']
+        pk=self.object.pk
         context['fk_articolo'] = Articolo.objects.get(pk=fk_articolo)
+        context['elenco_dettagli'] = DettaglioProcedura.objects.filter(fk_procedura=pk)
 
         return context
 
@@ -552,4 +558,76 @@ def delete_procedura(request, pk):
         fk_articolo = deleteobject.fk_articolo.pk
         deleteobject.delete()
         url_match = reverse_lazy('articoli:modifica_articolo', kwargs={'pk':fk_articolo})
+        return redirect(url_match)
+
+
+
+# Dettaglio Procedura
+class DettaglioProceduraCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioProcedura
+    form_class = DettaglioProceduraModelForm
+    template_name = 'articoli/dettaglio_procedura.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_procedura=self.object.fk_procedura.pk        
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':fk_procedura})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        procedura_id = self.kwargs.get('fk_procedura')
+        max_numero_riga = DettaglioProcedura.objects.filter(fk_procedura=procedura_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga
+
+        procedura_id = self.kwargs.get('fk_procedura')
+        
+        initial['fk_procedura'] = procedura_id
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_procedura = self.kwargs['fk_procedura']         
+        context['procedura'] = pk_procedura
+        context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
+        return context
+        
+
+class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioProcedura
+    form_class = DettaglioProceduraModelForm
+    template_name = 'articoli/dettaglio_procedura.html'
+    success_message = 'Dettaglio modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_procedura=self.object.fk_procedura.pk        
+        return reverse_lazy('articoli:modifica_procedura', kwargs={'pk':fk_procedura})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_procedura = self.kwargs['fk_procedura']         
+        context['procedura'] = pk_procedura
+        context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
+        return context
+
+
+def delete_dettaglio_procedura(request, pk):
+        deleteobject = get_object_or_404(DettaglioProcedura, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('articoli:modifica_procedura')
         return redirect(url_match)
