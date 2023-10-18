@@ -206,6 +206,24 @@ def tabelle_generiche(request):
     except EmptyPage:
         elenco_test_paginator = paginator_elenco_test.page(paginator_elenco_test.num_pages)
 
+    
+    # Elenco Lavorazioni
+    elenco_lavorazioni = LavorazioneEsterna.objects.all()
+    tot_lavorazioni_esterne = LavorazioneEsterna.objects.count()
+    lavorazioni_esterne_filter = LavorazioneEsternaFilter(request.GET, queryset=elenco_lavorazioni)
+    filtered_elenco_lavorazioni = lavorazioni_esterne_filter.qs
+    lavorazioni_esterne_filter_count = filtered_elenco_lavorazioni.count()
+    
+    # Paginazione Elenco Test
+    page_lavorazioni_esterne = request.GET.get('page', 1)
+    paginator_lavorazioni_esterne = Paginator(filtered_elenco_lavorazioni, 50)
+    try:
+        lavorazioni_esterne_paginator = paginator_lavorazioni_esterne.page(page_lavorazioni_esterne)
+    except PageNotAnInteger:
+        lavorazioni_esterne_paginator = paginator_lavorazioni_esterne.page(1)
+    except EmptyPage:
+        lavorazioni_esterne_paginator = paginator_lavorazioni_esterne.page(paginator_lavorazioni_esterne.num_pages)
+
 
 
     context={
@@ -218,30 +236,13 @@ def tabelle_generiche(request):
         'tot_test': tot_test,
         'elenco_test_filter_count': elenco_test_filter_count,
         'elenco_test_paginator': elenco_test_paginator,
+        'lavorazioni_esterne_filter': lavorazioni_esterne_filter,
+        'tot_lavorazioni_esterne': tot_lavorazioni_esterne,
+        'lavorazioni_esterne_filter_count': lavorazioni_esterne_filter_count,
+        'lavorazioni_esterne_paginator': lavorazioni_esterne_paginator,
         
     }
     return render(request, "articoli/tabelle_generiche.html", context)
-
-
-
-# def fasi_lavoro_home(request):
-#     fasi_lavoro = FaseLavoro.objects.all()
-#     fase_lavoro_filter = FaseLavoroFilter
-#     page = request.GET.get('page', 1)
-#     paginator = Paginator(fasi_lavoro, 50)
-    
-#     try:
-#         fasi_lavoro_home = paginator.page(page)
-#     except PageNotAnInteger:
-#         fasi_lavoro_home = paginator.page(1)
-#     except EmptyPage:
-#         fasi_lavoro_home = paginator.page(paginator.num_pages)
-#     context={
-#         'fasi_lavoro_home': fasi_lavoro_home,
-#         'filter': fase_lavoro_filter,
-        
-#     }
-#     return render(request, "articoli/fasi_lavoro_home.html", context)
 
 
 class FaseLavoroCreateView(LoginRequiredMixin,CreateView):
@@ -362,6 +363,61 @@ def delete_dettaglio_fase_lavoro(request, pk):
         return redirect(url_match)
 
 
+
+# Lavorazioni Esterne
+class LavorazioneEsternaCreateView(LoginRequiredMixin,CreateView):
+    model = LavorazioneEsterna
+    form_class = LavorazioneEsternaModelForm
+    template_name = 'articoli/lavorazione_esterna.html'
+    success_message = 'Lavorazione aggiunto correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def get_success_url(self):        
+        #if 'salva_esci' in self.request.POST:
+        return reverse_lazy('articoli:tabelle_generiche')
+        
+        #pk_fase=self.object.pk
+        #return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
+
+class LavorazioneEsternaUpdateView(LoginRequiredMixin,UpdateView):
+    model = LavorazioneEsterna
+    form_class = LavorazioneEsternaModelForm
+    template_name = 'articoli/lavorazione_esterna.html'
+    success_message = 'Lavorazione modificata correttamente!'
+    #success_url = reverse_lazy('human_resources:human_resources')
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_success_url(self):        
+        #if 'salva_esci' in self.request.POST:
+        return reverse_lazy('articoli:tabelle_generiche')
+        
+        #pk_fase=self.object.pk
+        #return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        # context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
+        return context
+    
+def delete_lavorazione_esterna(request, pk): 
+        deleteobject = get_object_or_404(LavorazioneEsterna, pk = pk)        
+        deleteobject.delete()
+        url_match= reverse_lazy('articoli:tabelle_generiche')
+        return redirect(url_match)
+
+
+
+# Test
 
 class ElencoTestCreateView(LoginRequiredMixin,CreateView):
     model = ElencoTest

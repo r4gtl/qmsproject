@@ -32,6 +32,11 @@ urlpatterns = [
     path('<int:fk_fase_lavoro>/modifica_attributo/<int:pk>/', DettaglioFaseLavoroUpdateView.as_view(), name="modifica_attributo"), 
     path('delete_attributo/<int:pk>', delete_dettaglio_fase_lavoro, name="delete_attributo"),
     
+    # Lavorazioni Esterne      
+    path("crea_lavorazione_esterna/", LavorazioneEsternaCreateView.as_view(), name="crea_lavorazione_esterna"),    
+    path("modifica_lavorazione_esterna/<int:pk>", LavorazioneEsternaUpdateView.as_view(), name="modifica_lavorazione_esterna"),    
+    path("delete_lavorazione_esterna/<int:pk>", delete_lavorazione_esterna, name="delete_lavorazione_esterna"), 
+
     # Elenco Test      
     path("crea_test/", ElencoTestCreateView.as_view(), name="crea_test"),    
     path("modifica_test/<int:pk>", ElencoTestUpdateView.as_view(), name="modifica_test"),    

@@ -50,7 +50,7 @@
                               <table class="table table-hover table-striped table-bordered">
                                   <thead class="thead-dark">
                                       <tr>     
-                                          <th>Descrizione</th>
+                                          <th>Descrizione</th>                                          
                                       </tr>
                                   </thead>  
                                   <tbody>
@@ -84,7 +84,8 @@
               <table class="table table-bordered table-striped mt-2">
                 <thead>
                   <tr>
-                    <th>Fase di Lavoro</th>                        
+                    <th>Fase di Lavoro</th>
+                    <th>Interna/Esterna</th>                        
                     <th>Azioni</th> 
                   </tr>
                 </thead>
@@ -94,6 +95,7 @@
             
             
             <td><a href="{% url 'articoli:modifica_fase_lavoro' pk=faselavoro.pk %}">{{ faselavoro.descrizione }}</a></td>            
+            <td>{{ faselavoro.interno_esterno|default_if_none:"" }}</td>            
             <td class="text-center"><a href="{% url 'articoli:delete_fase_lavoro' pk=faselavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{faselavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
@@ -254,6 +256,132 @@
     
   <br>
   <hr>
+
+    <div class="row">
+        <!-- Inizio Lavorazioni -->
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <h5>Codici Lavorazioni</h5>
+                <p>Inserire/modificare i codici lavorazione esterna.</p>                  
+              </div>
+              <div class="col-6 text-end">
+                <a href="{% url 'articoli:crea_lavorazione_esterna' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Lavorazione Esterna</a>
+              </div>
+            </div>
+          <!-- filtro -->
+            <div class="row">
+              <div class="col">
+                  <div class="card card-body">
+                      <form method="get">
+
+                          <div class="table-responsive-sm">
+                              <table class="table table-hover table-striped table-bordered">
+                                  <thead class="thead-dark">
+                                      <tr>     
+                                          <th>Descrizione</th>                                          
+                                      </tr>
+                                  </thead>  
+                                  <tbody>
+                                    <tr>
+                                      <td style="width: 20%">                
+                                        {% render_field filter.form.descrizione class="form-control" %}
+                                      </td>
+                                      
+                                      
+                                      
+                                    </tr>
+                              
+                                    
+                                    
+                                  </tbody>                          
+                                  
+                              </table>
+                          </div>
+                          <button class="btn btn-primary" type="submit">Cerca</button>
+                          <a class="btn btn-success" href="{% url 'articoli:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                      </form>        
+                  </div>
+              </div>        
+          </div>
+          <!-- fine filtro-->
+
+
+
+            <p>Numero Lavorazioni Totale {{ tot_lavorazioni_esterne }} - Numero Lavorazioni filtrate {{ lavorazioni_esterne_filter_count }}</p>
+            <div class="table-container">
+              <table class="table table-bordered table-striped mt-2">
+                <thead>
+                  <tr>
+                    <th>Lavorazione</th>
+                    <th>Codice</th>                        
+                    <th>Azioni</th> 
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for lavorazione in lavorazioni_esterne_filter.qs %}
+          <tr>        
+            
+            
+            <td><a href="{% url 'articoli:modifica_lavorazione_esterna' pk=lavorazione.pk %}">{{ lavorazione.descrizione }}</a></td>            
+            <td>{{ lavorazione.codice|default_if_none:"" }}</td>            
+            <td class="text-center"><a href="{% url 'articoli:delete_lavorazione_esterna' pk=lavorazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lavorazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+        <!-- Pagination -->
+        {% if lavorazioni_esterne_paginator.has_other_pages %}
+        <nav>
+          <ul class="pagination justify-content-center">
+            {% if lavorazioni_esterne_paginator.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ lavorazioni_esterne_paginator.previous_page_number }}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                  <span class="page-link" aria-hidden="true">&laquo;</span>
+              </li>
+            {% endif %}
+    
+            {% for p in lavorazioni_esterne_paginator.paginator.page_range %}
+              {% if lavorazioni_esterne_paginator.number == p %}
+                <li class="page-item"><a class="page-link" style="color: red;" href="#">{{ p }}</a></li>
+              {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+              {% endif %}
+            {% endfor %}
+    
+            {% if lavorazioni_esterne_paginator.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ lavorazioni_esterne_paginator.next_page_number }}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <span class="page-link" aria-hidden="true">&raquo;</span>
+              </li>
+            {% endif %}
+        </ul>
+        </nav>
+      {% endif %}
+      <!-- End Pagination -->
+
+          </div>
+        <!-- Fine Fasi Lavoro -->
+
+
+        
+
+    
+
+  </div>
+  <!-- Fine prima riga -->
+
 
         
     </div>

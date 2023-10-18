@@ -210,7 +210,8 @@ class Procedura(models.Model):
     
 class DettaglioProcedura(models.Model):
     fk_procedura = models.ForeignKey(Procedura, on_delete=models.CASCADE)
-    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)  
+    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)
+    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)   
     numero_riga = models.IntegerField()  
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglioprocedura', null=True, blank=True, on_delete=models.SET_NULL)
@@ -251,6 +252,23 @@ class TestArticolo(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='test_articolo', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class LavorazioneEsterna(models.Model):
+    descrizione = models.CharField(max_length=200)
+    codice = models.CharField(max_length=9)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='lavorazione_esterna', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.descrizione
+    
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "Lavorazioni esterne"
+
+
 
     
 

@@ -40,3 +40,12 @@ class ElencoTestFilter(django_filters.FilterSet):
         model = ElencoTest
         fields = ['descrizione'
                 ] 
+        
+class LavorazioneEsternaFilter(django_filters.FilterSet):
+    descrizione=django_filters.CharFilter(lookup_expr='icontains', label='Descrizione')
+    
+    
+    class Meta:
+        model = LavorazioneEsterna
+        fields = ['descrizione'
+                ] 

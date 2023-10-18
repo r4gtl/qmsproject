@@ -36,7 +36,24 @@ class ColoreModelForm(forms.ModelForm):
             'descrizione': 'Colore',
             
         }
-        
+
+class LavorazioneEsternaModelForm(forms.ModelForm):
+    class Meta:
+        model = LavorazioneEsterna
+        fields = '__all__'
+        widgets = {
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci Nome Lavorazione'}),  
+            'codice': forms.TextInput(attrs={'placeholder': 'Inserisci Codice Lavorazione'}),      
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'descrizione': 'Fase di Lavoro',
+            'codice': 'Codice Lavorazione',
+            'note': 'Note'            
+        }
+
+
 class FaseLavoroModelForm(forms.ModelForm):
     class Meta:
         model = FaseLavoro
