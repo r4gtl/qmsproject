@@ -37,10 +37,25 @@ def gestione_rifiuti_home(request):
     movimenti_recupero = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="recupero").aggregate(total=Sum('quantity'))['total']
     movimenti_smaltimento = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="smaltimento").aggregate(total=Sum('quantity'))['total']
 
-    tot_movimenti = movimenti_recupero + movimenti_smaltimento
 
-    perc_recupero = round((movimenti_recupero*100)/tot_movimenti, 2)
-    perc_smaltimento = round((movimenti_smaltimento*100)/tot_movimenti, 2)
+    if movimenti_recupero is not None and movimenti_smaltimento is not None:
+        tot_movimenti = movimenti_recupero + movimenti_smaltimento
+    else:    
+        tot_movimenti = None
+
+    
+
+    if tot_movimenti is not None and tot_movimenti != 0:
+        perc_recupero = round((movimenti_recupero * 100) / tot_movimenti, 2)
+    else:
+        # Gestisci il caso in cui tot_movimenti è zero o None
+        perc_recupero = 0
+    
+    if tot_movimenti is not None and tot_movimenti != 0:
+        perc_smaltimento = round((movimenti_smaltimento * 100) / tot_movimenti, 2)
+    else:
+        # Gestisci il caso in cui tot_movimenti è zero o None
+        perc_smaltimento = 0
 
 
     print(f'movimenti_recupero: {movimenti_recupero}')
