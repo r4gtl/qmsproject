@@ -94,7 +94,7 @@
   <br>
   
 
-  <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'gestionerifiuti:crea_movimento_rifiuti' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
+  <a class="btn btn-sm btn-success mt-2 mb-4" id="id_aggiungi" href="{% url 'gestionerifiuti:crea_movimento_rifiuti' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
     <table class="table table-bordered table-striped">
         <thead>
@@ -224,6 +224,10 @@
   });
   
   });
+  document.addEventListener("DOMContentLoaded", function() {
+        setFocusOnField('id_aggiungi');
+  });
 </script>
+
 {% endblock %}
 
