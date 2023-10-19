@@ -37,7 +37,14 @@ def gestione_rifiuti_home(request):
     movimenti_recupero = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="recupero").aggregate(total=Sum('quantity'))['total']
     movimenti_smaltimento = MovimentoRifiuti.objects.filter(Q(**{f"data_movimento__lte": current_date}) & Q(**{f"data_movimento__gte": begin_date})).filter(car_scar="carico").filter(fk_smaltrec__smalt_rec="smaltimento").aggregate(total=Sum('quantity'))['total']
 
-    
+    tot_movimenti = movimenti_recupero + movimenti_smaltimento
+
+    perc_recupero = round((movimenti_recupero*100)/tot_movimenti, 2)
+    perc_smaltimento = round((movimenti_smaltimento*100)/tot_movimenti, 2)
+
+
+    print(f'movimenti_recupero: {movimenti_recupero}')
+    print(f'movimenti_smaltimento: {movimenti_smaltimento}')
     
     
     
@@ -57,6 +64,9 @@ def gestione_rifiuti_home(request):
         'filter': movimenti_rifiuti_filter,
         'movimenti_recupero': movimenti_recupero,
         'movimenti_smaltimento': movimenti_smaltimento,
+        'perc_recupero': perc_recupero,
+        'perc_smaltimento': perc_smaltimento
+
         
     }
     
