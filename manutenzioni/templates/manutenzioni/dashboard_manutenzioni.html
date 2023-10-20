@@ -95,9 +95,20 @@
             
             <td><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.codice_attrezzatura }}</a></td>
             <td>{{ attrezzatura.descrizione }}</td>            
-            <td>{{ attrezzatura.fk_ward }}</td>            
-            <td>{{ attrezzatura.is_taratura }}</td>            
-            <td>{{ attrezzatura.is_dismesso }}</td>            
+            <td>{{ attrezzatura.fk_ward }}</td>
+
+            <td>
+              {% if attrezzatura.is_taratura %}
+              Da tarare
+              {% else %}
+              Non Soggetta
+              {% endif %}
+            </td>            
+            <td>
+              {% if attrezzatura.is_dismesso %}
+              <p style="color: red"> Dismesso</p>
+              {% endif %}
+              </td>            
             <td class="text-center"><a href="{% url 'manutenzioni:delete_attrezzatura' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
