@@ -23,7 +23,7 @@ class Attrezzatura(models.Model):
     procedura_controlli_periodici = models.TextField(null=True, blank=True)
     periodo_controlli_periodici = models.CharField(max_length=50, null=True, blank=True)
     riferimento_normativo_controlli_periodici = models.TextField(null=True, blank=True)
-    fk_human_resources = models.ForeignKey(HumanResource, null=True, blank=True, on_delete=models.SET_NULL)
+    fk_human_resource = models.ForeignKey(HumanResource, null=True, blank=True, on_delete=models.SET_NULL)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='attrezzatura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

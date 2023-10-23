@@ -7,7 +7,7 @@ from human_resources.models import Ward, HumanResource
 from anagrafiche.models import Fornitore
 
 class AttrezzaturaModelForm(forms.ModelForm):
-    fk_human_resources = forms.ModelChoiceField(queryset=HumanResource.objects.all(), label='Incaricato')
+    fk_human_resource = forms.ModelChoiceField(queryset=HumanResource.objects.all(), label='Incaricato', required=False)
     class Meta:
         model = Attrezzatura
         fields = '__all__'
