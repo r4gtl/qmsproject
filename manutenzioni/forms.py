@@ -7,6 +7,7 @@ from human_resources.models import Ward, HumanResource
 from anagrafiche.models import Fornitore
 
 class AttrezzaturaModelForm(forms.ModelForm):
+    fk_human_resources = forms.ModelChoiceField(queryset=HumanResource.objects.all(), label='Incaricato')
     class Meta:
         model = Attrezzatura
         fields = '__all__'
@@ -42,7 +43,7 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'is_taratura': 'Soggetto a taratura',
             'periodo_taratura': 'Periodi di taratura',
             'procedura_controlli_periodici': 'Procedura controlli periodici',
-            'periodo_controlli_periodici': 'Periodo di controllo periodico',
+            'periodo_controlli_periodici': 'Periodo di controllo periodico',            
             'riferimento_normativo_controlli_periodici': 'Riferimento normativo controllo periodico',
             'note': 'Annotazioni'
         }
