@@ -95,6 +95,10 @@
 
 {% endblock %}
 
-{% block scripts %}
-<script src="{% static '/js/main.js' %}"></script>
-{% endblock %} 
+{% block extra_scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_data_taratura');
+        });
+    </script>
+{% endblock %}
