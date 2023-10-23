@@ -1,0 +1,72 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% load custom_filters %}
+{% block title %}Piano dei controlli periodici {% endblock %}
+
+
+
+{% block content %}
+
+  <h1 class="text-center">Piano Dei Controlli Periodici</h1>
+  <h2 class="text-center">Intervallo di date selezionato: <strong>{{ data_inizio }} - {{ data_fine }}</strong></h2>
+  <h2 class="text-center">Reparto: <strong>{{ fk_ward_id }}</strong></h2>
+  
+
+
+<br>
+<hr>
+
+<hr>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>        
+            <th>Codice</th>
+            <th>Descrizione</th>
+            <th>Modello</th>
+            <th>Serie/Matricola</th>
+            <th>Reparto</th>
+            <th>Manutenzione</th>
+            <th>Prossima Scadenza</th>
+            
+                        
+        </tr>
+        </thead>
+        
+        <tbody>
+            {% for controllo in controlli_periodici %}
+                
+                <td>{{ controllo.fk_attrezzatura.codice_attrezzatura }}</td>
+                <td>{{ controllo.fk_attrezzatura.descrizione}}</td>
+                <td>{{ controllo.fk_attrezzatura.modello }}</td>
+                <td>{{ controllo.fk_attrezzatura.serie_matricola }}</td>
+                <td>{{ controllo.fk_attrezzatura.fk_ward }}</td>
+                <td>{{ controllo.descrizione }}</td>
+
+                <td>{{ controllo.prossima_scadenza }}</td>
+
+            </tr>
+            
+            {% endfor %}
+            
+        </tbody>
+        </table>
+</div>
+
+
+    
+
+		
+		
+
+
+
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+{% endblock %}

@@ -11,10 +11,8 @@ from qmsproject.context_processors import fk_ward_records
 
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import (Attrezzatura, ManutenzioneStraordinaria,
-                    ManutenzioneOrdinaria, Taratura
-                    )
-from .forms import AttrezzaturaModelForm, ManutenzioneOrdinariaModelForm, ManutenzioneStraordinariaModelForm, TaraturaModelForm
+from .models import *
+from .forms import *
 from .filters import AttrezzaturaFilter
 from core.utils import get_records_with_upcoming_expiry
 from human_resources.models import Ward
@@ -139,6 +137,7 @@ class AttrezzaturaUpdateView(LoginRequiredMixin, UpdateView):
         context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
         context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
         context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        context['elenco_controlli_periodici'] = ControlloPeriodico.objects.filter(fk_attrezzatura=pk_attrezzatura) 
 
         return context
 
@@ -337,6 +336,80 @@ def delete_taratura(request, pk):
         url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
         return redirect(url_match)
 
+
+
+
+# Controlli Periodici
+
+class ControlloPeriodicoCreateView(LoginRequiredMixin,CreateView):
+    model = ControlloPeriodico
+    form_class = ControlloPeriodicoModelForm
+    template_name = 'manutenzioni/controllo_periodico.html'
+    success_message = 'Controllo periodico aggiunto correttamente!'
+    
+
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        
+    
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        # Il form non è valido, puoi accedere agli errori
+        print("Campi obbligatori mancanti:")
+        for field_name, errors in form.errors.items():
+            print(f"{field_name}: {', '.join(errors)}")
+        # O mostrali all'utente o registrali in un file di log
+        return self.render_to_response(self.get_context_data(form=form))
+    
+    def get_initial(self):        
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]
+        created_by = self.request.user
+        return {
+            'created_by': created_by,
+            'fk_attrezzatura': fk_attrezzatura
+        }
+
+class ControlloPeriodicoUpdateView(LoginRequiredMixin, UpdateView):
+    model = ControlloPeriodico
+    form_class = ControlloPeriodicoModelForm
+    template_name = 'manutenzioni/controllo_periodico.html'
+    success_message = 'Controllo periodico modificato correttamente!'
+    
+    
+    def get_success_url(self):        
+        fk_attrezzatura = self.object.fk_attrezzatura.pk
+        return reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+            
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        #pk_attrezzatura = self.object.pk        
+        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+
+        return context
+
+
+
+def delete_controllo_periodico(request, pk): 
+        deleteobject = get_object_or_404(ControlloPeriodico, pk = pk)                 
+        fk_attrezzatura = deleteobject.fk_attrezzatura.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('manutenzioni:modifica_attrezzatura', kwargs={'pk':fk_attrezzatura})
+        return redirect(url_match)
+
+
+
+
 # Stampe
 def piano_tarature(request):
     
@@ -411,5 +484,42 @@ def piano_manutenzioni(request):
         }
         
     return render(request, 'manutenzioni/reports/piano_manutenzioni.html', context)
+
+
+def piano_controlli_periodici(request):
+    
+    if request.method == 'GET':
+        
+        data_inizio = request.GET.get('data_inizio')  # Assumi che il campo del modal si chiami 'data_inizio'
+        data_fine = request.GET.get('data_fine')  # Assumi che il campo del modal si chiami 'data_fine'
+        fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
+        
+        # Effettua il parsing delle date in oggetti datetime
+        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+    
+        # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
+        if fk_ward_id == 'tutti':
+            controlli_periodici = ControlloPeriodico.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine)
+            ).order_by('-prossima_scadenza')
+        else:
+            controlli_periodici = ControlloPeriodico.objects.filter(
+                prossima_scadenza__range=(data_inizio, data_fine),
+                fk_attrezzatura__fk_ward=fk_ward_id
+            ).order_by('-prossima_scadenza')
+        
+        
+        
+        context = {
+            'controlli_periodici': controlli_periodici,
+            'data_inizio': data_inizio,
+            'data_fine': data_fine,
+            'fk_ward_id': fk_ward_id
+            
+            
+        }
+        
+    return render(request, 'manutenzioni/reports/piano_controlli_periodici.html', context)
     
     

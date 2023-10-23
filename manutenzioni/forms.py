@@ -1,10 +1,8 @@
 from django import forms
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-from .models import (Attrezzatura, ManutenzioneStraordinaria, Taratura,
-                    ManutenzioneOrdinaria,
-                    )
-from human_resources.models import Ward
+from .models import *
+from human_resources.models import Ward, HumanResource
 
 from anagrafiche.models import Fornitore
 
@@ -136,3 +134,29 @@ class ManutenzioneOrdinariaModelForm(forms.ModelForm):
             'note': 'Annotazioni'
         }
         
+class ControlloPeriodicoModelForm(forms.ModelForm):
+    fk_human_resource = forms.ModelChoiceField(queryset=HumanResource.objects.all(),  label='Incaricato')
+    class Meta:
+        model = ControlloPeriodico
+        fields = '__all__'
+        
+        widgets = {
+            'data_controllo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
+            #'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),                        
+            'is_eseguita': forms.CheckboxInput(),
+            'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'fk_attrezzatura': forms.HiddenInput(),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            
+            'data_controllo': 'Data Controllo',
+            #'fk_fornitore': 'Fornitore',
+            'descrizione': 'Descrizione',
+            'is_eseguita': 'Eseguita',
+            'prossima_scadenza': 'Prossima Scadenza',
+            'note': 'Annotazioni'
+        }

@@ -83,6 +83,21 @@
                 <div class="col-2">
                     {{ form.periodo_taratura|as_crispy_field }}
                 </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    {{ form.procedura_controlli_periodici|as_crispy_field }}
+                </div>
+                <div class="col-2">
+                    {{ form.periodo_controlli_periodici|as_crispy_field }}
+                </div>
+                <div class="col-6">
+                    {{ form.riferimento_normativo_controlli_periodici|as_crispy_field }}
+                </div>
+            </div>
+
+            <hr>
                 <div class="col-6">
                     {{ form.note|as_crispy_field }}
                 </div>
@@ -93,6 +108,8 @@
 
             </div>
             
+            
+            
 
             
             
@@ -100,7 +117,7 @@
         <hr>
         
         {% include "core/partials/_messages.html" %}
-
+<div class="container">
 {% if form.instance.id  %}
 <div class="row">
     <!-- Tabella Manutenzioni Ordinarie -->
@@ -222,7 +239,51 @@
 </div> <!-- Fine colonna Tabella Tarature -->
 
 
-</div> <!-- Fine riga tabelle -->
+</div> <!-- Fine prima riga tabelle -->
+<br>
+<hr>
+
+<div class="row">
+    <!-- Tabella Controlli Periodici -->
+    <div class="col-4"> 
+        <div class="row justify-content-end">
+            <div class="col">
+                <p><strong>Controlli Periodici</strong></p>
+            </div>
+            <div class="col text-end">
+                <a href="{% url 'manutenzioni:aggiungi_controllo_periodico' fk_attrezzatura=attrezzatura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Controllo Periodico</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="table-container">
+                <table class="table table-fixed-header table-bordered table-striped mt-2">
+                <caption>Controlli Periodici</caption>
+                <thead>
+                    <tr>
+                        <th>Data</th>   
+                        <th>Descrizione</th>
+                        <th>Azione</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cont_per in elenco_controlli_periodici %}
+                    <tr>        
+                        
+                        <td><a href="{% url 'manutenzioni:modifica_controllo_periodico' fk_attrezzatura=attrezzatura.pk pk=cont_per.pk%}">{{ cont_per.data_controllo }}</a></td>
+                        <td>{{ cont_per.descrizione }}</td>
+                        
+                        <td class="text-center"><a href="{% url 'manutenzioni:delete_controllo_periodico' pk=cont_per.pk%}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{cont_per.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    </tr>  
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div> <!-- Fine colonna Tabella Controlli periodici -->
+</div> <!-- Fine Seconda riga tabelle -->
+
 {% endif %}
 
 
