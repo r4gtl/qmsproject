@@ -4,7 +4,7 @@ import datetime
 from django.utils import timezone
 from django.contrib.auth.models import User
 from anagrafiche.models import Fornitore
-from human_resources.models import Ward
+from human_resources.models import Ward, HumanResource
 
 class Attrezzatura(models.Model):
     codice_attrezzatura = models.CharField(max_length=10)
@@ -20,6 +20,9 @@ class Attrezzatura(models.Model):
     data_dismissione = models.DateField(null=True, blank=True)
     is_taratura = models.BooleanField(default=False)
     periodo_taratura = models.CharField(max_length=50, null=True, blank=True)
+    procedura_controlli_periodici = models.TextField(null=True, blank=True)
+    periodo_controlli_periodici = models.CharField(max_length=50, null=True, blank=True)
+    riferimento_normativo_controlli_periodici = models.TextField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='attrezzatura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -71,6 +74,21 @@ class ManutenzioneOrdinaria(models.Model):
     
     class Meta:
         ordering = ["-data_manutenzione"]
+
+
+class ControlloPeriodico(models.Model):
+    fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)
+    data_controllo = models.DateField(null=False, blank=False)
+    descrizione = models.CharField(max_length=100)    
+    fk_human_resource = models.ForeignKey(HumanResource, null=True, blank=True, on_delete=models.SET_NULL)
+    is_eseguita = models.BooleanField(default=False)
+    prossima_scadenza = models.DateField(null=False, blank=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='controllo_periodico', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["-data_controllo"]
         
     
     

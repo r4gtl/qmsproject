@@ -23,6 +23,9 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'is_taratura': forms.CheckboxInput(),
             'periodo_taratura': forms.TextInput(attrs={'placeholder': 'Inserisci periodo taratura'}),            
+            'procedura_controlli_periodici': forms.Textarea(attrs={'placeholder': 'Inserisci Procedura controlli periodici', 'rows': 3}),
+            'periodo_controlli_periodici': forms.TextInput(attrs={'placeholder': 'Inserisci periodo controlli periodici'}), 
+            'riferimento_normativo_controlli_periodici': forms.TextInput(attrs={'placeholder': 'Inserisci riferimento normativo controlli periodici'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 3}),
             
 
@@ -40,6 +43,9 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'data_dismissione': 'Data Dismissione',
             'is_taratura': 'Soggetto a taratura',
             'periodo_taratura': 'Periodi di taratura',
+            'procedura_controlli_periodici': 'Procedura controlli periodici',
+            'periodo_controlli_periodici': 'Periodo di controllo periodico',
+            'riferimento_normativo_controlli_periodici': 'Riferimento normativo controllo periodico',
             'note': 'Annotazioni'
         }
         
