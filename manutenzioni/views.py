@@ -369,12 +369,19 @@ class ControlloPeriodicoCreateView(LoginRequiredMixin,CreateView):
         fk_attrezzatura = self.kwargs["fk_attrezzatura"]
         created_by = self.request.user
          # Ottieni l'istanza dell'Attrezzatura
-        attrezzatura = Attrezzatura.objects.get(pk=fk_attrezzatura)
+        # attrezzatura = Attrezzatura.objects.get(pk=fk_attrezzatura)
         return {
             'created_by': created_by,
             'fk_attrezzatura': fk_attrezzatura,
-            'fk_human_resources': attrezzatura.fk_human_resource
+            #'fk_human_resources': attrezzatura.fk_human_resource
         }
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]
+        attrezzatura = Attrezzatura.objects.get(pk=fk_attrezzatura)
+        kwargs['initial']['fk_human_resource'] = attrezzatura.fk_human_resource
+        return kwargs
 
 class ControlloPeriodicoUpdateView(LoginRequiredMixin, UpdateView):
     model = ControlloPeriodico
