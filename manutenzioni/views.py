@@ -373,7 +373,7 @@ class ControlloPeriodicoCreateView(LoginRequiredMixin,CreateView):
         return {
             'created_by': created_by,
             'fk_attrezzatura': fk_attrezzatura,
-            'fk_human_resources': attrezzatura.fk_human_resources
+            'fk_human_resources': attrezzatura.fk_human_resource
         }
 
 class ControlloPeriodicoUpdateView(LoginRequiredMixin, UpdateView):
