@@ -143,7 +143,7 @@ class ControlloPeriodicoModelForm(forms.ModelForm):
         
         widgets = {
             'data_controllo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),
+            'descrizione': forms.Textarea(attrs={'placeholder': 'Inserisci descrizione'}),
             #'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),                        
             'is_eseguita': forms.CheckboxInput(),
             'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
