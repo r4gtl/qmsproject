@@ -58,7 +58,7 @@ class ManutenzioneStraordinariaModelForm(forms.ModelForm):
         
         widgets = {
             'data_manutenzione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'descrizione': forms.TextInput(attrs={'placeholder': 'Inserisci descrizione'}),            
+            'descrizione': forms.Textarea(attrs={'placeholder': 'Inserisci descrizione', 'rows':'3'}),            
             'fk_fornitore': forms.Select(attrs={'style': 'background-color: #F5F8EC'}),
             'ft_prot': forms.TextInput(attrs={'placeholder': 'Inserisci codice attrezzatura'}),
             'importo': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}), 

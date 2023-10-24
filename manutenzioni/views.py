@@ -21,15 +21,18 @@ from human_resources.models import Ward
 
 def dashboard_manutenzioni(request):
     attrezzature = Attrezzatura.objects.filter(is_dismesso=False)
+    attrezzature_count = Attrezzatura.objects.filter(is_dismesso=False).count()
     filter = AttrezzaturaFilter(request.GET, queryset=Attrezzatura.objects.all())
     manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.all()
     manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.all()
     tarature = Taratura.objects.all()
-    #fk_ward_records = Ward.objects.all()
-    #fk_ward_records = [('tutti', 'Tutti')] + [(ward.pk, ward.description) for ward in fk_ward_records]
+    attrezzature_filter = filter.qs
+    attrezzature_filter_count = attrezzature_filter.count()
+    
+    
     
 
-    filterset_class = AttrezzaturaFilter
+    #filterset_class = AttrezzaturaFilter
     page = request.GET.get('page', 1)
     paginator = Paginator(attrezzature, 50)
     
@@ -45,6 +48,8 @@ def dashboard_manutenzioni(request):
         'manutenzioni_ordinarie': manutenzioni_ordinarie,
         'manutenzioni_straordinarie': manutenzioni_straordinarie,
         'tarature': tarature,
+        'attrezzature_count': attrezzature_count,
+        'attrezzature_filter_count': attrezzature_filter_count
         #'fk_ward_records': fk_ward_records(request)['fk_ward_records']
     }
     return render(request, "manutenzioni/dashboard_manutenzioni.html", context)
