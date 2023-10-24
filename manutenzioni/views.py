@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, re
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.db.models import Sum, Count, Q
-import datetime
-from datetime import date, timedelta, datetime
+# import datetime
+from datetime import timedelta, datetime
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
@@ -423,8 +423,8 @@ def piano_tarature(request):
         fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
         
         # Effettua il parsing delle date in oggetti datetime
-        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
-        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+        data_inizio = datetime.datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.datetime.strptime(data_fine, '%Y-%m-%d').date()
     
         # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
         if fk_ward_id == 'tutti':
@@ -461,8 +461,8 @@ def piano_manutenzioni(request):
         fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
         
         # Effettua il parsing delle date in oggetti datetime
-        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
-        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+        data_inizio = datetime.datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.datetime.strptime(data_fine, '%Y-%m-%d').date()
     
         # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
         if fk_ward_id == 'tutti':
@@ -498,8 +498,8 @@ def piano_controlli_periodici(request):
         fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
         
         # Effettua il parsing delle date in oggetti datetime
-        data_inizio = datetime.strptime(data_inizio, '%Y-%m-%d').date()
-        data_fine = datetime.strptime(data_fine, '%Y-%m-%d').date()
+        data_inizio = datetime.datetime.strptime(data_inizio, '%Y-%m-%d').date()
+        data_fine = datetime.datetime.strptime(data_fine, '%Y-%m-%d').date()
     
         # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
         if fk_ward_id == 'tutti':
