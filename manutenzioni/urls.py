@@ -40,6 +40,7 @@ urlpatterns = [
     path('piano_tarature/', piano_tarature, name="piano_tarature"),
     path('piano_manutenzioni/', piano_manutenzioni, name="piano_manutenzioni"),
     path('piano_controlli_periodici/', piano_controlli_periodici, name="piano_controlli_periodici"),
+    path('registro_controllo_periodico/<int:fk_attrezzatura>/', registro_controllo_periodico, name="registro_controllo_periodico"),
 
     # Charts
     path('get_monthly_data/', get_monthly_data, name="get_monthly_data"),

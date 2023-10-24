@@ -99,6 +99,13 @@
                     {{ form.fk_human_resource|as_crispy_field }}
                 </div>
             </div>
+            <div class="row">
+                <div class="col-10">
+                </div>
+                <div class="col-2">
+                <a href="{% url 'manutenzioni:registro_controllo_periodico' fk_attrezzatura=attrezzatura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Stampa Registro</a>
+                </div>
+            </div>
 
             <hr>
                 <div class="col-6">

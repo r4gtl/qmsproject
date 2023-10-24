@@ -524,5 +524,18 @@ def piano_controlli_periodici(request):
         }
         
     return render(request, 'manutenzioni/reports/piano_controlli_periodici.html', context)
+
+
+def registro_controllo_periodico(request, fk_attrezzatura):
+    
+    controlli_periodici=ControlloPeriodico.objects.filter(fk_attrezzatura=fk_attrezzatura)
+    attrezzatura = Attrezzatura.objects.get(pk=fk_attrezzatura)
+    context = {
+        'fk_attrezzatura': fk_attrezzatura,
+        'controlli_periodici': controlli_periodici,
+        'attrezzatura': attrezzatura
+    }
+    
+    return render(request, 'manutenzioni/reports/registro_controllo_periodico.html', context)
     
     

@@ -1,0 +1,94 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% load custom_filters %}
+{% block title %}Registro Controllo Periodico {% endblock %}
+
+
+
+{% block content %}
+
+  <h1 class="text-center">Registro Controlli Periodici</h1>
+  <div class="row">
+    <div class="col-3">
+        <label for="attrezzatura">Attrezzatura:</label>
+        <h4 class="text-center" id="attrezzatura">{{ attrezzatura.descrizione }}</h4>
+    </div>
+    <div class="col-3">
+        <label for="periodicità">Periodicità:</label>
+        <h4 class="text-center" id="periodicità">{{ attrezzatura.periodo_controlli_periodici|default_if_none:"" }}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+        <label for="procedura">Procedura:</label>
+        <h4 class="text-center" id="procedura">{{ attrezzatura.procedura_controlli_periodici }}</h4>
+    </div>
+    <div class="col-3">
+        <label for="norma">Riferimento normativo:</label>
+        <h4 class="text-center" id="norma">{{ attrezzatura.riferimento_normativo_controlli_periodici }}</h4>
+    </div>
+    <div class="col-3">
+        <label for="incaricato">Incaricato:</label>
+        <h4 class="text-center" id="incaricato">{{ attrezzatura.fk_human_resource|default_if_none:"" }}</h4>
+    </div>
+  </div>
+  
+  
+
+
+<br>
+<hr>
+
+<hr>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr>        
+            
+            
+            <th>Data Controllo</th>
+            <th>Descrizione</th>
+            <th>Prossima Scadenza</th>
+            <th>Eseguita</th>
+            
+            
+                        
+        </tr>
+        </thead>
+        
+        <tbody>
+            {% for controllo in controlli_periodici %}
+                
+                
+                
+                <td>{{ controllo.data_controllo }}</td>
+                <td>{{ controllo.descrizione }}</td>
+
+                <td>{{ controllo.prossima_scadenza }}</td>
+                <td>{{ controllo.is_eseguita }}</td>
+
+            </tr>
+            
+            {% endfor %}
+            
+        </tbody>
+        </table>
+</div>
+
+
+    
+
+		
+		
+
+
+
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+{% endblock %}
