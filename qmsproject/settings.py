@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "chem_man",
     "antincendio",
     "ricette",
+    "air_emissions",
     
     "bootstrap5",
     "crispy_forms",
@@ -127,6 +128,7 @@ TEMPLATES = [
                     os.path.join(BASE_DIR, 'chem_man/templates'),
                     os.path.join(BASE_DIR, 'antincendio/templates'),
                     os.path.join(BASE_DIR, 'ricette/templates'),
+                    os.path.join(BASE_DIR, 'air_emissions/templates'),
         ]
                 ,
         "APP_DIRS": True,
