@@ -86,6 +86,7 @@
                 </div>
                 <div class="col-3 mb-1 d-flex align-items-center pt-1">
                     <button type="button" class="btn btn-sm btn-success" onclick="openWebSite()"><i class="bi bi-globe2"></i> Visita Sito</button>
+                    
                 </div>
                 <div class="col-3">
                     {{ form.e_mail|as_crispy_field }}
@@ -145,49 +146,28 @@
 
 {% block extra_scripts %}
 <script>
-/*
-const isLwg = document.getElementById("id_is_lwg");
-const lwgSection = document.getElementById("lwg-section");
-window.onload = hideLwgSection;
 
-function hideLwgSection(){
-    if (isLwg.checked){         
-        lwgSection.style.display = "block";
-        }else {
-            lwgSection.style.display = "none";
-        }
-    }
-
-
-isLwg.addEventListener('click', hideLwgSection)
-
-
-function myFunction() {
-    
-    var x = document.getElementById("lwg-section");
-    if (x.style.display === "none") {
-      x.style.display = "block";
-    } else {
-      x.style.display = "none";
-    }
-  } 
-*/
 document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_ragionesociale');
         });
 
 
 function openWebSite() {
-        var website = document.getElementById("id_sito_web").value;
-        
+    var website = document.getElementById("id_sito_web").value;
 
-        if (website) {
-            var url = website;
-            window.open(url);
-        } else {
-            alert("Manca indirizzo web!");
+    if (website) {
+        // Verifica se l'URL inizia con "http://" o "https://"
+        if (!website.startsWith("http://") && !website.startsWith("https://")) {
+            // Se non inizia con il prefisso, aggiungi "http://"
+            website = "http://" + website;
         }
+
+        // Apri l'URL
+        window.open(website);
+    } else {
+        alert("Manca indirizzo web!");
     }
+}
 
 function openGoogleMaps() {
         var latitudine = document.getElementById("id_latitude").value;
