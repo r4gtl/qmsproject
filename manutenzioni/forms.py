@@ -45,7 +45,8 @@ class AttrezzaturaModelForm(forms.ModelForm):
             'procedura_controlli_periodici': 'Procedura controlli periodici',
             'periodo_controlli_periodici': 'Periodo di controllo periodico',            
             'riferimento_normativo_controlli_periodici': 'Riferimento normativo controllo periodico',
-            'note': 'Annotazioni'
+            'note': 'Annotazioni',
+            'image': 'Immagine'
         }
         
 class ManutenzioneStraordinariaModelForm(forms.ModelForm):
@@ -78,8 +79,7 @@ class ManutenzioneStraordinariaModelForm(forms.ModelForm):
             'ore_fermo': 'Ore Fermo',
             'fk_fornitore': 'Fornitore',
             'ft_prot': 'Fattura Protocollo',
-            'data_fattura': 'Data Fattura',
-            'image': 'Immagine',
+            'data_fattura': 'Data Fattura',            
             'note': 'Annotazioni'
         }
         

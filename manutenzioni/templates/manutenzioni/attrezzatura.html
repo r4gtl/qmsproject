@@ -46,50 +46,40 @@
             
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
-            <div class="row mt-2">
-                <div class="col-2">
-                    {{ form.codice_attrezzatura|as_crispy_field }}
-                </div>
-                <div class="col-3">
-                    {{ form.descrizione|as_crispy_field }}
-                </div>
-                <div class="col-3">
-                    {{ form.modello|as_crispy_field }}
-                </div>
-                <div class="col-2">
-                    {{ form.serie_matricola|as_crispy_field }}
-                </div>
-                <div class="col-2">
-                    {{ form.fk_ward|as_crispy_field }}
-                </div>
-                
-                
-            </div>
             <div class="row">
-                <div class="col-2">
-                    {{ form.is_dismesso|as_crispy_field }}
-                </div>
-                <div class="col-2">
-                    {{ form.data_dismissione|as_crispy_field }}
-                </div>
-                <div class = "col-md-3">
-                    {{ form.image|as_crispy_field }}
-                </div>
-               {% if attrezzatura.image %}
-               <div class="col-md-5 text-center">               
-                <img src="{{ attrezzatura.image.url }}" 
-                    alt="{{ attrezzatura.descrizione }}" 
-                    style="height: auto; width: 200px; margin-top: 25px;" 
-                    class="avatar"  
-                    accept=".jpg,.jpeg,.png"
-                    id="preview-image"
-                    />
-                </div>                
-                {% endif %}
+                <div class="col-9">
+                    <div class="row mt-2">
+                    <div class="col-2">
+                        {{ form.codice_attrezzatura|as_crispy_field }}
+                    </div>
+                    <div class="col-3">
+                        {{ form.descrizione|as_crispy_field }}
+                    </div>
+                    <div class="col-3">
+                        {{ form.modello|as_crispy_field }}
+                    </div>
+                    <div class="col-2">
+                        {{ form.serie_matricola|as_crispy_field }}
+                    </div>
+                    <div class="col-2">
+                        {{ form.fk_ward|as_crispy_field }}
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-2">
+                        {{ form.is_dismesso|as_crispy_field }}
+                    </div>
+                    <div class="col-2">
+                        {{ form.data_dismissione|as_crispy_field }}
+                    </div>
+                    <div class = "col-md-8">
+                        {{ form.image|as_crispy_field }}
+                    </div>
+                
 
 
-            </div>
-            <div class="row">
+                </div>
+                    <div class="row">
                 <div class="col-2">
                     {{ form.is_taratura|as_crispy_field }}
                 </div>
@@ -97,6 +87,36 @@
                     {{ form.periodo_taratura|as_crispy_field }}
                 </div>
             </div>
+                    
+                
+                </div> <!-- fine colonna -->
+            <div class="col-3">
+                    {% if attrezzatura.image %}
+                    <div class="col-md-12 float-md-center text-center"> 
+                    <div class="card" >
+                        <img src="{{ attrezzatura.image.url }}" 
+                            alt="{{ attrezzatura.descrizione }}" 
+                            style="height: auto; width: 200px; margin-top: 25px;" 
+                            class="card-img-top text-center mx-auto"  
+                            accept=".jpg,.jpeg,.png"
+                            id="preview-image"
+                            />
+                        
+                        <div class="card-body">
+                            <p class="card-text text center">Codice Attrezzatura {{ attrezzatura.codice_attrezzatura }}</p>
+                        </div>
+                    </div>
+                                  
+                        
+                    </div>                
+                {% endif %}
+            </div>
+            </div>
+            
+            
+            
+            
+            
             <hr>
             <div class="row">
                 <div class="col-4">
