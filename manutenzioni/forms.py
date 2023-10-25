@@ -79,6 +79,7 @@ class ManutenzioneStraordinariaModelForm(forms.ModelForm):
             'fk_fornitore': 'Fornitore',
             'ft_prot': 'Fattura Protocollo',
             'data_fattura': 'Data Fattura',
+            'image': 'Immagine',
             'note': 'Annotazioni'
         }
         

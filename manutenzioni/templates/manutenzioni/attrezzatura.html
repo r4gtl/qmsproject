@@ -40,7 +40,7 @@
         <br>
 
 
-        <form method="post">
+        <form method="POST" novalidate enctype="multipart/form-data">
             {% csrf_token %}
 
             
@@ -72,7 +72,20 @@
                 <div class="col-2">
                     {{ form.data_dismissione|as_crispy_field }}
                 </div>
-               
+                <div class = "col-md-3">
+                    {{ form.image|as_crispy_field }}
+                </div>
+               {% if attrezzatura.image %}
+               <div class="col-md-5 text-center">               
+                <img src="{{ attrezzatura.image.url }}" 
+                    alt="{{ attrezzatura.descrizione }}" 
+                    style="height: auto; width: 200px; border-radius: 50%; margin-top: 25px;" 
+                    class="avatar"  
+                    accept=".jpg,.jpeg,.png"
+                    id="preview-image"
+                    />
+                </div>                
+                {% endif %}
 
 
             </div>
@@ -341,6 +354,10 @@
             setFocusOnField('id_codice_attrezzatura');
         });
 
+
+    $(document).ready(function() {
+    handleImagePreview('id_image', 'preview-image');
+    });
     </script>
     
 {% endblock %} 

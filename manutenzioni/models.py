@@ -24,6 +24,7 @@ class Attrezzatura(models.Model):
     periodo_controlli_periodici = models.CharField(max_length=50, null=True, blank=True)
     riferimento_normativo_controlli_periodici = models.TextField(null=True, blank=True)
     fk_human_resource = models.ForeignKey(HumanResource, null=True, blank=True, on_delete=models.SET_NULL)
+    image = models.ImageField(upload_to='tools_images', null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='attrezzatura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
