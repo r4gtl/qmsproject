@@ -33,6 +33,7 @@ class PuntoEmissione(models.Model):
 class RegistroControlloAnalitico(models.Model):
     fk_punto_emissione = models.ForeignKey(PuntoEmissione, related_name='registro_controllo_analitico', null=False, blank=False, on_delete=models.CASCADE)
     data_prelievo = models.DateField(null=False, blank=False)
+    prossima_scadenza = models.DateField(null=True, blank=True) 
     portata_risc = models.DecimalField(max_digits=9, decimal_places=2,  blank=True, null=True,
                                help_text="Nm3/h")
     conc_risc = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True,
@@ -41,6 +42,9 @@ class RegistroControlloAnalitico(models.Model):
                                help_text="g/h")
     certificato_numero  = models.CharField(max_length=50, blank=True, null=True)
     certificato = models.FileField(upload_to='analisi_fumi/', null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='registro_controllo_analitico', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__ (self):
         return self.data_prelievo

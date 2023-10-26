@@ -1,0 +1,116 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Registro Analisi{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_gestione_rifiuti.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<div class="container">
+    <br>
+    <nav aria-label="breadcrumb" class="mt-3">
+      <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+          <li class="breadcrumb-item"><a href="{% url 'air_emissions:dashboard_emissions' %}">Dashboard</a></li>    
+          <li class="breadcrumb-item active" aria-current="page">{{ punto_emissione.camino_numero }}</li>    
+  
+          {% if form.instance.id  %}
+              <li class="breadcrumb-item active" aria-current="page">Modifica analisi del {{ registrocontrolloanalitico.data_prelievo }}</li>
+          {% else %}
+              <li class="breadcrumb-item active" aria-current="page">Aggiungi registro analisi</li>
+          {% endif %}             
+          
+          
+      </ol>
+  </nav>
+    
+    
+    {% include "core/partials/_messages.html" %}
+    <!-- Form Procedura -->
+    
+    <hr>
+
+    
+    <form method="POST" novalidate enctype="multipart/form-data">
+        {% csrf_token %}
+
+        
+
+        <div class="row">
+            <div class="col-2">
+                {{ form.data_prelievo|as_crispy_field }}
+            </div>
+            <div class="col-2">
+                {{ form.prossima_scadenza|as_crispy_field }}
+                
+            </div>
+            <div class="col-2">
+                {{ form.portata_risc|as_crispy_field }}
+                
+            </div>
+            <div class="col-2">
+                {{ form.conc_risc|as_crispy_field }}
+                
+            </div>
+            <div class="col-2">
+                {{ form.flusso_risc|as_crispy_field }}
+            </div>
+            
+            
+        </div>
+        <div class="row">
+            
+            <div class="col-2">
+                {{ form.certificato_numero|as_crispy_field }}
+                
+            </div>
+            <div class="col-8">
+                {{ form.certificato|as_crispy_field }}
+                
+            </div>
+            
+          </div>
+          <div>
+            
+            <div class="col-3">
+                {{ form.note|as_crispy_field }}
+                
+            </div>
+            <div class="col-1">
+                {{ form.created_by|as_crispy_field }}
+                
+            </div>
+            <div class="col-1">
+                {{ form.fk_punto_emissione|as_crispy_field }}
+                
+            </div>
+            
+            
+        </div>
+        
+        
+
+        
+        <input type="submit" class="btn btn-success" value="Salva">
+        <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+    </form>
+    <hr>
+    
+</div>
+
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    
+
+      document.addEventListener("DOMContentLoaded", function() {
+        setFocusOnField('id_cdata_prelievo');
+    });
+</script>
+{% endblock %}
