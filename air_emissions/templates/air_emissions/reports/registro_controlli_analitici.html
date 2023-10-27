@@ -1,0 +1,82 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% load custom_filters %}
+{% block title %}Registro Controlli Analitici {% endblock %}
+
+
+{% block content %}
+
+
+<div class="container">
+    <h6 class="text-center" >DECRETO LEGISLATIVO 3 aprile 2006, n. 152 e s.m.i.</h6>
+    <h6 class="text-center" >Norme in materia ambientale</h6>
+    <hr>
+    <h5 class="text-center" >PARTE QUINTA</h6>
+    <h6 class="text-center" >NORME IN MATERIA DI TUTELA DELL'ARIA</h6>
+    <h6 class="text-center" >E DI RIDUZIONE DELLE EMISSIONI NELL'ATMOSFERA</h6>
+    <h6 class="text-center" >Allegato VI</h6>
+    <h6 class="text-center" >Appendice 1</h6>
+    <h6 class="text-center" style="background-color: black; color:white">Registro relativo al controllo discontinuo di cui ai punti 2.5 e 2.7</h5>
+
+    
+    <h5 class="text-center" style="border: 1px solid #000; padding: 5px;">{{ nome_sito|upper }}</h5>
+    <h5 class="text-center" style="border: 1px solid #000; padding: 5px;">PROVVEDIMENTO UNICO CONCLUSIVO A.U.A. N. 23/2017<br>
+    (Protocollo: REP_PROV_VI/VI-SUPRO/0210382 del 07/12/2017)
+    </h5>
+
+    
+    <table class="table table-bordered table-striped mt-2">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Sigla dei punti di emissione</th>            
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Origine</th>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Data del prelievo</th>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Portata (Nm3/h)</th>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Inquinanti emessi</th>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Concentrazione (mg/Nm3)</th>
+                    <th rowspan="2" style="text-align:center; vertical-align:middle">Flusso di massa (g/h)</th>
+                    <th colspan="2" style="text-align:center; vertical-align:middle">Valori limite</th>
+
+                
+                </tr>
+                <tr>
+                    <th style="text-align:center; vertical-align:middle">
+                        mg/Nm3
+                    </th>
+                    <th style="text-align:center; vertical-align:middle">
+                        g/h
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+              
+              {% for analisi in elenco_analisi %}
+              <tr>        
+                
+                <td>{{ analisi.fk_punto_emissione.camino_numero }}</td>
+                <td>{{ analisi.fk_punto_emissione.origine }}</td>
+                <td>{{ analisi.data_prelievo }}</td>                           
+                <td class="text-end">{{ analisi.portata_risc|format_number_dec_thousand }}</td>  
+                <td>{{ analisi.fk_punto_emissione.parametri }}</td>                         
+                <td class="text-end">{{ analisi.conc_risc }}</td>                           
+                <td class="text-end">{{ analisi.flusso_risc }}</td>                           
+                <td class="text-end">{{ analisi.fk_punto_emissione.limite_conc|default_if_none:"" }}</td>                         
+                <td class="text-end">{{ analisi.fk_punto_emissione.limite_flusso|default_if_none:"" }}</td>                         
+                
+              </tr>  
+              {% endfor %}
+            </tbody>
+          </table>
+
+
+
+</div>
+
+
+
+{% endblock content %}
+
+{% block extra_scripts %}
+
+{% endblock %}

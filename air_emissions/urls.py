@@ -1,7 +1,6 @@
 from django.urls import path
+
 from .views import *
-
-
 
 app_name="air_emissions"
 
@@ -22,6 +21,9 @@ urlpatterns = [
     path("<int:fk_punto_emissione>/aggiungi_registro_analisi/", RegistroControlloAnaliticoCreateView.as_view(), name="aggiungi_registro_analisi"),
     path("<int:fk_punto_emissione>/modifica_registro_analisi/<int:pk>", RegistroControlloAnaliticoUpdateView.as_view(), name="modifica_registro_analisi"),
     path("delete_registro_analisi/<int:pk>", delete_registro_analisi, name="delete_registro_analisi"),
+
+    # Stampe
+    path("registro_controlli_analitici/", registro_controlli_analitici, name="registro_controlli_analitici"),
     
 
     

@@ -12,3 +12,4 @@ venv
 .env
 media-serve
 update_and_deploy.sh
+.pylintrc

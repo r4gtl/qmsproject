@@ -1,13 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView
 
-from .models import *
 from .forms import *
-
-
+from .models import *
 
 # Create your views here.
  
@@ -123,7 +121,7 @@ class RegistroControlloAnaliticoCreateView(LoginRequiredMixin,CreateView):
     def get_initial(self):        
         fk_punto_emissione = self.kwargs["fk_punto_emissione"]
         created_by = self.request.user
-        print(f"fk_punto_emissione: {fk_punto_emissione}")
+        
         
         return {
             'created_by': created_by,
@@ -172,3 +170,14 @@ def delete_registro_analisi(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('air_emissions:modifica_punto_emissione', kwargs={'pk':fk_punto_emissione})
         return redirect(url_match)
+
+def registro_controlli_analitici(request):
+    elenco_analisi=RegistroControlloAnalitico.objects.order_by('-data_prelievo')
+    context = {
+        # Sostanze
+        'elenco_analisi': elenco_analisi
+        
+        
+    }
+
+    return render(request, 'air_emissions/reports/registro_controlli_analitici.html', context)

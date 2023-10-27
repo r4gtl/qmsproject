@@ -1,14 +1,14 @@
 from django import forms
-from .models import *
 
+from .models import PuntoEmissione, RegistroControlloAnalitico
 
 
 class PuntoEmissioneModelForm(forms.ModelForm):
+    
     class Meta:
-        model = PuntoEmissione
-        exclude=()
-        #fields='__all__'
         
+        model = PuntoEmissione  # noqa: F405
+        exclude=()
         widgets = {
                 'camino_numero': forms.TextInput(attrs={'placeholder': 'Inserisci il nome del punto di emissione'}),
                 'origine': forms.TextInput(attrs={'placeholder': 'Inserisci l\'origine del punto di emissione'}),
@@ -47,8 +47,7 @@ class RegistroControlloAnaliticoModelForm(forms.ModelForm):
     class Meta:
         model = RegistroControlloAnalitico
         exclude=()
-        fields='__all__'
-        
+        fields='__all__'        
         widgets = {
                 'fk_punto_emissione': forms.HiddenInput(),
                 'data_prelievo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
@@ -69,7 +68,5 @@ class RegistroControlloAnaliticoModelForm(forms.ModelForm):
             'flusso_risc': 'Flusso di massa riscontrato (g/h)',
             'certificato_numero': 'Numero certificato',
             'certificato': 'Link al certificato',
-            'note': 'Note',
-            
-            
-        }
+            'note': 'Note'
+            }
