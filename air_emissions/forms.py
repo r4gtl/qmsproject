@@ -12,6 +12,7 @@ class PuntoEmissioneModelForm(forms.ModelForm):
         widgets = {
                 'camino_numero': forms.TextInput(attrs={'placeholder': 'Inserisci il nome del punto di emissione'}),
                 'origine': forms.TextInput(attrs={'placeholder': 'Inserisci l\'origine del punto di emissione'}),
+                'descrizione_origine': forms.Textarea(attrs={'placeholder': 'Inserisci descrizione', 'rows':'3'}),
                 'quota': forms.TextInput(attrs={'placeholder': 'Inserisci la quota del punto di emissione'}),
                 'portata': forms.NumberInput(attrs={'class': 'form-control'}),
                 'parametri': forms.TextInput(attrs={'placeholder': 'Inserisci il parametro del punto di emissione'}),
@@ -26,6 +27,7 @@ class PuntoEmissioneModelForm(forms.ModelForm):
         labels = {
             'camino_numero': 'Camino Numero',
             'origine': 'Origine',
+            'descrizione_origine': 'Descrizione Origine',
             'quota': 'Quota (m)',
             'portata': 'portata (Nm3/h)',
             'parametri': 'Parametri',

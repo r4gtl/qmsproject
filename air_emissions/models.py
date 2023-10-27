@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 # Create your models here.
 
@@ -7,6 +7,8 @@ class PuntoEmissione(models.Model):
     camino_numero  = models.CharField(max_length=50, blank=False, null=False)
     origine = models.CharField(max_length=50, blank=False, null=False,
                                help_text="P.E.: cabina rifinizione pelli, depolveratore linea...")
+    descrizione_origine = models.TextField(null=True, blank=True,
+                                           help_text="Aggiungi una breve descrizione dell'origine.")
     quota = models.CharField(max_length=50, blank=True, null=True)
     
     portata = models.DecimalField(max_digits=9, decimal_places=2, blank=True, null=True,

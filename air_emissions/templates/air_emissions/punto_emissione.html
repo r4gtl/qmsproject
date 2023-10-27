@@ -53,13 +53,17 @@
                 
             </div>
             <div class="col-3">
-                {{ form.portata|as_crispy_field }}
+                {{ form.descrizione_origine|as_crispy_field }}
                 
             </div>
             
             
         </div>
         <div class="row">
+            <div class="col-2">
+                {{ form.portata|as_crispy_field }}
+                
+            </div>
             <div class="col-2">
                 {{ form.parametri|as_crispy_field }}
             </div>

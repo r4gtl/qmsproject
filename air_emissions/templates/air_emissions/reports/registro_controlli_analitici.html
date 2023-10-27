@@ -56,7 +56,7 @@
                 
                 <td>{{ analisi.fk_punto_emissione.camino_numero }}</td>
                 <td>{{ analisi.fk_punto_emissione.origine }}</td>
-                <td>{{ analisi.data_prelievo }}</td>                           
+                <td class="text-end">{{ analisi.data_prelievo|date:"d/m/Y" }}</td>                           
                 <td class="text-end">{{ analisi.portata_risc|format_number_dec_thousand }}</td>  
                 <td>{{ analisi.fk_punto_emissione.parametri }}</td>                         
                 <td class="text-end">{{ analisi.conc_risc }}</td>                           
