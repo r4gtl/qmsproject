@@ -172,7 +172,7 @@ def delete_registro_analisi(request, pk):
         return redirect(url_match)
 
 def registro_controlli_analitici(request):
-    elenco_analisi=RegistroControlloAnalitico.objects.order_by('-data_prelievo')
+    elenco_analisi=RegistroControlloAnalitico.objects.order_by('data_prelievo')
     context = {
         # Sostanze
         'elenco_analisi': elenco_analisi

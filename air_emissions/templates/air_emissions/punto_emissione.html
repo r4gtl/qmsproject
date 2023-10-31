@@ -133,9 +133,9 @@
               <tr>        
                 
                 <td><a href="{% url 'air_emissions:modifica_registro_analisi' fk_punto_emissione=puntoemissione.pk pk=analisi.pk %}">{{ analisi.data_prelievo }}</a></td>
-                <td>{{ analisi.portata_risc }}</td>                           
-                <td>{{ analisi.conc_risc }}</td>                           
-                <td>{{ analisi.flusso_risc }}</td>                           
+                <td class="text-end">{{ analisi.portata_risc }}</td>                           
+                <td class="text-end">{{ analisi.conc_risc }}</td>                           
+                <td class="text-end">{{ analisi.flusso_risc }}</td>                           
                 <td>{{ analisi.certificato_numero }}</td>                           
                 <td class="text-center"><a href="{% url 'air_emissions:delete_registro_analisi' pk=analisi.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{analisi.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
               </tr>  
