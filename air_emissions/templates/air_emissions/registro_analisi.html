@@ -17,7 +17,7 @@
       <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
           <li class="breadcrumb-item"><a href="{% url 'air_emissions:dashboard_emissions' %}">Dashboard</a></li>    
-          <li class="breadcrumb-item active" aria-current="page">{{ punto_emissione.camino_numero }}</li>    
+          <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'air_emissions:modifica_punto_emissione' pk=fk_punto_emissione %}">{{ punto_emissione.camino_numero }}</a></li>    
   
           {% if form.instance.id  %}
               <li class="breadcrumb-item active" aria-current="page">Modifica analisi del {{ registrocontrolloanalitico.data_prelievo }}</li>

@@ -121,6 +121,7 @@ class RegistroControlloAnaliticoCreateView(LoginRequiredMixin,CreateView):
     def get_initial(self):        
         fk_punto_emissione = self.kwargs["fk_punto_emissione"]
         created_by = self.request.user
+        print(f'fk_punto_emissione da nuovo: {fk_punto_emissione}')
         
         
         return {
@@ -128,6 +129,15 @@ class RegistroControlloAnaliticoCreateView(LoginRequiredMixin,CreateView):
             'fk_punto_emissione': fk_punto_emissione,
             #'fk_human_resources': attrezzatura.fk_human_resource
         }
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_punto_emissione = self.kwargs["fk_punto_emissione"]  
+        punto_emissione = PuntoEmissione.objects.get(pk=fk_punto_emissione) 
+        print(f"fk_punto_emissione: {fk_punto_emissione}")
+        context['fk_punto_emissione']=fk_punto_emissione
+        context['punto_emissione']=punto_emissione
+
+        return context
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -157,6 +167,8 @@ class RegistroControlloAnaliticoUpdateView(LoginRequiredMixin, UpdateView):
         fk_punto_emissione = self.kwargs["fk_punto_emissione"]   
         print(f"fk_punto_emissione: {fk_punto_emissione}")
         context['punto_emissione'] = PuntoEmissione.objects.get(pk=fk_punto_emissione)
+        context['fk_punto_emissione']=fk_punto_emissione
+        print(f"PuntoEmissione : {PuntoEmissione.objects.get(pk=fk_punto_emissione)}")
         #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
         #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
 
