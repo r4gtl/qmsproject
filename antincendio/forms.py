@@ -1,11 +1,9 @@
-from django import forms
 from datetime import date
+
+from django import forms
 from django.db.models import Max
 
-
 from .models import *
-
-
 
 
 class EstintoreModelForm(forms.ModelForm):
@@ -22,7 +20,7 @@ class EstintoreModelForm(forms.ModelForm):
             'anno': forms.TextInput(attrs={'placeholder': 'Inserisci l\'anno di fabbricazione'}),
             'ubicazione': forms.TextInput(attrs={'placeholder': 'Inserisci la posizione o il reparto'}),
             'data_dismissione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-            'numero_posizione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'numero_posizione': forms.TextInput(attrs={'placeholder': 'Inserisci il numero assegnato'}),
             'scadenza_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'scadenza_collaudo': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),            
