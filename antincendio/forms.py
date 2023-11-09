@@ -34,7 +34,8 @@ class EstintoreModelForm(forms.ModelForm):
             'anno': 'Anno di fabbricazione',            
             'ubicazione': 'Ubicazione',            
             'data_dismissione': 'Data Dismissione',            
-            'numero_posizione': 'Numero/Posizione',            
+            'numero_posizione': 'Numero/Posizione',   
+            'certificato_conf': 'Dichiarazione conformità',
             'scadenza_revisione': 'Scadenza Revisione',            
             'scadenza_collaudo': 'Scadenza Collaudo',            
             'note': 'Note'

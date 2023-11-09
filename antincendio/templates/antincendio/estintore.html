@@ -89,13 +89,19 @@
                 <div class="col-2">
                     {{ form.scadenza_collaudo|as_crispy_field }}
                 </div>
-                <div class="col-7">
+                <div class="col-3">
+                    {{ form.certificato_conf|as_crispy_field }}
+                </div>
+                <div class="col-5">
                     {{ form.note|as_crispy_field }}
                 </div>
+                
+                
+            </div>
+            <div class="row">
                 <div class="col-1">
                     {{ form.created_by|as_crispy_field }}
                 </div>
-                
             </div>
             
             

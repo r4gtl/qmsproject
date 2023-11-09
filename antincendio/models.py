@@ -1,8 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import User
 from anagrafiche.models import Fornitore
+from django.contrib.auth.models import User
+from django.db import models
 from human_resources.models import HumanResource
-
 
 # Create your models here.
 
@@ -17,6 +16,7 @@ class Estintore(models.Model):
     numero_posizione = models.IntegerField()
     scadenza_revisione = models.DateField()
     scadenza_collaudo = models.DateField()
+    certificato_conf = models.FileField(upload_to='extinguisher_conformity/', null=True, blank=True)
 
 
     note = models.TextField(null=True, blank=True)
@@ -67,7 +67,7 @@ class Idrante(models.Model):
     N = 'Naspo'
         
     CHOICES_TYPE = (
-        (IP, 'Interno'),
+        (IP, 'Idrante a Parete'),
         (ISS, 'Idrante soprasuolo'),     
         (ICS, 'Idrante a colonna soprasuolo'),     
         (GFS, 'Gruppo fisso schiuma'),     
