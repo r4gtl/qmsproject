@@ -25,6 +25,7 @@ class Estintore(models.Model):
 
     class Meta:
         ordering = ["numero_posizione"]
+        verbose_name_plural = "Estintori"
 
     def __str__(self):
         return f"{self.matricola} - {self.numero_posizione}"
@@ -96,6 +97,7 @@ class Idrante(models.Model):
 
     class Meta:
         ordering = ["numero_posizione"]
+        verbose_name_plural = "Idranti"
 
     def __str__(self):
         return f"{self.numero_posizione} - {self.tipo_idrante}"
@@ -152,6 +154,7 @@ class PortaUscita(models.Model):
 
     class Meta:
         ordering = ["numero_posizione"]
+        verbose_name_plural = "Porte Uscita"
 
     def __str__(self):
         return f"{self.numero_posizione} - {self.tipo_porta}"
@@ -166,6 +169,7 @@ class ImpiantoSpegnimento(models.Model):
 
     class Meta:
         ordering = ["numero_posizione"]
+        verbose_name_plural = "Impianti Spegnimento"
 
 
 
@@ -174,6 +178,10 @@ class AttrezzaturaAntincendio(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='attrezzatura_antincendio', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "Attrezzature Antincendio"
     
 
 

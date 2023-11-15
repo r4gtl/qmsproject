@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import (AreaFormazione, CentrodiLavoro, CorsoFormazione,
                      HumanResource, RegistroFormazione, RegistroOreLavoro,
-                     ValutazioneOperatore)
+                     Role, Safety_Role, ValutazioneOperatore, Ward)
 
 
 class HumanResourceModelAdmin(admin.ModelAdmin):
@@ -74,6 +74,30 @@ class CentrodiLavoroModelAdmin(admin.ModelAdmin):
     ordering = ['description']
 
 
+class WardModelAdmin(admin.ModelAdmin):
+    model = Ward
+    list_display = [         
+        "description"
+        ]
+    search_fields = ["description"]
+    ordering = ['description']
+
+class RoleModelAdmin(admin.ModelAdmin):
+    model = Role
+    list_display = [         
+        "description"
+        ]
+    search_fields = ["description"]
+    ordering = ['description']
+
+class Safety_RoleModelAdmin(admin.ModelAdmin):
+    model = Safety_Role
+    list_display = [         
+        "descrizione"
+        ]
+    search_fields = ["descrizione"]
+    ordering = ['descrizione']
+
 
 admin.site.register(HumanResource, HumanResourceModelAdmin)
 admin.site.register(AreaFormazione, AreaFormazioneModelAdmin)
@@ -82,3 +106,6 @@ admin.site.register(RegistroFormazione, RegistroFormazioneModelAdmin)
 admin.site.register(RegistroOreLavoro, RegistroOreLavoroModelAdmin)
 admin.site.register(CentrodiLavoro, CentrodiLavoroModelAdmin)
 admin.site.register(ValutazioneOperatore, ValutazioneOperatoreModelAdmin)
+admin.site.register(Ward, WardModelAdmin)
+admin.site.register(Role, RoleModelAdmin)
+admin.site.register(Safety_Role, Safety_RoleModelAdmin)
