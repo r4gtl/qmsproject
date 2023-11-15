@@ -1,10 +1,12 @@
-from django.db import models
-from django.urls import reverse
 import datetime
-from django_countries.fields import CountryField # Field from django countries app
+
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
+from django.db import models
 from django.db.models import Sum
+from django.urls import reverse
+from django_countries.fields import \
+    CountryField  # Field from django countries app
 
 
 class CentrodiLavoro(models.Model):
@@ -18,7 +20,7 @@ class CentrodiLavoro(models.Model):
 
     class Meta:
         ordering = ["description"]
-        verbose_name_plural = "centridilavoro"
+        verbose_name_plural = "Centri di lavoro"
         db_table = "centrodilavoro"
     
     def __str__(self):
@@ -120,6 +122,10 @@ class AreaFormazione(models.Model):
     '''
     descrizione = models.CharField(max_length=50)
     created_by = models.ForeignKey(User, related_name='area_formazione', null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "Aree Formazione"        
     
     def __str__(self):
         return self.descrizione
@@ -129,9 +135,14 @@ class CorsoFormazione(models.Model):
     descrizione = models.CharField(max_length=100)
     fk_areaformazione = models.ForeignKey(AreaFormazione, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, related_name='corso_formazione', null=True, blank=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "Corsi Formazione"
     
     def __str__(self):
         return self.descrizione
+    
     
 class RegistroFormazione(models.Model):
     data_formazione = models.DateField(null=False, blank=False)
@@ -143,6 +154,7 @@ class RegistroFormazione(models.Model):
     
     class Meta:
         ordering = ["-data_formazione"]
+        verbose_name_plural = "Registri Formazione"
 
 
 
@@ -258,6 +270,7 @@ class RegistroOreLavoro(models.Model):
     
     class Meta:
         ordering = ["-entry_year", "-entry_month"]
+        verbose_name_plural = "Registri Ore Lavoro"
 
 class ValutazioneOperatore(models.Model):
     # Categoria
@@ -282,7 +295,9 @@ class ValutazioneOperatore(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-
+    class Meta:
+        ordering = ["fk_hr"]
+        verbose_name_plural = "Valutazioni Operatori"
 
 
 ##############################################################################

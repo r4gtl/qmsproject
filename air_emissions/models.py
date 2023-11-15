@@ -29,6 +29,10 @@ class PuntoEmissione(models.Model):
     created_by = models.ForeignKey(User, related_name='punto_emissione', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["camino_numero"]
+        verbose_name_plural = "Punti di Emissione"
+
     def __str__ (self):
         return self.camino_numero 
     
@@ -47,6 +51,10 @@ class RegistroControlloAnalitico(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='registro_controllo_analitico', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["data_prelievo"]
+        verbose_name_plural = "Registri controlli analitici"
 
     def __str__ (self):
         return self.data_prelievo
