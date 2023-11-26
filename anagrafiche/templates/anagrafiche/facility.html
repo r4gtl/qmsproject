@@ -26,16 +26,19 @@
         <br>
 
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
 
             {% csrf_token %}
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     
                     {{ form.nome_sito|as_crispy_field}}
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     {{ form.urn|as_crispy_field}}
+                </div>
+                <div class="col-sm-4">
+                    {{ form.logo|as_crispy_field}}
                 </div>
             </div>
 

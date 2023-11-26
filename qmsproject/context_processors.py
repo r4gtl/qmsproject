@@ -6,6 +6,10 @@ def nome_sito(request):
     facility = Facility.objects.first()  # Scegli la Facility corretta o utilizza la logica di scelta desiderata
     return {'nome_sito': facility.nome_sito if facility else ''}
 
+def logo_sito(request):
+    facility = Facility.objects.first()  # Scegli la Facility corretta o utilizza la logica di scelta desiderata
+    return {'logo_sito': facility.logo if facility else ''}
+
 
 # questa funzione restituisce un elenco preso dal modello Wards e aggiunge "Tutti"
 # Inizialmente usato per il modal che renderizza la stampa dei piani di manutenzione e taratura

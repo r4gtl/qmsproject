@@ -30,6 +30,7 @@ class Facility(models.Model):
     )
     
     nome_sito = models.CharField(max_length=100)
+    logo = models.ImageField(default='avatar.png', upload_to='logo')
     urn = models.CharField(max_length=50, blank=True, null=True)
     piva = models.CharField(max_length=11, blank=True, null=True)
     indirizzo = models.CharField(max_length=100, blank=True, null=True)

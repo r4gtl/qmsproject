@@ -139,6 +139,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "qmsproject.context_processors.nome_sito",
+                "qmsproject.context_processors.logo_sito",
                 "qmsproject.context_processors.fk_ward_records",
                 'qmsproject.context_processors.app_icons',
             ],
