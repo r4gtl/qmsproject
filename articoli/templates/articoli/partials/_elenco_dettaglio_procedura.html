@@ -25,7 +25,7 @@
         {% for dettaglio in elenco_dettagli %}
         <tr>        
           
-          <td><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=dettaglio.fk_procedura pk=dettaglio.pk %}">{{ numero_riga }}</a></td>
+          <td><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=dettaglio.fk_procedura.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
           <td>{{ dettaglio.fk_faselavoro.descrizione }}</td>            
           <td class="text-center"><a href="{% url 'articoli:delete_dettaglio_procedura' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  

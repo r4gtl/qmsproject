@@ -170,7 +170,8 @@ class DettaglioProceduraModelForm(forms.ModelForm):
             'created_at': forms.HiddenInput()
         }
         labels = {
-            'fk_faselavoro': 'Fase di Lavoro',            
+            'fk_faselavoro': 'Fase di Lavoro',
+            'fk_fornitore': 'Terzista',            
             'note': 'Note',
             
             
