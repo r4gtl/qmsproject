@@ -1,3 +1,22 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import *
+
+
+class EstintoreModelAdmin(admin.ModelAdmin):
+    model = Estintore
+    list_display = ['tipo_estinguente', 'classe', 'matricola', 'numero_posizione']
+    search_fields = ['matricola'] 
+    ordering = ['numero_posizione']
+
+class IdranteModelAdmin(admin.ModelAdmin):
+    model = Idrante
+    list_display = ['numero_posizione', 'tipo_idrante']
+    search_fields = ['numero_posizione'] 
+    ordering = ['numero_posizione']
+
+
+
+
+admin.site.register(Estintore, EstintoreModelAdmin)
+admin.site.register(Idrante, IdranteModelAdmin)

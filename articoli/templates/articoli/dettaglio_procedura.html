@@ -46,10 +46,13 @@
                 
                 <div class="col-md-12 border rounded shadow-sm">
                 <div class="row">
-                    <div class = "col-md-6">
+                    <div class = "col-md-5">
                         {{ form.fk_faselavoro|as_crispy_field }}
                     </div>
-                    <div class = "col-md-6">
+                    <div class = "col-md-2">
+                        {{ form.is_interna|as_crispy_field }}
+                    </div>
+                    <div class = "col-md-5">
                         {{ form.fk_fornitore|as_crispy_field }}
                         </div>
                     
@@ -105,7 +108,7 @@
 {% block extra_scripts %}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            setFocusOnField('id_descrizione');
+            setFocusOnField('id_fk_faselavoro');
         });
     </script>
 {% endblock %}

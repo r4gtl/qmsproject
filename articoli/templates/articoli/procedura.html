@@ -15,10 +15,10 @@
     <nav aria-label="breadcrumb" class="mt-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-            <li class="breadcrumb-item"><a href="{% url 'articoli:tabelle_generiche' %}">Tabelle Generiche</a></li>        
+            <li class="breadcrumb-item"><a href="{% url 'articoli:modifica_articolo' pk=fk_articolo.pk %}">{{ fk_articolo }}</a></li>        
     
             {% if form.instance.id  %}
-                <li class="breadcrumb-item active" aria-current="page">{{ procedura.nr_procedura }} del {{ procedura.data_procedura }}</li>
+                <li class="breadcrumb-item active" aria-current="page">Procedura {{ procedura.nr_procedura }} del {{ procedura.data_procedura }}</li>
             {% else %}
                 <li class="breadcrumb-item active" aria-current="page">Aggiungi Procedura</li>
             {% endif %}             

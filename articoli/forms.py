@@ -1,7 +1,7 @@
+from acquistopelli.models import TipoAnimale, TipoGrezzo
 from django import forms
 
 from .models import *
-from acquistopelli.models import TipoAnimale, TipoGrezzo
 
 
 class ArticoloModelForm(forms.ModelForm):
@@ -172,7 +172,9 @@ class DettaglioProceduraModelForm(forms.ModelForm):
         labels = {
             'fk_faselavoro': 'Fase di Lavoro',
             'fk_fornitore': 'Terzista',            
-            'note': 'Note',
+            'is_interna': 'Interna',
+            'note': 'Note'
+            
             
             
         }
