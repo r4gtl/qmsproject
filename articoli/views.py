@@ -84,8 +84,7 @@ class ArticoloUpdateView(LoginRequiredMixin,UpdateView):
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         context['elenco_test'] = TestArticolo.objects.filter(fk_articolo=self.object.pk)
-        context['elenco_revisioni'] = Procedura.objects.filter(fk_articolo=self.object.pk).order_by('-data_procedura')
-        # context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
+        context['elenco_revisioni'] = Procedura.objects.filter(fk_articolo=self.object.pk).order_by('-data_procedura', '-data_revisione')
         return context
     
 def delete_articolo(request, pk): 
@@ -370,8 +369,6 @@ class LavorazioneEsternaCreateView(LoginRequiredMixin,CreateView):
     form_class = LavorazioneEsternaModelForm
     template_name = 'articoli/lavorazione_esterna.html'
     success_message = 'Lavorazione aggiunto correttamente!'
-    #success_url = reverse_lazy('human_resources:human_resources')
-
     def get_success_url(self):        
         #if 'salva_esci' in self.request.POST:
         return reverse_lazy('articoli:tabelle_generiche')
@@ -390,8 +387,7 @@ class LavorazioneEsternaUpdateView(LoginRequiredMixin,UpdateView):
     form_class = LavorazioneEsternaModelForm
     template_name = 'articoli/lavorazione_esterna.html'
     success_message = 'Lavorazione modificata correttamente!'
-    #success_url = reverse_lazy('human_resources:human_resources')
-
+    
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
@@ -418,7 +414,6 @@ def delete_lavorazione_esterna(request, pk):
 
 
 # Test
-
 class ElencoTestCreateView(LoginRequiredMixin,CreateView):
     model = ElencoTest
     form_class = ElencoTestModelForm

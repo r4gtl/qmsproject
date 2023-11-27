@@ -135,9 +135,10 @@ class Procedura(models.Model):
                     print("Ricetta: " + str(existing_procedura))
 
                     if existing_procedura:
-                        print("Modifica: la procedura esiste. Existing ricetta numero ricetta: " + str(existing_procedura.nr_procedura) + "existing_procedura.numero_revisione: " + str(existing_procedura.nr_revisione))
+                        print(f"Modifica: la procedura esiste. Existing ricetta numero ricetta: {existing_procedura.nr_procedura} | Existing ricetta data ricetta: {existing_procedura.data_ricetta} existing_procedura.numero_revisione: {existing_procedura.nr_revisione}")
                         # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
-                        self.nr_procedura = existing_procedura.nr_procedura                       
+                        self.nr_procedura = existing_procedura.nr_procedura
+                        self.data_procedura = existing_procedura.data_procedura                       
                         self.nr_revisione = existing_procedura.nr_revisione + 1
                     else:
                         print("Modifica: la procedura NON esiste. Existing procedura numero riproceduracetta: " + str(existing_procedura.nr_procedura) + "existing_procedura.numero_revisione: " + str(existing_procedura.nr_revisione))
@@ -159,6 +160,7 @@ class Procedura(models.Model):
                     print("Creazione: la procedura esiste. Existing procedura numero procedura: " + str(existing_procedura.nr_procedura) + "existing_procedura.nr_revisione: " + str(existing_procedura.nr_revisione))
                     # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
                     self.nr_procedura = existing_procedura.nr_procedura
+                    self.data_procedura = existing_procedura.data_procedura
                     self.nr_revisione = existing_procedura.nr_revisione + 1
                 else:
                     # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi

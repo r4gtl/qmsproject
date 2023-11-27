@@ -11,8 +11,9 @@
       </div>
       <div class="col-6 text-end">
         
-        <a href="{% url 'articoli:aggiungi_procedura' fk_articolo=articolo.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Revisione</a>
-
+        <!-- altrimenti genero una nuova procedura -->
+          <a href="{% url 'articoli:aggiungi_procedura' fk_articolo=articolo.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Revisione</a>
+        
       </div>
     </div>
     <div class="table-container">
