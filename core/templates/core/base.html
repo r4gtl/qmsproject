@@ -68,7 +68,20 @@
         <!-- Option 1: Bootstrap Bundle with Popper -->
         <script src="{% static '/js/main.js' %}"></script>
 
-        
+        <!-- Attivo i tooltips -->
+        <!-- Esempio di utilizzo -->
+        <!--  <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
+                data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="Sposta la riga in alto"
+                id="btnUp">
+                <i class="bi bi-arrow-bar-up"></i>
+            </button>
+        -->
+        <script>
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        </script>
         
         
         
