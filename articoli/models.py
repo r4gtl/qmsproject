@@ -1,10 +1,12 @@
-from django.db import models
-from django.db.models import Max
+from datetime import datetime
+
+from acquistopelli.models import TipoAnimale, TipoGrezzo
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
-from datetime import datetime
+from django.db import models
+from django.db.models import Max
 from django.utils import timezone
-from acquistopelli.models import TipoAnimale, TipoGrezzo
+
 
 class Articolo(models.Model):
     # Industrie fornite
@@ -219,6 +221,10 @@ class DettaglioProcedura(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglioprocedura', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["numero_riga"]
+        verbose_name_plural = "dettaglio procedure"
 
 
 class ElencoTest(models.Model):

@@ -158,3 +158,92 @@ function initializeDataTable(tableId) {
       });
   });
 }
+
+
+
+
+// Le prossime funzioni servono per switchare le righe di una tabella in alto o in basso
+// Esempio di uso: due pulsanti, uno per spostare in su e uno in giù
+// <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
+// data-bs-toggle="tooltip" data-bs-placement="top"
+// data-bs-custom-class="custom-tooltip"
+// data-bs-title="Sposta la riga in alto"
+// id="btnUp"
+// onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'down', '{% url 'core:update_numero_riga_down' %}')"
+// >
+// <i class="bi bi-arrow-bar-up"></i>
+// </button>
+// <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
+// data-bs-toggle="tooltip" data-bs-placement="top"
+// data-bs-custom-class="custom-tooltip"
+// data-bs-title="Sposta la riga in basso"
+// id="btnDown"
+// onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'up', '{% url 'core:update_numero_riga_up' %}')"
+// >
+// <i class="bi bi-arrow-bar-down"></i>
+// </button>
+// </td>
+// Sull'evento onclick va richiamato il nome dell'app, il nome del modello, il pk della riga, lo step, l'azione e l'url
+// Funzione per eseguire l'aggiornamento lato server
+function updateNumeroRigaServer(appLabel, model, dettaglioId, nuovoNumeroRiga, action, url) {
+  $.ajax({
+      //url: action === 'up' ? '{% url "core:update_numero_riga_up" %}' : '{% url "core:update_numero_riga_down" %}',
+      url: url,
+      method: 'POST',
+      data: {
+          model: model,
+          app_label: appLabel,
+          dettaglio_id: dettaglioId,
+          increment: action === 'up' ? 1 : -1,
+          action: action,
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+      },
+      success: function (data) {
+          if (data.success) {
+              // Esegui la funzione di callback per l'aggiornamento lato client
+              updateNumeroRigaCallback(dettaglioId, data.numero_riga);
+          } else {
+              alert(data.error);
+          }
+      },
+      error: function (xhr, textStatus, errorThrown) {
+          console.error('Errore durante la richiesta Ajax:', errorThrown);
+      }
+  });
+}
+
+function updateNumeroRigaCallback(dettaglioId, nuovoNumeroRiga) {
+  var numeroRigaElement = document.getElementById('numero-riga-' + dettaglioId);
+  if (numeroRigaElement) {
+      updateTableWithNewNumberRiga(nuovoNumeroRiga);
+      numeroRigaElement.textContent = nuovoNumeroRiga;
+      location.reload();
+      console.log("Nuovo numero riga: " + nuovoNumeroRiga)
+      // Cerca la riga con il nuovo numero_riga e aggiorna la tabella
+      //updateTableWithNewNumberRiga(nuovoNumeroRiga);
+  } else {
+      console.error('Elemento non trovato con ID:', 'numero-riga-' + dettaglioId);
+  }
+}
+
+function updateTableWithNewNumberRiga(newNumeroRiga) {
+  // Trova la tabella
+  var tableBody = document.getElementById('table-body');
+
+  // Cerca la riga con il numero_riga desiderato
+  var rows = tableBody.getElementsByTagName('tr');
+  for (var i = 0; i < rows.length; i++) {
+      var currentRow = rows[i];
+      var numeroRigaElement = currentRow.querySelector('.numero-riga');
+      if (numeroRigaElement && parseInt(numeroRigaElement.textContent) === newNumeroRiga) {
+          // Aggiorna solo questa riga
+          // Puoi anche chiamare una funzione per aggiornare solo questa riga, se necessario
+          var updatedRowElement = '<td class="numero-riga" id="numero-riga-' + currentRow.id.split('-')[2] + '"><a href="#">' + (newNumeroRiga - 1) + '</a></td>';
+          updatedRowElement += '<td>' + currentRow.querySelector('td:nth-child(2)').textContent + '</td>';
+          updatedRowElement += '<td class="text-center">' + currentRow.querySelector('td:nth-child(3)').innerHTML + '</td>';
+          currentRow.innerHTML = updatedRowElement;
+          break;  // Esci dal ciclo dopo l'aggiornamento
+      }
+  }
+}
+

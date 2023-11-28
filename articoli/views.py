@@ -1,18 +1,15 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse_lazy
-
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import F
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
-from .models import (Articolo, Colore, FaseLavoro, ElencoTest, TestArticolo,
-                    Procedura, DettaglioProcedura
-                    )
-from .forms import *
-from .filters import *
 
+from .filters import *
+from .forms import *
+from .models import (Articolo, Colore, DettaglioProcedura, ElencoTest,
+                     FaseLavoro, Procedura, TestArticolo)
 
 
 def articoli_home(request):
@@ -680,13 +677,30 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
         procedura = get_object_or_404(Procedura, pk=pk_procedura)        
         context['procedura'] = pk_procedura
         context['dati_procedura'] = Procedura.objects.get(pk=pk_procedura)
-        context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
+        context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=self.kwargs['pk'])
         context['fk_articolo'] = procedura.fk_articolo.pk
         return context
 
 
+
 def delete_dettaglio_procedura(request, pk):
-        deleteobject = get_object_or_404(DettaglioProcedura, pk = pk)
-        deleteobject.delete()
-        url_match = reverse_lazy('articoli:modifica_procedura')
-        return redirect(url_match)
+    dettaglio_procedura = get_object_or_404(DettaglioProcedura, pk=pk)
+    fk_articolo = dettaglio_procedura.fk_procedura.fk_articolo.pk
+    fk_procedura = dettaglio_procedura.fk_procedura.pk
+    
+    # Salva il numero_riga prima della cancellazione
+    numero_riga_deleted = dettaglio_procedura.numero_riga
+    
+    # Cancella l'oggetto
+    dettaglio_procedura.delete()
+
+    # Aggiorna i numeri di riga per le righe rimanenti
+    DettaglioProcedura.objects.filter(
+        fk_procedura=fk_procedura,
+        numero_riga__gt=numero_riga_deleted
+    ).update(numero_riga=F('numero_riga') - 1)
+
+    # Redirect alla vista desiderata dopo l'aggiornamento
+    url_match = reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo': fk_articolo, 'pk': fk_procedura})
+    return redirect(url_match)
+

@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% include 'core/modals/delConfirm.html' %}
 <div class="container">
     <br>
     <nav aria-label="breadcrumb" class="mt-3">
@@ -27,6 +27,9 @@
         </ol>
     </nav>    
     <hr>
+    <!-- Inseriamo il partial dei messaggi per visualizzare il messaggio su Salva e Continua -->
+    {% include "core/partials/_messages.html" %}
+
     <br>
     {% if form.instance.id  %}
             <h5 class="text-end">{{ procedura.nr_procedura }} del {{ procedura.data_procedura }}</h5>
@@ -115,61 +118,18 @@
 
 {% endblock content %}
 {% block extra_scripts %}
+
     <script>
         
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_descrizione');
+            
         });
+    
+    
 
 
 
-        
-            document.addEventListener('DOMContentLoaded', function() {
-              // Trova tutti gli elementi con la classe btnUp
-              console.log("Caricato")
-              var btnUpElements = document.querySelectorAll('.btnUp');
-              // Aggiungi un listener per ciascun pulsante
-              btnUpElements.forEach(function(btnUp) {
-                btnUp.addEventListener('click', function() {
-                  // Trova l'elemento padre della riga corrente
-                  var row = btnUp.closest('tr');
-                  // Trova l'elemento della colonna che contiene il numero_riga
-                  var numeroRigaElement = row.querySelector('.numero-riga');
-                  // Ottieni il numero_riga attuale
-                  var numeroRiga = parseInt(numeroRigaElement.textContent);
-          
-                  // Verifica se il numero_riga è già 1
-                  if (numeroRiga > 1) {
-                    // Decrementa il numero_riga e aggiorna il contenuto della colonna
-                    numeroRiga -= 1;
-                    numeroRigaElement.textContent = numeroRiga;
-                    // Implementa qui la logica per aggiornare il numero_riga sul lato server (ad esempio, con una richiesta Ajax)
-                  } else {
-                    // Se il numero_riga è già 1, mostra un alert
-                    alert('Non puoi andare oltre.');
-                  }
-                });
-              });
-          
-              // Trova tutti gli elementi con la classe btnDown
-              var btnDownElements = document.querySelectorAll('.btnDown');
-              // Aggiungi un listener per ciascun pulsante
-              btnDownElements.forEach(function(btnDown) {
-                btnDown.addEventListener('click', function() {
-                  // Trova l'elemento padre della riga corrente
-                  var row = btnDown.closest('tr');
-                  // Trova l'elemento della colonna che contiene il numero_riga
-                  var numeroRigaElement = row.querySelector('.numero-riga');
-                  // Ottieni il numero_riga attuale
-                  var numeroRiga = parseInt(numeroRigaElement.textContent);
-          
-                  // Incrementa il numero_riga e aggiorna il contenuto della colonna
-                  numeroRiga += 1;
-                  numeroRigaElement.textContent = numeroRiga;
-                  // Implementa qui la logica per aggiornare il numero_riga sul lato server (ad esempio, con una richiesta Ajax)
-                });
-              });
-            });
           
           
     </script>

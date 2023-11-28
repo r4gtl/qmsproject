@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="table-container">
-    <table class="table table-bordered table-striped mt-2">
+    <table class="table table-bordered table-striped mt-2" id="table-details">
       <thead>
         <tr>
           <th>Riga </th>
@@ -21,11 +21,11 @@
           
         </tr>
       </thead>
-      <tbody>
+      <tbody id="table-body">
         {% for dettaglio in elenco_dettagli %}
         <tr>        
+          <td class="numero-riga" id="numero-riga-{{ dettaglio.pk }}"><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=procedura.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
           
-          <td class="numero-riga"><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=dettaglio.fk_procedura.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
           <td>{{ dettaglio.fk_faselavoro.descrizione }}</td>            
           <td class="text-center">
             <a href="{% url 'articoli:delete_dettaglio_procedura' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a>
@@ -33,14 +33,18 @@
               data-bs-toggle="tooltip" data-bs-placement="top"
               data-bs-custom-class="custom-tooltip"
               data-bs-title="Sposta la riga in alto"
-              id="btnUp">
+              id="btnUp"
+              onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'down', '{% url 'core:update_numero_riga_down' %}')"
+              >
               <i class="bi bi-arrow-bar-up"></i>
             </button>
             <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
               data-bs-toggle="tooltip" data-bs-placement="top"
               data-bs-custom-class="custom-tooltip"
               data-bs-title="Sposta la riga in basso"
-              id="btnDown">
+              id="btnDown"
+              onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'up', '{% url 'core:update_numero_riga_up' %}')"
+              >
               <i class="bi bi-arrow-bar-down"></i>
             </button>
           </td>
@@ -50,4 +54,6 @@
       </tbody>
     </table>
   </div>
+
+  {% block extra_scripts %}{% endblock %}
   
