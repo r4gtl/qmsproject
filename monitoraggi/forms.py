@@ -1,14 +1,7 @@
 from django import forms
 
-
-from .models import (MonitoraggioAcqua, MonitoraggioGas, MonitoraggioEnergiaElettrica,
-                     DatoProduzione
-                     )
-
-
-
-
-
+from .models import (DatoProduzione, MonitoraggioAcqua,
+                     MonitoraggioEnergiaElettrica, MonitoraggioGas)
 
 
 class MonitoraggioAcquaModelForm(forms.ModelForm):
@@ -75,6 +68,7 @@ class DatoProduzioneModelForm(forms.ModelForm):
             #'industries_served': forms.ChoiceField(),
             'n_pelli': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
             'mq': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
+            'kg': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':3}),
             'created_by': forms.HiddenInput()
         }

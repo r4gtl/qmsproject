@@ -80,6 +80,7 @@
               <th>Destinazione d'uso</th>
               <th>N. Pelli</th>
               <th>Mq</th>
+              <th>Kg</th>
               <th>Azioni</th>
             </tr>
           </thead>
@@ -92,6 +93,7 @@
               <td>{{ dato_produzione.industries_served }}</td>                           
               <td class="text-end">{{ dato_produzione.n_pelli }}</td>
               <td class="text-end">{{ dato_produzione.mq|intcomma }}</td>
+              <td class="text-end">{{ dato_produzione.kg|default_if_none:""|intcomma }}</td>
               <td class="text-center"><a href="{% url 'monitoraggi:delete_lettura_dato_produzione' pk=dato_produzione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dato_produzione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
             </tr>  
             {% endfor %}

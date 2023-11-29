@@ -1,6 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import User
 from datetime import datetime, timedelta
+
+from django.contrib.auth.models import User
+from django.db import models
+
 
 # Create your models here.
 class MonitoraggioAcqua(models.Model):
@@ -141,6 +143,7 @@ class DatoProduzione(models.Model):
     industries_served = models.CharField(max_length=50, choices=CHOICES_INDUSTRIES_SERVED)    
     n_pelli = models.IntegerField()
     mq = models.DecimalField(max_digits=8, decimal_places=3)
+    kg = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dati_produzione', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
