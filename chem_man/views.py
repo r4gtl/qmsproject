@@ -1,29 +1,25 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-import pdb
 import datetime
+import pdb
 from datetime import date
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
-from django.db.models import Max
 
 from .filters import *
-
-
-from .models import (ProdottoChimico, PrezzoProdotto, SchedaTecnica,
-                    Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
-                    SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
-                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico, AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
-                    
-                    )
-
-
 from .forms import *
-
-
+from .models import (AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
+                     DettaglioOrdineProdottoChimico, HazardStatement,
+                     HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
+                     PrecautionaryStatement, PrecautionaryStatement_SDS,
+                     PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
+                     SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
+                     Sostanza_SDS, SostanzaSVHC)
 
 
 def home_prodotti_chimici(request):
@@ -294,6 +290,7 @@ def tabelle_generiche(request):
     # Paginazione Sostanze
     page_sostanze = request.GET.get('page', 1)
     paginator_sostanze = Paginator(filtered_sostanze, 50)
+    
     try:
         sostanze_paginator = paginator_sostanze.page(page_sostanze)
     except PageNotAnInteger:
@@ -396,7 +393,8 @@ def tabelle_generiche(request):
         'imballaggi_pc_filter_count': imballaggi_pc_filter_count
 
     }
-
+    print(f'Filter_sostanze: {sostanze_filter}')
+    print(f'Filter_svhc: {sostanze_svhc_filter}')
     return render(request, 'chem_man/generiche/tabelle_generiche.html', context)
 
 

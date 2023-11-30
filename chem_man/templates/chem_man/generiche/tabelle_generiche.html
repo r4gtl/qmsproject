@@ -59,11 +59,11 @@
                     <tbody>
                     <tr>
                       <td style="width: 20%">                
-                        {% render_field filter_sostanze.form.num_cas class="form-control" %}
+                        {% render_field filter_sostanze.form.num_cas_sostanza class="form-control" %}
                       </td>
                       
                       <td style="width: 20%">
-                        {% render_field filter_sostanze.form.num_ec class="form-control" %}
+                        {% render_field filter_sostanze.form.num_ec_sostanza class="form-control" %}
                       </td>
                       
                     </tr>
@@ -121,13 +121,13 @@
       <div class="pagination">
         <span class="step-links">
           {% if sostanze_paginator.has_previous %}
-            <a href="?page={{ sostanze_paginator.previous_page_number }}">precedente</a>
+            <a href="?page_sostanze={{ sostanze_paginator.previous_page_number }}">precedente</a>
           {% endif %}
 
           <span class="current-page">{{ sostanze_paginator.number }}</span>
 
           {% if sostanze_paginator.has_next %}
-            <a href="?page={{ sostanze_paginator.next_page_number }}">successivo</a>
+            <a href="?page_sostanze={{ sostanze_paginator.next_page_number }}">successivo</a>
           {% endif %}
         </span>
       </div>
@@ -227,13 +227,13 @@
       <div class="pagination">
         <span class="step-links">
           {% if sostanze_svhc_paginator.has_previous %}
-            <a href="?page={{ sostanze_svhc_paginator.previous_page_number }}">precedente</a>
+            <a href="?page_sostanze_svhc={{ sostanze_svhc_paginator.previous_page_number }}">precedente</a>
           {% endif %}
 
           <span class="current-page">{{ sostanze_svhc_paginator.number }}</span>
 
           {% if sostanze_svhc_paginator.has_next %}
-            <a href="?page={{ sostanze_svhc_paginator.next_page_number }}">successivo</a>
+            <a href="?page_sostanze_svhc={{ sostanze_svhc_paginator.next_page_number }}">successivo</a>
           {% endif %}
         </span>
       </div>

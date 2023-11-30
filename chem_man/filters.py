@@ -1,15 +1,11 @@
 import django_filters
-from django_filters.widgets import BooleanWidget
-from django import forms
-from .models import (ProdottoChimico, Sostanza, 
-                    SostanzaSVHC, HazardStatement,
-                    PrecautionaryStatement, SimboloGHS,
-                    ImballaggioPC, OrdineProdottoChimico,
-                    AcquistoProdottoChimico,
-)
 from anagrafiche.models import Fornitore
+from django import forms
+from django_filters.widgets import BooleanWidget
 
-
+from .models import (AcquistoProdottoChimico, HazardStatement, ImballaggioPC,
+                     OrdineProdottoChimico, PrecautionaryStatement,
+                     ProdottoChimico, SimboloGHS, Sostanza, SostanzaSVHC)
 
 
 class ProdottoChimicoFilter(django_filters.FilterSet):
@@ -29,8 +25,8 @@ class ProdottoChimicoFilter(django_filters.FilterSet):
 
 class SostanzaFilter(django_filters.FilterSet):
     
-    num_cas=django_filters.CharFilter(field_name='num_cas', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
-    num_ec=django_filters.CharFilter(field_name='num_cas', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    num_cas_sostanza=django_filters.CharFilter(field_name='num_cas', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    num_ec_sostanza=django_filters.CharFilter(field_name='num_ec', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
     
     class Meta:
         model = Sostanza
@@ -41,7 +37,7 @@ class SostanzaFilter(django_filters.FilterSet):
 class SostanzaSVHCFilter(django_filters.FilterSet):
     
     num_cas_svhc=django_filters.CharFilter(field_name='num_cas', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
-    num_ec_svhc=django_filters.CharFilter(field_name='num_cas', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    num_ec_svhc=django_filters.CharFilter(field_name='num_ec', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
     
     class Meta:
         model = SostanzaSVHC
