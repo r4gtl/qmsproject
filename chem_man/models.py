@@ -150,7 +150,7 @@ class SostanzaSVHC(models.Model):
     descrizione = models.CharField(max_length=1000)
     data_inclusione=models.DateField()
     num_cas = models.CharField(max_length=20, blank=True, null=True)
-    num_ec = models.CharField(max_length=20, blank=True, null=True)
+    num_ec = models.CharField(max_length=50, blank=True, null=True)
     num_reach = models.CharField(max_length=20, blank=True, null=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='sostanze_svhc', null=True, blank=True, on_delete=models.SET_NULL)
