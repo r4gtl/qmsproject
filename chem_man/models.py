@@ -1,11 +1,10 @@
-from django.db import models
 import os
-from django.db.models import Max
-from django.contrib.auth.models import User
 from datetime import date
+
 from anagrafiche.models import Fornitore
-
-
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Max
 
 
 class ImballaggioPC(models.Model):
@@ -148,7 +147,7 @@ class Sostanza(models.Model):
     
 
 class SostanzaSVHC(models.Model):
-    descrizione = models.CharField(max_length=500)
+    descrizione = models.CharField(max_length=1000)
     data_inclusione=models.DateField()
     num_cas = models.CharField(max_length=20, blank=True, null=True)
     num_ec = models.CharField(max_length=20, blank=True, null=True)
