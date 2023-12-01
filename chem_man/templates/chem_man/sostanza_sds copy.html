@@ -10,7 +10,7 @@
 
 {% block content %}
 
-{% include 'chem_man/modals/searchSubstances.html' %}
+
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
@@ -53,13 +53,22 @@
 
             <div class="row">
 
-                
+                <div class="col-8">
+                <label for="search-input">Cerca per CAS o EC</label>
+                    <input type="text" id="search-input" class="form-control" placeholder="Cerca Sostanza">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <ul id="option-list" class="list-group">
+    
+    </ul>
+                </div>
                 <div class="row mt-3">
                     <div class="col-4">
                     
                     <input type="hidden" id="id_fk_sostanza" name="fk_sostanza" value="{{ current_fk_sostanza }}">
                     <input type="text" id="id_fk_sostanza_descrizione" class="form-control" placeholder="Descrizione" readonly>
-                    <button type="button" class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#ricercaModal_Substances" id="btnRicercaAvanzata">Ricerca Avanzata</button>
                     </div>
                     <div class="col-4">
                     <input type="text" id="id_fk_sostanza_num_cas" class="form-control" placeholder="Num CAS" readonly>
@@ -106,15 +115,13 @@
     </div>
 
 
-
-
 <!-- Modal per controllare se la sostanza è svhc -->
 <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="confirmModalLabel">Conferma Salvataggio</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -122,7 +129,7 @@
         La sostanza è presente nella lista SVHC. Confermi di voler procedere con il salvataggio?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
         <button type="button" class="btn btn-primary" onclick="$('#saveForm').submit()">Conferma</button>
       </div>
     </div>
@@ -137,9 +144,6 @@
 
 {% block extra_scripts %}
 <script>
-
-// Da qui inizio a gestire il modal di ricerca
-// definisco l'url
 var searchURL = "{% url 'chem_man:search_sostanza' %}";
 
 // Funzione per gestire la ricerca
@@ -149,48 +153,39 @@ function searchSostanza(term) {
     data: { term: term },
     dataType: 'json',
     success: function(data) {
-      // Crea le righe della tabella con i risultati della ricerca
-      var tableRows = '';
+      // Crea le opzioni per il campo select
+      var optionsList = '';
       for (var i = 0; i < data.length; i++) {
-        tableRows += '<tr data-id="' + data[i].id + '" data-descrizione="' + data[i].descrizione + '" data-num-cas="' + data[i].num_cas + '" data-num-ec="' + data[i].num_ec + '">';
-        tableRows += '<td>' + data[i].id + '</td>';
-        tableRows += '<td>' + data[i].descrizione + '</td>';
-        tableRows += '<td>' + data[i].num_cas + '</td>';
-        tableRows += '<td>' + data[i].num_ec + '</td>';
-        tableRows += '<td><button class="btn btn-primary btn-sm selezionaSostanza">Seleziona</button></td>';
-        tableRows += '</tr>';
+        optionsList += '<li class="list-group-item" data-id="' + data[i].id + '" data-num_cas="' + data[i].num_cas + '" data-num_ec="' + data[i].num_ec + '">' + data[i].descrizione + '</li>';
+
       }
-      // Aggiorna il corpo della tabella con i nuovi risultati
-      $('#modalSearchResults').html(tableRows);
+      // Aggiorna il campo select con le nuove opzioni
+      $('#option-list').html(optionsList);
     }
   });
 }
 
-// Aggiungi un gestore clic per il pulsante "Seleziona" nella tabella del modal
-$('#modalSearchResults').on('click', '.selezionaSostanza', function() {
-  var id = $(this).closest('tr').data('id');
-  var descrizione = $(this).closest('tr').data('descrizione');
-  var numCas = $(this).closest('tr').data('num-cas');
-  var numEc = $(this).closest('tr').data('num-ec');
-
-  // Assegna i valori ai campi appropriati nel tuo form
-  $('#id_fk_sostanza').val(id);
-  $('#id_fk_sostanza_descrizione').val(descrizione);
-  $('#id_fk_sostanza_num_cas').val(numCas);
-  $('#id_fk_sostanza_num_ec').val(numEc);
-
-  // Chiudi il modal di ricerca
-  $('#ricercaModal_Substances').modal('hide');
-});
-
-
-// Gestione dell'evento di input per il campo di ricerca nel modal
-$('#modalSearchInput').on('input', function() {
+// Gestione dell'evento di input per il campo di ricerca
+$('#search-input').on('input', function() {
   var term = $(this).val();
   searchSostanza(term);
 });
 
-// qui finisco di gestire il modal per la ricerca
+// Gestione del clic sull'opzione
+$('#option-list').on('click', 'li', function() {
+  var id = $(this).data('id');
+  var descrizione = $(this).text();
+  var num_cas = $(this).data('num_cas');
+  var num_ec = $(this).data('num_ec');
+  
+
+  // Assegna i valori ai campi appropriati
+  $('#id_fk_sostanza').val(id);
+  $('#id_fk_sostanza_descrizione').val(descrizione);
+  $('#id_fk_sostanza_num_cas').val(num_cas);
+  $('#id_fk_sostanza_num_ec').val(num_ec);
+});
+
 
 
  // Funzione per gestire il clic sul pulsante "Salva"
@@ -212,12 +207,22 @@ $('#modalSearchInput').on('input', function() {
     });
   }
 
+function setFocusOnField() {
+        const campoDesiderato = document.getElementById('search-input');
+        if (campoDesiderato) {
+            campoDesiderato.focus();
+        }
+    }
+
+    // Chiamare la funzione setFocusOnField() dopo che la pagina è stata caricata
+    window.onload = function () {
+        setFocusOnField();
+    };
 
 
-
-    document.addEventListener("DOMContentLoaded", function() {
-        setFocusOnField('btnRicercaAvanzata');
-    });
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('search-input');
+        });
     
 
 

@@ -1,13 +1,9 @@
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views import View
 
-from .models import (Sostanza, SostanzaSVHC, SimboloGHS,
-                     ProdottoChimico, ImballaggioPC
-)
-
-from django.db.models import Q
-
-
+from .models import (ImballaggioPC, ProdottoChimico, SimboloGHS, Sostanza,
+                     SostanzaSVHC)
 
 
 # Serve per avere i dati per passare l'immagine del simbolo GHS da visualizzare al cambio di un campo 
@@ -39,7 +35,7 @@ def search_sostanza(request):
                 'num_cas': sostanza.num_cas,
                 'num_ec': sostanza.num_ec
             }
-            print(f"Result: {result}")
+            
             results.append(result)
 
     return JsonResponse(results, safe=False)
@@ -113,3 +109,6 @@ def get_solvente(request):
             return JsonResponse({'solvente': solvente})
         except ProdottoChimico.DoesNotExist:
             return JsonResponse({'solvente': None})
+        
+
+

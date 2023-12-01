@@ -1,0 +1,54 @@
+{% extends 'core/modals/baseModalSearch.html' %}
+
+
+<!-- Modal ID -->
+{% block modal-id %} id="ricercaModal_Substances" {% endblock modal-id %}
+<!-- Modal Title -->
+{% block modal-title %}
+<h5><i class="bi bi-search"></i>&nbsp;&nbsp; Ricerca Sostanze</h5>          
+{% endblock modal-title %}
+      <!-- Modal Body -->
+{% block modal-body %}
+<!-- Contenuto del tuo modal di ricerca -->
+        <label for="modalSearchInput">Cerca per numero CAS o EC</label>
+        <input type="text" id="modalSearchInput" class="form-control" placeholder="Cerca Sostanza">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Descrizione</th>
+              <th>Num CAS</th>
+              <th>Num EC</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody id="modalSearchResults"></tbody>
+        </table>
+
+{% endblock modal-body %}
+
+
+<!-- Modal Footer -->
+{% block modal-footer %}
+        
+        
+
+
+{% block extra_scripts %}
+<script>
+$(document).ready(function() {
+  // Utilizza il valore dell'id dinamico definito nel blocco modal-id
+  $('#ricercaModal_Substances').on('shown.bs.modal', function () {
+    // Quando il modal è completamente visibile, impostiamo il focus sul campo di ricerca e lo svuotiamo
+    $('#modalSearchInput').val('').focus();
+  });
+
+  // Aggiungi anche l'evento hidden.bs.modal per ripulire i risultati della ricerca quando il modal viene chiuso
+  $('#ricercaModal_Substances').on('hidden.bs.modal', function () {
+    $('#modalSearchResults').html(''); // Svuota i risultati della ricerca
+  });
+});
+
+</script>
+{% endblock %}
+{% endblock modal-footer %}
