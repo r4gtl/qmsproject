@@ -113,7 +113,11 @@
         <tr>        
           
           <td><a href="{% url 'human_resources:modifica_dettaglio_registro_formazione' fk_registro_formazione=registroformazione.pk pk=operatore_associato.id %}">{{ operatore_associato.fk_hr }}</a></td>
-          <td><a href="{{ operatore_associato.certificato.url }}" download>{{ operatore_associato.certificato }}</a></td>
+          {% if operatore_associato.certificato %}
+            <td><a href="{{ operatore_associato.certificato.url }}" download>{{ operatore_associato.certificato.name }}</a></td>
+          {% else %}
+            <td>Nessun certificato associato</td>
+          {% endif %}
           <td class="text-center"><a href="{% url 'human_resources:delete_dettaglio_registro_formazione' pk=operatore_associato.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatore_associato.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  
         {% endfor %}
