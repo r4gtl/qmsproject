@@ -181,7 +181,7 @@ class DettaglioRegistroFormazione(models.Model):
     fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
     ore = models.IntegerField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)  
-    certificato = models.FileField(upload_to=corso_directory_path)  
+    certificato = models.FileField(upload_to=corso_directory_path, null=True, blank=True)  
     presenza =  models.CharField(max_length=10, choices=CHOICES_PRESENCE)
     efficace = models.BooleanField(default=True)
     prossima_scadenza = models.DateField(null=True, blank=True)
