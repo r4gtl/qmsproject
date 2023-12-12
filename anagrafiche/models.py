@@ -1,7 +1,8 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.urls import reverse
-from django_countries.fields import CountryField # Field from django countries app
+from django_countries.fields import \
+    CountryField  # Field from django countries app
 
 # Create your models here.
 
@@ -77,6 +78,7 @@ class FacilityContact(models.Model):
     
 
 
+
 class Fornitore(models.Model):
     #
     # Categoria
@@ -125,6 +127,7 @@ class LwgFornitore(models.Model):
     lwg_date = models.DateField(blank=True, null=True)
     lwg_expiry = models.DateField(blank=True, null=True)
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+
 
 
 '''I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE'''
@@ -225,4 +228,40 @@ class Cliente(models.Model):
     
 
     
+
+'''AUTORIZZAZIONI FACILITY'''
+
+class FacilityAuthorization(models.Model):
+    fk_facility = models.ForeignKey(Facility, related_name='facility_authorization', on_delete=models.CASCADE)
+    descrizione = models.CharField(max_length=500, help_text="Oggetto autorizzazione")
+    purpose = models.CharField(max_length=500, blank=True, null=True, help_text="Finalità autorizzazione")
+    fk_fornitore = models.ForeignKey(Fornitore, related_name='facility_authorization', blank=True, null=True, on_delete=models.CASCADE)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='facility_authorization', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering =['descrizione']
+
+    def __str__(self):
+        return self.descrizione
+    
+class DetailFacilityAuthorization(models.Model):
+    fk_facility_authorization = models.ForeignKey(FacilityAuthorization, related_name='detail_facility_authorization', on_delete=models.CASCADE)
+    numero=models.CharField(max_length=100, help_text="Numero/Protocollo")
+    data_autorizzazione = models.DateField(null=False, blank=False)
+    prossima_scadenza = models.DateField(null=True, blank=True)
+    documento = models.FileField(upload_to='autorizzazioni_facility/', null=True, blank=True)
+    is_rinnovata = models.BooleanField(default=False)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='detail_facility_authorization', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering =['-data_autorizzazione']
+
+    def __str__(self):
+        return (f'Autorizzazione n. {self.numero} del {self.data_autorizzazione}')
+    
+
 

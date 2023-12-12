@@ -1,36 +1,34 @@
-from django.shortcuts import render, get_object_or_404, redirect
+import datetime
+
+from django.apps import apps
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
 from django.db.utils import IntegrityError
 from django.forms.models import modelform_factory
-from django.apps import apps
-import datetime
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
-
-
-from .filters import FornitoreFilter, ClienteFilter
-
-from .models import (Fornitore, Facility, 
-                    FacilityContact, LwgFornitore, 
-                    TransferValue, XrTransferValueLwgFornitore,
-                    Cliente,
-                    FornitorePelli, FornitoreProdottiChimici, FornitoreLavorazioniEsterne, FornitoreServizi
-)
-
 from nonconformity.models import RapportoNC
 
-from .forms import (FormFornitore, FormFacility,
-                    FormFacilityContact, FormLwgFornitore,
-                    FormXrTransferValueLwgFornitore, FormTransferValue,
-                    FormCliente, FormFornitorePelli, FormFornitoreLavorazioniEsterne,
-                    FormFornitoreServizi, FormFornitoreProdottiChimici
-)
+from .filters import (ClienteFilter, FacilityAuthorizationFilter,
+                      FornitoreFilter)
+from .forms import (DetailFacilityAuthorizationModelForm,
+                    FacilityAuthorizationModelForm, FormCliente, FormFacility,
+                    FormFacilityContact, FormFornitore,
+                    FormFornitoreLavorazioniEsterne, FormFornitorePelli,
+                    FormFornitoreProdottiChimici, FormFornitoreServizi,
+                    FormLwgFornitore, FormTransferValue,
+                    FormXrTransferValueLwgFornitore)
+from .models import (Cliente, DetailFacilityAuthorization, Facility,
+                     FacilityAuthorization, FacilityContact, Fornitore,
+                     FornitoreLavorazioniEsterne, FornitorePelli,
+                     FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
+                     TransferValue, XrTransferValueLwgFornitore)
 
 # Create your views here.
 
@@ -521,5 +519,102 @@ class TransferValueListView(LoginRequiredMixin, ListView):
 '''FINE SEZIONE TABELLE GENERICHE'''
     
 
+
+'''SEZIONE AUTORIZZAZIONI'''
+
+def home_autorizzazioni(request, fk_facility):
+    autorizzazioni = FacilityAuthorization.objects.filter(fk_facility=fk_facility)
+    autorizzazioni_filter = FacilityAuthorizationFilter(request.GET, queryset=autorizzazioni)
+    fk_facility = fk_facility
+    facility = Facility.objects.get(pk=fk_facility)
+    
+    page = request.GET.get('page', 1)
+    paginator = Paginator(autorizzazioni_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
+
+    try:
+        autorizzazioni_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        autorizzazioni_paginator = paginator.page(1)
+    except EmptyPage:
+        autorizzazioni_paginator = paginator.page(paginator.num_pages)
+
+    context = {
+        
+        'autorizzazioni_paginator': autorizzazioni_paginator,
+        'filter': autorizzazioni_filter,
+        'fk_facility': fk_facility,
+        'facility': facility
+        
+    }
+    return render(request, 'anagrafiche/home_autorizzazioni.html', context)
+
+class FacilityAuthorizationCreateView(LoginRequiredMixin,CreateView):
+    model = FacilityAuthorization
+    form_class = FacilityAuthorizationModelForm
+    template_name = 'anagrafiche/autorizzazione.html'
+    success_message = 'Autorizzazione aggiunta correttamente!'
+    
+
+    def get_success_url(self):                
+        fk_facility=self.object.fk_facility.pk       
+        if 'salva_esci' in self.request.POST:                        
+                return reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
+        
+        pk_autorizzazione=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'pk':fk_facility, 'id':pk_autorizzazione})
     
     
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_initial(self):
+        created_by = self.request.user
+        fk_facility = self.kwargs['fk_facility'] 
+        print(f'fk_facility: {fk_facility}')
+        facility = Facility.objects.get(pk=fk_facility)
+        return {
+            'created_by': created_by,
+            'fk_facility': fk_facility,
+            'facility': facility            
+        }
+
+class FacilityAuthorizationUpdateView(LoginRequiredMixin, UpdateView):
+    model = FacilityAuthorization
+    form_class = FacilityAuthorizationModelForm
+    template_name = 'anagrafiche/autorizzazione.html'
+    success_message = 'Autorizzazione modificata correttamente!'
+    
+    
+    def get_success_url(self):    
+        fk_facility=self.object.fk_facility.pk       
+        if 'salva_esci' in self.request.POST:                        
+                return reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
+        
+        pk_autorizzazione=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'pk':fk_facility, 'id':pk_autorizzazione})
+    
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        pk_facility = self.object.pk
+
+        context['elenco_revisioni'] = DetailFacilityAuthorization.objects.filter(fk_facility_authorization=pk_facility) 
+        context['facility']=Facility.objects.get(pk=pk_facility)
+
+        # context['elenco_moduli'] = Modulo.objects.filter(fk_procedura=pk_procedura) 
+
+        return context
+
+
+def delete_facility_authorization(request, pk): 
+        deleteobject = get_object_or_404(FacilityAuthorization, pk = pk)                 
+        deleteobject.delete()
+        url_match = reverse_lazy('anagrafiche:edit_facility_details')
+        return redirect(url_match)
+    
+'''FINE SEZIONE AUTORIZZAZIONI'''

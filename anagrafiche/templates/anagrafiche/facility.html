@@ -25,6 +25,9 @@
         
         <br>
 
+        {% if form.instance.id  %}
+            <a class="btn btn-success" href="{% url 'anagrafiche:home_autorizzazioni' fk_facility=facility.pk %}"><i class="bi bi-clipboard-check"></i>&nbsp;&nbsp; Autorizzazioni</a>
+        {% endif %}
 
         <form method="post" enctype="multipart/form-data">
 
