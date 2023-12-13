@@ -33,7 +33,7 @@ urlpatterns = [
     path("fornitore/<int:fk_fornitore>/aggiungi_lwg/", AddLwgCertificate.as_view(), name="aggiungi_lwg"),
     path("modifica_lwg/<int:pk>", UpdateLwgCertificate.as_view(), name="modifica_lwg"),    
     path("delete_lwg/<int:pk>", delete_certificato, name="delete_lwg"),
-    path("modifica_lwg/<int:pk>/add_transf_value/", XrTransferValueCreateView.as_view(), name="add_transf_value"),
+    path("modifica_lwg/<int:fk_certificato>/add_transf_value/", XrTransferValueCreateView.as_view(), name="add_transf_value"),
     path("edit_transf_value/<int:id>", XrTransferValueUpdateView.as_view(), name="edit_transf_value"),
     path("delete_transf_value/<int:id>", XrTransferValueDeleteView.as_view(), name="delete_transf_value"),
 

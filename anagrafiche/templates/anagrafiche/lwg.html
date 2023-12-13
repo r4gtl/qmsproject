@@ -14,7 +14,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        
-        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore %}">{{ ragionesociale }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fk_fornitore %}">{{ fornitore.ragionesociale }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">Certificato LWG</li>
         
     </ol>
@@ -68,8 +68,9 @@
             
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
-            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         <!-- sezione Transfer Values -->
@@ -81,7 +82,7 @@
                     </div>
                     <div class="col">
                         {% if form.instance.id  %}
-                        <a class="btn btn-sm btn-outline-success mb-2" href="{% url 'anagrafiche:add_transf_value' pk=form.instance.id %}">Aggiungi</a>
+                        <a class="btn btn-sm btn-outline-success mb-2" href="{% url 'anagrafiche:add_transf_value' fk_certificato=form.instance.id %}">Aggiungi</a>
                         {% else %}
                             <a class="btn btn-sm btn-outline-success mb-2" disabled>Salvare per inserire</a>
                         {% endif %}

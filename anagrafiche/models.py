@@ -202,7 +202,7 @@ class TransferValue(models.Model):
 
 class XrTransferValueLwgFornitore(models.Model):
     
-    fk_lwgfornitore = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
+    fk_lwgcertificato = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
     fk_transfervalue = models.ForeignKey(TransferValue, on_delete=models.CASCADE)
     quantity = models.FloatField()
     

@@ -110,7 +110,7 @@ class FormXrTransferValueLwgFornitore(forms.ModelForm):
     class Meta:
         model = XrTransferValueLwgFornitore
         fields = '__all__'
-        # widgets = {'fk_lwgfornitore': forms.HiddenInput(),} # Sospeso per vedere se si compila
+        widgets = {'fk_lwgcertificato': forms.HiddenInput(),} # Sospeso per vedere se si compila
         labels = {
             'fk_transfervalue': 'Descrizione',
             'quantity': 'Quantità',

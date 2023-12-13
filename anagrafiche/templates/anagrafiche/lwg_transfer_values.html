@@ -13,8 +13,8 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>        
-        <li class="breadcrumb-item"><a href="#">{{ ragionesociale }}</a></li>
-        <li class="breadcrumb-item"><a href="#">{{ certificato }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore.pk %}">{{ fornitore.ragionesociale }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:modifica_lwg' pk=certificato.pk %}">{{ certificato.lwg_urn }}</a></li>
         <li class="breadcrumb-item active" aria-current="page">Transfer Values</li>
         
     </ol>
@@ -22,9 +22,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica Certificato</h3>
+            <h3>Modifica Transfer Value</h3>
         {% else %}
-            <h3> Aggiungi Certificato</h3>
+            <h3> Aggiungi Transfer Value</h3>
         {% endif %}
         
         
@@ -42,9 +42,7 @@
             
 
             <div class="row">
-                <div class="col-3">
-                    {{ form.fk_lwgfornitore|as_crispy_field }}
-                </div>
+                
                 <div class="col-3">
                     {{ form.fk_transfervalue|as_crispy_field }}
                 </div>
@@ -53,11 +51,17 @@
                 </div>
                 
             </div>
+            <div class="row">
+                <div class="col-3">
+                    {{ form.fk_lwgcertificato|as_crispy_field }}
+                </div>
+            </div>
             
             
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
+            <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         
@@ -68,6 +72,6 @@
 
 {% endblock %}
 
-{% block scripts %}
+{% block extra_scripts %}
 
 {% endblock %} 

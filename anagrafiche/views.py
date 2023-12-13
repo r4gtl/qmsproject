@@ -245,9 +245,15 @@ class AddLwgCertificate(CreateView):
 
     def get_success_url(self):          
         #fornitore=self.object.fk_fornitore.pk
-        fornitore = self.kwargs['fk_fornitore']
-        print("Fornitore: " + str(fornitore))
-        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+            
+        if 'salva_esci' in self.request.POST:
+            fornitore = self.object.fk_fornitore.pk
+            print("Fornitore: " + str(fornitore))
+            return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+        pk=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk':pk})
+    
 
     def get_initial(self):
         fk_fornitore = self.kwargs['fk_fornitore']
@@ -258,11 +264,11 @@ class AddLwgCertificate(CreateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        fornitore=self.kwargs['fk_fornitore']
-        print("Fornitore: " + str(fornitore))
+        fk_fornitore=self.kwargs['fk_fornitore']
+        print("Fornitore: " + str(fk_fornitore))
         #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
-        context['ragionesociale'] = Fornitore.objects.get(pk=fornitore)
-        context['fornitore'] = fornitore
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
+        context['fk_fornitore'] = fk_fornitore
         return context
 
 class UpdateLwgCertificate(UpdateView):
@@ -276,18 +282,21 @@ class UpdateLwgCertificate(UpdateView):
 
 
     def get_success_url(self):
-        # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-        # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-        fornitore=self.object.fk_fornitore.pk
-        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+        if 'salva_esci' in self.request.POST:
+            fornitore = self.object.fk_fornitore.pk
+            print("Fornitore: " + str(fornitore))
+            return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+        pk=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk':pk})
+    
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk = self.object.pk
-        print("pk fornitore: " + str(self.object.fk_fornitore.pk))
-        context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgfornitore_id=self.object.id) # FILTRARE
-        context['fornitore'] = self.object.fk_fornitore.pk
-        context['ragionesociale'] = Fornitore.objects.get(pk=self.object.fk_fornitore.pk)
+        fk_fornitore = self.object.fk_fornitore.pk
+        context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgcertificato=self.object.id) # FILTRARE
+        context['fk_fornitore'] = fk_fornitore
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)        
         
         return context
 
@@ -316,14 +325,23 @@ class XrTransferValueCreateView(CreateView):
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
+        fk_certificato = self.kwargs['fk_certificato']
+        print(f'fk_certificato: {fk_certificato}')
+        certificato=LwgFornitore.objects.get(pk=fk_certificato)
+        fornitore=Fornitore.objects.get(pk=certificato.fk_fornitore.pk)
+        context['fornitore'] = fornitore
+        context['certificato'] = certificato
         
-        context['fornitore'] = self.kwargs['pk']
         return context
 
-    def get_initial(self):
-        fk_fornitore = self.kwargs['pk']
+    def get_initial(self):        
+        fk_certificato = self.kwargs['fk_certificato']
+        certificato=LwgFornitore.objects.get(pk=fk_certificato)
+        fornitore=Fornitore.objects.get(pk=certificato.fk_fornitore.pk)
+        fk_lwgfornitore = fornitore.pk
+        print(f'fk_lwgfornitore: {fk_lwgfornitore}')
         return {
-            'fk_lwgfornitore': self.kwargs['pk']
+            'fk_lwgcertificato': certificato.pk
             
         }
     
@@ -338,7 +356,15 @@ class XrTransferValueUpdateView(LoginRequiredMixin,UpdateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
 
-
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)        
+        fk_certificato = self.kwargs['fk_certificato']
+        print(f'fk_certificato: {fk_certificato}')
+        certificato=LwgFornitore.objects.get(pk=fk_certificato)
+        fornitore=Fornitore.objects.get(pk=certificato.fk_fornitore.pk)
+        context['fornitore'] = fornitore
+        context['certificato'] = certificato
+        return context
 
     def get_success_url(self):
         # if you are passing 'pk' from 'urls' to 'DeleteView' for company
@@ -496,6 +522,8 @@ class TransferValueCreateView(LoginRequiredMixin,CreateView):
     template_name = 'anagrafiche/transfer_value.html'
     success_message = 'Transfer Value aggiunta correttamente!'
     success_url = reverse_lazy('anagrafiche:transfer_values_list')
+
+    
 
 class TransferValueUpdateView(LoginRequiredMixin,UpdateView):
     model = TransferValue
