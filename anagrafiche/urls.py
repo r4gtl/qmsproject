@@ -40,8 +40,7 @@ urlpatterns = [
     # Tabelle Generiche
     path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),
     
-    # Generiche - Transfer Values
-    path("transfer_values_list/", TransferValueListView.as_view(), name="transfer_values_list"),
+    # Generiche - Transfer Values    
     path("add_transfer_values/", TransferValueCreateView.as_view(), name="add_transfer_values"),
     path("edit_transfer_values/<int:pk>", TransferValueUpdateView.as_view(), name="edit_transfer_values"),
     path("delete_transfer_value/<int:pk>", delete_transfer_value, name="delete_transfer_value"),

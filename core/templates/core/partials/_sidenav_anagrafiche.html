@@ -6,11 +6,35 @@
             <li class="border-top my-3"></li>
             
                 <li><a href="{% url 'anagrafiche:edit_facility_details' pk=2 %}">Facility Details</a></li>
-                <li><a href="{% url 'anagrafiche:home_clienti' %}">Clienti</a></li>
-                <li><a href="{% url 'anagrafiche:home_fornitori' %}">Fornitori</a></li>
+                
+                <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#clienti-collapse" aria-expanded="false">
+                    Clienti
+                </button>
+                <div class="collapse" id="clienti-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="{% url 'anagrafiche:home_clienti' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Anagrafiche</a></li>
+                    <li><a href="{% url 'anagrafiche:tabelle_generiche' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tabelle Generiche</a></li>
+                    
+                    </ul>
+                </div>
+                </li>
+                
+                <li class="mb-1">
+                <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#fornitori-collapse" aria-expanded="false">
+                    Fornitori
+                </button>
+                <div class="collapse" id="fornitori-collapse">
+                    <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                    <li><a href="{% url 'anagrafiche:home_fornitori' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Anagrafiche</a></li>
+                    <li><a href="{% url 'anagrafiche:tabelle_generiche' %}" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Tabelle Generiche</a></li>
+                    
+                    </ul>
+                </div>
+                </li>
                 <li><a href="{% url 'human_resources:human_resources' %}">Operatori</a></li>
                 <li><a href="{% url 'articoli:articoli_home' %}">Articoli</a></li>
-                <li><a href="{% url 'anagrafiche:tabelle_generiche' %}">Tabelle Generiche</a></li>
+                
                 <li class="border-top my-3"></li>
                 <li><a href="{% url 'manualeprocedure:procedure_home' %}">Procedure</a></li>
                 <li><a href="{% url 'lwg:lwg_home' %}">LWG</a></li>

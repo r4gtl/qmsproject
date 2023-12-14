@@ -525,6 +525,12 @@ def tabelle_generiche(request):
     filtered_transfervalues = transfervalues_filter.qs  # Ottieni i record filtrati
     transfervalues_filter_count = filtered_transfervalues.count()  # Conta i record filtrati
     
+
+    '''sostanze_filter = SostanzaFilter(request.GET, queryset=sostanze)
+    filtered_sostanze = sostanze_filter.qs  # Ottieni i record filtrati
+    sostanze_filter_count = filtered_sostanze.count()  # Conta i record filtrati'''
+
+
     # Paginazione Sostanze
     page_transfervalues = request.GET.get('page', 1)
     paginator_transfervalues = Paginator(filtered_transfervalues, 50)
@@ -544,7 +550,7 @@ def tabelle_generiche(request):
         'transfervalues': transfervalues,
         'transfervalues_paginator': transfervalues_paginator,
         'tot_transfervalues': tot_transfervalues,
-        'filtered_transfervalues': filtered_transfervalues,
+        'filter_transfervalues': transfervalues_filter,
         'transfervalues_filter_count': transfervalues_filter_count,
     }
     
@@ -556,7 +562,7 @@ class TransferValueCreateView(LoginRequiredMixin,CreateView):
     form_class = FormTransferValue
     template_name = 'anagrafiche/transfer_value.html'
     success_message = 'Transfer Value aggiunta correttamente!'
-    success_url = reverse_lazy('anagrafiche:transfer_values_list')
+    success_url = reverse_lazy('anagrafiche:tabelle_generiche')
 
     
 
@@ -565,22 +571,17 @@ class TransferValueUpdateView(LoginRequiredMixin,UpdateView):
     form_class = FormTransferValue
     template_name = 'anagrafiche/transfer_value.html'
     success_message = 'Transfer Value modificata correttamente!'
-    success_url = reverse_lazy('anagrafiche:transfer_values_list')
+    success_url = reverse_lazy('anagrafiche:tabelle_generiche')
 
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
-    
-    
-class TransferValueListView(LoginRequiredMixin, ListView):
-    model = TransferValue
-    template_name = 'anagrafiche/transfer_values_list.html'
-    paginate_by = 10
+
 
 def delete_transfer_value(request, pk): 
         deleteobject = get_object_or_404(TransferValue, pk = pk)         
         deleteobject.delete()
-        url_match= reverse_lazy('anagrafiche:home_fornitori') # Provvisoriamente rimandiamo in Home Fornitori
+        url_match= reverse_lazy('anagrafiche:tabelle_generiche') 
         return redirect(url_match)    
 
 '''FINE SEZIONE TABELLE GENERICHE'''
