@@ -287,14 +287,15 @@ class UpdateLwgCertificate(UpdateView):
             print("Fornitore: " + str(fornitore))
             return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
 
-        pk=self.object.pk        
+        pk=self.object.pk
+        print(f'pk da success url: {pk}')       
         return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk':pk})
     
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         fk_fornitore = self.object.fk_fornitore.pk
-        context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgcertificato=self.object.id) # FILTRARE
+        context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgcertificato=self.object.id) 
         context['fk_fornitore'] = fk_fornitore
         context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)        
         
@@ -312,11 +313,13 @@ def delete_certificato(request, pk):
         url_match= reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
         return redirect(url_match)
 
+
+
 class XrTransferValueCreateView(CreateView):
     model = XrTransferValueLwgFornitore
     form_class = FormXrTransferValueLwgFornitore
     success_message = 'Transfer Value modificata correttamente!'
-    success_url = reverse_lazy('anagrafiche:modifica_lwg')
+    # success_url = reverse_lazy('anagrafiche:modifica_lwg')
     template_name = "anagrafiche/lwg_transfer_values.html"
 
     def form_valid(self, form):        
@@ -336,14 +339,17 @@ class XrTransferValueCreateView(CreateView):
 
     def get_initial(self):        
         fk_certificato = self.kwargs['fk_certificato']
-        certificato=LwgFornitore.objects.get(pk=fk_certificato)
-        fornitore=Fornitore.objects.get(pk=certificato.fk_fornitore.pk)
-        fk_lwgfornitore = fornitore.pk
-        print(f'fk_lwgfornitore: {fk_lwgfornitore}')
+        certificato=LwgFornitore.objects.get(pk=fk_certificato)        
+        created_by = self.request.user
         return {
-            'fk_lwgcertificato': certificato.pk
-            
+            'fk_lwgcertificato': certificato.pk,
+            'created_by': created_by            
         }
+    
+    def get_success_url(self):
+        fk_certificato=self.object.fk_lwgcertificato.pk              
+        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk':fk_certificato})
+    
     
 class XrTransferValueUpdateView(LoginRequiredMixin,UpdateView):
     model = XrTransferValueLwgFornitore
@@ -358,30 +364,25 @@ class XrTransferValueUpdateView(LoginRequiredMixin,UpdateView):
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)        
-        fk_certificato = self.kwargs['fk_certificato']
-        print(f'fk_certificato: {fk_certificato}')
+        xrtv = XrTransferValueLwgFornitore.objects.get(pk=self.kwargs['pk'])
+        fk_certificato=xrtv.fk_lwgcertificato.pk
         certificato=LwgFornitore.objects.get(pk=fk_certificato)
         fornitore=Fornitore.objects.get(pk=certificato.fk_fornitore.pk)
         context['fornitore'] = fornitore
         context['certificato'] = certificato
         return context
 
-    def get_success_url(self):
-        # if you are passing 'pk' from 'urls' to 'DeleteView' for company
-        # capture that 'pk' as companyid and pass it to 'reverse_lazy()' function
-        lwgcertificate=self.object.fk_lwgfornitore.pk
-        return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
-    
-
-class XrTransferValueDeleteView(LoginRequiredMixin, DeleteView):
-    
-    model = XrTransferValueLwgFornitore
-    
     def get_success_url(self):        
-        lwgcertificate=self.object.fk_lwgfornitore.pk
+        lwgcertificate=self.object.fk_lwgcertificato.pk
         return reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': lwgcertificate})
     
     
+def delete_xrtransfervalue(request, pk): 
+        deleteobject = get_object_or_404(XrTransferValueLwgFornitore, pk = pk)         
+        fk_certificato=deleteobject.fk_lwgcertificato.pk       
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:modifica_lwg', kwargs={'pk': fk_certificato})
+        return redirect(url_match)    
 
 
 class ListaFornitoriView(FilterView):

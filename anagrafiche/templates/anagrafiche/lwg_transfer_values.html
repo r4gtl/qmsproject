@@ -30,7 +30,7 @@
         
         <hr>
         
-        {% include "core/partials/_messages.html" %}
+        
         
         
         <br>
@@ -49,11 +49,18 @@
                 <div class="col-3">
                     {{ form.quantity|as_crispy_field }}
                 </div>
+                <div class="col-6">
+                    {{ form.note|as_crispy_field }}
+                </div>
+
                 
             </div>
             <div class="row">
                 <div class="col-3">
                     {{ form.fk_lwgcertificato|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.created_by|as_crispy_field }}
                 </div>
             </div>
             

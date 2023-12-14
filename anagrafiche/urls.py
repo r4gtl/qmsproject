@@ -34,8 +34,8 @@ urlpatterns = [
     path("modifica_lwg/<int:pk>", UpdateLwgCertificate.as_view(), name="modifica_lwg"),    
     path("delete_lwg/<int:pk>", delete_certificato, name="delete_lwg"),
     path("modifica_lwg/<int:fk_certificato>/add_transf_value/", XrTransferValueCreateView.as_view(), name="add_transf_value"),
-    path("edit_transf_value/<int:id>", XrTransferValueUpdateView.as_view(), name="edit_transf_value"),
-    path("delete_transf_value/<int:id>", XrTransferValueDeleteView.as_view(), name="delete_transf_value"),
+    path("edit_transf_value/<int:pk>", XrTransferValueUpdateView.as_view(), name="edit_transf_value"),
+    path("delete_transf_value/<int:pk>", delete_xrtransfervalue, name="delete_transf_value"),
 
     # Generiche - Transfer Values
     path("transfer_values_list/", TransferValueListView.as_view(), name="transfer_values_list"),

@@ -62,7 +62,8 @@ class FormLwgFornitore(forms.ModelForm):
             'lwg_score': 'Punteggio',
             'lwg_range': 'Fase',
             'lwg_date': 'Data Certificato',
-            'lwg_expiry': 'Scadenza Certificato'
+            'lwg_expiry': 'Scadenza Certificato',
+            'documento': 'Associa Certificato'
 
         }
         
@@ -110,12 +111,15 @@ class FormXrTransferValueLwgFornitore(forms.ModelForm):
     class Meta:
         model = XrTransferValueLwgFornitore
         fields = '__all__'
-        widgets = {'fk_lwgcertificato': forms.HiddenInput(),} # Sospeso per vedere se si compila
+        widgets = {'fk_lwgcertificato': forms.HiddenInput(),
+                    'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+                    'created_by': forms.HiddenInput(),
+                   } 
+        
         labels = {
             'fk_transfervalue': 'Descrizione',
             'quantity': 'Quantità',
-            
-
+            'note': 'Annotazioni'
         }
 
 class FormTransferValue(forms.ModelForm):

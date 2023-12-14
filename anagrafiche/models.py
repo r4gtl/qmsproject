@@ -126,6 +126,7 @@ class LwgFornitore(models.Model):
     lwg_range = models.CharField(max_length=100, blank=True, null=True)
     lwg_date = models.DateField(blank=True, null=True)
     lwg_expiry = models.DateField(blank=True, null=True)
+    documento = models.FileField(upload_to='lwg_certificates/', null=True, blank=True)
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
 
 
@@ -204,7 +205,11 @@ class XrTransferValueLwgFornitore(models.Model):
     
     fk_lwgcertificato = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
     fk_transfervalue = models.ForeignKey(TransferValue, on_delete=models.CASCADE)
-    quantity = models.FloatField()
+    quantity = models.DecimalField(max_digits=10, decimal_places=8)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='xrtransfervaluelwgfornitore', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
     
     
 class Cliente(models.Model):    
