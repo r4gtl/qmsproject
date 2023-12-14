@@ -230,7 +230,8 @@ class FacilityAuthorizationModelForm(forms.ModelForm):
         labels = {
             'descrizione': 'Descrizione',
             'purpose': 'Finalità',            
-            'note': 'Annotazioni'
+            'note': 'Annotazioni',
+            'fk_fornitore': 'Ente/Fornitore'
         }
 
 class DetailFacilityAuthorizationModelForm(forms.ModelForm):

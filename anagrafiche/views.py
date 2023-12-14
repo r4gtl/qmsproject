@@ -629,21 +629,35 @@ class FacilityAuthorizationCreateView(LoginRequiredMixin,CreateView):
                 return reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
         
         pk_autorizzazione=self.object.pk        
-        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'pk':fk_facility, 'id':pk_autorizzazione})
+        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'fk_facility':fk_facility, 'id':pk_autorizzazione})
     
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        facility = Facility.objects.get(pk=self.kwargs['fk_facility'])
+        
+        
+        context['facility'] = facility
+        
+        
+        return context
+
+    
+
     def get_initial(self):
         created_by = self.request.user
-        fk_facility = self.kwargs['fk_facility'] 
-        print(f'fk_facility: {fk_facility}')
-        facility = Facility.objects.get(pk=fk_facility)
+        #fk_facility = self.kwargs['fk_facility'] 
+        facility = Facility.objects.get(pk=self.kwargs['fk_facility'])
+        print(f'fk_facility: {facility.pk}')
+        #facility = Facility.objects.get(pk=fk_facility)
         return {
             'created_by': created_by,
-            'fk_facility': fk_facility,
+            'fk_facility': facility.pk,
             'facility': facility            
         }
 
@@ -660,7 +674,7 @@ class FacilityAuthorizationUpdateView(LoginRequiredMixin, UpdateView):
                 return reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
         
         pk_autorizzazione=self.object.pk        
-        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'pk':fk_facility, 'id':pk_autorizzazione})
+        return reverse_lazy('anagrafiche:modifica_facility_authorization', kwargs={'fk_facility':fk_facility, 'id':pk_autorizzazione})
     
 
     def form_valid(self, form):        

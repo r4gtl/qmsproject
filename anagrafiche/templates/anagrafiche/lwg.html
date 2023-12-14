@@ -109,7 +109,7 @@
               
               <tbody>
                 {% for transfer_value in transfer_values %}
-                    
+                  <tr>   
                     <td class="col-md-6"><a href="{% url 'anagrafiche:edit_transf_value' pk=transfer_value.id  %}">{{ transfer_value.fk_transfervalue.description }}</a></td>
                     <td class="col-md-2 text-end">{{ transfer_value.quantity }}</td>  
                     <td class="text-center"> <a href="{% url 'anagrafiche:delete_transf_value' pk=transfer_value.id %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{operatori_attivi.pk}}"><i class="bi bi-trash"></i> Elimina</a></td>

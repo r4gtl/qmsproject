@@ -13,7 +13,8 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:edit_facility_details' pk=fk_facility %}">{{ facility }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'anagrafiche:edit_facility_details' pk=facility.pk %}">{{ facility.nome_sito }}</a></li>
+        
         {% if form.instance.id  %}
         <li class="breadcrumb-item active" aria-current="page">{{ autorizzazione.descrizione }}</li>
         {% else %}
