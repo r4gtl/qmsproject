@@ -16,7 +16,7 @@ from django_filters.views import FilterView
 from nonconformity.models import RapportoNC
 
 from .filters import (ClienteFilter, FacilityAuthorizationFilter,
-                      FornitoreFilter)
+                      FornitoreFilter, TransferValueFilter)
 from .forms import (DetailFacilityAuthorizationModelForm,
                     FacilityAuthorizationModelForm, FormCliente, FormFacility,
                     FormFacilityContact, FormFornitore,
@@ -516,6 +516,40 @@ class ListaClienteView(FilterView):
 
 '''SEZIONE TABELLE GENERICHE'''
 
+
+def tabelle_generiche(request):
+    transfervalues = TransferValue.objects.all()
+    tot_transfervalues = TransferValue.objects.count()
+    
+    transfervalues_filter = TransferValueFilter(request.GET, queryset=transfervalues)
+    filtered_transfervalues = transfervalues_filter.qs  # Ottieni i record filtrati
+    transfervalues_filter_count = filtered_transfervalues.count()  # Conta i record filtrati
+    
+    # Paginazione Sostanze
+    page_transfervalues = request.GET.get('page', 1)
+    paginator_transfervalues = Paginator(filtered_transfervalues, 50)
+    
+    try:
+        transfervalues_paginator = paginator_transfervalues.page(page_transfervalues)
+    except PageNotAnInteger:
+        transfervalues_paginator = paginator_transfervalues.page(1)
+    except EmptyPage:
+        transfervalues_paginator = paginator_transfervalues.page(paginator_transfervalues.num_pages)
+
+   
+
+
+    context = {
+        # Transfer Values
+        'transfervalues': transfervalues,
+        'transfervalues_paginator': transfervalues_paginator,
+        'tot_transfervalues': tot_transfervalues,
+        'filtered_transfervalues': filtered_transfervalues,
+        'transfervalues_filter_count': transfervalues_filter_count,
+    }
+    
+    return render(request, 'anagrafiche/generiche/tabelle_generiche.html', context)
+
 # Creazione, Vista e Update Transfer Values
 class TransferValueCreateView(LoginRequiredMixin,CreateView):
     model = TransferValue
@@ -543,7 +577,11 @@ class TransferValueListView(LoginRequiredMixin, ListView):
     template_name = 'anagrafiche/transfer_values_list.html'
     paginate_by = 10
 
-
+def delete_transfer_value(request, pk): 
+        deleteobject = get_object_or_404(TransferValue, pk = pk)         
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:home_fornitori') # Provvisoriamente rimandiamo in Home Fornitori
+        return redirect(url_match)    
 
 '''FINE SEZIONE TABELLE GENERICHE'''
     
@@ -647,3 +685,6 @@ def delete_facility_authorization(request, pk):
         return redirect(url_match)
     
 '''FINE SEZIONE AUTORIZZAZIONI'''
+
+
+

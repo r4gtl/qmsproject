@@ -1,7 +1,7 @@
 import django_filters
 from django import forms
 
-from .models import Cliente, FacilityAuthorization, Fornitore
+from .models import Cliente, FacilityAuthorization, Fornitore, TransferValue
 
 
 class FornitoreFilter(django_filters.FilterSet):
@@ -50,3 +50,12 @@ class FacilityAuthorizationFilter(django_filters.FilterSet):
     class Meta:
         model = FacilityAuthorization
         fields = ['descrizione']
+
+
+class TransferValueFilter(django_filters.FilterSet):   
+   
+    descrizione = django_filters.CharFilter(field_name='description', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
+    
+    class Meta:
+        model = TransferValue
+        fields = ['description']

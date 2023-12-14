@@ -37,10 +37,14 @@ urlpatterns = [
     path("edit_transf_value/<int:pk>", XrTransferValueUpdateView.as_view(), name="edit_transf_value"),
     path("delete_transf_value/<int:pk>", delete_xrtransfervalue, name="delete_transf_value"),
 
+    # Tabelle Generiche
+    path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),
+    
     # Generiche - Transfer Values
     path("transfer_values_list/", TransferValueListView.as_view(), name="transfer_values_list"),
     path("add_transfer_values/", TransferValueCreateView.as_view(), name="add_transfer_values"),
     path("edit_transfer_values/<int:pk>", TransferValueUpdateView.as_view(), name="edit_transfer_values"),
+    path("delete_transfer_value/<int:pk>", delete_transfer_value, name="delete_transfer_value"),
 
     # Charts
     path('get_country_count/', get_country_count, name='get_country_count'),
