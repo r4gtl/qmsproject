@@ -120,10 +120,30 @@ function handleImagePreviewOption_Old(selectId, previewImageId, symbolImageURL) 
 // definire l'ID del campo e richiamare la funzione 
 // setFocusOnField('campo_predefinito');
 function setFocusOnField(fieldId) {
+  console.log('Setting focus on: ' + fieldId);
   $(document).ready(function() {
       $("#" + fieldId).focus();
   });
 };
+
+
+// Chiudere un modal e settare il focus su un campo
+// DELLO STESSO TEMPLATE
+// vedi l'uso di esempio nel template sostanza_sds.html della app chem_man
+function closeModalAndSetFocus(modalId, elementId) {
+  $(modalId).modal('hide');
+
+  $(modalId).on('hidden.bs.modal', function () {
+    console.log('Modal closed');
+    setTimeout(function() {
+      $('#' + elementId).focus();
+    }, 100);
+    
+  });
+}
+
+
+
 
 // Per gestire il pulsanta Annulla
 function goBack() {
