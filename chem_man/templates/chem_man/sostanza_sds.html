@@ -141,7 +141,7 @@
 // Da qui inizio a gestire il modal di ricerca
 // definisco l'url
 var searchURL = "{% url 'chem_man:search_sostanza' %}";
-
+var focusId = 'btnRicercaAvanzata'
 // Funzione per gestire la ricerca
 function searchSostanza(term) {
   $.ajax({
@@ -172,12 +172,17 @@ $('#modalSearchResults').on('click', '.selezionaSostanza', function() {
   var descrizione = $(this).closest('tr').data('descrizione');
   var numCas = $(this).closest('tr').data('num-cas');
   var numEc = $(this).closest('tr').data('num-ec');
-
+  
   // Assegna i valori ai campi appropriati nel tuo form
   $('#id_fk_sostanza').val(id);
   $('#id_fk_sostanza_descrizione').val(descrizione);
   $('#id_fk_sostanza_num_cas').val(numCas);
   $('#id_fk_sostanza_num_ec').val(numEc);
+
+
+
+  window.focusId = 'id_concentrazione';
+
 
   // Chiudi il modal di ricerca
   $('#ricercaModal_Substances').modal('hide');
@@ -216,7 +221,7 @@ $('#modalSearchInput').on('input', function() {
 
 
     document.addEventListener("DOMContentLoaded", function() {
-        setFocusOnField('btnRicercaAvanzata');
+        setFocusOnField(focusId);
     });
     
 

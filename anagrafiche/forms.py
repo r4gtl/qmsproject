@@ -2,8 +2,7 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from .models import (Cliente, DetailFacilityAuthorization, Facility,
-                     FacilityAuthorization, FacilityContact, Fornitore,
+from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitoreManutenzioni,
                      FornitorePelli, FornitoreProdottiChimici,
                      FornitoreRifiuti, FornitoreServizi, LwgFornitore,
@@ -209,49 +208,3 @@ class FormCliente(forms.ModelForm):
             
             
         }
-
-
-'''FORMS PER LA GESTIONE DEI MODELLI DELLE AUTORIZZAZIONI '''
-       
-class FacilityAuthorizationModelForm(forms.ModelForm):
-    class Meta:
-        model = FacilityAuthorization
-        exclude=()
-        
-        fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
-        
-        widgets = {'fk_facility': forms.HiddenInput(),
-                   'descrizione': forms.TextInput(attrs={'placeholder': 'Oggetto Autorizzazione'}),
-                   'purpose': forms.TextInput(attrs={'placeholder': 'Finalità'}),
-                   'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
-                   'created_by': forms.HiddenInput()
-                   
-                   }
-        labels = {
-            'descrizione': 'Descrizione',
-            'purpose': 'Finalità',            
-            'note': 'Annotazioni',
-            'fk_fornitore': 'Ente/Fornitore'
-        }
-
-class DetailFacilityAuthorizationModelForm(forms.ModelForm):
-    class Meta:
-        model = DetailFacilityAuthorization
-        exclude=()
-        widgets = {'fk_facility_authorization': forms.HiddenInput(),
-                   'numero': forms.TextInput(attrs={'placeholder': 'Oggetto Autorizzazione'}),
-                   'data_autorizzazione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-                   'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
-                   'is_rinnovata': forms.CheckboxInput(),
-                   'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
-                   'created_by': forms.HiddenInput()
-                   
-                   }
-        labels = {
-            'numero': 'Numero/Protocollo',
-            'data_autorizzazione': 'Data Autorizzazione',            
-            'prossima_scadenza': 'Prossima Scadenza',   
-            'documento': 'Documento',         
-            'note': 'Annotazioni'
-        }
-        

@@ -1,7 +1,7 @@
 import django_filters
 from django import forms
 
-from .models import Cliente, FacilityAuthorization, Fornitore, TransferValue
+from .models import Cliente, Fornitore, TransferValue
 
 
 class FornitoreFilter(django_filters.FilterSet):
@@ -42,14 +42,6 @@ class ClienteFilter(django_filters.FilterSet):
         model = Cliente
         fields = ['ragionesociale']
 
-
-class FacilityAuthorizationFilter(django_filters.FilterSet):   
-   
-    descrizione = django_filters.CharFilter(field_name='descrizione', lookup_expr='icontains', widget=forms.TextInput(attrs={'style': 'width: 90%; margin-left: 5%'}))
-    
-    class Meta:
-        model = FacilityAuthorization
-        fields = ['descrizione']
 
 
 class TransferValueFilter(django_filters.FilterSet):   

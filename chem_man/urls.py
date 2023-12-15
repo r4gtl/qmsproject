@@ -1,13 +1,12 @@
 from django.urls import path
 
-
-
+from .utils import (check_if_svhc, get_prodotto_chimico, get_solvente,
+                    get_sostanza_details, get_symbol_image_url,
+                    get_ultimo_prezzo, search_sostanza)
 from .views import *
+
 #from .views import *
 
-from .utils import (get_symbol_image_url, search_sostanza, get_sostanza_details, 
-                    check_if_svhc, get_prodotto_chimico, get_ultimo_prezzo, get_solvente,
-)
 
 
 app_name = 'chem_man'
@@ -68,6 +67,7 @@ urlpatterns = [
     # Schede Sicurezza
     path('<int:fk_prodottochimico>/aggiungi_scheda_sicurezza/', SchedaSicurezzaCreateView.as_view(), name="aggiungi_scheda_sicurezza"), 
     path('<int:fk_prodottochimico>/modifica_scheda_sicurezza/<int:pk>/', SchedaSicurezzaUpdateView.as_view(), name="modifica_scheda_sicurezza"), 
+    path('<int:fk_prodottochimico>/modifica_scheda_sicurezza/<int:pk>/<str:focus_button>/', SchedaSicurezzaUpdateView.as_view(), name='modifica_scheda_sicurezza_with_focus_button'),
     path('delete_scheda_sicurezza/<int:pk>', delete_scheda_sicurezza, name="delete_scheda_sicurezza"),
     
     # Simbolo_ghs_sds

@@ -797,7 +797,14 @@ class SchedaSicurezzaUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk_sds = self.kwargs['pk']
-        fk_prodottochimico = self.kwargs['fk_prodottochimico']
+        fk_prodottochimico = self.kwargs['fk_prodottochimico']   
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus
+            print(f'focus_button_param: {focus_button_param}')
+            context['focus_button'] = focus_button_param
+        else:
+            context['focus_button'] = 'id_data_revisione'
+
         context['fk_prodottochimico'] = ProdottoChimico.objects.get(pk=fk_prodottochimico)
         context['elenco_simboli'] = SimboloGHS_SDS.objects.filter(fk_sds=pk_sds)
         context['elenco_hazard_statements'] = HazardStatement_SDS.objects.filter(fk_sds=pk_sds)
@@ -827,7 +834,9 @@ class SimboloGHS_SDSCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_ghs_symbol'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds, 'focus_button': focus_button})
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -862,7 +871,11 @@ class SimboloGHS_SDSUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_ghs_symbol'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
+        
     
 
     def form_valid(self, form):        
@@ -884,7 +897,8 @@ def delete_simbolo_ghs_sds(request, pk):
         fk_sds = deleteobject.fk_sds.pk   
         fk_prodottochimico= deleteobject.fk_sds.fk_prodottochimico.pk             
         deleteobject.delete()
-        url_match = reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_ghs_symbol'  # Imposto il pulsante su cui settare il focus
+        url_match = reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds, 'focus_button': focus_button})
         return redirect(url_match)
 
 
@@ -901,7 +915,10 @@ class HazardStatement_SDSCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_hazard_statement'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -920,7 +937,6 @@ class HazardStatement_SDSCreateView(LoginRequiredMixin,CreateView):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs['fk_sds'] 
         sds=SchedaSicurezza.objects.get(pk=pk)
-
         context['fk_sds'] = SchedaSicurezza.objects.get(pk=pk) 
         context['fk_prodottochimico'] = sds.fk_prodottochimico
 
@@ -936,7 +952,10 @@ class HazardStatement_SDSUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_hazard_statement'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
 
     def form_valid(self, form):        
@@ -975,7 +994,10 @@ class PrecautionaryStatement_SDSCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_precautionary_statement'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -1010,7 +1032,10 @@ class PrecautionaryStatement_SDSUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_precautionary_statement'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
 
     def form_valid(self, form):        
@@ -1048,7 +1073,10 @@ class Sostanza_SDSCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_substances'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -1110,7 +1138,10 @@ class Sostanza_SDSUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):   
         fk_sds=self.object.fk_sds.pk
         fk_prodottochimico= self.object.fk_sds.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_scheda_sicurezza', kwargs={'fk_prodottochimico':fk_prodottochimico, 'pk':fk_sds})
+        focus_button = 'btn_substances'  # Imposto il pulsante su cui settare il focus        
+        success_url = reverse_lazy('chem_man:modifica_scheda_sicurezza_with_focus_button', kwargs={'fk_prodottochimico': fk_prodottochimico, 'pk': fk_sds, 'focus_button': focus_button})
+        
+        return success_url
     
 
     def form_valid(self, form):        

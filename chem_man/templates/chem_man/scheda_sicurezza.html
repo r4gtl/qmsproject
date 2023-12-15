@@ -107,7 +107,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_simbolo_ghs_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Simbolo GHS</a>
+          <a href="{% url 'chem_man:aggiungi_simbolo_ghs_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success" id="btn_ghs_symbol"><i class="bi bi-file-earmark-plus"></i> Aggiungi Simbolo GHS</a>
 
         </div>
       </div>
@@ -152,7 +152,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_hazard_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Istruzione di pericolo</a>
+          <a href="{% url 'chem_man:aggiungi_hazard_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success" id="btn_hazard_statement"><i class="bi bi-file-earmark-plus"></i> Aggiungi Istruzione di pericolo</a>
 
         </div>
       </div>
@@ -199,7 +199,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_precautionary_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
+          <a href="{% url 'chem_man:aggiungi_precautionary_statement_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success" id="btn_precautionary_statement"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
 
         </div>
       </div>
@@ -239,7 +239,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_sostanza_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza</a>
+          <a href="{% url 'chem_man:aggiungi_sostanza_sds' fk_sds=schedasicurezza.pk %}" class="btn btn-sm btn-success" id="btn_substances"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza</a>
 
         </div>
       </div>
@@ -295,8 +295,12 @@
 
     
         document.addEventListener("DOMContentLoaded", function() {
-            setFocusOnField('id_data_revisione');
+            var focusButtonId = "{{ focus_button }}"
+            console.log('focus button id: ' + focusButtonId)
+            setFocusOnField(focusButtonId);
         });
     
+     
+
   </script>
 {% endblock %} 

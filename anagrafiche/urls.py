@@ -15,10 +15,10 @@ urlpatterns = [
     path("<int:pk>/add_facility_contact", add_facility_contact, name="add_facility_contact"),
     path("<int:pk>/modifica_facility_contact/<int:id>", FacilityContactUpdateView.as_view(), name="modifica_facility_contact"),
     path("delete_facility_contact/<int:pk>", delete_facility_contact, name="delete_facility_contact"),
-    path("<int:fk_facility>/home_autorizzazioni/", home_autorizzazioni, name="home_autorizzazioni"),
-    path("<int:fk_facility>/add_facility_authorization/", FacilityAuthorizationCreateView.as_view(), name="add_facility_authorization"),
-    path("<int:fk_facility>/modifica_facility_authorization/<int:id>", FacilityAuthorizationUpdateView.as_view(), name="modifica_facility_authorization"),
-    path("delete_facility_authorization/<int:pk>", delete_facility_authorization, name="delete_facility_authorization"),
+    #path("<int:fk_facility>/home_autorizzazioni/", home_autorizzazioni, name="home_autorizzazioni"),
+    #path("<int:fk_facility>/add_facility_authorization/", FacilityAuthorizationCreateView.as_view(), name="add_facility_authorization"),
+    #path("<int:fk_facility>/modifica_facility_authorization/<int:id>", FacilityAuthorizationUpdateView.as_view(), name="modifica_facility_authorization"),
+    #path("delete_facility_authorization/<int:pk>", delete_facility_authorization, name="delete_facility_authorization"),
 
     # Clienti
     path("home_clienti/", ListaClienteView.as_view(), name="home_clienti"),

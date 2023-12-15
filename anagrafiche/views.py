@@ -15,17 +15,13 @@ from django.views.generic.list import ListView
 from django_filters.views import FilterView
 from nonconformity.models import RapportoNC
 
-from .filters import (ClienteFilter, FacilityAuthorizationFilter,
-                      FornitoreFilter, TransferValueFilter)
-from .forms import (DetailFacilityAuthorizationModelForm,
-                    FacilityAuthorizationModelForm, FormCliente, FormFacility,
-                    FormFacilityContact, FormFornitore,
-                    FormFornitoreLavorazioniEsterne, FormFornitorePelli,
-                    FormFornitoreProdottiChimici, FormFornitoreServizi,
-                    FormLwgFornitore, FormTransferValue,
+from .filters import ClienteFilter, FornitoreFilter, TransferValueFilter
+from .forms import (FormCliente, FormFacility, FormFacilityContact,
+                    FormFornitore, FormFornitoreLavorazioniEsterne,
+                    FormFornitorePelli, FormFornitoreProdottiChimici,
+                    FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
                     FormXrTransferValueLwgFornitore)
-from .models import (Cliente, DetailFacilityAuthorization, Facility,
-                     FacilityAuthorization, FacilityContact, Fornitore,
+from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
                      FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
                      TransferValue, XrTransferValueLwgFornitore)
@@ -589,6 +585,8 @@ def delete_transfer_value(request, pk):
 
 
 '''SEZIONE AUTORIZZAZIONI'''
+'''
+
 
 def home_autorizzazioni(request, fk_facility):
     autorizzazioni = FacilityAuthorization.objects.filter(fk_facility=fk_facility)
@@ -698,8 +696,9 @@ def delete_facility_authorization(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('anagrafiche:edit_facility_details')
         return redirect(url_match)
-    
+    '''
 '''FINE SEZIONE AUTORIZZAZIONI'''
+
 
 
 
