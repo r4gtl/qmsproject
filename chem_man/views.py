@@ -770,6 +770,7 @@ class SchedaSicurezzaCreateView(LoginRequiredMixin,CreateView):
         context = super().get_context_data(**kwargs)
         fk_prodottochimico = self.kwargs['fk_prodottochimico']
         context['fk_prodottochimico'] = ProdottoChimico.objects.get(pk=fk_prodottochimico)
+        context['focus_button'] = 'id_data_revisione'
 
         return context
 
