@@ -82,6 +82,11 @@
 
 {% endblock %}
 
-{% block scripts %}
 
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        setFocusOnField('id_codice');
+    });
+</script>
 {% endblock %} 
