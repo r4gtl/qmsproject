@@ -1,17 +1,16 @@
-from django.http import JsonResponse
-from django.utils.dateparse import parse_date
-from django.shortcuts import render
 import json
-from django.db.models import Sum, Count
 from datetime import datetime, timedelta
+
+from django.db.models import Count, Sum
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils.dateparse import parse_date
 from django_countries.fields import Country
 
-from .models import (DatoProduzione, 
-                    MonitoraggioGas, MonitoraggioEnergiaElettrica
-
-                    )
-
+from .models import (DatoProduzione, MonitoraggioEnergiaElettrica,
+                     MonitoraggioGas)
 from .utils import filtro_dati_produzione, somma_dato_per_intervallo_per_mese
+
 
 def produzione_ultimo_anno(request):
     today = datetime.now().date()
@@ -80,7 +79,10 @@ def produzione_intervallo_date(request):
         data = DatoProduzione.objects.filter(
             data_inserimento__gte=from_date,
             data_inserimento__lte=to_date
-        ).values('industries_served').annotate(total_quantity=Sum('n_pelli'))
+        ).values('industries_served').annotate(
+            total_quantity=Sum('n_pelli'),
+            total_mq=Sum('mq'),  
+            total_kg=Sum('kg') )
         
         data_json = list(data)
         

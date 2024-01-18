@@ -28,6 +28,8 @@
             
             <th>Destinazione d'uso</th>
             <th>N. Pelli</th>                                    
+            <th>MQ</th>                                    
+            <th>Kg.</th>                                    
              
           </tr>
         </thead>
@@ -135,6 +137,16 @@ function renderDataInTemplate(data, from_date, to_date) {
     totalQuantityColumn.classList.add("text-end");
     totalQuantityColumn.textContent = record.total_quantity;
     row.appendChild(totalQuantityColumn);
+
+    var totalMQColumn = document.createElement('td');
+    totalMQColumn.classList.add("text-end");
+    totalMQColumn.textContent = parseFloat(record.total_mq).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    row.appendChild(totalMQColumn);
+
+    var totalKgColumn = document.createElement('td');
+    totalKgColumn.classList.add("text-end");
+    totalKgColumn.textContent = record.total_kg;
+    row.appendChild(totalKgColumn);
     
     // Aggiungi la riga alla tabella
     tableBody.appendChild(row);
