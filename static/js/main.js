@@ -145,10 +145,15 @@ function closeModalAndSetFocus(modalId, elementId) {
 
 
 
-// Per gestire il pulsanta Annulla
+// Per gestire il pulsante Annulla
 function goBack() {
   window.history.back();
 };
+
+// Prova in sostituzione della funzione precedente
+function cancelAndRedirectTo(url) {
+  window.location.href = url;
+}
 
 // Inizializzare le tabelle di DataTable con le labels in Italiano
 // Si usa con initializeDataTable('id_tabella');
