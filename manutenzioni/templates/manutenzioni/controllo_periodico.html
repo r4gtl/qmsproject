@@ -13,12 +13,13 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard manutenzioni</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard manutenzioni</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.descrizione }}</a></li>                 
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica controllo periodico del {{ controllo_periodico.data_controllo }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica controllo periodico del {{ controlloperiodico.data_controllo }} - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi controllo periodico</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi controllo periodico - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</li>
         {% endif %}             
         
         
@@ -27,9 +28,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica controllo periodico del {{ controllo_periodico.data_controllo }}</h3>
+            <h3>Modifica controllo periodico del {{ controlloperiodico.data_controllo }} - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</h3>
         {% else %}
-            <h3> Aggiungi controllo periodico</h3>
+            <h3> Aggiungi controllo periodico - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</h3>
         {% endif %}
         
         

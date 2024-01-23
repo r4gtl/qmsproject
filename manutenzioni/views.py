@@ -174,14 +174,30 @@ class ManutenzioneOrdinariaCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)        
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
+        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+
+        return context
+
+
     def get_initial(self):
         for key, value in self.kwargs.items():
             print(f"Chiave: {key}, Valore: {value}")
         fk_attrezzatura = self.kwargs["fk_attrezzatura"]
+        
+        attrezzatura=Attrezzatura.objects.get(pk=fk_attrezzatura)
+        print(f"FK_Attrezzatura: {fk_attrezzatura}")
+        print(f"Attrezzatura: {attrezzatura}")
+        print(f"Attrezzatura pk: {attrezzatura.pk}")
         created_by = self.request.user
         return {
             'created_by': created_by,
-            'fk_attrezzatura': fk_attrezzatura
+            'fk_attrezzatura': fk_attrezzatura,
+            'attrezzatura': attrezzatura
             
         }
 
@@ -202,10 +218,10 @@ class ManutenzioneOrdinariaUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):        
-        context = super().get_context_data(**kwargs)
-        #pk_attrezzatura = self.object.pk        
-        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        context = super().get_context_data(**kwargs)        
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
         #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
 
         return context
@@ -238,6 +254,14 @@ class ManutenzioneStraordinariaCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
+        return context
+    
     def get_initial(self):
         for key, value in self.kwargs.items():
             print(f"Chiave: {key}, Valore: {value}")
@@ -266,11 +290,9 @@ class ManutenzioneStraordinariaUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        #pk_attrezzatura = self.object.pk        
-        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
         return context
 
 
@@ -301,6 +323,14 @@ class TaraturaCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
     
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
+
+        return context
+    
     def get_initial(self):        
         fk_attrezzatura = self.kwargs["fk_attrezzatura"]
         created_by = self.request.user
@@ -327,10 +357,9 @@ class TaraturaUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        #pk_attrezzatura = self.object.pk        
-        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
 
         return context
 
@@ -372,6 +401,15 @@ class ControlloPeriodicoCreateView(LoginRequiredMixin,CreateView):
         # O mostrali all'utente o registrali in un file di log
         return self.render_to_response(self.get_context_data(form=form))
     
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
+
+        return context
+
+
     def get_initial(self):        
         fk_attrezzatura = self.kwargs["fk_attrezzatura"]
         created_by = self.request.user
@@ -408,10 +446,9 @@ class ControlloPeriodicoUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        #pk_attrezzatura = self.object.pk        
-        #context['elenco_man_straord'] = ManutenzioneStraordinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_tarature'] = Taratura.objects.filter(fk_attrezzatura=pk_attrezzatura) 
-        #context['elenco_man_ord'] = ManutenzioneOrdinaria.objects.filter(fk_attrezzatura=pk_attrezzatura) 
+        fk_attrezzatura = self.kwargs["fk_attrezzatura"]        
+        context['attrezzatura'] = Attrezzatura.objects.get(pk=fk_attrezzatura) 
+        context['fk_attrezzatura'] = fk_attrezzatura
 
         return context
 

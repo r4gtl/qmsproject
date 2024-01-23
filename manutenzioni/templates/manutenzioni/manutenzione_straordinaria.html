@@ -13,12 +13,13 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard Manutenzioni</a></li>        
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard Manutenzioni</a></li>  
+        <li class="breadcrumb-item"><a href="{% url 'manutenzioni:modifica_attrezzatura' pk=attrezzatura.pk %}">{{ attrezzatura.descrizione }}</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica manutenzione del {{ manutenzionestraordinaria.data_manutenzione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica manutenzione del {{ manutenzionestraordinaria.data_manutenzione }} - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Manutenzione Straordinaria</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Manutenzione Straordinaria - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</li>
         {% endif %}             
         
         
@@ -27,9 +28,9 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica manutenzione straordinaria del {{ manutenzionestraordinaria.data_manutenzione }}</h3>
+            <h3>Modifica manutenzione straordinaria del {{ manutenzionestraordinaria.data_manutenzione }} - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</h3>
         {% else %}
-            <h3> Aggiungi manutenzione straordinaria</h3>
+            <h3> Aggiungi manutenzione straordinaria - {{ attrezzatura.descrizione }} | {{ attrezzatura.codice_attrezzatura }}</h3>
         {% endif %}
         
         
