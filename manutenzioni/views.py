@@ -1,22 +1,23 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
+# import datetime
+from datetime import datetime, timedelta
+
+from core.utils import get_records_with_upcoming_expiry
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Q, Sum
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.db.models import Sum, Count, Q
-# import datetime
-from datetime import timedelta, datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from qmsproject.context_processors import fk_ward_records
-
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import *
-from .forms import *
-from .filters import AttrezzaturaFilter
-from core.utils import get_records_with_upcoming_expiry
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from human_resources.models import Ward
 
+from qmsproject.context_processors import fk_ward_records
+
+from .filters import AttrezzaturaFilter
+from .forms import *
+from .models import *
 
 
 def dashboard_manutenzioni(request):
@@ -181,6 +182,7 @@ class ManutenzioneOrdinariaCreateView(LoginRequiredMixin,CreateView):
         return {
             'created_by': created_by,
             'fk_attrezzatura': fk_attrezzatura
+            
         }
 
 class ManutenzioneOrdinariaUpdateView(LoginRequiredMixin, UpdateView):

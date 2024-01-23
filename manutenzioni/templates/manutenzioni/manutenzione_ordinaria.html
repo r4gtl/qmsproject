@@ -21,7 +21,7 @@
         <li class="breadcrumb-item"><a href="{% url 'manutenzioni:dashboard_manutenzioni' %}">Dashboard Manutenzioni</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ man_ord.descrizione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ man_ord.descrizione }} - {{ fk_attrezzatura.descrizione }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Manutenzione Ordinaria</li>
         {% endif %}             
@@ -99,7 +99,10 @@
 
 {% endblock %}
 
-{% block scripts %}
-
-<script src="{% static '/js/main.js' %}"></script>
+{% block extra_scripts %}
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_data_manutenzione');
+        });
+    </script>
 {% endblock %} 

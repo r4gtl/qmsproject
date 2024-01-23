@@ -100,7 +100,10 @@
 
 {% endblock %}
 
-{% block scripts %}
-
-<script src="{% static '/js/main.js' %}"></script>
+{% block extra_scripts %}
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_data_manutenzione');
+        });
+    </script>
 {% endblock %} 
