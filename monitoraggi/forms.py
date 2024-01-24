@@ -1,3 +1,4 @@
+from acquistopelli.models import TipoAnimale
 from django import forms
 
 from .models import (DatoProduzione, MonitoraggioAcqua,
@@ -62,10 +63,12 @@ class DatoProduzioneModelForm(forms.ModelForm):
     class Meta:
         model = DatoProduzione
         fields = '__all__'
+        fk_tipoanimale = forms.ModelChoiceField(queryset=TipoAnimale.objects.all())
 
         widgets = {
             'data_inserimento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
             #'industries_served': forms.ChoiceField(),
+            'fk_tipoanimale': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'n_pelli': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
             'mq': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
             'kg': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
@@ -75,6 +78,7 @@ class DatoProduzioneModelForm(forms.ModelForm):
         labels = {
             'data_inserimento': 'Data inserimento',
             'industries_served': 'Destinazione d\'Uso',
+            'fk_tipoanimale': 'Tipo Animale',
             'mc_in': 'Mc in ingresso',
             'mc_out': 'Mc in uscita',
             'note': 'Annotazioni'

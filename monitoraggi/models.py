@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from acquistopelli.models import TipoAnimale
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -123,15 +124,18 @@ class DatoProduzione(models.Model):
     # Industrie fornite
     APPAREL_CLOTHING = 'apparel/clothing'
     AUTOMOTIVE = 'automotive'
+    AVIATION = 'aviation'
     CONTRACT = 'contract'
     FOOTWEAR = 'footwear'
     FOOTWEAR_ATHLETIC = 'footwear (athletic)'
     LEATHER_GOODS = 'leather goods'
     UPHOLSTERY = 'upholstery'
+
     
     
     CHOICES_INDUSTRIES_SERVED = (
         (APPAREL_CLOTHING, 'Apparel/clothing'),
+        (AVIATION, 'Aviation'),
         (AUTOMOTIVE, 'Automotive'),        
         (CONTRACT, 'Contract'),
         (FOOTWEAR, 'Footwear'),
@@ -140,7 +144,8 @@ class DatoProduzione(models.Model):
         (UPHOLSTERY, 'Upholstery')
     )
     data_inserimento = models.DateField(null=False, blank=False)
-    industries_served = models.CharField(max_length=50, choices=CHOICES_INDUSTRIES_SERVED)    
+    industries_served = models.CharField(max_length=50, choices=CHOICES_INDUSTRIES_SERVED)   
+    fk_tipoanimale =  models.ForeignKey(TipoAnimale, related_name='dati_produzione', null=True, blank=True, on_delete=models.SET_NULL)
     n_pelli = models.IntegerField()
     mq = models.DecimalField(max_digits=8, decimal_places=3)
     kg = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
