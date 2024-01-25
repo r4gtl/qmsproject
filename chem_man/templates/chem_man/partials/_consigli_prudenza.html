@@ -1,0 +1,108 @@
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+
+
+
+  <div class="row">
+    <div class="col-6">
+      <h5>Consigli di Prudenza</h5>
+      <p>Inserire/Modificare i Consigli di Prudenza.</p>                  
+    </div>
+    <div class="col-6 text-end">
+      <a href="{% url 'chem_man:aggiungi_precautionary_statement' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Consiglio di Prudenza</a>
+    </div>
+  </div>
+
+  <!-- Inizio filtro -->
+    <div class="row">
+      <div class="col">
+        <div class="card card-body">
+    
+          
+          <form method="get">
+    
+            <div class="table-responsive-sm">
+              <table class="table table-hover table-striped table-bordered">
+                <thead class="thead-dark">
+                  <tr>     
+                    <th>Consiglio Prudenza</th>
+                    <th>Descrizione</th>
+                    
+                  </tr>
+                </thead>
+                
+                <tbody>
+                <tr>
+                  <td style="width: 20%">                
+                    {% render_field filter_precautionary_statements.form.codice class="form-control" %}
+                  </td>
+                  
+                  <td style="width: 20%">
+                    {% render_field filter_precautionary_statements.form.descrizione class="form-control" %}
+                  </td>
+                  
+                </tr>
+          
+                
+                
+              </tbody>
+              </table>
+            </div>
+              
+    
+            
+    
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+            <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+            
+          </form>
+          
+          
+        </div>
+      </div>
+      
+    </div>
+    <!-- Fine filtro -->
+    <p>Numero Consigli di Prudenza totale {{ tot_precautionary_statements }} - Numero IConsigli di Prudenza filtrate {{ precautionary_statements_filter_count }}</p>
+
+
+  <div class="table-container">
+    <table class="table table-bordered table-striped mt-2">
+      <thead>
+        <tr>
+          <th>Codice</th>            
+          <th>Descrizione</th>
+          <th>Azione</th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for precautionary_statement in precautionary_statements_paginator %}
+        <tr>        
+          
+          <td><a href="{% url 'chem_man:modifica_precautionary_statement' pk=precautionary_statement.pk %}">{{ precautionary_statement.codice }}</a></td>
+          <td>{{ precautionary_statement.descrizione|truncatechars:20 }}</td>
+          
+          <td class="text-center"><a href="{% url 'chem_man:delete_precautionary_statement' pk=precautionary_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{precautionary_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+        </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Paginazione -->
+  <div class="pagination">
+    <span class="step-links">
+      {% if precautionary_statements_paginator.has_previous %}
+        <a href="?page_precautionary_statements={{ precautionary_statements_paginator.previous_page_number }}">precedente</a>
+      {% endif %}
+
+      <span class="current-page">{{ precautionary_statements_paginator.number }}</span>
+
+      {% if precautionary_statements_paginator.has_next %}
+        <a href="?page_precautionary_statements={{ precautionary_statements_paginator.next_page_number }}">successivo</a>
+      {% endif %}
+    </span>
+  </div>
+  
+<!-- Fine Paginazione -->

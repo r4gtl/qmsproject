@@ -1,0 +1,115 @@
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+
+
+
+    <div class="row">
+      <div class="col-6">
+        <h5>Sostanze</h5>
+        <p>Inserire/modificare le Sostanze.</p>                  
+      </div>
+      <div class="col-6 text-end">
+        <a href="{% url 'chem_man:aggiungi_sostanza' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Sostanza</a>
+      </div>
+    </div>
+  <!-- Inizio filtro -->
+      <div class="row">
+        <div class="col">
+          <div class="card card-body">
+      
+            
+            <form method="get">
+      
+              <div class="table-responsive-sm">
+                <table class="table table-hover table-striped table-bordered">
+                  <thead class="thead-dark">
+                    <tr>     
+                      <th>Numero CAS</th>
+                      <th>Numero EC</th>
+                      
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+                  <tr>
+                    <td style="width: 20%">                
+                      {% render_field filter_sostanze.form.num_cas_sostanza class="form-control" %}
+                    </td>
+                    
+                    <td style="width: 20%">
+                      {% render_field filter_sostanze.form.num_ec_sostanza class="form-control" %}
+                    </td>
+                    
+                  </tr>
+            
+                  
+                  
+                </tbody>
+                </table>
+              </div>
+                
+      
+              
+      
+              <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
+              <a class="btn btn-success" href="{% url 'chem_man:tabelle_generiche' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+              
+            </form>
+            
+            
+          </div>
+        </div>
+        
+      </div>
+      <!-- Fine filtro -->
+
+
+
+    <p>Numero sostanze totale {{ tot_sostanze }} - Numero sostanze filtrate {{ sostanze_filter_count }}</p>
+    <div class="table-container">
+      <table class="table table-bordered table-striped mt-2">
+        <thead>
+          <tr>
+            <th>Descrizione</th> 
+            <th>N. CAS</th> 
+            <th>N. EC</th> 
+
+            <th>Azione</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          {% for sostanza in sostanze_paginator %}
+          <tr>        
+            
+            <td><a href="{% url 'chem_man:modifica_sostanza' pk=sostanza.pk %}">{{ sostanza.descrizione|truncatechars:20 }}</a></td>
+            <td>{{ sostanza.num_cas }}</td>
+            <td>{{ sostanza.num_ec }}</td>
+            <td class="text-center"><a href="{% url 'chem_man:delete_sostanza' pk=sostanza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{sostanza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          </tr>  
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+<!-- Paginazione -->
+    <div class="pagination">
+      <span class="step-links">
+        {% if sostanze_paginator.has_previous %}
+          <a href="?page_sostanze={{ sostanze_paginator.previous_page_number }}">precedente</a>
+        {% endif %}
+
+        <span class="current-page">{{ sostanze_paginator.number }}</span>
+
+        {% if sostanze_paginator.has_next %}
+          <a href="?page_sostanze={{ sostanze_paginator.next_page_number }}">successivo</a>
+        {% endif %}
+      </span>
+    </div>
+    
+<!-- Fine Paginazione -->
+
+  
+
+
+

@@ -288,7 +288,7 @@ def tabelle_generiche(request):
 
 
     # Paginazione Sostanze
-    page_sostanze = request.GET.get('page', 1)
+    page_sostanze = request.GET.get('page_sostanze', 1)
     paginator_sostanze = Paginator(filtered_sostanze, 50)
     
     try:
@@ -299,7 +299,7 @@ def tabelle_generiche(request):
         sostanze_paginator = paginator_sostanze.page(paginator_sostanze.num_pages)
 
     # Paginazione Sostanze SVHC
-    page_sostanze_svhc = request.GET.get('page', 1)
+    page_sostanze_svhc = request.GET.get('page_sostanze_svhc', 1)
     paginator_sostanze_svhc = Paginator(filtered_sostanze_svhc, 50)
     try:
         sostanze_svhc_paginator = paginator_sostanze_svhc.page(page_sostanze_svhc)
@@ -309,7 +309,7 @@ def tabelle_generiche(request):
         sostanze_svhc_paginator = paginator_sostanze_svhc.page(paginator_sostanze_svhc.num_pages)
 
     # Paginazione Hazard Statements
-    page_hazard_statements = request.GET.get('page', 1)
+    page_hazard_statements = request.GET.get('page_hazard_statements', 1)
     paginator_hazard_statements = Paginator(filtered_hazard_statements, 50)
     try:
         hazard_statements_paginator = paginator_hazard_statements.page(page_hazard_statements)
@@ -319,7 +319,7 @@ def tabelle_generiche(request):
         hazard_statements_paginator = paginator_hazard_statements.page(paginator_hazard_statements.num_pages)
 
     # Paginazione Precautionary Statements
-    page_precautionary_statements = request.GET.get('page', 1)
+    page_precautionary_statements = request.GET.get('page_precautionary_statements', 1)
     paginator_precautionary_statements = Paginator(filtered_precautionary_statements, 50)
     try:
         precautionary_statements_paginator = paginator_precautionary_statements.page(page_precautionary_statements)
@@ -329,7 +329,7 @@ def tabelle_generiche(request):
         precautionary_statements_paginator = paginator_precautionary_statements.page(paginator_precautionary_statements.num_pages)
 
     # Paginazione Simboli GHS
-    page_simboli_ghs = request.GET.get('page', 1)
+    page_simboli_ghs = request.GET.get('page_simboli_ghs', 1)
     paginator_simboli_ghs = Paginator(filtered_simboli_ghs, 50)
     try:
         simboli_ghs_paginator = paginator_simboli_ghs.page(page_simboli_ghs)
@@ -339,7 +339,7 @@ def tabelle_generiche(request):
         simboli_ghs_paginator = paginator_simboli_ghs.page(paginator_simboli_ghs.num_pages)
 
     # Paginazione Imballaggi PC
-    page_imballaggi_pc = request.GET.get('page', 1)
+    page_imballaggi_pc = request.GET.get('page_imballaggi_pc', 1)
     imballaggi_pc_paginator = Paginator(filtered_imballaggi_pc, 50)
     try:
         imballaggi_pc_paginator = imballaggi_pc_paginator.page(page_imballaggi_pc)
