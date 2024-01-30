@@ -31,6 +31,7 @@ $(document).on('click', '#confirmDeleteButtonModal', function () {
   var caller = $("#confirmDeleteButtonModal").closest(".modal").attr("caller-id");
   console.log("Indirizzo:" + $("#".concat(caller)).attr("href"))
   window.location = $("#".concat(caller)).attr("href");
+  console.log("Indirizzo:" + $("#".concat(caller)).attr("href"))
 });
 </script>
 {% endblock %}
