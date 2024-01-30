@@ -24,11 +24,15 @@
 <script>
 
 $(document).on('click', '.confirm-delete', function () {
+  var callerId = $(this).data("bs-id");
+  console.log("Caller: " + callerId)
   $("#confirmDeleteModal").attr("caller-id", $(this).attr("id"));
+  
 });
 
 $(document).on('click', '#confirmDeleteButtonModal', function () {
   var caller = $("#confirmDeleteButtonModal").closest(".modal").attr("caller-id");
+  console.log("Caller onclick: " + caller)
   console.log("Indirizzo:" + $("#".concat(caller)).attr("href"))
   window.location = $("#".concat(caller)).attr("href");
   console.log("Indirizzo:" + $("#".concat(caller)).attr("href"))
