@@ -36,7 +36,9 @@
                   {% endfor %}
               </div>
             </div>
-              
+              {% if squadra_antincendio.count > 3 %}
+                <a href="#">[...]</a>
+              {% endif %}
             {% else %}
               <p style="color: red;">Non è ancora stata assegnata la Squadra Antincendio</p>
             
@@ -54,7 +56,9 @@
                   {% endfor %}
               </div>
             </div>
-              
+              {% if scadenzario.count > 3 %}
+                <a href="#">[...]</a>
+              {% endif %}
             {% else %}
               <p style="color: red;">Non è ancora presente formazione</p>            
             {% endif %}
@@ -69,444 +73,36 @@
         
         
 
-        <div class="row">
-        <!-- Inizio Estintori -->
+      <div class="row">
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <h5>Estintori</h5>
-                <p>Inserire/modificare gli estintori.</p>                  
-              </div>
-              <div class="col-6 text-end">
-                <a href="{% url 'antincendio:aggiungi_estintore' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi estintore</a>
-              </div>
-            </div>
-          <!-- Inizio filtro -->
-              <div class="row">
-                <div class="col">
-                  <div class="card card-body">
-              
-                    
-                    <form method="get">
-              
-                      <div class="table-responsive-sm">
-                        <table class="table table-hover table-striped table-bordered">
-                          <thead class="thead-dark">
-                            <tr>     
-                              <th>Classe</th>
-                              <th>Matricola</th>
-                              
-                            </tr>
-                          </thead>
-                          
-                          <tbody>
-                          <tr>
-                            <td style="width: 20%">                
-                              {% render_field filter_estintori.form.classe class="form-control" %}
-                            </td>
-                            
-                            <td style="width: 20%">
-                              {% render_field filter_estintori.form.matricola class="form-control" %}
-                            </td>
-                            
-                          </tr>
-                    
-                          
-                          
-                        </tbody>
-                        </table>
-                      </div>
-                        
-              
-                      
-              
-                      <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                      <a class="btn btn-success" href="{% url 'antincendio:antincendio_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
-                      
-                    </form>
-                    
-                    
-                  </div>
-                </div>
-                
-              </div>
-              <!-- Fine filtro -->
-
-
-
-            <p>Numero estintori totale {{ tot_estintori }} - Numero estintori filtrati {{ estintori_filter_count }}</p>
-            <div class="table-container">
-              <table class="table table-bordered table-striped mt-2">
-                <thead>
-                  <tr>
-                    <th>Numero</th> 
-                    <th>Classe</th> 
-                    <th>Matricola</th> 
-
-                    <th>Azione</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for estintore in estintori_paginator %}
-                  <tr>        
-                    
-                    <td><a href="{% url 'antincendio:modifica_estintore' pk=estintore.pk %}">{{ estintore.numero_posizione }}</a></td>
-                    <td>{{ estintore.classe }}</td>
-                    <td>{{ estintore.matricola }}</td>
-                    <td class="text-center"><a href="{% url 'antincendio:delete_estintore' pk=estintore.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{estintore.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-                  </tr>  
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-        <!-- Paginazione -->
-            <div class="pagination">
-              <span class="step-links">
-                {% if estintori_paginator.has_previous %}
-                  <a href="?page={{ estintori_paginator.previous_page_number }}">precedente</a>
-                {% endif %}
-
-                <span class="current-page">{{ estintori_paginator.number }}</span>
-
-                {% if estintore_paginator.has_next %}
-                  <a href="?page={{ estintori_paginator.next_page_number }}">successivo</a>
-                {% endif %}
-              </span>
-            </div>
-            
-        <!-- Fine Paginazione -->
+            {% include "antincendio/partials/_estintori.html" %}
 
           </div>
-        <!-- Fine Estintori -->
-
-
-        <!-- Inizio Idranti -->
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <h5>Idranti</h5>
-                <p>Inserire/Modificare gli Idranti.</p>                  
-              </div>
-              <div class="col-6 text-end">
-                <a href="{% url 'antincendio:aggiungi_idrante' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Idrante</a>
-              </div>
-            </div>
+            {% include "antincendio/partials/_idranti.html" %}
 
-            <!-- Inizio filtro -->
-              <div class="row">
-                <div class="col">
-                  <div class="card card-body">
-              
-                    
-                    <form method="get">
-              
-                      <div class="table-responsive-sm">
-                        <table class="table table-hover table-striped table-bordered">
-                          <thead class="thead-dark">
-                            <tr>     
-                              <th>Numero posizione</th>
-                              <th>Tipo Idrante</th>
-                              
-                            </tr>
-                          </thead>
-                          
-                          <tbody>
-                          <tr>
-                            <td style="width: 20%">                
-                              {% render_field filter_idranti.form.numero_posizione class="form-control" %}
-                            </td>
-                            
-                            <td style="width: 20%">
-                              {% render_field filter_idranti.form.tipo_idrante class="form-control" %}
-                            </td>
-                            
-                          </tr>
-                    
-                          
-                          
-                        </tbody>
-                        </table>
-                      </div>
-                        
-              
-                      
-              
-                      <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                      <a class="btn btn-success" href="{% url 'antincendio:antincendio_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
-                      
-                    </form>
-                    
-                    
-                  </div>
-                </div>
-                
-              </div>
-              <!-- Fine filtro -->
-              <p>Numero idranti totale {{ tot_idranti }} - Numero idranti filtrati {{ idranti_filter_count }}</p>
-            <div class="table-container">
-              <table class="table table-bordered table-striped mt-2">
-                <thead>
-                  <tr>
-                    <th>Numero/Posizione</th>            
-                    <th>Tipo Idrante</th>
-                    <th>Azione</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for idrante in idranti_paginator %}
-                  <tr>        
-                    
-                    <td><a href="{% url 'antincendio:modifica_idrante' pk=idrante.pk %}">{{ idrante.numero_posizione }}</a></td>
-                    <td>{{ idrante.tipo_idrante }}</td>
-                    <td class="text-center"><a href="{% url 'antincendio:delete_idrante' pk=idrante.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{idrante.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-                  </tr>  
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <!-- Paginazione -->
-            <div class="pagination">
-              <span class="step-links">
-                {% if idranti_paginator.has_previous %}
-                  <a href="?page={{ idranti_paginator.previous_page_number }}">precedente</a>
-                {% endif %}
-
-                <span class="current-page">{{ idranti_paginator.number }}</span>
-
-                {% if idranti_paginator.has_next %}
-                  <a href="?page={{ idranti_paginator.next_page_number }}">successivo</a>
-                {% endif %}
-              </span>
-            </div>
-            
-        <!-- Fine Paginazione -->
           </div>
-        <!-- Fine Idranti -->
-
     
 
-  </div>
-  <!-- Fine prima riga -->
+      </div>
+      <!-- Fine prima riga -->
 
   <br>
   <hr>
 
   <!-- Seconda riga -->
 
-         <div class="row">
-        <!-- Inizio Porte/Uscite -->
+      <div class="row">
+        
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <h5>Porte/Uscite</h5>
-                <p>Inserire/modificare le porte e le uscite.</p>                  
-              </div>
-              <div class="col-6 text-end">
-                <a href="{% url 'antincendio:aggiungi_porta_uscita' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi porta/uscita</a>
-              </div>
-            </div>
-          <!-- Inizio filtro -->
-              <div class="row">
-                <div class="col">
-                  <div class="card card-body">
-              
-                    
-                    <form method="get">
-              
-                      <div class="table-responsive-sm">
-                        <table class="table table-hover table-striped table-bordered">
-                          <thead class="thead-dark">
-                            <tr>     
-                              <th>Numero</th>
-                              <th>Tipo Porta</th>
-                              
-                            </tr>
-                          </thead>
-                          
-                          <tbody>
-                          <tr>
-                            <td style="width: 20%">                
-                              {% render_field filter_porte_uscite.form.numero_posizione class="form-control" %}
-                            </td>
-                            
-                            <td style="width: 20%">
-                              {% render_field filter_porte_uscite.form.tipo_porta class="form-control" %}
-                            </td>
-                            
-                          </tr>
-                    
-                          
-                          
-                        </tbody>
-                        </table>
-                      </div>
-                        
-              
-                      
-              
-                      <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                      <a class="btn btn-success" href="{% url 'antincendio:antincendio_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
-                      
-                    </form>
-                    
-                    
-                  </div>
-                </div>
-                
-              </div>
-              <!-- Fine filtro -->
-
-
-
-            <p>Numero porte totale {{ tot_porte_uscite }} - Numero porte filtrate {{ porte_uscite_filter_count }}</p>
-            <div class="table-container">
-              <table class="table table-bordered table-striped mt-2">
-                <thead>
-                  <tr>
-                    <th>Numero</th> 
-                    <th>Tipo Porta</th> 
-                    <th>Azione</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for porta_uscita in porte_uscite_paginator %}
-                  <tr>        
-                    
-                    <td><a href="{% url 'antincendio:modifica_porta_uscita' pk=porta_uscita.pk %}">{{ porta_uscita.numero_posizione }}</a></td>
-                    <td>{{ porta_uscita.tipo_porta }}</td>                    
-                    <td class="text-center"><a href="{% url 'antincendio:delete_porta_uscita' pk=porta_uscita.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{porta_uscita.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-                  </tr>  
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-        <!-- Paginazione -->
-            <div class="pagination">
-              <span class="step-links">
-                {% if porte_uscite_paginator.has_previous %}
-                  <a href="?page={{ porte_uscite_paginator.previous_page_number }}">precedente</a>
-                {% endif %}
-
-                <span class="current-page">{{ porte_uscite_paginator.number }}</span>
-
-                {% if porte_uscite_paginator.has_next %}
-                  <a href="?page={{ porte_uscite_paginator.next_page_number }}">successivo</a>
-                {% endif %}
-              </span>
-            </div>
-            
-        <!-- Fine Paginazione -->
+            {% include "antincendio/partials/_porte_uscite.html" %}
 
           </div>
-        <!-- Fine Porte/Uscite -->
-
-
-        <!-- Inizio Attrezzatura Antincendio -->
           <div class="col-6">
-            <div class="row">
-              <div class="col-6">
-                <h5>Attrezzatura Antincendio</h5>
-                <p>Inserire/Modificare l'Attrezzatura Antincendio.</p>                  
-              </div>
-              <div class="col-6 text-end">
-                <a href="{% url 'antincendio:aggiungi_attrezzatura_antincendio' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Attrezzatura</a>
-              </div>
-            </div>
+            {% include "antincendio/partials/_attrezzatura_antincendio.html" %}
 
-            <!-- Inizio filtro -->
-              <div class="row">
-                <div class="col">
-                  <div class="card card-body">
-              
-                    
-                    <form method="get">
-              
-                      <div class="table-responsive-sm">
-                        <table class="table table-hover table-striped table-bordered">
-                          <thead class="thead-dark">
-                            <tr>     
-                              <th>Descrizione</th>
-                              
-                              
-                            </tr>
-                          </thead>
-                          
-                          <tbody>
-                          <tr>
-                            <td style="width: 20%">                
-                              {% render_field filter_attrezzature_antincendio.form.descrizione class="form-control" %}
-                            </td>
-                            
-                            
-                          </tr>
-                    
-                          
-                          
-                        </tbody>
-                        </table>
-                      </div>
-                        
-              
-                      
-              
-                      <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                      <a class="btn btn-success" href="{% url 'antincendio:antincendio_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
-                      
-                    </form>
-                    
-                    
-                  </div>
-                </div>
-                
-              </div>
-              <!-- Fine filtro -->
-              <p>Numero Attrezzature totale {{ tot_attrezzatura_antincendio }} - Numero idranti filtrati {{ idranti_filter_count }}</p>
-            <div class="table-container">
-              <table class="table table-bordered table-striped mt-2">
-                <thead>
-                  <tr>
-                    <th>Descrizione</th>
-                    <th>Azione</th>
-                    
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for attrezzatura in attrezzature_antincendio_paginator %}
-                  <tr>        
-                    
-                    <td><a href="{% url 'antincendio:modifica_attrezzatura_antincendio' pk=attrezzatura.pk %}">{{ attrezzatura.descrizione }}</a></td>
-                    
-                    <td class="text-center"><a href="{% url 'antincendio:delete_attrezzatura_antincendio' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-                  </tr>  
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            <!-- Paginazione -->
-            <div class="pagination">
-              <span class="step-links">
-                {% if attrezzature_antincendio_paginator.has_previous %}
-                  <a href="?page={{ attrezzature_antincendio_paginator.previous_page_number }}">precedente</a>
-                {% endif %}
-
-                <span class="current-page">{{ attrezzature_antincendio_paginator.number }}</span>
-
-                {% if attrezzature_antincendio_paginator.has_next %}
-                  <a href="?page={{ attrezzature_antincendio_paginator.next_page_number }}">successivo</a>
-                {% endif %}
-              </span>
-            </div>
-            
-        <!-- Fine Paginazione -->
           </div>
-        <!-- Fine Attrezzatura Antincendio -->
-
-    
-
-  </div>
+      </div>
   <!-- Fine seconda riga -->
 
   <br>
@@ -514,120 +110,15 @@
 
   <!-- Terza riga -->
 
-  <div class="row">
-    <!-- Inizio Impianto Spegnimento -->
-      <div class="col-6">
-        <div class="row">
+      <div class="row">
+    
           <div class="col-6">
-            <h5>Impianti di Spegnimento</h5>
-            <p>Inserire/modificare gli impianti di spegnimento.</p>                  
+            {% include "antincendio/partials/_impianto_spegnimento.html" %}
+
           </div>
-          <div class="col-6 text-end">
-            <a href="{% url 'antincendio:aggiungi_impianto_spegnimento' %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Impianto</a>
-          </div>
-        </div>
-      <!-- Inizio filtro -->
-          <div class="row">
-            <div class="col">
-              <div class="card card-body">
-          
-                
-                <form method="get">
-          
-                  <div class="table-responsive-sm">
-                    <table class="table table-hover table-striped table-bordered">
-                      <thead class="thead-dark">
-                        <tr>     
-                          <th>Numero</th>
-                          <th>Ubicazione</th>
-                          
-                        </tr>
-                      </thead>
-                      
-                      <tbody>
-                      <tr>
-                        <td style="width: 20%">                
-                          {% render_field filter_impianti_spegnimento.form.numero_posizione class="form-control" %}
-                        </td>
-                        
-                        <td style="width: 20%">
-                          {% render_field filter_impianti_spegnimento.form.ubicazione class="form-control" %}
-                        </td>
-                        
-                      </tr>
-                
-                      
-                      
-                    </tbody>
-                    </table>
-                  </div>
-                    
-          
-                  
-          
-                  <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                  <a class="btn btn-success" href="{% url 'antincendio:antincendio_home' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
-                  
-                </form>
-                
-                
-              </div>
-            </div>
-            
-          </div>
-          <!-- Fine filtro -->
-
-
-
-        <p>Numero porte impianti {{ tot_impianti_spegnimento }} - Numero impianti filtrati {{ impianti_spegnimento_filter_count }}</p>
-        <div class="table-container">
-          <table class="table table-bordered table-striped mt-2">
-            <thead>
-              <tr>
-                <th>Numero</th> 
-                <th>Ubicazione</th> 
-                <th>Azione</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              {% for impianto_spegnimento in impianti_spegnimento_paginator %}
-              <tr>        
-                
-                <td><a href="{% url 'antincendio:modifica_impianto_spegnimento' pk=impianto_spegnimento.pk %}">{{ impianto_spegnimento.numero_posizione }}</a></td>
-                <td>{{ impianto_spegnimento.ubicazione }}</td>                    
-                <td class="text-center"><a href="{% url 'antincendio:delete_impianto_spegnimento' pk=impianto_spegnimento.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{impianto_spegnimento.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
-              </tr>  
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-    <!-- Paginazione -->
-        <div class="pagination">
-          <span class="step-links">
-            {% if impianto_spegnimento_paginator.has_previous %}
-              <a href="?page={{ impianto_spegnimento_paginator.previous_page_number }}">precedente</a>
-            {% endif %}
-
-            <span class="current-page">{{ impianto_spegnimento_paginator.number }}</span>
-
-            {% if impianto_spegnimento_paginator.has_next %}
-              <a href="?page={{ impianto_spegnimento_paginator.next_page_number }}">successivo</a>
-            {% endif %}
-          </span>
-        </div>
-        
-    <!-- Fine Paginazione -->
 
       </div>
-    <!-- Fine Impianto Spegnimento -->
-
-
-
-
-
-</div>
-<!-- Fine Terza riga -->
+    <!-- Fine Terza riga -->
         
     </div>
 

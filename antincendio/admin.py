@@ -15,8 +15,14 @@ class IdranteModelAdmin(admin.ModelAdmin):
     search_fields = ['numero_posizione'] 
     ordering = ['numero_posizione']
 
+class ImpiantoSpegnimentoModelAdmin(admin.ModelAdmin):
+    model = ImpiantoSpegnimento
+    list_display = ['numero_posizione', 'ubicazione']
+    search_fields = ['numero_posizione'] 
+    ordering = ['numero_posizione']
 
 
 
 admin.site.register(Estintore, EstintoreModelAdmin)
 admin.site.register(Idrante, IdranteModelAdmin)
+admin.site.register(ImpiantoSpegnimento, ImpiantoSpegnimentoModelAdmin)

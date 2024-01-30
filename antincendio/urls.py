@@ -1,8 +1,6 @@
 from django.urls import path
+
 from .views import *
-
-
-
 
 app_name="antincendio"
 
@@ -34,8 +32,8 @@ urlpatterns = [
     path('delete_attrezzatura_antincendio/<int:pk>', delete_attrezzatura_antincendio, name="delete_attrezzatura_antincendio"),
     
     # Impianto Spegnimento
-    path('aggiungi_impianto_spegnimento/', AttrezzaturaAntincendioCreateView.as_view(), name="aggiungi_impianto_spegnimento"), 
-    path('modifica_impianto_spegnimento/<int:pk>/', AttrezzaturaAntincendioUpdateView.as_view(), name="modifica_impianto_spegnimento"), 
+    path('aggiungi_impianto_spegnimento/', ImpiantoSpegnimentoCreateView.as_view(), name="aggiungi_impianto_spegnimento"), 
+    path('modifica_impianto_spegnimento/<int:pk>/', ImpiantoSpegnimentoUpdateView.as_view(), name="modifica_impianto_spegnimento"), 
     path('delete_impianto_spegnimento/<int:pk>', delete_impianto_spegnimento, name="delete_impianto_spegnimento"),
 
     # Registri Antincendio

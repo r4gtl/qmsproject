@@ -1,17 +1,16 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.edit import CreateView, UpdateView
-from django.urls import reverse_lazy
-from django.contrib import messages
 from datetime import date
 
-from .models import *
-from human_resources.models import HR_Safety, DettaglioRegistroFormazione
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView
+from human_resources.models import DettaglioRegistroFormazione, HR_Safety
+
 from .filters import *
 from .forms import *
-
-
+from .models import *
 
 # Create your views here.
 
@@ -19,12 +18,12 @@ from .forms import *
 
 def antincendio_home(request):
 
-    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)
+    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)[0:3]
     # Per quanto riguarda lo scadenzario specifico, valutare se generare un elenco di fixture in cui
     # non si possano modificare le descrizioni in modo da potersi fidare delle descrizioni
     today = date.today()
     scadenzario = []
-    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')
+    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')[0:3]
     for scadenza in scadenze_antincendio:
         
         scadenzario.append({
@@ -95,7 +94,7 @@ def antincendio_home(request):
     # Attrezzatura antincendio
     attrezzature_antincendio = AttrezzaturaAntincendio.objects.all()
     tot_attrezzature_antincendio = AttrezzaturaAntincendio.objects.count()
-    attrezzature_antincendio_filter = AttrezzaturaAntincendioFilter(request.GET, queryset=porte_uscite)
+    attrezzature_antincendio_filter = AttrezzaturaAntincendioFilter(request.GET, queryset=attrezzature_antincendio)
     filtered_attrezzature_antincendio = attrezzature_antincendio_filter.qs
     attrezzature_antincendio_filter_count = filtered_attrezzature_antincendio.count()
     
@@ -113,7 +112,7 @@ def antincendio_home(request):
     # Impianto Spegnimento
     impianti_spegnimento = ImpiantoSpegnimento.objects.all()
     tot_impianti_spegnimento = ImpiantoSpegnimento.objects.count()
-    impianti_spegnimento_filter = ImpiantoSpegnimentoFilter(request.GET, queryset=porte_uscite)
+    impianti_spegnimento_filter = ImpiantoSpegnimentoFilter(request.GET, queryset=impianti_spegnimento)
     filtered_impianti_spegnimento = impianti_spegnimento_filter.qs
     impianti_spegnimento_filter_count = filtered_impianti_spegnimento.count()
     
