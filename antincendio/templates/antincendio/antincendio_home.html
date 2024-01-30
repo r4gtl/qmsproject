@@ -9,6 +9,8 @@
 
 {% block content %}
 {% include 'core/modals/delConfirm.html' %}
+{% include 'antincendio/modals/squadra_antincendio_modal.html' %}
+{% include 'antincendio/modals/scadenzario_modal.html' %}
 
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
@@ -32,13 +34,21 @@
               <h5 class="card-header">Squadra Antincendio</h5>
               <div class="card-body">
                 {% for operatore in squadra_antincendio %}
-                  <p class="card-text">{{ operatore.fk_hr }} in squadra dal {{ operatore.data_inizio_incarico }}</p>
-                  {% endfor %}
+                  {% if forloop.counter <= 3 %}
+                    <p class="card-text">{{ operatore.fk_hr }} in squadra dal {{ operatore.data_inizio_incarico }}</p>
+                  {% endif %}
+                {% endfor %}
               </div>
+              
+                {% if squadra_antincendio.count > 3 %}
+                  <div class="text-end me-1 mb-1">
+                  
+                    <a href="#" class="text-end" data-bs-toggle="modal" data-bs-target="#squadra_antincendio_modal">[...]</a>
+                  </div>
+                {% endif %}
+              
             </div>
-              {% if squadra_antincendio.count > 3 %}
-                <a href="#">[...]</a>
-              {% endif %}
+            
             {% else %}
               <p style="color: red;">Non è ancora stata assegnata la Squadra Antincendio</p>
             
@@ -51,13 +61,17 @@
                 
               <div class="card-body">
                 {% for scadenza in scadenzario %}
-                  <p class="card-text mb-0">{{ scadenza.descrizione }}</p>
-                  <p class="card-text">Scadenza prevista: {{ scadenza.mese_anno }}</p>
-                  {% endfor %}
+                  {% if forloop.counter <= 3 %}
+                    <p class="card-text mb-0">{{ scadenza.descrizione }}</p>
+                    <p class="card-text">Scadenza prevista: {{ scadenza.mese_anno }}</p>
+                  {% endif %}
+                {% endfor %}
               </div>
             </div>
               {% if scadenzario.count > 3 %}
-                <a href="#">[...]</a>
+                <div class="text-end me-1 mb-1">
+                    <a href="#" class="text-end" data-bs-toggle="modal" data-bs-target="#scadenzario_modal">[...]</a>
+                </div>
               {% endif %}
             {% else %}
               <p style="color: red;">Non è ancora presente formazione</p>            

@@ -1,0 +1,18 @@
+<div class="modal fade" id="squadra_antincendio_modal" tabindex="-1" aria-labelledby="squadra_antincendio_modalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Squadra Antincendio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            {% for operatore in squadra_antincendio %}
+                    <p class="card-text">{{ operatore.fk_hr }} in squadra dal {{ operatore.data_inizio_incarico }}</p>                  
+            {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>        
+      </div>
+    </div>
+  </div>
+</div>

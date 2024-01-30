@@ -1,0 +1,19 @@
+<div class="modal fade" id="scadenzario_modal" tabindex="-1" aria-labelledby="scadenzario_modalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Squadra Antincendio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            {% for scadenza in scadenzario %}                  
+                    <p class="card-text mb-0">{{ scadenza.descrizione }}</p>
+                    <p class="card-text">Scadenza prevista: {{ scadenza.mese_anno }}</p>                  
+            {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>        
+      </div>
+    </div>
+  </div>
+</div>

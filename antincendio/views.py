@@ -18,12 +18,12 @@ from .models import *
 
 def antincendio_home(request):
 
-    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)[0:3]
+    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)    
     # Per quanto riguarda lo scadenzario specifico, valutare se generare un elenco di fixture in cui
     # non si possano modificare le descrizioni in modo da potersi fidare delle descrizioni
     today = date.today()
     scadenzario = []
-    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')[0:3]
+    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')    
     for scadenza in scadenze_antincendio:
         
         scadenzario.append({
@@ -131,6 +131,7 @@ def antincendio_home(request):
 
         'squadra_antincendio': squadra_antincendio,
         'scadenzario': scadenzario,
+        
 
         # Estintori
         'estintori': estintori,
