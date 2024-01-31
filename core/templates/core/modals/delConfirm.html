@@ -26,6 +26,8 @@
 $(document).on('click', '.confirm-delete', function () {
   var callerId = $(this).data("bs-id");
   console.log("Caller: " + callerId)
+  console.log("Caller-id: " + $("#confirmDeleteModal").attr("caller-id", $(this).attr("id")))
+  console.log("Attr: " + $(this).attr("id"))
   $("#confirmDeleteModal").attr("caller-id", $(this).attr("id"));
   
 });
@@ -45,8 +47,9 @@ $(document).on('click', '#confirmDeleteButtonModal', function () {
   //var targetUrl = $("#".concat(caller)).attr("href");
   var targetUrl = $("#" + caller).attr("href");
   console.log("Indirizzo: " + targetUrl);
-
+  
   if (targetUrl) {
+    console.log("target url: " + targetUrl) 
     window.location.href = targetUrl;
     console.log("target url: " + targetUrl) 
   } else {
