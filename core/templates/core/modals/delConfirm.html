@@ -47,6 +47,7 @@ $(document).on('click', '#confirmDeleteButtonModal', function () {
 
   if (targetUrl) {
     window.location.href = targetUrl;
+    console.log("target url: " + targetUrl) 
   } else {
     console.error("URL non valido.");
   }

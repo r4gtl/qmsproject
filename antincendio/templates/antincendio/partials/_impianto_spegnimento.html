@@ -85,6 +85,7 @@
                 <td><a href="{% url 'antincendio:modifica_impianto_spegnimento' pk=impianto_spegnimento.pk %}">{{ impianto_spegnimento.numero_posizione }}</a></td>
                 <td>{{ impianto_spegnimento.ubicazione }}</td>                    
                 <td class="text-center"><a href="{% url 'antincendio:delete_impianto_spegnimento' pk=impianto_spegnimento.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-bs-id="{{impianto_spegnimento.pk}}" id="deleteButton{{impianto_spegnimento.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                
               </tr>  
               {% endfor %}
             </tbody>
