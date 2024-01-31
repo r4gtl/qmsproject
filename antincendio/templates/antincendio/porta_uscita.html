@@ -41,7 +41,7 @@
         <br>
 
 
-        <form method="post">
+        <form method="post" novalidate enctype="multipart/form-data">
             {% csrf_token %}
 
             
@@ -68,11 +68,14 @@
                 <div class="col-2">
                     {{ form.anta|as_crispy_field }}
                 </div>
-                <div class="col-5">
+                <div class="col-4">
                     {{ form.matricola|as_crispy_field }}
                 </div>
                 <div class="col-3">
                     {{ form.ubicazione|as_crispy_field }}
+                </div>
+                <div class="col-3">
+                    {{ form.certificato_conf|as_crispy_field }}
                 </div>
                 
 

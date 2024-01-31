@@ -103,7 +103,8 @@ class PortaUscitaModelForm(forms.ModelForm):
             'maniglia': 'Maniglia',
             'anta': 'Anta',            
             'matricola': 'Matricola',            
-            'ubicazione': 'Ubicazione',            
+            'ubicazione': 'Ubicazione',   
+            'certificato_conf': 'Dichiarazione conformità',         
             'note': 'Note'
         }
         

@@ -149,6 +149,7 @@ class PortaUscita(models.Model):
     matricola = models.CharField(max_length=100, null=True, blank=True)
     ubicazione = models.CharField(max_length=200, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
+    certificato_conf = models.FileField(upload_to='door_conformity/', null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='porta', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
