@@ -1,0 +1,31 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">N.</th>
+      <th scope="col">Tipo Idrante</th>
+      <th scope="col">Uni</th>
+      <th scope="col">Metri</th>
+      <th scope="col">Anno</th>
+      <th scope="col">Scad. Schiuma</th>      
+      <th scope="col">Scad. Collaudo</th>
+      <th scope="col">Ubicazione</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for idrante in idranti %}
+        <tr>
+            
+            <td>{{ idrante.numero_posizione }}</td>
+            <td>{{ idrante.tipo_idrante }}</td>
+            <td>{{ idrante.uni }}</td>
+            <td>{{ idrante.metri }}</td>            
+            <td>{{ idrante.anno }}</td>
+            <td>{{ idrante.scadenza_schiuma }}</td>
+            <td>{{ idrante.scadenza_collaudo }}</td>
+            <td>{{ idrante.ubicazione }}</td>
+            
+        </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>

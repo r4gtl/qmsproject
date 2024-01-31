@@ -1,0 +1,33 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">N.</th>
+      <th scope="col">Estinguente</th>
+      <th scope="col">Classe</th>
+      <th scope="col">Kg.</th>
+      <th scope="col">Matricola</th>
+      <th scope="col">Anno</th>
+      <th scope="col">Scad. Revisione</th>
+      <th scope="col">Scad. Collaudo</th>
+      <th scope="col">Ubicazione</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for estintore in estintori %}
+        <tr>
+            
+            <td>{{ estintore.numero_posizione }}</td>
+            <td>{{ estintore.tipo_estinguente }}</td>
+            <td>{{ estintore.classe }}</td>
+            <td>{{ estintore.peso }}</td>
+            <td>{{ estintore.matricola }}</td>
+            <td>{{ estintore.anno }}</td>
+            <td>{{ estintore.scadenza_revisione }}</td>
+            <td>{{ estintore.scadenza_collaudo }}</td>
+            <td>{{ estintore.ubicazione }}</td>
+            
+        </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>

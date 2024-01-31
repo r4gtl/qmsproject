@@ -528,3 +528,30 @@ def delete_registro_controlli(request, pk):
         url_match = reverse_lazy('antincendio:registro_controlli_home')
         return redirect(url_match)
 
+
+'''
+View per gestire la stampa di un registro con tutte le attrezzature antincendio
+'''
+def stampa_mezzi_antincendio(request):
+    estintori = Estintore.objects.filter(data_dismissione__isnull=True)
+    idranti = Idrante.objects.filter(data_dismissione__isnull=True)
+    porte_uscite = PortaUscita.objects.all()
+    impianti_spegnimento = ImpiantoSpegnimento.objects.all()
+    attrezzature = AttrezzaturaAntincendio.objects.all()
+    data_odierna = date.today()
+
+    context = {
+        'estintori': estintori,
+        'idranti': idranti,
+        'porte_uscite': porte_uscite,
+        'impianti_spegnimento': impianti_spegnimento,
+        'attrezzature': attrezzature,
+        'data_odierna': data_odierna
+
+    }
+
+    return render(request, 'antincendio/reports/registro_mezzi_antincendio.html', context)
+
+
+
+

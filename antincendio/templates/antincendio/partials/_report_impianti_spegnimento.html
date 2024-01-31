@@ -1,0 +1,20 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">N.</th>
+      <th scope="col">Ubicazione</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for impianto_spegnimento in impianti_spegnimento %}
+        <tr>
+            
+            <td>{{ impianto_spegnimento.numero_posizione }}</td>
+            <td>{{ impianto_spegnimento.ubicazione }}</td>
+            
+        </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>

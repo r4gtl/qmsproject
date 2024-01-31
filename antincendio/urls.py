@@ -41,5 +41,8 @@ urlpatterns = [
     path('registri_antincendio/aggiungi_registro_controlli/', RegistroControlliAntincendioCreateView.as_view(), name="aggiungi_registro_controlli"), 
     path('registri_antincendio/modifica_registro_controlli/<int:pk>/', RegistroControlliAntincendioUpdateView.as_view(), name="modifica_registro_controlli"), 
     path('registri_antincendio/delete_registro_controlli/<int:pk>', delete_registro_controlli, name="delete_registro_controlli"),
+
+    # Reports
+    path('registro_mezzi_antincendio/', stampa_mezzi_antincendio, name="stampa_mezzi_antincendio"),
     
 ]

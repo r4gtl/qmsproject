@@ -1,0 +1,29 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">N.</th>
+      <th scope="col">Tipo Porta</th>
+      <th scope="col">CE</th>
+      <th scope="col">Maniglia</th>
+      <th scope="col">Ante</th>
+      <th scope="col">Matricola</th>            
+      <th scope="col">Ubicazione</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for porta_uscita in porte_uscite %}
+        <tr>
+            
+            <td>{{ porta_uscita.numero_posizione }}</td>
+            <td>{{ porta_uscita.tipo_porta }}</td>
+            <td>{{ porta_uscita.marcatura_ce }}</td>
+            <td>{{ porta_uscita.maniglia }}</td>            
+            <td>{{ porta_uscita.anta }}</td>
+            <td>{{ porta_uscita.matricola }}</td>
+            <td>{{ porta_uscita.ubicazione }}</td>
+            
+        </tr>
+    {% endfor %}
+    
+  </tbody>
+</table>
