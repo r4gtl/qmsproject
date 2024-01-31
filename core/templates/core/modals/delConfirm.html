@@ -42,7 +42,8 @@ $(document).on('click', '#confirmDeleteButtonModal', function () {
 $(document).on('click', '#confirmDeleteButtonModal', function () {
   var caller = $("#confirmDeleteButtonModal").closest(".modal").attr("caller-id");
   console.log("Caller onclick: " + caller);
-  var targetUrl = $("#".concat(caller)).attr("href");
+  //var targetUrl = $("#".concat(caller)).attr("href");
+  var targetUrl = $("#" + caller).attr("href");
   console.log("Indirizzo: " + targetUrl);
 
   if (targetUrl) {
