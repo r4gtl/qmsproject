@@ -78,9 +78,11 @@ class LottoModelForm(forms.ModelForm):
             'origine': CountrySelectWidget(),
             'documento': forms.TextInput(attrs={'placeholder': 'Riferimenti documento'}),            
             'is_lwg': forms.CheckboxInput(),
+            'peso_totale': forms.NumberInput(attrs={'style': 'text-align: right;'}),
             'pezzi': forms.NumberInput(attrs={'class': 'form-control', 'style': 'text-align: right;'}),
             'prezzo_unitario': forms.NumberInput(attrs={'style': 'text-align: right;'}),
             'spese_accessorie': forms.NumberInput(attrs={'style': 'text-align: right;'}),
+            'kg_km': forms.NumberInput(attrs={'style': 'text-align: right;'}),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows': 3}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
@@ -94,9 +96,11 @@ class LottoModelForm(forms.ModelForm):
             'origine': 'Origine',
             'documento': 'Riferimento Documento',
             'is_lwg': 'Lwg',
+            'peso_totale': 'Peso Netto (Kg.)',
             'pezzi': 'N. Pelli',
             'prezzo_unitario': 'Prezzo Unitario',
             'spese_accessorie': 'Spese Accessorie',
+            'kg_km': 'kg*km',
             'note': 'Annotazioni',
            
         }

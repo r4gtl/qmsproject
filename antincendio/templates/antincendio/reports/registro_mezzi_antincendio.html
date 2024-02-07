@@ -9,10 +9,10 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8 border">
-      <h1>Registro mezzi antincendio</h1>
+      <h3>Registro mezzi antincendio</h3>
     </div>
     <div class="col-md-4 border">
-      <h4>Data: {{ data_odierna }}</h4>
+      <h5>Data di stampa: {{ data_odierna }}</h5>
     </div>
     
   </div>
@@ -20,6 +20,7 @@
 
 
 <div class="container">
+
     {% include "antincendio/partials/_report_estintori.html" %}
     <hr>
     {% include "antincendio/partials/_report_idranti.html" %}

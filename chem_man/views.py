@@ -5,7 +5,7 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Max
+from django.db.models import Max, Sum
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -1475,6 +1475,10 @@ class AcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
         # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         context['elenco_dettagli'] = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=pk_acquisto)
+        # Calcola la somma della quantità dei dettagli di acquisto
+        somma_quantita = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=pk_acquisto).aggregate(somma_quantita=Sum('quantity'))
+        context['somma_quantita'] = somma_quantita['somma_quantita']
+
 
         return context
 

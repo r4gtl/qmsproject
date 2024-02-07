@@ -56,9 +56,12 @@ class Lotto(models.Model):
     origine = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
     documento = models.CharField(max_length=10, null=True, blank=True)
     is_lwg = models.BooleanField(default=False)
+    peso_totale = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, )
     pezzi = models.IntegerField(null=True, blank=True)
     prezzo_unitario = models.DecimalField(max_digits=8, decimal_places=3, null=True, blank=True, )
     spese_accessorie = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True, )
+    kg_km = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True,
+                                help_text="Moltiplicare i kg. per i km percorsi per il calcolo della CO2")
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='lotto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

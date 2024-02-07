@@ -87,7 +87,9 @@
                     <td><a href="{% url 'antincendio:modifica_estintore' pk=estintore.pk %}">{{ estintore.numero_posizione }}</a></td>
                     <td>{{ estintore.classe }}</td>
                     <td>{{ estintore.matricola }}</td>
-                    <td class="text-center"><a href="{% url 'antincendio:delete_estintore' pk=estintore.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{estintore.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    <!-- ATTENZIONE: In questo template ci sono molti subtemplate ed è necessario definire univocamente il pulsante di eliminazione. -->
+                    <!-- Pertanto è stato modificato l'id del pulsante.  -->
+                    <td class="text-center"><a href="{% url 'antincendio:delete_estintore' pk=estintore.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonEstintore{{estintore.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                   </tr>  
                   {% endfor %}
                 </tbody>

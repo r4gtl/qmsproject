@@ -407,3 +407,4 @@ class DettaglioAcquistoProdottoChimico(models.Model):
     created_by = models.ForeignKey(User, related_name='dettagli_acquisto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    

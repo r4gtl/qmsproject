@@ -76,8 +76,9 @@
                   <tr>        
                     
                     <td><a href="{% url 'antincendio:modifica_attrezzatura_antincendio' pk=attrezzatura.pk %}">{{ attrezzatura.descrizione }}</a></td>
-                    
-                    <td class="text-center"><a href="{% url 'antincendio:delete_attrezzatura_antincendio' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    <!-- ATTENZIONE: In questo template ci sono molti subtemplate ed è necessario definire univocamente il pulsante di eliminazione. -->
+                    <!-- Pertanto è stato modificato l'id del pulsante.  -->
+                    <td class="text-center"><a href="{% url 'antincendio:delete_attrezzatura_antincendio' pk=attrezzatura.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonAttrezzatura{{attrezzatura.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                   </tr>  
                   {% endfor %}
                 </tbody>

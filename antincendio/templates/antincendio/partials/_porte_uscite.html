@@ -85,7 +85,9 @@
                     
                     <td><a href="{% url 'antincendio:modifica_porta_uscita' pk=porta_uscita.pk %}">{{ porta_uscita.numero_posizione }}</a></td>
                     <td>{{ porta_uscita.tipo_porta }}</td>                    
-                    <td class="text-center"><a href="{% url 'antincendio:delete_porta_uscita' pk=porta_uscita.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{porta_uscita.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    <!-- ATTENZIONE: In questo template ci sono molti subtemplate ed è necessario definire univocamente il pulsante di eliminazione. -->
+                    <!-- Pertanto è stato modificato l'id del pulsante.  --> 
+                    <td class="text-center"><a href="{% url 'antincendio:delete_porta_uscita' pk=porta_uscita.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonPorta{{porta_uscita.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                   </tr>  
                   {% endfor %}
                 </tbody>

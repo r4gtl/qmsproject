@@ -82,7 +82,9 @@
                     
                     <td><a href="{% url 'antincendio:modifica_idrante' pk=idrante.pk %}">{{ idrante.numero_posizione }}</a></td>
                     <td>{{ idrante.tipo_idrante }}</td>
-                    <td class="text-center"><a href="{% url 'antincendio:delete_idrante' pk=idrante.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{idrante.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    <!-- ATTENZIONE: In questo template ci sono molti subtemplate ed è necessario definire univocamente il pulsante di eliminazione. -->
+                    <!-- Pertanto è stato modificato l'id del pulsante.  -->
+                    <td class="text-center"><a href="{% url 'antincendio:delete_idrante' pk=idrante.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonIdrante{{idrante.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                   </tr>  
                   {% endfor %}
                 </tbody>
