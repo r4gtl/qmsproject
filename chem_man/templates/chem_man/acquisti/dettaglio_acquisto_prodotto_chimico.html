@@ -15,7 +15,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'chem_man:home_acquisti_prodotti_chimici' %}">Dashboard Acquisti Prodotti Chimici</a></li>     
-        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_acquisto_prodotto_chimico' pk=acquisto_pc %}">Dashboard Acquisti Prodotti Chimici</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'chem_man:modifica_acquisto_prodotto_chimico' pk=acquisto_pc.pk %}">Modifica acquisto n. {{ acquisto_pc.numero_documento }} del {{ acquisto_pc.data_documento }}</a></li>     
         
         {% if form.instance.id  %}
             <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
@@ -100,7 +100,8 @@
 
                     </div>
                       </div>
-                      <input type="submit" class="btn btn-success" value="Salva">
+                      <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+                      <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'chem_man:modifica_acquisto_prodotto_chimico' pk=acquisto_pc.pk %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
 
         <!-- fine form -->
         </form>

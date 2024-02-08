@@ -48,6 +48,7 @@
             value="/previous/page/url">
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'chem_man:dashboard_acquisti_prodotti_chimici' %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
             
             
                     <div class="row mb-4">
@@ -132,22 +133,22 @@
               
               <td><a href="{% url 'chem_man:modifica_dettaglio_acquisto_prodotto_chimico' fk_acquisto=acquistoprodottochimico.pk pk=dettaglio.pk %}">{{ dettaglio.fk_prodotto_chimico }}</a></td>
               <td>{{ dettaglio.u_misura }}</td>
-              <td class="text-end quantity">{{ dettaglio.quantity|format_number_dec_thousand }}</td>
+              <td class="text-end quantity">{{ dettaglio.quantity|format_number_dec_thousand|default_if_none:'0' }}</td>
               
               <td class="text-center"><a href="{% url 'chem_man:delete_dettaglio_acquisto_prodotto_chimico' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
-
-          <tfoot class="table-secondary">
-            <tr>
-              <td></td>
-              <td class="text-end">Totale Quantità:</td>
-              <td class="text-end"><span id="">{{ somma_quantita|format_number_dec_thousand }}</span></td>
-              <td class="text-end"></td>
-            </tr>
+          {% if somma_quantita %}
+            <tfoot class="table-secondary">
+              <tr>
+                <td></td>
+                <td class="text-end">Totale Quantità:</td>
+                <td class="text-end"><span id="">{{ somma_quantita|format_number_dec_thousand }}</span></td>
+                <td class="text-end"></td>
+              </tr>
           </tfoot>
-
+          {% endif %}
         </table>
         
 

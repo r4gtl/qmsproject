@@ -1530,9 +1530,9 @@ class DettaglioAcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
         context = super().get_context_data(**kwargs)
         
         
-        pk = self.kwargs['fk_acquisto']         
-        context['acquisto_pc'] = pk
-        #pass
+        fk_acquisto = self.kwargs['fk_acquisto']         
+        context['acquisto_pc']=AcquistoProdottoChimico.objects.get(pk=fk_acquisto)
+        
         return context
     
 class DettaglioAcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
@@ -1565,10 +1565,8 @@ class DettaglioAcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView)
         context = super().get_context_data(**kwargs)
         fk_acquisto = self.kwargs['fk_acquisto']
         context['elenco_dettagli'] = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=fk_acquisto)
-        context['acquisto_pc']=fk_acquisto
-        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
-
+        context['acquisto_pc'] = AcquistoProdottoChimico.objects.get(pk=fk_acquisto)
+        
         return context
 
 
