@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load widget_tweaks %}
+{% load custom_filters %}
 {% load crispy_forms_tags %}
 {% block title %}{{ block.super }} | Prodotti Chimici {% endblock %}
 
@@ -26,6 +27,7 @@
         <div class="col-md-4">
           <p>Ultimo aggiornamento SVHC {{ ultimo_agg_svhc }}</p>
           <a href="https://preparatipericolosi.iss.it/cav.aspx" target="_blank" class="btn btn-sm btn-info"><i class="bi bi-headset"></i>Centri Anti Veleni</a>
+          <p>Tot. Solventi acquistati anno corrente: {{ totale_solvente|format_number_dec_thousand }}</p>
         </div>
         </div> <!-- Fine Statistiche -->
         <br>

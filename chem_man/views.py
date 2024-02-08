@@ -1,11 +1,11 @@
 import datetime
 import pdb
-from datetime import date
+from datetime import date, datetime #Aggiunta in data 08/02/2024 per il totale solventi acquistati nell'anno
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Max, Sum
+from django.db.models import Max, Sum,  F, ExpressionWrapper, DecimalField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -14,12 +14,12 @@ from django.views.generic.edit import CreateView, UpdateView
 from .filters import *
 from .forms import *
 from .models import (AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
-                     DettaglioOrdineProdottoChimico, HazardStatement,
-                     HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
-                     PrecautionaryStatement, PrecautionaryStatement_SDS,
-                     PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
-                     SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
-                     Sostanza_SDS, SostanzaSVHC)
+                    DettaglioOrdineProdottoChimico, HazardStatement,
+                    HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
+                    PrecautionaryStatement, PrecautionaryStatement_SDS,
+                    PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
+                    SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
+                    Sostanza_SDS, SostanzaSVHC)
 
 
 def home_prodotti_chimici(request):
@@ -36,15 +36,27 @@ def home_prodotti_chimici(request):
     except EmptyPage:
         prodotti_chimici_paginator = paginator.page(paginator.num_pages)
 
+    # Ottieni l'anno corrente
+    current_year = datetime.now().year
+
+    # Filtra gli acquisti di prodotti chimici per l'anno corrente
+    acquisti_anno_corrente = AcquistoProdottoChimico.objects.filter(
+        data_documento__year=current_year
+    )
+
+    # Calcola il totale del solvente acquistato nell'anno corrente
+    totale_solvente = acquisti_anno_corrente.aggregate(
+        totale_solvente=Sum(F('dettagli_acquisto__quantity') * F('dettagli_acquisto__solvente')) / 100
+    )['totale_solvente']
+
     context = {
         
         'prodotti_chimici_paginator': prodotti_chimici_paginator,
         'filter': prodotti_chimici_filter,
-        'ultimo_agg_svhc': ultimo_agg_svhc
+        'ultimo_agg_svhc': ultimo_agg_svhc,
+        'totale_solvente': totale_solvente
     }
     return render(request, 'chem_man/home_prodotti_chimici.html', context)
-
-
 
 
 # Prodotto Chimico
@@ -62,7 +74,6 @@ class ProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
 
         pk_prodotto_chimico=self.object.pk
         return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':pk_prodotto_chimico})
-
 
 
     def form_valid(self, form):
@@ -1397,8 +1408,6 @@ def delete_dettaglio_ordine_prodotto_chimico(request, pk):
 
 '''SECONDA PARTE: ACQUISTI'''
 
-
-
 def home_acquisti_prodotti_chimici(request):
     acquisti_pc = AcquistoProdottoChimico.objects.all()
     acquisti_pc_filter = AcquistoProdottoChimicoFilter(request.GET, queryset = acquisti_pc)
@@ -1459,27 +1468,24 @@ class AcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('chem_man:home_documenti_acquisto_prodotti_chimici')
+            return reverse_lazy('chem_man:home_acquisti_prodotti_chimici')
 
         pk_acquisto=self.object.pk
         return reverse_lazy('chem_man:modifica_acquisto_prodotto_chimico', kwargs={'pk':pk_acquisto})
 
-
+    
     def form_valid(self, form):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
-
+        
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk_acquisto = self.object.pk
-        # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
-        # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
+        pk_acquisto = self.object.pk        
         context['elenco_dettagli'] = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=pk_acquisto)
         # Calcola la somma della quantità dei dettagli di acquisto
         somma_quantita = DettaglioAcquistoProdottoChimico.objects.filter(fk_acquisto=pk_acquisto).aggregate(somma_quantita=Sum('quantity'))
         context['somma_quantita'] = somma_quantita['somma_quantita']
-
-
         return context
 
 
@@ -1525,14 +1531,9 @@ class DettaglioAcquistoProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
         }
 
     def get_context_data(self, **kwargs):
-        
-        
         context = super().get_context_data(**kwargs)
-        
-        
         fk_acquisto = self.kwargs['fk_acquisto']         
         context['acquisto_pc']=AcquistoProdottoChimico.objects.get(pk=fk_acquisto)
-        
         return context
     
 class DettaglioAcquistoProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
