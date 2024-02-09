@@ -28,7 +28,7 @@ def home_prodotti_chimici(request):
     prodotti_chimici_filter = ProdottoChimicoFilter(request.GET, queryset=prodotti_chimici)
     ultimo_agg_svhc = SostanzaSVHC.objects.aggregate(max_date=Max('data_inclusione'))['max_date']    
     page = request.GET.get('page', 1)
-    paginator = Paginator(prodotti_chimici_filter.qs, 10)  # Utilizza fornitori_filter.qs per la paginazione
+    paginator = Paginator(prodotti_chimici_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
 
     try:
         prodotti_chimici_paginator = paginator.page(page)
