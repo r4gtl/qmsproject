@@ -469,10 +469,10 @@ class DettaglioAcquistoProdottoChimicoModelForm(forms.ModelForm):
                 # Imposta il prezzo predefinito solo se il prodotto chimico è valido e ha un prezzo
                 if prodotto_chimico and prodotto_chimico.ultimo_prezzo:
                     self.fields['prezzo'].initial = prodotto_chimico.ultimo_prezzo
-'''                    
+                   
     def clean(self):
         cleaned_data = super().clean()
         quantity = cleaned_data.get('quantity')
         if quantity is not None and quantity <= 0:
             self.add_error('quantity', "La quantità deve essere maggiore di zero.")
-        return cleaned_data'''
+        return cleaned_data
