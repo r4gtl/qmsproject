@@ -1,11 +1,12 @@
 import datetime
 import pdb
-from datetime import date, datetime #Aggiunta in data 08/02/2024 per il totale solventi acquistati nell'anno
+from datetime import (  # Aggiunta in data 08/02/2024 per il totale solventi acquistati nell'anno
+    date, datetime)
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Max, Sum,  F, ExpressionWrapper, DecimalField
+from django.db.models import DecimalField, ExpressionWrapper, F, Max, Sum
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -14,12 +15,12 @@ from django.views.generic.edit import CreateView, UpdateView
 from .filters import *
 from .forms import *
 from .models import (AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
-                    DettaglioOrdineProdottoChimico, HazardStatement,
-                    HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
-                    PrecautionaryStatement, PrecautionaryStatement_SDS,
-                    PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
-                    SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
-                    Sostanza_SDS, SostanzaSVHC)
+                     DettaglioOrdineProdottoChimico, HazardStatement,
+                     HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
+                     PrecautionaryStatement, PrecautionaryStatement_SDS,
+                     PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
+                     SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
+                     Sostanza_SDS, SostanzaSVHC)
 
 
 def home_prodotti_chimici(request):
@@ -27,7 +28,7 @@ def home_prodotti_chimici(request):
     prodotti_chimici_filter = ProdottoChimicoFilter(request.GET, queryset=prodotti_chimici)
     ultimo_agg_svhc = SostanzaSVHC.objects.aggregate(max_date=Max('data_inclusione'))['max_date']    
     page = request.GET.get('page', 1)
-    paginator = Paginator(prodotti_chimici_filter.qs, 50)  # Utilizza fornitori_filter.qs per la paginazione
+    paginator = Paginator(prodotti_chimici_filter.qs, 10)  # Utilizza fornitori_filter.qs per la paginazione
 
     try:
         prodotti_chimici_paginator = paginator.page(page)
