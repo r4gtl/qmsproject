@@ -29,9 +29,11 @@ def search_sostanza(request):
         sostanze = Sostanza.objects.filter(query)[:10]
 
         for sostanza in sostanze:
+            # Tronca la descrizione a 20 caratteri
+            descrizione_troncata = sostanza.descrizione[:20] + str('...')
             result = {
                 'id': sostanza.id,
-                'descrizione': sostanza.descrizione,
+                'descrizione': descrizione_troncata,
                 'num_cas': sostanza.num_cas,
                 'num_ec': sostanza.num_ec
             }

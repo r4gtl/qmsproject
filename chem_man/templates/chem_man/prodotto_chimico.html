@@ -180,7 +180,7 @@
         <tr>        
           <td><a href="{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=prodottochimico.pk pk=scheda_sicurezza.pk %}">{{ scheda_sicurezza.data_revisione }}</a></td>
           {% if scheda_sicurezza.documento %}
-              <td><a href="{{ scheda_sicurezza.documento.url }}" download>{{ scheda_sicurezza.documento.url }}</a></td>
+              <td><a href="{{ scheda_sicurezza.documento.url }}" download>Vedi scheda di sicurezza</a></td>
           {% else %}
               <td>Nessun documento associato</td>
           {% endif %}        
@@ -229,7 +229,7 @@
         <tr>        
           <td><a href="{% url 'chem_man:modifica_scheda_tecnica' fk_prodottochimico=prodottochimico.pk pk=scheda_tecnica.pk %}">{{ scheda_tecnica.data_inserimento }}</a></td>
           {% if scheda_tecnica.documento %}
-              <td><a href="{{ scheda_tecnica.documento.url }}" download>{{ scheda_tecnica.documento.url }}</a></td>
+              <td><a href="{{ scheda_tecnica.documento.url }}" download>Vedi scheda tecnica</a></td>
           {% else %}
               <td>Nessun documento associato</td>
           {% endif %}        

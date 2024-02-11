@@ -16,39 +16,29 @@
 				margin: 0.1em 0.6em 0.1em 0.6em ;
 								
 				}
-            
+            .page-break {
+                page-break-before: always;
+            }
 				
 				
 		}
 		
 		
-			
+		 /* Definizione dell'altezza massima per la tabella */
+         .table-container {
+            max-height: calc(100vh - 200px); /* Calcola l'altezza massima sottraendo l'altezza degli altri elementi dalla viewport height */
+            overflow-y: auto; /* Aggiungi una scrollbar verticale se il contenuto supera l'altezza massima */
+        }	
 
 			
     </style>
 </head>
 {% block content %}
 <div class="container mt-4">
-<div class="row">
-    <div class="col-6">
-        <h3>E-Solutions</h3>
-        <h3>Via di qua</h3>
-        <h3>cap città provincia</h3>
-        <h3>Italia</h3>
-
-
-    </div>
-    <div class="col-6">
-        <h2>Ordine n. <strong>{{ordine.numero_ordine}}</strong></h2>
-        <h2>Del <strong>{{ ordine.data_ordine }}</strong></h2>
-        <h2>{{ ordine.fk_fornitore }}</h2>
-
-
-    </div>
-
-</div>
+    {% include 'chem_man/acquisti/_partials/_header_ordine.html' %}
 <hr>
 
+<div class="table-container page-break">
 <table class="table">
   <thead>
     <tr>
@@ -70,7 +60,7 @@
             {% endfor %}
   </tbody>
 </table>
-
+</div>
 
     <div class="row border border-primary rounded p-3 mt-3">
         
@@ -97,66 +87,24 @@
         </div>
     </div>
     <hr>
-    <!-- Sezione controlli -->
-    <label for="sezione_controlli" class="form-label mt-3"><strong>Sezione riservata ai controlli interni</strong></label>
-    <div class="row mt-1 border border-primary rounded p-1 text-center" id="sezione_controlli">
-        <div class="row">
-            <div class="col-3">
-                <label for="is_conforme" class="form-label">Conforme/NC</label>
-                 <div class="form-check d-flex justify-content-center align-items-center" >
-                    <input type="checkbox" id="is_conforme" {% if ordine.is_conforme %}checked{% endif %} disabled class="form-check-input form-check-lg">
-                </div>
-            </div>
-            <div class="col-9">
-                <label for="note_nc" class="form-label">NC Riscontrate</label>
-                <h5 id="note_nc">{{ ordine.note_nc }}</h5>
-            </div>
-        </div>
-        
-        <div class="row mt-3">
-            <div class="col-4">
-            <label for="data_controllo" class="form-label">Data Controllo</label>
-                <div class="border border-primary rounded p-3" id="data_controllo">
-                <!-- Qui puoi inserire il contenuto che desideri -->
-                </div>
-
-                    
-            </div>
-            <div class="col-8">
-            <label for="firma_controllo" class="form-label">Firma</label>
-                <div class="border border-primary rounded p-3" id="firma_controllo">
-                <!-- Qui puoi inserire il contenuto che desideri -->
-                </div>
-
-                    
-            </div>
-        </div>
-        
-    </div>
-    <!-- Fine Sezione controlli -->
+    
 
     </div>
     
-       
-            
+   
+    {% include 'chem_man/acquisti/_partials/_footer_ordine.html' %}
     
 
 
 
 
-<footer class="footer d-flex justify-content-center">
-    <!--Disclaimer-->
-    <div class="row mt-2 border border-primary rounded p-3 text-center">
-        <p>
-            I prodotti in ordine devono rispettare la vigente versione del Regolamento 1907/2006/CE (ReaCh). In particolare, devono rispettare i limiti e i divieti imposti dalla
-            normativa europea per quanto riguarda: CR VI, PB, CD, HG, PCP, Tetraclorofenolo, Nickel, Coloranti Azoici (come da punto 43 dell'Allegato I della Direttiva 76/769/CEE),
-            Ammine Aromatiche, Formaldeide, pesticidi.
-        </p>
-    </div>
-    <!--Fine Disclaimer-->
-    </footer>
 
 {% endblock %}
 
 
-        
+     
+{% block extra_scripts %}
+<script>
+    
+</script>
+{% endblock %}   
