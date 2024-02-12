@@ -1,7 +1,35 @@
-<footer class="footer d-flex">
+<footer class="footer d-flex" >
 
     <div class="container">
         
+    <div class="row border border-primary rounded p-3 mt-3">
+        
+            <div class="col-5">
+                <label for="data_consegna" class="form-label">Data Consegna</label>
+
+                    <h4 id="data_consegna">{{ ordine.data_consegna|default_if_none:"" }}</h4>
+            </div>
+            <div class="col-6">
+                <label for="note" class="form-label">Note</label>
+                    <h3 id="note">{{ ordine.note }}</h3>
+            </div>
+        
+
+    </div>
+        
+        <div class="row mt-2">
+        <div class="col-8">
+        </div>
+        <div class="col-4">
+            <label for="operatore" class="form-label">Firma</label>
+
+                    <h4 id="operatore">{{ ordine.created_by }}</h4>
+        </div>
+    </div>
+    <hr>
+
+
+
         <!-- Sezione controlli -->
     <label for="sezione_controlli" class="form-label mt-3"><strong>Sezione riservata ai controlli interni</strong></label>
     <div class="row mt-1 border border-primary rounded p-1 text-center" id="sezione_controlli">

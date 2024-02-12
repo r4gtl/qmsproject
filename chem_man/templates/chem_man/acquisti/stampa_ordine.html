@@ -1,4 +1,4 @@
-{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% extends 'core/basi_stampe/base_stampa_a4_verticale_ordini.html' %}
 {% load static %}
 {% block title %} {{ ordine }} {% endblock %}
 
@@ -11,35 +11,50 @@
 			
 			
 		}
+
+        
+
+
 		@media print {
 			body {
 				margin: 0.1em 0.6em 0.1em 0.6em ;
 								
 				}
-            .page-break {
-                page-break-before: always;
+            
+            table {
+                page-break-inside: auto;
+                
             }
-				
-				
+            .table-container {
+                /*page-break-before: always; /* Sposta la tabella su una nuova pagina se supera l'altezza massima */
+                /*max-height: none; /* Rimuovi il limite di altezza durante la stampa */
+                /*overflow-y: visible; /* Mostra tutto il contenuto della tabella durante la stampa */
+                /*margin-bottom: 100vh -200px;*/
+        }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+        }
+
+            .footer {
+                
+                page-break-after: always;
+                
+            }
+			
 		}
 		
 		
-		 /* Definizione dell'altezza massima per la tabella */
-         .table-container {
-            max-height: calc(100vh - 200px); /* Calcola l'altezza massima sottraendo l'altezza degli altri elementi dalla viewport height */
-            overflow-y: auto; /* Aggiungi una scrollbar verticale se il contenuto supera l'altezza massima */
-        }	
-
-			
+        
     </style>
 </head>
 {% block content %}
 <div class="container mt-4">
     {% include 'chem_man/acquisti/_partials/_header_ordine.html' %}
 <hr>
-
-<div class="table-container page-break">
-<table class="table">
+</div>
+<div class="container">
+<table class="table" >
   <thead>
     <tr>
       <th scope="col">Prodotto Chimico</th>
@@ -60,39 +75,16 @@
             {% endfor %}
   </tbody>
 </table>
-</div>
 
-    <div class="row border border-primary rounded p-3 mt-3">
-        
-            <div class="col-5">
-                <label for="data_consegna" class="form-label">Data Consegna</label>
 
-                    <h4 id="data_consegna">{{ ordine.data_consegna|default_if_none:"" }}</h4>
-            </div>
-            <div class="col-6">
-                <label for="note" class="form-label">Note</label>
-                    <h3 id="note">{{ ordine.note }}</h3>
-            </div>
-        
-
-    </div>
-        
-        <div class="row mt-2">
-        <div class="col-8">
-        </div>
-        <div class="col-4">
-            <label for="operatore" class="form-label">Firma</label>
-
-                    <h4 id="operatore">{{ ordine.created_by }}</h4>
-        </div>
-    </div>
-    <hr>
+    
     
 
     </div>
-    
    
+    <footer>
     {% include 'chem_man/acquisti/_partials/_footer_ordine.html' %}
+   </footer>
     
 
 
