@@ -152,138 +152,17 @@
 {% block extra_scripts %}
 <script>
 
+document.addEventListener('DOMContentLoaded', function() {
 
+  const table = document.getElementById('myTable');
+  makeTableRowsDraggable(table);
+});
 
+  const searchURL = "{% url 'ricette:update_row_numbers' %}";
+  const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
 
+  updateRowNumbers(table, searchURL, linkTemplate);
 
-
-// Funzione per rendere le righe della tabella trascinabili
-  function makeTableRowsDraggable(table) {
-    const rows = table.querySelectorAll('tbody tr');
-
-    rows.forEach(row => {
-      row.draggable = true;
-      row.classList.add('draggable');
-
-      // Aggiungi event listener per il trascinamento
-      row.addEventListener('dragstart', () => {
-        row.classList.add('dragging');
-      });
-
-      row.addEventListener('dragend', () => {
-        row.classList.remove('dragging');
-        updateRowNumbers(table);
-      });
-    });
-
-    // Aggiungi event listener per il trascinamento
-    table.addEventListener('dragover', (event) => {
-      event.preventDefault();
-      const afterElement = getDragAfterElement(table, event.clientY);
-      const draggingElement = table.querySelector('.dragging');
-      if (afterElement == null) {
-        table.querySelector('tbody').appendChild(draggingElement);
-      } else {
-        table.querySelector('tbody').insertBefore(draggingElement, afterElement);
-      }
-    });
-  }
-
-  // Funzione per trovare l'elemento dopo cui deve essere inserito il trascinamento
-  function getDragAfterElement(table, y) {
-    const draggableElements = [...table.querySelectorAll('.draggable:not(.dragging)')];
-    return draggableElements.reduce((closest, child) => {
-      const box = child.getBoundingClientRect();
-      const offset = y - box.top - box.height / 2;
-      if (offset < 0 && offset > closest.offset) {
-        return { offset: offset, element: child };
-      } else {
-        return closest;
-      }
-    }, { offset: Number.NEGATIVE_INFINITY }).element;
-  }
-
-
-
-  // Funzione per aggiornare i numeri di riga dopo il trascinamento
-  function updateRowNumbers_Old(table) {
-    const rows = table.querySelectorAll('tbody tr');
-    rows.forEach((row, index) => {
-      const rowNumberCell = row.querySelector('td:first-child');
-      rowNumberCell.textContent = index + 1;
-    });
-  }
-
-  var searchURL = "{% url 'ricette:update_row_numbers' %}";
-  
-  function updateRowNumbers(table) {
-  const rows = table.querySelectorAll('tbody tr');
-  const newNumbers = [];
-
-  rows.forEach((row, index) => {
-    const rowNumberCell = row.querySelector('td:first-child');
-    rowNumberCell.textContent = index + 1;
-    newNumbers.push({ pk: row.dataset.pk, numero_riga: index + 1 });
-  });
-  console.log("newNumbers:", JSON.stringify(newNumbers, null, 2));
-
-  // Esegui una chiamata AJAX per inviare i nuovi numeri di riga al backend
-  fetch(searchURL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      /*'Accept': 'application/json',*/
-      'X-CSRFToken': getCookie('csrftoken') // Assicurati di includere il CSRF token
-    },
-    
-    body: JSON.stringify({ data: newNumbers.map((item, index) => ({ pk: item.pk, numero_riga: index + 1 })) })
-
-  })  
-  .then(response => {
-        if (!response.ok) {
-            throw new Error('Errore durante l\'aggiornamento dei numeri di riga');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Nuovi numeri di riga inviati con successo al backend:', data);
-        updateLinksWithNewData(table, newNumbers); // Chiamata alla funzione per aggiornare i link
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-    });
-}
-
-function updateLinksWithNewData(table, newNumbers) {
-    const rows = table.querySelectorAll('tbody tr');
-    rows.forEach((row, index) => {
-        const rowNumberCell = row.querySelector('td:first-child');
-        const pk = newNumbers[index].pk;
-        const numero_riga = newNumbers[index].numero_riga;
-        const url = `/ricette/modifica_dettaglio_ricetta_rifinizione/{ricettarifinizione.pk}/${pk}/`;
-        rowNumberCell.innerHTML = `<a href="${url}" id="numero_riga_${pk}">${numero_riga}</a>`;
-    });
-}
-
-
-function printCSRFToken() {
-  const csrfToken = getCookie('csrftoken');
-  console.log('CSRF Token:', csrfToken);
-}
-
-
-
-// Funzione per ottenere il valore del CSRF token
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-  printCSRFToken();
-  // Applica il trascinamento delle righe alla tabella
-  console.log("tabella: " + document.getElementById('myTable'))
-  makeTableRowsDraggable(document.getElementById('myTable'));
 
 
 </script>
