@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import *
-from .utils import *
 
+from .utils import *
+from .views import *
 
 app_name="ricette"
 
@@ -32,7 +32,8 @@ urlpatterns = [
 
     # Numero riga
     path('update_numero_riga/', update_numero_riga, name="update_numero_riga"),
-    path('get_updated_table_data/', get_updated_table_data, name="get_updated_table_data"),
+    #path('get_updated_table_data/', get_updated_table_data, name="get_updated_table_data"),
+    path('update_row_numbers/', update_row_numbers, name='update_row_numbers'),
     
 
     

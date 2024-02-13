@@ -1,8 +1,12 @@
 {% extends 'core/base.html' %} 
 {% load static %}
 {% load crispy_forms_tags %} 
+{% load custom_filters %}
 {% load widget_tweaks %}
+
 {% block head_title %}{{ block.super }} - Ricetta Rifinizione{% endblock head_title %} 
+
+
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_chem_man.html" %}
@@ -98,6 +102,7 @@
 
                           <div class="col-5 text-end">
                           <h3>Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
+                          <h3>Solvente: Kg. {{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}</h3>
                           </div>
 
                           <div class="col-md-1">
@@ -146,180 +151,139 @@
 
 {% block extra_scripts %}
 <script>
-var searchURL = "{% url 'ricette:update_numero_riga' %}";
-var pk_ricetta_rifinizione = {{ ricettarifinizione.pk }};
-console.log("pk_ricetta: " + pk_ricetta_rifinizione)
 
-$(document).ready(function() {
-  $(".move-up").click(function() {
-    moveRow("up");
-  });
 
-  $(".move-down").click(function() {
-    moveRow("down");
-  });
 
-  function moveRow(direction) {
-    const selectedInstance = $(".select-instance:checked");
-    if (selectedInstance.length === 0) {
-      alert("Seleziona un'istanza prima di spostarla.");
-      return;
-    }
 
-    const currentRow = selectedInstance.closest("tr");
-    const targetRow = direction === "up" ? currentRow.prev() : currentRow.next();
-    console.log("currentRow: " + currentRow);
-    console.log("targetRow: " + targetRow);
 
-    if (targetRow.length === 0) {
-      // Non puoi spostarti oltre i limiti della tabella
-      return;
-    }
 
-    const currentNumber = currentRow.find("a[id^='numero_riga_']").text();
-    const targetNumber = targetRow.find("a[id^='numero_riga_']").text();
-    console.log("currentNumber: " + currentNumber);
-    console.log("targetNumber: " + targetNumber);
+// Funzione per rendere le righe della tabella trascinabili
+  function makeTableRowsDraggable(table) {
+    const rows = table.querySelectorAll('tbody tr');
 
-    if (isNaN(currentNumber) || isNaN(targetNumber)) {
-      alert("Il numero di riga non è valido.");
-      return;
-    }
+    rows.forEach(row => {
+      row.draggable = true;
+      row.classList.add('draggable');
 
-    currentRow.find("a[id^='numero_riga_']").text(targetNumber);
-    targetRow.find("a[id^='numero_riga_']").text(currentNumber);
+      // Aggiungi event listener per il trascinamento
+      row.addEventListener('dragstart', () => {
+        row.classList.add('dragging');
+      });
 
-    // Aggiorna i valori nel form e invia eventuali modifiche al server
-    const currentInstanceId = selectedInstance.data("id");
-    const targetInstanceId = targetRow.find(".select-instance").data("id");
-    console.log("Instance id: " + currentInstanceId);
-    console.log("targetInstanceId: " + targetInstanceId);
-
-    // Esegui una richiesta AJAX per aggiornare il numero di riga nel server
-    $.ajax({
-      url: searchURL, // Sostituisci con l'URL effettivo della tua vista
-      headers: {
-        "Accept": "application/json", // Imposta l'header "Accept" a "application/json"
-      },
-      method: 'POST',
-      data: {
-        instance_id: currentInstanceId,
-        new_numero_riga: currentNumber,
-        target_instance_id: targetInstanceId,
-        target_new_numero_riga: targetNumber,
-        csrfmiddlewaretoken: '{{ csrf_token }}' // Assicurati di includere il token CSRF se necessario
-      },
-      success: function(response) {
-        if (response.success === true) {
-          // L'operazione è riuscita
-          console.log("Successo!");
-        }
-
-        if (response.success) {
-          console.log("response: " + response);
-          // Aggiornamento riuscito, puoi eseguire ulteriori azioni qui se necessario
-          currentRow.find("a[id^='numero_riga_']").text(targetNumber);
-          console.log("currentRow: " + currentRow.find("a[id^='numero_riga_']").text(currentNumber));
-          // Aggiorna il numero di riga nella riga di destinazione
-          targetRow.find("a[id^='numero_riga_']").text(currentNumber);
-          console.log("targetRow: " + targetRow.find("#id_numero_riga").text(targetNumber));
-
-          // Deseleziona tutte le caselle di controllo
-          $(".select-instance:checked").prop("checked", false);
-
-          // Ora invia una seconda richiesta AJAX per aggiornare il numero di riga della riga di destinazione
-          $.ajax({
-            url: searchURL,
-            headers: {
-              "Accept": "application/json",
-            },
-            method: 'POST',
-            data: {
-              instance_id: targetInstanceId,  // Usa l'ID della riga di destinazione -->
-              //target_instance_id: targetInstanceId,
-              new_numero_riga: targetNumber,   // Usa il nuovo numero di riga della riga di destinazione
-              //target_new_numero_riga: targetNumber,
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-            success: function(response) {
-              if (response.success) {
-                console.log("Aggiornamento della riga di destinazione riuscito.");
-                //refreshTable(pk_ricetta_rifinizione);
-              } else {
-                console.log("Errore nell'aggiornamento della riga di destinazione: " + response.error_message);
-              }
-            },
-            error: function() {
-              console.log("Errore durante la richiesta AJAX per l'aggiornamento della riga di destinazione.");
-            }
-          });
-        } else {
-          console.log("Fail!");
-          console.log("Errore durante l'aggiornamento del numero di riga: " + response.error_message);
-        }
-      },
-      error: function() {
-        alert("Si è verificato un errore durante la richiesta AJAX.");
-      }
+      row.addEventListener('dragend', () => {
+        row.classList.remove('dragging');
+        updateRowNumbers(table);
+      });
     });
 
-    // Dopo l'aggiornamento, puoi aggiornare la vista se necessario
-  }
-});
-
-
-function refreshTable(pk_ricetta_rifinizione) {
-  // Effettua una richiesta AJAX per ottenere i dati aggiornati
-  $.ajax({
-    url: "{% url 'ricette:get_updated_table_data' %}",
-    method: 'GET',  // Utilizza il metodo HTTP GET
-    dataType: 'json',
-    data: {
-      pk_ricetta_rifinizione: pk_ricetta_rifinizione
-    },
-    success: function(response) {
-      if (response.success) {
-        // Aggiorna la tabella con i nuovi dati
-        var tableBody = $("#tabella_dettaglio");  // Sostituisci con l'ID corretto del corpo della tabella
-        tableBody.html(response.table_html); // Assume che il server restituisca l'HTML della tabella aggiornata
+    // Aggiungi event listener per il trascinamento
+    table.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      const afterElement = getDragAfterElement(table, event.clientY);
+      const draggingElement = table.querySelector('.dragging');
+      if (afterElement == null) {
+        table.querySelector('tbody').appendChild(draggingElement);
       } else {
-        console.log("Errore nell'ottenere i dati aggiornati.");
+        table.querySelector('tbody').insertBefore(draggingElement, afterElement);
       }
-    },
-    error: function() {
-      console.log("Errore durante la richiesta AJAX per i dati aggiornati.");
-    }
-  });
-};
-
-// Chiamare la funzione refreshTable() dopo aver completato con successo la seconda richiesta AJAX
-
-var updateURL = "{% url 'ricette:get_updated_table_data' %}";
-var pk_ricetta_rifinizione = {{ ricettarifinizione.pk }};
-$(document).ready(function () {
-  // Aggiorna la tabella quando la pagina è pronta
-  updateTable();
-
-  // Funzione per aggiornare la tabella
-  function updateTable() {
-      //var pk_ricetta_rifinizione = // Ottieni il valore appropriato
-
-      $.ajax({
-          url: updateURL,
-          type: 'GET',
-          data: {'pk_ricetta_rifinizione': pk_ricetta_rifinizione},
-          success: function (data) {
-              // Aggiorna il contenuto della tabella con i dati ricevuti dalla chiamata AJAX
-              $('#tabella_dettaglio').html(data);
-          },
-          error: function (xhr, status, error) {
-              console.error(error);
-          }
-      });
+    });
   }
-});
+
+  // Funzione per trovare l'elemento dopo cui deve essere inserito il trascinamento
+  function getDragAfterElement(table, y) {
+    const draggableElements = [...table.querySelectorAll('.draggable:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
 
 
+
+  // Funzione per aggiornare i numeri di riga dopo il trascinamento
+  function updateRowNumbers_Old(table) {
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach((row, index) => {
+      const rowNumberCell = row.querySelector('td:first-child');
+      rowNumberCell.textContent = index + 1;
+    });
+  }
+
+  var searchURL = "{% url 'ricette:update_row_numbers' %}";
+  
+  function updateRowNumbers(table) {
+  const rows = table.querySelectorAll('tbody tr');
+  const newNumbers = [];
+
+  rows.forEach((row, index) => {
+    const rowNumberCell = row.querySelector('td:first-child');
+    rowNumberCell.textContent = index + 1;
+    newNumbers.push({ pk: row.dataset.pk, numero_riga: index + 1 });
+  });
+  console.log("newNumbers:", JSON.stringify(newNumbers, null, 2));
+
+  // Esegui una chiamata AJAX per inviare i nuovi numeri di riga al backend
+  fetch(searchURL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      /*'Accept': 'application/json',*/
+      'X-CSRFToken': getCookie('csrftoken') // Assicurati di includere il CSRF token
+    },
+    
+    body: JSON.stringify({ data: newNumbers.map((item, index) => ({ pk: item.pk, numero_riga: index + 1 })) })
+
+  })  
+  .then(response => {
+        if (!response.ok) {
+            throw new Error('Errore durante l\'aggiornamento dei numeri di riga');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Nuovi numeri di riga inviati con successo al backend:', data);
+        updateLinksWithNewData(table, newNumbers); // Chiamata alla funzione per aggiornare i link
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+    });
+}
+
+function updateLinksWithNewData(table, newNumbers) {
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach((row, index) => {
+        const rowNumberCell = row.querySelector('td:first-child');
+        const pk = newNumbers[index].pk;
+        const numero_riga = newNumbers[index].numero_riga;
+        const url = `/ricette/modifica_dettaglio_ricetta_rifinizione/{ricettarifinizione.pk}/${pk}/`;
+        rowNumberCell.innerHTML = `<a href="${url}" id="numero_riga_${pk}">${numero_riga}</a>`;
+    });
+}
+
+
+function printCSRFToken() {
+  const csrfToken = getCookie('csrftoken');
+  console.log('CSRF Token:', csrfToken);
+}
+
+
+
+// Funzione per ottenere il valore del CSRF token
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+  printCSRFToken();
+  // Applica il trascinamento delle righe alla tabella
+  console.log("tabella: " + document.getElementById('myTable'))
+  makeTableRowsDraggable(document.getElementById('myTable'));
 
 
 </script>

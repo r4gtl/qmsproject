@@ -1,8 +1,12 @@
-from .models import DettaglioRicettaRifinizione
-from django.http import JsonResponse,HttpResponse
-from django.template.loader import render_to_string, get_template
+import json
+
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.template import RequestContext
+from django.template.loader import get_template, render_to_string
+
+from .models import DettaglioRicettaRifinizione
+
 
 def update_numero_riga(request):
     if request.method == "POST" and ("application/json" in request.META.get("HTTP_ACCEPT", "")):
@@ -81,7 +85,7 @@ def update_numero_riga(request):
         return JsonResponse({"success": False, "error_message": "Richiesta non valida."})
     
 
-
+'''
 def get_updated_table_data(request):
     pk_ricetta_rifinizione = request.GET.get("pk_ricetta_rifinizione")
     updated_rows = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=pk_ricetta_rifinizione)
@@ -95,3 +99,25 @@ def get_updated_table_data(request):
     
     # Restituisci solo l'HTML della tabella come HttpResponse
     return HttpResponse(table_html)
+'''
+
+
+'''13/02/2024 prova trascinamento riga tabella'''
+def update_row_numbers(request):
+    
+    if request.method == 'POST': 
+        data = json.loads(request.body)
+        data_list = data['data']
+        
+        # Itera sui dati ricevuti e aggiorna i record nel database
+        for item in data_list:            
+            pk = item['pk']
+            new_numero_riga = item['numero_riga']
+            dettaglio = DettaglioRicettaRifinizione.objects.get(pk=pk)
+            dettaglio.numero_riga = new_numero_riga
+            dettaglio.save()
+        
+        return JsonResponse({'message': 'Numeri di riga aggiornati con successo'}, status=200)
+    
+    else:        
+        return JsonResponse({'error': 'Richiesta non valida'}, status=400)

@@ -159,3 +159,8 @@ img .avatarimage {
   height: 100px;
 
 }
+
+
+  tr.draggable {
+    cursor: move;
+  }

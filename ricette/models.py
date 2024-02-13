@@ -1,16 +1,13 @@
-from django.db import models
-from datetime import date
-from django.db.models import Max, Q
-from django.contrib.auth.models import User
-from articoli.models import Articolo, Colore
-from acquistopelli.models import TipoAnimale, TipoGrezzo
-from chem_man.models import ProdottoChimico, PrezzoProdotto
-
 import locale
+from datetime import date
 from decimal import Decimal
 
-
-
+from acquistopelli.models import TipoAnimale, TipoGrezzo
+from articoli.models import Articolo, Colore
+from chem_man.models import PrezzoProdotto, ProdottoChimico
+from django.contrib.auth.models import User
+from django.db import models
+from django.db.models import Max, Q
 
 ####################################################
 # RICETTE
@@ -270,6 +267,21 @@ class RicettaRifinizione(models.Model):
 
         
         return totale_prezzi
+    
+    def calcola_solvente_totale(self):
+        # Ottieni tutti i dettagli delle ricette associati a questa RicettaRifinizione
+        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
+
+        # Inizializza il totale del solvente a zero
+        totale_solvente = 0.0
+
+        for dettaglio_ricetta in dettagli_ricette:
+            if dettaglio_ricetta.fk_prodotto_chimico and dettaglio_ricetta.fk_prodotto_chimico.solvente:
+                # Calcola il solvente per il dettaglio della ricetta
+                solvente_dettaglio = float(dettaglio_ricetta.quantity) * float((dettaglio_ricetta.fk_prodotto_chimico.solvente / 100))
+                totale_solvente += solvente_dettaglio
+
+        return totale_solvente
     
     def save(self, *args, **kwargs):
         # Se il numero ricetta è vuoto
