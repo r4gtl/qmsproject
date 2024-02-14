@@ -58,6 +58,19 @@
 
 {% endblock %}
 
+{% block extra_styles %}
+  <style>
+    @media print {
+      .col-sm-6 {
+        width: 50%;
+        float: left;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+{% endblock %}
+
+
 
 {% block extra_scripts %}
 <script src="{% static '/js/monitoraggi/monitoraggi.js' %}"></script>
