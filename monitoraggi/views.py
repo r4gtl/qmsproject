@@ -1,21 +1,20 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-from django.urls import reverse, reverse_lazy
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 import datetime
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
+from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-
-from .models import (
-                    MonitoraggioAcqua, MonitoraggioGas, MonitoraggioEnergiaElettrica, DatoProduzione
-)
-from .forms import (
-                    MonitoraggioAcquaModelForm, MonitoraggioGasModelForm, MonitoraggioEnergiaElettricaModelForm, DatoProduzioneModelForm
-)
-
-from .utils import filtro_dati_produzione, somma_quantity_intervallo_date, somma_dato_per_intervallo_per_mese
+from .forms import (DatoProduzioneModelForm, MonitoraggioAcquaModelForm,
+                    MonitoraggioEnergiaElettricaModelForm,
+                    MonitoraggioGasModelForm)
+from .models import (DatoProduzione, MonitoraggioAcqua,
+                     MonitoraggioEnergiaElettrica, MonitoraggioGas)
+from .utils import (filtro_dati_produzione, somma_dato_per_intervallo_per_mese,
+                    somma_quantity_intervallo_date)
 
 
 def dashboard_monitoraggi(request):
@@ -322,6 +321,8 @@ def report_energia(request):
         # MegaJoule periodo
         megajoule_periodo = (float(produzione_filtrata) / float(energia_filtrata))*3.6
 
+        # Totale TEP periodo
+        energia_filtrata_tep = (float(energia_filtrata)*0.23)/1000
 
         context = {
                 'produzione_filtrata': produzione_filtrata,
@@ -329,6 +330,7 @@ def report_energia(request):
                 'energia_filtrata': energia_filtrata,
                 'energia_filtrata_per_mese': energia_filtrata_per_mese,
                 'megajoule_periodo': megajoule_periodo,
+                'energia_filtrata_tep': energia_filtrata_tep,
                 'from_date_formatted': from_date_formatted,
                 'to_date_formatted': to_date_formatted,
                 'from_date': from_date,
