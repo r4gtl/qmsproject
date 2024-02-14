@@ -16,7 +16,7 @@
         <li class="breadcrumb-item"><a href="{% url 'nonconformity:modifica_rapporto_audit' pk=fk_rapportoaudit.pk %}">Rapporto audit {{ fk_rapportoaudit }}</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica Processo {{ processoaudit }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica Processo {{ processo_audit.fk_processo }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Processo</li>
         {% endif %}             
@@ -27,7 +27,7 @@
 
     <div class="container">
         {% if form.instance.id  %}
-            <h3>Modifica Processo {{ processoaudit }}</h3>
+            <h3>Modifica Processo {{ processo_audit.fk_processo }}</h3>
         {% else %}
             <h3> Aggiungi Processo</h3>
         {% endif %}

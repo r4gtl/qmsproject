@@ -165,7 +165,8 @@ class RapportoAuditUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk_rapporto = self.object.pk        
+        pk_rapporto = self.object.pk    
+        
         context['nc_associate'] = RapportoNC.objects.filter(fk_rapportoaudit=pk_rapporto) 
         context['processi_audit'] = ProcessoAudit.objects.filter(fk_rapportoaudit=pk_rapporto) 
 
@@ -301,8 +302,16 @@ class ProcessoAuditUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        fk_rapportoaudit = self.kwargs['fk_rapportoaudit']        
-        context['fk_rapportoaudit'] = RapportoAudit.objects.filter(pk=fk_rapportoaudit) 
+        print("Tutti i kwargs:", self.kwargs)  # Stampa tutti i kwargs
+        fk_rapportoaudit = self.kwargs['fk_rapportoaudit']  
+        fk_processo_audit = self.kwargs['pk']
+        print("Valore di fk_rapportoaudit:", fk_rapportoaudit)
+        print("processi: " + str(ProcessoAudit.objects.filter(fk_rapportoaudit=fk_rapportoaudit)))
+
+        context['fk_rapportoaudit'] = RapportoAudit.objects.get(pk=fk_rapportoaudit) 
+        context['processo_audit'] = ProcessoAudit.objects.get(pk=fk_processo_audit)
+        
+        context['processi_audit'] = ProcessoAudit.objects.filter(fk_rapportoaudit=fk_rapportoaudit)
         # context['elenco_moduli'] = Modulo.objects.filter(fk_procedura=pk_procedura) 
 
         return context
