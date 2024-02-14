@@ -27,12 +27,12 @@
   <div class="col-4">
   <h5>Destinazione Rifiuti Prodotti ultimo anno:</h5>
     {% if movimenti_recupero %}
-      <h6>Recupero kg.: {{ movimenti_recupero }} ({{ perc_recupero }}%)</h6>
+      <h6>Recupero kg.: {{ movimenti_recupero|format_number_dec_thousand }} ({{ perc_recupero }}%)</h6>
     {% else %}
       <h6>Nessun rifiuto a recupero</h6>
     {% endif %}
     {% if movimenti_smaltimento %}
-      <h6>Smaltimento kg.: {{ movimenti_smaltimento }} ({{ perc_smaltimento }}%)</h6>
+      <h6>Smaltimento kg.: {{ movimenti_smaltimento|format_number_dec_thousand }} ({{ perc_smaltimento }}%)</h6>
     {% else %}
       <h6>Nessun rifiuto a smaltimento</h6>
     {% endif %}
