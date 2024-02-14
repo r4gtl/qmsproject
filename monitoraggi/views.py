@@ -366,11 +366,14 @@ def report_gas(request):
         # MegaJoule periodo
         megajoule_periodo = (float(produzione_filtrata) / float(gas_filtrato))*3.6
 
+        # Totale TEP per periodo
+        gas_filtrato_tep = (float(gas_filtrato)*0.82)/1000
 
         context = {
                 'produzione_filtrata': produzione_filtrata,
                 'produzione_filtrata_per_mese': produzione_filtrata_per_mese,
                 'gas_filtrato': gas_filtrato,
+                'gas_filtrato_tep': gas_filtrato_tep,
                 'gas_filtrato_per_mese': gas_filtrato_per_mese,
                 'megajoule_periodo': megajoule_periodo,
                 'from_date_formatted': from_date_formatted,
