@@ -250,7 +250,7 @@ class FaseLavoroCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
-            return reverse_lazy('articoli:fasi_lavoro_home')
+            return reverse_lazy('articoli:tabelle_generiche')
         
         pk_fase=self.object.pk
         return reverse_lazy('articoli:modifica_fase_lavoro', kwargs={'pk':pk_fase})

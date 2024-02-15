@@ -96,7 +96,7 @@
             
             <td><a href="{% url 'articoli:modifica_fase_lavoro' pk=faselavoro.pk %}">{{ faselavoro.descrizione }}</a></td>            
             <td>{{ faselavoro.interno_esterno|default_if_none:"" }}</td>            
-            <td class="text-center"><a href="{% url 'articoli:delete_fase_lavoro' pk=faselavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{faselavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            <td class="text-center"><a href="{% url 'articoli:delete_fase_lavoro' pk=faselavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonFaseLavoro{{faselavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>
@@ -223,7 +223,7 @@
                     
                     <td><a href="{% url 'articoli:modifica_test' pk=test.pk %}">{{ test.descrizione }}</a></td>
                     <td>{{ test.norma_riferimento|default_if_none:"Non inserita" }}</td>
-                    <td class="text-center"><a href="{% url 'articoli:delete_test' pk=test.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{test.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+                    <td class="text-center"><a href="{% url 'articoli:delete_test' pk=test.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonTest{{test.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
                   </tr>  
                   {% endfor %}
                 </tbody>
@@ -325,7 +325,7 @@
             
             <td><a href="{% url 'articoli:modifica_lavorazione_esterna' pk=lavorazione.pk %}">{{ lavorazione.descrizione }}</a></td>            
             <td>{{ lavorazione.codice|default_if_none:"" }}</td>            
-            <td class="text-center"><a href="{% url 'articoli:delete_lavorazione_esterna' pk=lavorazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{lavorazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            <td class="text-center"><a href="{% url 'articoli:delete_lavorazione_esterna' pk=lavorazione.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonLavorazione{{lavorazione.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>

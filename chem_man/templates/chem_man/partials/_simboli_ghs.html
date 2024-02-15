@@ -85,7 +85,7 @@
             <td>No Image</td>
           {% endif %}
           </td>
-          <td class="text-center"><a href="{% url 'chem_man:delete_simbolo_ghs' pk=simbolo_ghs.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{delete_simbolo_ghs.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          <td class="text-center"><a href="{% url 'chem_man:delete_simbolo_ghs' pk=simbolo_ghs.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonGHS{{delete_simbolo_ghs.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  
         {% endfor %}
       </tbody>

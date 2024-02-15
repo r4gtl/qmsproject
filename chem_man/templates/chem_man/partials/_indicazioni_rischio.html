@@ -81,7 +81,7 @@
           
           <td><a href="{% url 'chem_man:modifica_hazard_statement' pk=hazard_statement.pk %}">{{ hazard_statement.hazard_statement }}</a></td>
           <td>{{ hazard_statement.descrizione|truncatechars:20 }}</td>
-          <td class="text-center"><a href="{% url 'chem_man:delete_hazard_statement' pk=hazard_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{hazard_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          <td class="text-center"><a href="{% url 'chem_man:delete_hazard_statement' pk=hazard_statement.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonHazardStatement{{hazard_statement.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  
         {% endfor %}
       </tbody>

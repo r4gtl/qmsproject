@@ -85,7 +85,7 @@
           <td class="text-center">{{ imballaggio_pc.peso_unitario }}</td>
           
           </td>
-          <td class="text-center"><a href="{% url 'chem_man:delete_imballaggio_pc' pk=imballaggio_pc.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{imballaggio_pc.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+          <td class="text-center"><a href="{% url 'chem_man:delete_imballaggio_pc' pk=imballaggio_pc.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonImballaggio{{imballaggio_pc.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
         </tr>  
         {% endfor %}
       </tbody>

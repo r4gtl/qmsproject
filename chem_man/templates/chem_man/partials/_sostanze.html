@@ -86,7 +86,7 @@
             <td><a href="{% url 'chem_man:modifica_sostanza' pk=sostanza.pk %}">{{ sostanza.descrizione|truncatechars:20 }}</a></td>
             <td>{{ sostanza.num_cas }}</td>
             <td>{{ sostanza.num_ec }}</td>
-            <td class="text-center"><a href="{% url 'chem_man:delete_sostanza' pk=sostanza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{sostanza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            <td class="text-center"><a href="{% url 'chem_man:delete_sostanza' pk=sostanza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonSostanza{{sostanza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
           </tr>  
           {% endfor %}
         </tbody>
