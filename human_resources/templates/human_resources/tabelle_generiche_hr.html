@@ -51,7 +51,7 @@
               
               <td><a href="{% url 'human_resources:update_ward' pk=ward.pk %}">{{ ward.description }}</a></td>
               
-              <td class="text-center"><a href="{% url 'human_resources:delete_ward' pk=ward.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ward.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+              <td class="text-center"><a href="{% url 'human_resources:delete_ward' pk=ward.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonWard{{ward.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
@@ -83,7 +83,7 @@
               
               <td><a href="{% url 'human_resources:update_role' pk=role.pk %}">{{ role.description }}</a></td>
               
-              <td class="text-center"><a href="{% url 'human_resources:delete_role' pk=role.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{role.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+              <td class="text-center"><a href="{% url 'human_resources:delete_role' pk=role.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonRole{{role.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
@@ -118,7 +118,7 @@
               
               <td><a href="{% url 'human_resources:modifica_centro_di_lavoro' pk=centrodilavoro.pk %}">{{ centrodilavoro.description }}</a></td>
               
-              <td class="text-center"><a href="{% url 'human_resources:delete_centro_di_lavoro' pk=centrodilavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{centrodilavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+              <td class="text-center"><a href="{% url 'human_resources:delete_centro_di_lavoro' pk=centrodilavoro.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonCentroLavoro{{centrodilavoro.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>
@@ -152,7 +152,7 @@
               
               <td><a href="{% url 'human_resources:update_safety_role' pk=safety_role.pk %}">{{ safety_role.descrizione }}</a></td>
               
-              <td class="text-center"><a href="{% url 'human_resources:delete_safety_role' pk=safety_role.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{safety_role.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+              <td class="text-center"><a href="{% url 'human_resources:delete_safety_role' pk=safety_role.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonSafetyRole{{safety_role.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
             {% endfor %}
           </tbody>

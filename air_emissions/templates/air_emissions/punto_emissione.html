@@ -110,11 +110,11 @@
         
         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
         <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
-        <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+        <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_rifinizione' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
     </form>
     <hr>
     {% if form.instance.id  %}
-          <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'air_emissions:aggiungi_registro_analisi' fk_punto_emissione=puntoemissione.pk %}"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
+          <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'air_emissions:dashboard_emissions' %}"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
           <table class="table table-bordered table-striped mt-2">
             <thead>
               <tr>

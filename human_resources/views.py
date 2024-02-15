@@ -614,10 +614,11 @@ def delete_dettaglio_registro_formazione(request, pk):
 '''SEZIONE REGISTRO ORE'''
 
 def dashboard_registro_ore(request):
-    registri_ore = RegistroOreLavoro.objects.all()
-    somma_ore_lavorate = RegistroOreLavoro.objects.aggregate(Sum('ore_lavorate'))
-    somma_ore_lavorabili = RegistroOreLavoro.objects.aggregate(Sum('ore_lavorabili'))
-    somma_ore_ferie = RegistroOreLavoro.objects.aggregate(Sum('ferie_permessi'))
+    current_year = datetime.date.today().year
+    registri_ore = RegistroOreLavoro.objects.filter(entry_year=current_year)
+    somma_ore_lavorate = registri_ore.aggregate(Sum('ore_lavorate'))
+    somma_ore_lavorabili = registri_ore.aggregate(Sum('ore_lavorabili'))
+    somma_ore_ferie = registri_ore.aggregate(Sum('ferie_permessi'))
     
     #queryset = RegistroFormazione.objects.values('fk_corso__fk_areaformazione__descrizione').annotate(ore_lavorate=Sum('ore_lavorate'))
     if somma_ore_ferie:
@@ -626,9 +627,9 @@ def dashboard_registro_ore(request):
         print("Vuoto")
 
     context = {'registri_ore': registri_ore, 
-                'somma_ore_lavorate': somma_ore_lavorate, 
-                'somma_ore_lavorabili': somma_ore_lavorabili,
-                'somma_ore_ferie': somma_ore_ferie,
+            'somma_ore_lavorate': somma_ore_lavorate['ore_lavorate__sum'], 
+            'somma_ore_lavorabili': somma_ore_lavorabili['ore_lavorabili__sum'],
+            'somma_ore_ferie': somma_ore_ferie['ferie_permessi__sum'],
 
                 
                 }
