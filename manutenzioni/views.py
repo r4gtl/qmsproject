@@ -35,7 +35,7 @@ def dashboard_manutenzioni(request):
 
     #filterset_class = AttrezzaturaFilter
     page = request.GET.get('page', 1)
-    paginator = Paginator(attrezzature_filter, 50)
+    paginator = Paginator(attrezzature_filter.qs, 50)
     
     try:
         attrezzature_home = paginator.page(page)
