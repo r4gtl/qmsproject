@@ -65,6 +65,7 @@
             
             
             <input type="submit" class="btn btn-success" value="Salva">
+            <button type="button" class="btn btn-danger" onclick="cancelAndRedirectTo(`{% url 'nonconformity:modifica_rapporto_audit' pk=fk_rapportoaudit.pk %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         
