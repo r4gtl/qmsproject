@@ -40,7 +40,7 @@ urlpatterns = [
 
     # Processi-Rapporti Audit
     path('<int:fk_rapportoaudit>/aggiungi_processo_rapporto_audit/', ProcessoAuditCreateView.as_view(), name="aggiungi_processo_rapporto_audit"), 
-    path('<int:fk_rapportoaudit>/modifica_processo_rapporto_audit/<int:id>/', ProcessoAuditUpdateView.as_view(), name="modifica_processo_rapporto_audit"), 
+    path('<int:fk_rapportoaudit>/modifica_processo_rapporto_audit/<int:pk>/', ProcessoAuditUpdateView.as_view(), name="modifica_processo_rapporto_audit"), 
     path('delete_processo_audit/<int:pk>', delete_processo_audit, name="delete_processo_audit"),
 
     # Charts

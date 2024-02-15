@@ -104,7 +104,9 @@
 
                           <div class="col-5 text-end">
                           <h3>Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
-                          <h3>Solvente: Kg. {{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}</h3>
+                          
+                          <h3>Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
+                          
                           </div>
 
                           <div class="col-md-1">
