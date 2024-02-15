@@ -345,9 +345,10 @@ class DettaglioFaseLavoroUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fk_fase_lavoro = self.kwargs['fk_fase_lavoro']
-        context['fk_fase_lavoro'] = DettaglioFaseLavoro.objects.get(pk=fk_fase_lavoro)
-
+        fk_fase_lavoro = self.kwargs['fk_fase_lavoro']  
+        pk = self.kwargs['pk']      
+        context['fk_fase_lavoro'] = FaseLavoro.objects.get(pk=fk_fase_lavoro)
+        context['attributo']=DettaglioFaseLavoro.objects.get(pk=pk)
         return context
 
 

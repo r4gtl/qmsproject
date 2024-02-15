@@ -16,6 +16,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
             <li class="breadcrumb-item"><a href="{% url 'articoli:tabelle_generiche' %}">Tabelle Generiche</a></li>        
+            <li class="breadcrumb-item"><a href="{% url 'articoli:modifica_fase_lavoro' pk=fk_fase_lavoro.pk %}">{{ fk_fase_lavoro.descrizione }}</a></li>        
     
             {% if form.instance.id  %}
                 <li class="breadcrumb-item active" aria-current="page">{{ attributo.attributo }}</li>
@@ -82,7 +83,7 @@
                       </div>
         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
         
-        <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+        <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'articoli:modifica_fase_lavoro' pk=fk_fase_lavoro.pk %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
 
         <!-- fine form -->
         </form>
