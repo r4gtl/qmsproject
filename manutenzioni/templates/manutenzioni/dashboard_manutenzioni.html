@@ -118,12 +118,12 @@
         </tbody>
       </table>
       <!-- Pagination -->
-      {% if filter.qs.has_other_pages %}
+      {% if attrezzature_home.has_other_pages %}
       <nav>
         <ul class="pagination justify-content-center">
-          {% if filter.qs.has_previous %}
+          {% if attrezzature_home.has_previous %}
             <li class="page-item">
-              <a class="page-link" href="?page={{ filter.qs.previous_page_number }}" aria-label="Previous">
+              <a class="page-link" href="?page={{ attrezzature_home.previous_page_number }}" aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
@@ -133,17 +133,17 @@
             </li>
           {% endif %}
   
-          {% for p in filter.qs.paginator.page_range %}
-            {% if filter.qs.number == p %}
+          {% for p in attrezzature_home.paginator.page_range %}
+            {% if attrezzature_home.number == p %}
               <li class="page-item"><a class="page-link" style="color: red;" href="#">{{ p }}</a></li>
             {% else %}
               <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
             {% endif %}
           {% endfor %}
   
-          {% if filter.qs.has_next %}
+          {% if attrezzature_home.has_next %}
             <li class="page-item">
-              <a class="page-link" href="?page={{ filter.qs.next_page_number }}" aria-label="Next">
+              <a class="page-link" href="?page={{ attrezzature_home.next_page_number }}" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
