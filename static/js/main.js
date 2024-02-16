@@ -188,6 +188,10 @@ function initializeDataTable(tableId) {
 // DRAG & DROP RIGHE TABELLE //
 /*
 Funzione per rendere le righe della tabella trascinabili
+aggiungere alla tabella nel tag <table>
+<table class="...css..." id="myTable" data-model_name="DettaglioRicettaRifinizione">
+dove l'id serve per individuare la tabella nel codice Javascript
+e data-model_name per definire il modello da passare poi al backend per aggiornarlo
 Inserire la chiamata 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -198,18 +202,29 @@ makeTableRowsDraggable(table);
 inserire per ogni riga della tabella il tag
 <tr data-pk="{{ dettaglio.pk }}">
 dove {{ dettaglio.pk }} indica la pk di quella riga.
-Per chiamare poi la funzione che aggiorna il backend:
+
 
 definire come costante l'url che punta alla funzione che gestisce
-la chiamata ajax del backend
-const searchURL = "{% url 'ricette:update_row_numbers' %}";
+la chiamata ajax del backend:
+Definisco il nome della app corrente per passarlo nell'url come variabile in modo che la funzione
+update_row_numbers(request, app_name, model_name)
+possa cercare il modello nella app corretta
+const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
+prendo il nome del modello
+const modelName = document.getElementById('myTable').dataset.model_name;
+genero l'url presente nell'app Core
+const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
 
 
 definire come deve essere il link da assegnare ad ogni riga per modificare il dettaglio
 const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
 
-chiamare la funzione con le variabili
-updateRowNumbers(table, searchURL, linkTemplate);
+Quindi, le suddette costanti vanno aggiunte così
+const currentApp = "{{ request.resolver_match.app_name }}";  
+const modelName = document.getElementById('myTable').dataset.model_name;
+const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
+const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
+
 
 */
 
@@ -271,7 +286,7 @@ function getDragAfterElement(table, y) {
       newNumbers.push({ pk: row.dataset.pk, numero_riga: index + 1 });
     });
     
-  
+    
     // Esegui una chiamata AJAX per inviare i nuovi numeri di riga al backend
     fetch(searchURL, {
       method: 'POST',
@@ -285,7 +300,7 @@ function getDragAfterElement(table, y) {
     })  
     .then(response => {
           if (!response.ok) {
-              throw new Error('Errore durante l\'aggiornamento dei numeri di riga');
+              throw new Error('Errore durante l\'aggiornamento dei numeri di riga: ' );
           }
           return response.json();
       })
@@ -295,20 +310,10 @@ function getDragAfterElement(table, y) {
       })
       .catch(error => {
           console.error('Errore:', error);
+          
       });
   }
   
-  //13/02/2024 - ELIMINABILE
-  /*function updateLinksWithNewData(table, newNumbers) {
-      const rows = table.querySelectorAll('tbody tr');
-      rows.forEach((row, index) => {
-          const rowNumberCell = row.querySelector('td:first-child');
-          const pk = newNumbers[index].pk;
-          const numero_riga = newNumbers[index].numero_riga;
-          const url = `/ricette/modifica_dettaglio_ricetta_rifinizione/{ricettarifinizione.pk}/${pk}/`;
-          rowNumberCell.innerHTML = `<a href="${url}" id="numero_riga_${pk}">${numero_riga}</a>`;
-      });
-  }*/
   
   function updateLinksWithNewData(table, newNumbers, linkTemplate) {
     const rows = table.querySelectorAll('tbody tr');
@@ -329,4 +334,4 @@ function getDragAfterElement(table, y) {
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
   
-    
+  // FINE DRAG & DROP RIGHE TABELLE //

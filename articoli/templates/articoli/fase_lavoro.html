@@ -27,6 +27,8 @@
         </ol>
     </nav>    
     <hr>
+    <!-- Inseriamo il partial dei messaggi per visualizzare il messaggio su Salva e Continua -->
+    {% include "core/partials/_messages.html" %}
     <br>
     {% if form.instance.id  %}
             <h5 class="text-end">{{ faselavoro.descrizione }}</h5>

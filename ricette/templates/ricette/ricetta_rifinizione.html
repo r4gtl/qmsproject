@@ -162,12 +162,11 @@ document.addEventListener('DOMContentLoaded', function() {
   makeTableRowsDraggable(table);
 });
 
-  const searchURL = "{% url 'ricette:update_row_numbers' %}";
+
+  const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
+  const modelName = document.getElementById('myTable').dataset.model_name;
+  const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
   const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
-
-  updateRowNumbers(table, searchURL, linkTemplate);
-
-
 
 </script>
 {% endblock %}

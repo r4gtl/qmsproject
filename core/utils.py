@@ -6,6 +6,7 @@ from django.core.serializers import serialize
 from django.db.models import Max, Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from articoli.models import *
 
 '''
 Questa funzione serve per conteggiare quanti record hanno la prossima scadenza nei prossimi x giorni.
@@ -146,5 +147,43 @@ def update_numero_riga_up(request):
         return JsonResponse({'success': False, 'error': 'La riga è già al massimo delle righe disponibili'})
 
     return JsonResponse({'success': False, 'error': 'Richiesta non valida'}, status=400)
+
+
+
+# Prova astrazione update_row_numbers per drag 'n drop
+
+
+def update_row_numbers(request, app_name, model_name):
+    # Ottieni il modello dal nome
+    
+    try:
+        model = apps.get_model(app_name, model_name)
+        
+    except LookupError:
+        print("Eccomi LookupError")
+        return JsonResponse({'error': 'Modello non trovato'}, status=400)
+    
+    
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+        data_list = data['data']
+        
+        # Itera sui dati ricevuti e aggiorna i record nel database
+        for item in data_list:            
+            pk = item['pk']
+            new_numero_riga = item['numero_riga']
+            try:
+                instance = model.objects.get(pk=pk)
+                
+            except model.DoesNotExist:
+                return JsonResponse({'error': 'Oggetto non trovato'}, status=400)
+            instance.numero_riga = new_numero_riga
+            instance.save()
+        
+        return JsonResponse({'message': 'Numeri di riga aggiornati con successo'}, status=200)
+    
+    else:        
+        return JsonResponse({'error': 'Richiesta non valida'}, status=400)
 
 
