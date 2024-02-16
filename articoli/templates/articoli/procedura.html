@@ -123,9 +123,15 @@
         
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_descrizione');
+        
+            const table = document.getElementById('myTable');
+            makeTableRowsDraggable(table);
             
         });
-    
+
+        const searchURL = "{% url 'articoli:update_row_numbers' %}";
+        const linkTemplate = "/articoli/modifica_dettaglio_procedura/{pk}/";
+        updateRowNumbers(table, searchURL, linkTemplate);
     
 
 

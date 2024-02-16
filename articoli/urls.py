@@ -1,4 +1,6 @@
 from django.urls import path
+
+from .utils import *
 from .views import *
 
 app_name="articoli"
@@ -57,6 +59,7 @@ urlpatterns = [
     path('<int:fk_procedura>/modifica_dettaglio_procedura/<int:pk>/', DettaglioProceduraUpdateView.as_view(), name="modifica_dettaglio_procedura"), 
     path('delete_dettaglio_procedura/<int:pk>', delete_dettaglio_procedura, name="delete_dettaglio_procedura"),
 
-    
+    # Numeri RIga Drag 'n Drop
+    path('update_row_numbers/', update_row_numbers, name='update_row_numbers'),
     
 ]

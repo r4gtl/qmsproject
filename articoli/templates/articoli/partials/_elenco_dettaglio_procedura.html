@@ -11,8 +11,8 @@
 
     </div>
   </div>
-  <div class="table-container">
-    <table class="table table-bordered table-striped mt-2" id="table-details">
+  <div class="table-container" >
+    <table class="table table-bordered table-striped mt-2" id="myTable">
       <thead>
         <tr>
           <th>Riga </th>
@@ -23,7 +23,7 @@
       </thead>
       <tbody id="table-body">
         {% for dettaglio in elenco_dettagli %}
-        <tr>        
+        <tr data-pk="{{ dettaglio.pk }}">        
           <td class="numero-riga" id="numero-riga-{{ dettaglio.pk }}"><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=procedura.pk pk=dettaglio.pk %}">{{ dettaglio.numero_riga }}</a></td>
           
           <td>{{ dettaglio.fk_faselavoro.descrizione }}</td>            
