@@ -3,6 +3,7 @@ from datetime import date
 
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
 
@@ -17,6 +18,13 @@ class ImballaggioPC(models.Model):
 
     def __str__(self):
         return f"{self.descrizione} - peso unitario: {self.peso_unitario}"
+
+
+
+def no_duplicates(value):
+    if ProdottoChimico.objects.filter(my_field__iexact=value).exists():
+        raise ValidationError('Questo valore è già presente.')
+
 
 
 class ProdottoChimico(models.Model):
@@ -59,7 +67,7 @@ class ProdottoChimico(models.Model):
         limit_choices_to={'categoria': Fornitore.PRODOTTI_CHIMICI},
         on_delete=models.CASCADE
     )
-    descrizione = models.CharField(max_length=100)
+    descrizione = models.CharField(max_length=100, validators=[no_duplicates])
     solvente = models.DecimalField(max_digits=5, decimal_places=2)
     reparto = models.CharField(max_length=12, choices=CHOICES_REPARTO, null=True, blank=True)
     flame_class = models.CharField(max_length=50, choices=CHOICES_FLAME, null=True, blank=True)
