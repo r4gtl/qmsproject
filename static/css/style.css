@@ -164,3 +164,18 @@ img .avatarimage {
   tr.draggable {
     cursor: move;
   }
+
+
+  .fixed-bottom-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px; /* Puoi regolare questa posizione a tuo piacimento */
+    z-index: 1000; /* Assicurati che il messaggio sia sovrapposto al contenuto */
+    width: 300px; /* Larghezza del messaggio */
+    padding: 10px;
+    background-color: #f8d7da; /* Colore di sfondo */
+    border: 1px solid #f5c6cb; /* Bordo */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombra */
+    display: none; /* Inizialmente nascosto */
+}

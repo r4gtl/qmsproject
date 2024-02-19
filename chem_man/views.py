@@ -81,6 +81,15 @@ class ProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        for errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"Errore: {error}")
+
+
+        return super().form_invalid(form)
+
+    
     def get_initial(self):
         created_by = self.request.user
         return {
@@ -105,6 +114,10 @@ class ProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Si è verificato un errore nel modulo. Per favore, correggi gli errori.')
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

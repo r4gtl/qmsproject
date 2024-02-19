@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
-
+from core.utils import no_duplicates_validator
 
 class ImballaggioPC(models.Model):
     # Genera un elenco di imballaggi standard da associare poi al prodotto chimico
@@ -21,9 +21,7 @@ class ImballaggioPC(models.Model):
 
 
 
-def no_duplicates(value):
-    if ProdottoChimico.objects.filter(my_field__iexact=value).exists():
-        raise ValidationError('Questo valore è già presente.')
+
 
 
 
@@ -67,7 +65,7 @@ class ProdottoChimico(models.Model):
         limit_choices_to={'categoria': Fornitore.PRODOTTI_CHIMICI},
         on_delete=models.CASCADE
     )
-    descrizione = models.CharField(max_length=100, validators=[no_duplicates])
+    descrizione = models.CharField(max_length=100)
     solvente = models.DecimalField(max_digits=5, decimal_places=2)
     reparto = models.CharField(max_length=12, choices=CHOICES_REPARTO, null=True, blank=True)
     flame_class = models.CharField(max_length=50, choices=CHOICES_FLAME, null=True, blank=True)
@@ -83,6 +81,17 @@ class ProdottoChimico(models.Model):
     created_by = models.ForeignKey(User, related_name='prodotto_chimico', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+    def clean(self):
+        try:
+            no_duplicates_validator(self.descrizione, 'descrizione', self)
+        except ValidationError:
+            # Se la validazione fallisce, aggiungi un messaggio di errore personalizzato al campo 'descrizione'
+            raise ValidationError("Esiste già un prodotto con questo nome. Controlla!")
+
+        # Assicurati di restituire i dati puliti
+        return super().clean()
+        
     class Meta:
         ordering = ["-descrizione"]
         

@@ -1,9 +1,10 @@
 import json
 from datetime import date, timedelta
-
+from django.core.exceptions import ValidationError
 from django.apps import apps
 from django.core.serializers import serialize
 from django.db.models import Max, Q
+from django.db import models
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from articoli.models import *
@@ -187,3 +188,22 @@ def update_row_numbers(request, app_name, model_name):
         return JsonResponse({'error': 'Richiesta non valida'}, status=400)
 
 
+
+# Questa funzione serve a controllare i duplicati anche se sono scritti 
+# con maiuscole e minuscole diverse
+# Uso:
+# importare nel file models.py in cui è presente il campo da controllare la funzione
+# from core.utils import no_duplicates_validator
+# nel modello interessato inserire la funzione
+# def clean(self):
+#        no_duplicates_validator(
+#            self.my_field,
+#            'my_field',
+#            self
+#        )
+
+def no_duplicates_validator(value, field_name, model_instance):
+    model_class = model_instance.__class__
+    field_lookup = {f'{field_name}__iexact': value}
+    if model_class.objects.filter(**field_lookup).exclude(pk=model_instance.pk).exists():
+        raise ValidationError('Questo valore è già presente.')

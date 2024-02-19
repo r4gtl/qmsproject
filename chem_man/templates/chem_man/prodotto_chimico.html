@@ -27,16 +27,16 @@
 
 <div class="container">
     <br>
-    
     <div class="container">
       {% if form.instance.id  %}
-          <h3>Modifica {{ prodottochimico.descrizione }}</h3>
+      <h3>Modifica {{ prodottochimico.descrizione }}</h3>
       {% else %}
-          <h3> Aggiungi Prodotto Chimico</h3>
+      <h3> Aggiungi Prodotto Chimico</h3>
       {% endif %}
-    <hr>
-    <br>
-    {% include "core/partials/_messages.html" %}
+      <hr>
+      <br>
+      {% include "core/partials/_messages.html" %}
+      
     
     <!-- Form nuovo registro -->
     
