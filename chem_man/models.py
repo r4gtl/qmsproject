@@ -2,11 +2,12 @@ import os
 from datetime import date
 
 from anagrafiche.models import Fornitore
+from core.utils import no_duplicates_validator
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Max
-from core.utils import no_duplicates_validator
+from django.db.models import Q
+
 
 class ImballaggioPC(models.Model):
     # Genera un elenco di imballaggi standard da associare poi al prodotto chimico
@@ -62,7 +63,7 @@ class ProdottoChimico(models.Model):
     
     fk_fornitore = models.ForeignKey(
         Fornitore, related_name='prodotto_chimico',
-        limit_choices_to={'categoria': Fornitore.PRODOTTI_CHIMICI},
+        limit_choices_to=Q(categoria=Fornitore.PRODOTTI_CHIMICI) | Q(categoria=Fornitore.NESSUNA),
         on_delete=models.CASCADE
     )
     descrizione = models.CharField(max_length=100)
