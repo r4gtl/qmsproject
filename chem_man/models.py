@@ -94,7 +94,7 @@ class ProdottoChimico(models.Model):
         return super().clean()
         
     class Meta:
-        ordering = ["-descrizione"]
+        ordering = ["descrizione"]
         
     def __str__(self):
         return self.descrizione
