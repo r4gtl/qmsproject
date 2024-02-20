@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .utils import (check_if_svhc, get_prodotto_chimico, get_solvente,
-                    get_sostanza_details, get_symbol_image_url,
+from .utils import (check_if_svhc, get_imballaggi, get_prodotto_chimico,
+                    get_solvente, get_sostanza_details, get_symbol_image_url,
                     get_ultimo_prezzo, search_sostanza)
 from .views import *
 
@@ -128,6 +128,7 @@ urlpatterns = [
     path('get_prodotto_chimico/', get_prodotto_chimico, name='get_prodotto_chimico'),
     path('get_ultimo_prezzo/', get_ultimo_prezzo, name='get_ultimo_prezzo'),
     path('get_solvente/', get_solvente, name='get_solvente'),
+    path('get_imballaggi/', get_imballaggi, name='get_imballaggi'),
 
     # Stampe
     path('stampa_ordine/<int:pk>/', stampa_ordine, name='stampa_ordine'),

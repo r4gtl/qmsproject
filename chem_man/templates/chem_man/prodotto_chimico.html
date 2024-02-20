@@ -251,5 +251,30 @@
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_descrizione');
         });
+
+
+        $(document).ready(function() {
+        $("#id_fk_imballaggio").on("shown.bs.select", function() {
+            // Chiamata AJAX per ottenere l'elenco aggiornato degli imballaggi
+            $.ajax({
+                url: "{% url 'chem_man:get_imballaggi' %}",
+                dataType: "json",
+                success: function(data) {
+                    var imballaggi = data.imballaggi;
+                    var selectImballaggi = $("#id_fk_imballaggio");
+                    selectImballaggi.empty();
+                    imballaggi.forEach(function(imballaggio) {
+                        selectImballaggi.append($('<option>', {
+                            value: imballaggio.id,
+                            text: imballaggio.nome
+                        }));
+                    });
+                    // Aggiorna il plugin Bootstrap Select dopo aver aggiunto le nuove opzioni
+                    selectImballaggi.selectpicker("refresh");
+                }
+            });
+        });
+    });
+
     </script>
 {% endblock %}

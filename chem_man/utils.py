@@ -113,4 +113,11 @@ def get_solvente(request):
             return JsonResponse({'solvente': None})
         
 
+# Per il refresh della tendina di selezione imballaggio nel form del prodotto chimico
+def get_imballaggi(request):
+    imballaggi = ImballaggioPC.objects.all()
+    print(f"Eccomi")
+    imballaggi_list = [{'id': imballaggio.id, 'nome': imballaggio.nome} for imballaggio in imballaggi]
+    return JsonResponse({'imballaggi': imballaggi_list})
+
 
