@@ -404,7 +404,7 @@ class DettaglioRicettaRifinizione(models.Model):
     #def get_choices_chemical():
     #    return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
     
-    @staticmethod
+    
     def get_choices_chemical():
         reparto_rifinizione = ProdottoChimico.objects.filter(reparto=ProdottoChimico.RIFINIZIONE)
         reparto_null = ProdottoChimico.objects.filter(Q(reparto__isnull=True) | Q(reparto=''))
