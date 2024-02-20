@@ -1,12 +1,10 @@
-from django import forms
 from datetime import date
+
+from articoli.models import Articolo
+from django import forms
 from django.db.models import Max
 
-
 from .models import *
-from articoli.models import Articolo
-
-
 
 
 class OperazioneRicetteModelForm(forms.ModelForm):
@@ -71,7 +69,7 @@ class DettaglioRicettaRifinizioneModelForm(forms.ModelForm):
         widgets = {
             'numero_riga': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
             'fk_operazione_ricette': forms.Select(),
-            'fk_prodotto_chimico': forms.Select(),
+            'fk_prodotto_chimico': forms.Select(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),

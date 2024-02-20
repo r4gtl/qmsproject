@@ -81,7 +81,7 @@ class ProdottoChimico(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='prodotto_chimico', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
 
     def clean(self):
         try:

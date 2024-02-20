@@ -401,8 +401,19 @@ class DettaglioRicettaRifinizione(models.Model):
     quantity = models.DecimalField(max_digits=8, decimal_places=2)
 
     
+    #def get_choices_chemical():
+    #    return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
+    
+    @staticmethod
     def get_choices_chemical():
-        return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
+        reparto_rifinizione = ProdottoChimico.objects.filter(reparto=ProdottoChimico.RIFINIZIONE)
+        reparto_null = ProdottoChimico.objects.filter(Q(reparto__isnull=True) | Q(reparto=''))
+        
+        reparto_choices = list(reparto_rifinizione) + list(reparto_null)
+    
+        reparto_choices_dict = [{'id': choice.id, 'descrizione': choice.descrizione} for choice in reparto_choices]
+        return Q(id__in=[choice['id'] for choice in reparto_choices_dict])
+
 
     fk_prodotto_chimico = models.ForeignKey(
         ProdottoChimico,
