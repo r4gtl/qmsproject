@@ -1,21 +1,22 @@
-from django import forms
 from datetime import date
-from django.db.models import Max
-from django.contrib.admin.widgets import ForeignKeyRawIdWidget
 
-from .models import (
-                    ProdottoChimico, PrezzoProdotto, SchedaTecnica,
-                    Sostanza, SostanzaSVHC, HazardStatement, PrecautionaryStatement,
-                    SimboloGHS, SchedaSicurezza, SimboloGHS_SDS, PrecautionaryStatement_SDS, HazardStatement_SDS, Sostanza_SDS,
-                    ImballaggioPC, OrdineProdottoChimico, DettaglioOrdineProdottoChimico,
-                    AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico
-)
 from anagrafiche.models import Fornitore
+from django import forms
+from django.contrib.admin.widgets import ForeignKeyRawIdWidget
+from django.db.models import Q
+
+from .models import (AcquistoProdottoChimico, DettaglioAcquistoProdottoChimico,
+                     DettaglioOrdineProdottoChimico, HazardStatement,
+                     HazardStatement_SDS, ImballaggioPC, OrdineProdottoChimico,
+                     PrecautionaryStatement, PrecautionaryStatement_SDS,
+                     PrezzoProdotto, ProdottoChimico, SchedaSicurezza,
+                     SchedaTecnica, SimboloGHS, SimboloGHS_SDS, Sostanza,
+                     Sostanza_SDS, SostanzaSVHC)
 
 
 class ProdottoChimicoModelForm(forms.ModelForm):
     fk_fornitore = forms.ModelChoiceField(
-        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        queryset=Fornitore.objects.filter(Q(categoria=Fornitore.PRODOTTI_CHIMICI) | Q(categoria=Fornitore.NESSUNA)),
         label='Fornitore'
     )
     fk_imballaggio = forms.ModelChoiceField(
