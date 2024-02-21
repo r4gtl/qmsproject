@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .reports import *
 from .utils import *
 from .views import *
 
@@ -32,6 +33,10 @@ urlpatterns = [
     
     # Cerca prodotto chimico
     path('search_prodotto_chimico/', search_prodotto_chimico, name="search_prodotto_chimico"),
+
+
+    # Stemap ricette
+    path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),
     
 
     
