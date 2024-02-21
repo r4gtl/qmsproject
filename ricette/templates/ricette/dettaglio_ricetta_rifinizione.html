@@ -38,6 +38,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
+    {% include "ricette/_modal_ricerca.html" %}
     
     <!-- Form nuovo dettaglio -->
     
@@ -60,8 +61,11 @@
                               {{ form.fk_operazione_ricette|as_crispy_field }}
                             </div>
 
-                            <div class = "col-md-7">
+                            <div class = "col-md-6">
                               {{ form.fk_prodotto_chimico|as_crispy_field }}
+                            </div>
+                            <div class = "col-md-1 d-flex align-items-center">
+                              <button type="button" class="btn btn-block search-modal-button" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Cerca</button>
                             </div>
 
                             <div class = "col-md-2">
@@ -129,8 +133,63 @@ $(document).ready(function() {
   });
 });
 
+$(document).ready(function() {
+  $("#searchInput").on("input", function() {
+    var searchTerm = $(this).val().trim();
+    if (searchTerm.length >= 1) {
+      $.ajax({
+        url: "{% url 'ricette:search_prodotto_chimico' %}",
+        method: "GET",
+        data: { search: searchTerm },
+        dataType: 'json',
+        success: function(data) {
+          var resultsContainer = $("#searchResults");
+          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
+
+          // Aggiunge i nuovi risultati al DOM
+          if (data && data.html) {
+            resultsContainer.html(data.html);
+          } else {
+            resultsContainer.append("<p>Nessun risultato trovato.</p>");
+          }
+        },
+        error: function(xhr, errmsg, err) {
+          console.log(errmsg);
+          // Gestisci eventuali errori qui
+        }
+      });
+    } else {
+      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
+    }
+  });
 
 
+
+  $('#searchModal').on('hide.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+  });
+
+  // Pulisci i campi quando il modal viene aperto
+  $('#searchModal').on('shown.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+    $('#searchInput').focus();
+  });
+
+
+  // Gestisce il clic su una riga della tabella dei risultati
+  $('#searchResults').on('click', 'tr', function() {
+    // Ottiene l'id del prodotto chimico dalla riga cliccata
+    var prodottoId = $(this).find('.prodotto-id').text();
+    
+    // Chiude il modal
+    $('#searchModal').modal('hide');
+
+    // Compila il campo del form con l'id del prodotto chimico
+    $('#id_fk_prodotto_chimico').val(prodottoId);
+  });
+});
 
 </script>
 {% endblock %}

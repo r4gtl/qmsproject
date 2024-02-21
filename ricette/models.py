@@ -398,7 +398,7 @@ class DettaglioRicettaRifinizione(models.Model):
                                             limit_choices_to=get_choices_operations,
                                             )
     numero_riga = models.IntegerField()
-    quantity = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.DecimalField(max_digits=8, decimal_places=4)
 
     
     #def get_choices_chemical():

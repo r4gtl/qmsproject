@@ -166,13 +166,20 @@ img .avatarimage {
   }
 
 
+/* Messaggi di successo o errore in basso a destra */
   .fixed-bottom-message {
     position: fixed;
     bottom: 20px;
-    right: 20px; /* Puoi regolare questa posizione a tuo piacimento */
-    z-index: 1000; /* Assicurati che il messaggio sia sovrapposto al contenuto */
-    width: 400px; /* Larghezza del messaggio */
+    right: 20px; 
+    z-index: 1000; 
+    width: 400px; 
     padding: 10px;
     
-    /*display: none; /* Inizialmente nascosto */
 }
+
+.search-modal-button {
+  background-color: #ffb703 !important;
+  color: white !important;
+  
+}
+
