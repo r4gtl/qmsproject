@@ -65,7 +65,7 @@
                               {{ form.fk_prodotto_chimico|as_crispy_field }}
                             </div>
                             <div class = "col-md-1 d-flex align-items-center">
-                              <button type="button" class="btn btn-block search-modal-button" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Cerca</button>
+                              <button type="button" class="btn btn-block search-modal-button" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Cerca</button>
                             </div>
 
                             <div class = "col-md-2">
@@ -168,6 +168,11 @@ $(document).ready(function() {
   $('#searchModal').on('hide.bs.modal', function() {
     $('#searchInput').val('');  // Pulisce il campo di ricerca
     $('#searchResults').empty(); // Pulisce i risultati della ricerca
+     
+    // Imposta il focus sul campo 'id_quantity' dopo un breve ritardo
+    setTimeout(function() {
+        $('#id_quantity').focus(); // Imposta il focus sul campo 'id_quantity'
+    }, 500); 
   });
 
   // Pulisci i campi quando il modal viene aperto
@@ -185,11 +190,17 @@ $(document).ready(function() {
     
     // Chiude il modal
     $('#searchModal').modal('hide');
-
+    
     // Compila il campo del form con l'id del prodotto chimico
     $('#id_fk_prodotto_chimico').val(prodottoId);
+    
+    
   });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_fk_operazione_ricette');
+        });
 
 </script>
 {% endblock %}
