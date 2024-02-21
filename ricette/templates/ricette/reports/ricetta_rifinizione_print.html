@@ -54,7 +54,7 @@
     {% for operazione in dettagli_per_operazione %}
         {% with operazione.list as dettagli %}
             {% for dettaglio in dettagli %}
-                <tr>        
+                <tr style="font-size: 16px;">        
                     <td>{{ dettaglio.fk_operazione_ricette }}</td>
                     <td class="text-end">{{ dettaglio.quantity }}</td>
                     <td>{{ dettaglio.fk_prodotto_chimico }}</td>
@@ -62,7 +62,7 @@
                     <td class="text-end">{{ dettaglio.calcola_totale|format_number_dec_thousand }}</td>
                 </tr>
             {% endfor %}
-            <tr style="background-color: #faf0ca">
+            <tr style="background-color: #faf0ca; font-size: 16px;">
                 <td class="text-end"><em>Totale Quantità {{ operazione.grouper }}:</em></td>
                 <td class="text-end">
                     {% for dettaglio_raggruppato in dettagli_raggruppati %}
@@ -84,7 +84,7 @@
             </tr>
         {% endwith %}
     {% endfor %}
-    <tr style="background-color:#7678ed">
+    <tr style="background-color:#7678ed; font-size: 16px;">
         <td colspan="4" class="text-end"><em>Totale ricetta:</em></td>
         <td class="text-end"><strong>{{ totale|floatformat:"2" }}</strong></td>
     </tr>
