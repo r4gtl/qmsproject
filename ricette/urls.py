@@ -25,6 +25,7 @@ urlpatterns = [
     path('aggiungi_ricetta_rifinizione/', RicettaRifinizioneCreateView.as_view(), name="aggiungi_ricetta_rifinizione"), 
     path('modifica_ricetta_rifinizione/<int:pk>/', RicettaRifinizioneUpdateView.as_view(), name="modifica_ricetta_rifinizione"), 
     path('delete_ricetta_rifinizione/<int:pk>', delete_ricetta_rifinizione, name="delete_ricetta_rifinizione"),
+    path('aggiungi_revisione_rifinizione/', RevisioneRicettaRifinizioneCreateView.as_view(), name="aggiungi_revisione_rifinizione"), 
 
     # Dettaglio Ricette Rifinizione
     path('<int:fk_ricetta_rifinizione>/aggiungi_dettaglio_ricetta_rifinizione/', DettaglioRicettaRifinizioneCreateView.as_view(), name="aggiungi_dettaglio_ricetta_rifinizione"), 
@@ -35,10 +36,10 @@ urlpatterns = [
     path('search_prodotto_chimico/', search_prodotto_chimico, name="search_prodotto_chimico"),
 
 
-    # Stemap ricette
+    # Stampa ricette
     path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),
-    
-
     
     
 ]
+    
+    

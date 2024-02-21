@@ -19,7 +19,9 @@ def ricetta_rifinizione_print(request, pk):
         subtotale=Sum(F('quantity') * F('ultimo_prezzo')),        
         subquantity=Sum('quantity')
     )
-    totale = sum(dettaglio['subtotale'] for dettaglio in dettagli_raggruppati)
+    
+    totale = sum(dettaglio['subtotale'] if dettaglio['subtotale'] is not None else 0 for dettaglio in dettagli_raggruppati)
+
     
     context = {
         'ricetta': ricetta,

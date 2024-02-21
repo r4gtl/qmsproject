@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'corsheaders',
     "core",
     "accounts",
     "anagrafiche",
@@ -285,6 +286,10 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
 ]
+
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 INTERNAL_IPS = [
     # ...

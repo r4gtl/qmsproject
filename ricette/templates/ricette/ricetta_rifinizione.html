@@ -62,7 +62,7 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_rifinizione' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
-            <a href="{% url 'ricette:ricetta_rifinizione_print' pk=ricettarifinizione.pk %}" class="btn btn-outline-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>
+            {% if form.instance.id  %}<a href="{% url 'ricette:ricetta_rifinizione_print' pk=ricettarifinizione.pk %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>{% endif %}
             
 
             
@@ -94,8 +94,15 @@
                           <div class="col-md-5">
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
-                          
-                                                      
+                          <div class="col-md-4">
+                            <button id="crea-nuova-ricetta">Crea nuova ricetta con revisione successiva</button>
+                            <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
+                            <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
+                            <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
+                            <input type="hidden" id="id_ricetta_per_pelli" value="{{ ricetta.ricetta_per_pelli }}">
+                            <input type="hidden" id="id_note" value="{{ ricetta.note }}">
+
+                          </div>                            
                         </div>
                         <div class="row">
                           <div class="col-6">
@@ -168,6 +175,56 @@ document.addEventListener('DOMContentLoaded', function() {
   const modelName = document.getElementById('myTable').dataset.model_name;
   const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
   const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
+
+
+
+
+  // Ottieni il token CSRF dal cookie
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Verifica se il cookie ha il nome corretto
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+$(document).ready(function() {
+  $('#crea-nuova-ricetta').click(function() {
+      var numeroRicetta = $('#id_numero_ricetta').val();
+      var dataRicetta = $('#id_data_ricetta').val();
+      var fkArticolo = $('#id_fk_articolo').val();
+      var numeroRevisione = $('#id_numero_revisione').val();
+      var dataOdierna = new Date().toISOString().split('T')[0];
+      var note = $('#id_note').val();
+      var ricettaPerPelli = $('#id_ricetta_per_pelli').val();
+
+      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_revisione_rifinizione' %}";
+      console.log("aggiungiRevisioneRifinizioneURL:" + aggiungiRevisioneRifinizioneURL)
+      // Aggiungi i parametri alla query string dell'URL
+      aggiungiRevisioneRifinizioneURL += '?numero_ricetta=' + encodeURIComponent(numeroRicetta) +
+                                          '&data_ricetta=' + encodeURIComponent(dataRicetta) +
+                                          '&fk_articolo=' + encodeURIComponent(fkArticolo) +
+                                          '&numero_revisione=' + encodeURIComponent(numeroRevisione) +
+                                          '&data_revisione=' + encodeURIComponent(dataOdierna) +
+                                          '&note=' + encodeURIComponent(note) +
+                                          '&ricetta_per_pelli=' + encodeURIComponent(ricettaPerPelli);
+
+      // Reindirizza l'utente all'URL costruito
+      window.location.href = aggiungiRevisioneRifinizioneURL;
+  });
+});
+
+
+
 
 </script>
 {% endblock %}
