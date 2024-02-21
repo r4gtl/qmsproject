@@ -58,7 +58,7 @@
                     <td>{{ dettaglio.fk_operazione_ricette }}</td>
                     <td class="text-end">{{ dettaglio.quantity }}</td>
                     <td>{{ dettaglio.fk_prodotto_chimico }}</td>
-                    <td class="text-end">{{ dettaglio.ultimo_prezzo }}</td>
+                    <td class="text-end">{{ dettaglio.fk_prodotto_chimico.ultimo_prezzo }}</td>
                     <td class="text-end">{{ dettaglio.calcola_totale|format_number_dec_thousand }}</td>
                 </tr>
             {% endfor %}
