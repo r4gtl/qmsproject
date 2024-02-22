@@ -41,6 +41,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
+    {% include "ricette/_modal_ricerca_ricette_rifinizione.html" %}
     
     <!-- Form nuovo registro -->
     
@@ -94,15 +95,19 @@
                           <div class="col-md-5">
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
-                          <div class="col-md-4">
-                            {% if form.instance.id  %}<button class="btn btn-sm btn-info" id="crea-nuova-ricetta">Crea nuova revisione</button>{% endif %}
+                          <div class="col-md-3 d-flex align-items-center">
+                            <button type="button" class="btn btn-info" id="crea-nuova-ricetta">Crea nuova revisione</button>
                             <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
                             <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
                             <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
                             <input type="hidden" id="id_ricetta_per_pelli" value="{{ ricetta.ricetta_per_pelli }}">
                             <input type="hidden" id="id_note" value="{{ ricetta.note }}">
 
-                          </div>                            
+                          </div>   
+
+                          <div class = "col-md-3 d-flex align-items-center">
+                              <button type="button" class="btn btn-block search-modal-button" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Accoda ricetta</button>
+                            </div>                         
                         </div>
                         <div class="row">
                           <div class="col-6">
@@ -176,11 +181,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
   const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
 
-
-
-
+// Per creare una nuova revisione della ricetta
 $(document).ready(function() {
   $('#crea-nuova-ricetta').click(function() {
+    // Mostra un alert di conferma
+    var conferma = confirm("Sei sicuro di voler creare una nuova revisione?");
+    
+    // Se l'utente conferma l'azione, procedi con la creazione della nuova revisione
+    if (conferma) {
+      // Costruisci l'URL per la creazione della nuova revisione
       var numeroRicetta = $('#id_numero_ricetta').val();
       var dataRicetta = $('#id_data_ricetta').val();
       var fkArticolo = $('#id_fk_articolo').val();
@@ -190,8 +199,6 @@ $(document).ready(function() {
       var ricettaPerPelli = $('#id_ricetta_per_pelli').val();
 
       var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_ricetta_rifinizione' %}";
-      console.log("aggiungiRevisioneRifinizioneURL:" + aggiungiRevisioneRifinizioneURL)
-      // Aggiungi i parametri alla query string dell'URL
       aggiungiRevisioneRifinizioneURL += '?numero_ricetta=' + encodeURIComponent(numeroRicetta) +
                                           '&data_ricetta=' + encodeURIComponent(dataRicetta) +
                                           '&fk_articolo=' + encodeURIComponent(fkArticolo) +
@@ -199,16 +206,113 @@ $(document).ready(function() {
                                           '&data_revisione=' + encodeURIComponent(dataOdierna) +
                                           '&note=' + encodeURIComponent(note) +
                                           '&ricetta_per_pelli=' + encodeURIComponent(ricettaPerPelli);
-      // Reindirizza l'utente all'URL costruito
-      
-      console.log("Url: " + aggiungiRevisioneRifinizioneURL) 
-      setTimeout(function() {
-          window.location.replace(aggiungiRevisioneRifinizioneURL);
-      }, 500);
+
+      // Reindirizza l'utente all'URL costruito solo dopo la conferma dell'utente
+      if (aggiungiRevisioneRifinizioneURL) {
+        window.location.href = aggiungiRevisioneRifinizioneURL;
+      } else {
+        console.error("URL non valido.");
+      }
+    }
   });
 });
 
 
+// Per cercare live le ricette da accodare
+$(document).ready(function() {
+  $("#searchInput").on("input", function() {
+    var searchTerm = $(this).val().trim();
+    if (searchTerm.length >= 1) {
+      $.ajax({
+        url: "{% url 'ricette:search_revisione_rifinizione' %}",
+        method: "GET",
+        data: { search: searchTerm },
+        dataType: 'json',
+        success: function(data) {
+          var resultsContainer = $("#searchResults");
+          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
+
+          // Aggiunge i nuovi risultati al DOM
+          if (data && data.html) {
+            resultsContainer.html(data.html);
+            
+          } else {
+            resultsContainer.append("<p>Nessun risultato trovato.</p>");
+          }
+        },
+        error: function(xhr, errmsg, err) {
+          console.log(errmsg);
+          // Gestisci eventuali errori qui
+        }
+      });
+    } else {
+      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
+    }
+  });
+
+
+
+  $('#searchModal').on('hide.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+     
+    
+  });
+
+  // Pulisci i campi quando il modal viene aperto
+  $('#searchModal').on('shown.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+    $('#searchInput').focus();
+  });
+
+
+  // Gestisce il clic su una riga della tabella dei risultati
+  $('#searchResults').on('click', 'tr', function() {
+    
+    var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
+
+    if (conferma) {
+      // Ottiene l'id del prodotto chimico dalla riga cliccata
+
+      var ricettaId = $(this).find('.ricetta-id').text();
+      var ricettaAttiva = '{{ ricettarifinizione.pk }}';
+      console.log("ricettaAttiva: " + ricettaAttiva)
+      
+      
+      // Chiude il modal
+      $('#searchModal').modal('hide');
+      
+      // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+      $.ajax({
+          url: "{% url 'ricette:accoda_dettaglio_ricetta_rifinizione' %}",  // Sostituisci 'nome_tuo_url_aggiunta_dettaglio' con il tuo URL reale
+          method: "POST",
+          data: {
+              ricetta_id: ricettaId,
+              ricettaAttiva: ricettaAttiva,
+              csrfmiddlewaretoken: '{{ csrf_token }}'  // Assicurati di includere il token CSRF
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.redirect_url) {
+              // L'URL di reindirizzamento è stato restituito dal backend, esegui il reindirizzamento
+              window.location.href = data.redirect_url;
+            } else {
+                // L'operazione non è stata completata con successo, gestisci eventuali errori qui
+                console.error('Errore durante il reindirizzamento:', data.error);
+            }
+            
+          },
+          error: function(xhr, errmsg, err) {
+              console.log(errmsg);
+              
+          }
+      });
+    };
+  });
+  
+
+});
 
 
 </script>

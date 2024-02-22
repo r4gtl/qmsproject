@@ -25,19 +25,24 @@ urlpatterns = [
     path('aggiungi_ricetta_rifinizione/', RicettaRifinizioneCreateView.as_view(), name="aggiungi_ricetta_rifinizione"), 
     path('modifica_ricetta_rifinizione/<int:pk>/', RicettaRifinizioneUpdateView.as_view(), name="modifica_ricetta_rifinizione"), 
     path('delete_ricetta_rifinizione/<int:pk>', delete_ricetta_rifinizione, name="delete_ricetta_rifinizione"),
-    path('aggiungi_revisione_rifinizione/', RevisioneRicettaRifinizioneCreateView.as_view(), name="aggiungi_revisione_rifinizione"), 
+    #path('aggiungi_revisione_rifinizione/', RevisioneRicettaRifinizioneCreateView.as_view(), name="aggiungi_revisione_rifinizione"), 
 
     # Dettaglio Ricette Rifinizione
     path('<int:fk_ricetta_rifinizione>/aggiungi_dettaglio_ricetta_rifinizione/', DettaglioRicettaRifinizioneCreateView.as_view(), name="aggiungi_dettaglio_ricetta_rifinizione"), 
     path('<int:fk_ricetta_rifinizione>/modifica_dettaglio_ricetta_rifinizione/<int:pk>/', DettaglioRicettaRifinizioneUpdateView.as_view(), name="modifica_dettaglio_ricetta_rifinizione"), 
     path('delete_dettaglio_ricetta_rifinizione/<int:pk>', delete_dettaglio_ricetta_rifinizione, name="delete_dettaglio_ricetta_rifinizione"),
     
-    # Cerca prodotto chimico
-    path('search_prodotto_chimico/', search_prodotto_chimico, name="search_prodotto_chimico"),
+    # Ricerche
+    path('search_prodotto_chimico/', search_prodotto_chimico, name="search_prodotto_chimico"), # Prodotto Chimico
+    path('search_revisione_rifinizione/', search_revisione_rifinizione, name="search_revisione_rifinizione"), # Ricette Rifinizione
 
 
     # Stampa ricette
     path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),
+    
+    
+    # Automatismi
+    path('accoda_dettaglio_ricetta_rifinizione/', accoda_dettaglio_ricetta_rifinizione, name="accoda_dettaglio_ricetta_rifinizione"),
     
     
 ]

@@ -183,3 +183,9 @@ img .avatarimage {
   
 }
 
+
+/* classe aggiunta per le tabelle di ricerca nei modal*/
+.table-search tr:hover {
+  background-color: #f0f0f0; /* Cambia il colore di sfondo della riga al passaggio del mouse */
+  cursor: pointer; /* Cambia il cursore quando il mouse passa sopra la riga */
+}

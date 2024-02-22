@@ -6,7 +6,7 @@ from chem_man.models import ProdottoChimico
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template import RequestContext
 from django.template.loader import get_template, render_to_string
 from django.urls import reverse
@@ -24,7 +24,7 @@ def search_prodotto_chimico(request):
             Q(descrizione__icontains=search_term)
         )
         # Costruisci il markup HTML per la tabella dei risultati della ricerca
-        results_html = "<table class='table'><thead><tr><th>ID</th><th>Descrizione</th><th>Fornitore</th></tr></thead><tbody>"
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Descrizione</th><th>Fornitore</th></tr></thead><tbody>"
         for prodotto in prodotti_chimici:
             results_html += f"<tr data-id='{prodotto.pk}'><td class='prodotto-id'>{prodotto.pk}</td><td class='prodotto-descrizione'>{prodotto.descrizione}</td><td>{prodotto.fk_fornitore}</td></tr>"
         results_html += "</tbody></table>"
@@ -34,6 +34,24 @@ def search_prodotto_chimico(request):
         return JsonResponse({'html': ''})
 
 
+
+def search_revisione_rifinizione(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        ricette_rifinizione = RicettaRifinizione.objects.filter(
+            Q(fk_articolo__descrizione__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Articolo</th><th>Revisione N.</th><th>Data Revisione</th></tr></thead><tbody>"
+        for ricetta in ricette_rifinizione:
+            results_html += f"<tr data-id='{ricetta.pk}'><td class='ricetta-id'>{ricetta.pk}</td><td class='ricetta-articolo'>{ricetta.fk_articolo}</td><td class='ricetta-revisione'>{ricetta.numero_revisione}</td><td class='ricetta-revisione-data'>{ricetta.data_revisione}</td></tr>"
+        results_html += "</tbody></table>"
+        
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
 
 
 '''
@@ -107,3 +125,32 @@ def new_finishing_revision(request):
         # Se la richiesta non è di tipo POST, restituisci un errore
         return JsonResponse({'error': 'Metodo non consentito'}, status=405)
 
+
+def accoda_dettaglio_ricetta_rifinizione(request):
+    if request.method == 'POST':
+        ricetta_id = request.POST.get('ricetta_id')
+        ricetta_attiva = request.POST.get('ricettaAttiva')
+        print(f"ricetta_attiva: {ricetta_attiva}" )
+        print(f"ricetta_id: {ricetta_id}" )
+        ricetta_attiva = RicettaRifinizione.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
+        # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
+        dettagli_ricetta = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id)
+
+        # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
+        for dettaglio in dettagli_ricetta:
+            DettaglioRicettaRifinizione.objects.create(
+                fk_ricetta_rifinizione=ricetta_attiva,
+                fk_operazione_ricette=dettaglio.fk_operazione_ricette,
+                numero_riga=dettaglio.numero_riga,
+                quantity=dettaglio.quantity,
+                fk_prodotto_chimico=dettaglio.fk_prodotto_chimico,
+                note=dettaglio.note,
+                created_by=dettaglio.created_by
+            )
+        print(f"ricetta_attiva.pk: {ricetta_attiva.pk}")
+        #return redirect(reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': int(ricetta_attiva.pk)}))
+        #return JsonResponse({'message': 'Dettagli della ricetta rifinizione aggiunti correttamente.'})
+        redirect_url = reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': ricetta_attiva.pk})
+        return JsonResponse({'redirect_url': redirect_url}) 
+    else:
+        return JsonResponse({'error': 'Richiesta non valida.'})

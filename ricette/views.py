@@ -187,16 +187,24 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
 
-    def form_valid(self, form):        
+    '''def form_valid(self, form):        
         form.instance.created_by = self.request.user
         
         messages.info(self.request, self.success_message)  # Compare sul success_url
-        return super().form_valid(form)
+        return super().form_valid(form)'''
+    def form_valid(self, form):
+        if 'salva_esci' in self.request.POST:
+            return redirect('ricette:home_ricette_rifinizione')
+        else:
+            form.instance.created_by = self.request.user
+            messages.info(self.request, self.success_message)
+            return super().form_valid(form)
 
 
     def get_initial(self):
         initial = super().get_initial()
         if self.request.GET.get('numero_ricetta'):
+            print(f"Articolo: ")
             fk_articolo=self.request.GET.get('fk_articolo')
             last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
             numero_revisione=last_recipe.numero_revisione+1
@@ -221,6 +229,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
         else:
             initial['created_by'] = self.request.user
             initial['ricetta_per_pelli'] = 100
+        print(f"Initial: {initial}")
         return initial
         
 
@@ -260,43 +269,6 @@ def delete_ricetta_rifinizione(request, pk):
         return redirect(url_match)
 
 
-class RevisioneRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
-    model = RicettaRifinizione
-    form_class = RicettaRifinizioneModelForm
-    template_name = 'ricette/ricetta_rifinizione.html'
-    #success_message = 'Ricetta aggiunta correttamente!'
-
-
-    def get_success_url(self):
-        print("get_success_url")
-        return reverse_lazy('ricette:aggiungi_revisione_rifinizione')
-
-
-
-    def form_valid(self, form):        
-        form.instance.created_by = self.request.user
-        
-        messages.info(self.request, self.success_message)  # Compare sul success_url
-        return super().form_valid(form)
-
-
-    def get_initial(self):
-        # Ottieni i parametri dall'URL
-        initial = super().get_initial()
-        fk_articolo=self.request.GET.get('fk_articolo')
-        last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
-        numero_revisione=last_recipe.numero_revisione+1
-        initial['numero_ricetta'] = self.request.GET.get('numero_ricetta')
-        initial['data_ricetta'] = self.request.GET.get('data_ricetta')
-        initial['fk_articolo'] = self.request.GET.get('fk_articolo')
-        initial['numero_revisione'] = numero_revisione
-        initial['data_revisione'] = self.request.GET.get('data_revisione')
-        initial['ricetta_per_pelli'] = self.request.GET.get('ricetta_per_pelli')
-        initial['note'] = self.request.GET.get('note')
-        initial['created_by'] = self.request.user
-        print(f"initial: {initial}")
-        return initial
-    
 # Dettaglio
 class DettaglioRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
     model = DettaglioRicettaRifinizione
@@ -363,6 +335,7 @@ class DettaglioRicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_dettaglio_ricetta_rifinizione(request, pk):
         deleteobject = get_object_or_404(DettaglioRicettaRifinizione, pk = pk)
+        fk_ricetta_rifinizione = deleteobject.fk_ricetta_rifinizione.pk
         deleteobject.delete()
-        url_match = reverse_lazy('ricette:home_ricette_rifinizione')
+        url_match = reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
         return redirect(url_match)

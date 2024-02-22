@@ -112,6 +112,7 @@
 
 {% block extra_scripts %}
 <script>
+// Per aggiornare il select ogni volta che lo si seleziona
 $(document).ready(function() {
   $("#id_fk_prodotto_chimico").change(function() {
     var selectedProductId = $(this).val();
@@ -133,6 +134,8 @@ $(document).ready(function() {
   });
 });
 
+
+// Per cercare live i prodotti chimici
 $(document).ready(function() {
   $("#searchInput").on("input", function() {
     var searchTerm = $(this).val().trim();

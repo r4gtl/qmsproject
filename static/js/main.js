@@ -335,3 +335,4 @@ function getDragAfterElement(table, y) {
   }
   
   // FINE DRAG & DROP RIGHE TABELLE //
+
