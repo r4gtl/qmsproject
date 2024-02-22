@@ -95,7 +95,7 @@
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
                           <div class="col-md-4">
-                            <button id="crea-nuova-ricetta">Crea nuova ricetta con revisione successiva</button>
+                            {% if form.instance.id  %}<button class="btn btn-sm btn-info" id="crea-nuova-ricetta">Crea nuova revisione</button>{% endif %}
                             <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
                             <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
                             <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
@@ -179,24 +179,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-  // Ottieni il token CSRF dal cookie
-function getCookie(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie !== '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-          var cookie = cookies[i].trim();
-          // Verifica se il cookie ha il nome corretto
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-          }
-      }
-  }
-  return cookieValue;
-}
-
-var csrftoken = getCookie('csrftoken');
 $(document).ready(function() {
   $('#crea-nuova-ricetta').click(function() {
       var numeroRicetta = $('#id_numero_ricetta').val();
@@ -207,7 +189,7 @@ $(document).ready(function() {
       var note = $('#id_note').val();
       var ricettaPerPelli = $('#id_ricetta_per_pelli').val();
 
-      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_revisione_rifinizione' %}";
+      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_ricetta_rifinizione' %}";
       console.log("aggiungiRevisioneRifinizioneURL:" + aggiungiRevisioneRifinizioneURL)
       // Aggiungi i parametri alla query string dell'URL
       aggiungiRevisioneRifinizioneURL += '?numero_ricetta=' + encodeURIComponent(numeroRicetta) +
@@ -217,9 +199,12 @@ $(document).ready(function() {
                                           '&data_revisione=' + encodeURIComponent(dataOdierna) +
                                           '&note=' + encodeURIComponent(note) +
                                           '&ricetta_per_pelli=' + encodeURIComponent(ricettaPerPelli);
-
       // Reindirizza l'utente all'URL costruito
-      window.location.href = aggiungiRevisioneRifinizioneURL;
+      
+      console.log("Url: " + aggiungiRevisioneRifinizioneURL) 
+      setTimeout(function() {
+          window.location.replace(aggiungiRevisioneRifinizioneURL);
+      }, 500);
   });
 });
 

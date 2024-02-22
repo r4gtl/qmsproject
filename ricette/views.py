@@ -1,17 +1,16 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib import messages
 from datetime import date
+
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import F, FloatField, Max, OuterRef, Subquery, Sum
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.db.models import Max, Sum, FloatField, F, OuterRef, Subquery
 from django.views.generic.edit import CreateView, UpdateView
-from .models import *
-from .forms import *
+
 from .filters import *
-
-
-
+from .forms import *
+from .models import *
 
 
 def home_ricette(request):
@@ -142,7 +141,7 @@ def delete_operazione(request, pk):
 
 # Ricette Rifinizione
 # Ricetta
-class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
+'''class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
     model = RicettaRifinizione
     form_class = RicettaRifinizioneModelForm
     template_name = 'ricette/ricetta_rifinizione.html'
@@ -152,7 +151,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):
         if 'salva_esci' in self.request.POST:
             return reverse_lazy('ricette:home_ricette_rifinizione')
-
+        
         pk_ricetta=self.object.pk
         return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':pk_ricetta})
 
@@ -166,9 +165,62 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_initial(self):
-        initial = super().get_initial()        
+        initial = super().get_initial()
+
         initial['created_by'] = self.request.user
         initial['ricetta_per_pelli'] = 100
+        return initial'''
+
+class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
+    model = RicettaRifinizione
+    form_class = RicettaRifinizioneModelForm
+    template_name = 'ricette/ricetta_rifinizione.html'
+    success_message = 'Ricetta aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_rifinizione')
+        
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':pk_ricetta})
+
+
+
+    def form_valid(self, form):        
+        form.instance.created_by = self.request.user
+        
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)
+
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.request.GET.get('numero_ricetta'):
+            fk_articolo=self.request.GET.get('fk_articolo')
+            last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
+            numero_revisione=last_recipe.numero_revisione+1
+            numero_ricetta = self.request.GET.get('numero_ricetta')
+            data_ricetta = self.request.GET.get('data_ricetta')
+            fk_articolo = self.request.GET.get('fk_articolo')
+            numero_revisione = numero_revisione
+            data_revisione = self.request.GET.get('data_revisione')
+            note = self.request.GET.get('note')
+            ricetta_per_pelli = self.request.GET.get('ricetta_per_pelli')
+
+            # Inizializza i campi del form con i valori recuperati
+            initial['numero_ricetta'] = numero_ricetta
+            initial['data_ricetta'] = data_ricetta
+            initial['fk_articolo'] = fk_articolo
+            initial['numero_revisione'] = numero_revisione
+            initial['data_revisione'] = data_revisione
+            initial['note'] = note
+            initial['ricetta_per_pelli'] = ricetta_per_pelli
+            initial['created_by'] = self.request.user
+            initial['ricetta_per_pelli'] = 100
+        else:
+            initial['created_by'] = self.request.user
+            initial['ricetta_per_pelli'] = 100
         return initial
         
 
@@ -216,8 +268,8 @@ class RevisioneRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        
-        return reverse_lazy('ricette:aggiungi_ricetta_rifinizione')
+        print("get_success_url")
+        return reverse_lazy('ricette:aggiungi_revisione_rifinizione')
 
 
 

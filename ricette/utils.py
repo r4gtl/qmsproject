@@ -1,21 +1,19 @@
 import json
+from datetime import datetime
 
-
-from django.views.decorators.http import require_POST
+from articoli.models import Articolo
+from chem_man.models import ProdottoChimico
+from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.template import RequestContext
 from django.template.loader import get_template, render_to_string
-from datetime import datetime
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
-from django.contrib.auth.models import User
-
-from chem_man.models import ProdottoChimico
-from .models import DettaglioRicettaRifinizione, RicettaRifinizione
 from .forms import RicettaRifinizioneModelForm
-from articoli.models import Articolo
+from .models import DettaglioRicettaRifinizione, RicettaRifinizione
 
 
 def search_prodotto_chimico(request):
@@ -109,57 +107,3 @@ def new_finishing_revision(request):
         # Se la richiesta non è di tipo POST, restituisci un errore
         return JsonResponse({'error': 'Metodo non consentito'}, status=405)
 
-
-def get_last_recipe_view(request):
-    if request.method == 'GET':
-        fk_articolo = request.GET.get('fk_articolo')
-        # Recupera l'ultima ricetta per l'articolo specificato
-        last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
-        if last_recipe:
-            data_odierna = last_recipe.data_revisione.strftime('%Y-%m-%d')
-            response_data = {
-                'numero_revisione': last_recipe.numero_revisione,
-                'data_odierna': data_odierna,
-            }
-            return JsonResponse(response_data)
-        else:
-            return JsonResponse({'error': 'Nessuna ricetta trovata per l\'articolo specificato'}, status=404)
-    else:
-        return JsonResponse({'error': 'Metodo non consentito'}, status=405)
-    
-@require_POST
-def aggiungi_revisione_rifinizione(request):
-    if request.method == 'POST':
-        # Ottieni i dati inviati dalla richiesta POST
-        numero_ricetta = request.POST.get('numero_ricetta')
-        data_ricetta = request.POST.get('data_ricetta')
-        fk_articolo = request.POST.get('fk_articolo')
-        numero_revisione = request.POST.get('numero_revisione')
-        data_revisione = request.POST.get('data_revisione')
-        ricetta_per_pelli= request.POST.get('ricetta_per_pelli')
-
-        articolo = get_object_or_404(Articolo, pk=fk_articolo)
-        last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
-        numero_revisione=last_recipe.numero_revisione+1
-        created_by = request.user
-        # Esegui la logica per creare una nuova istanza di RicettaRifinizione o fare altre azioni necessarie
-        # Ad esempio:
-        nuova_ricetta = RicettaRifinizione.objects.create(
-            numero_ricetta=numero_ricetta,
-            data_ricetta=data_ricetta,
-            fk_articolo=articolo,
-            numero_revisione=numero_revisione,
-            data_revisione=data_revisione,
-            ricetta_per_pelli=ricetta_per_pelli,
-            created_by=created_by
-            
-        )
-        print(f"nuova_ricetta: {nuova_ricetta.pk}")
-        # Invia una risposta JSON per indicare il successo
-        return JsonResponse({'message': 'Nuova ricetta creata con successo!', 'redirect_url': reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': nuova_ricetta.pk})})
-
-    else:
-        # Se la richiesta non è di tipo POST, restituisci un errore
-        return JsonResponse({'error': 'Metodo non consentito'}, status=405)
-    
-    
