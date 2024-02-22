@@ -95,37 +95,63 @@
                           <div class="col-md-5">
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
-                          <div class="col-md-3 d-flex align-items-center">
-                            <button type="button" class="btn btn-info" id="crea-nuova-ricetta">Crea nuova revisione</button>
-                            <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
-                            <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
-                            <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
-                            <input type="hidden" id="id_ricetta_per_pelli" value="{{ ricetta.ricetta_per_pelli }}">
-                            <input type="hidden" id="id_note" value="{{ ricetta.note }}">
-
-                          </div>   
-
-                          <div class = "col-md-3 d-flex align-items-center">
-                              <button type="button" class="btn btn-block search-modal-button" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Accoda ricetta</button>
-                            </div>                         
+                          
+                          <div class="col-md-7 d-flex flex-row-reverse align-items-center">
+                            <div class="row">
+                              <div class="col-12 ml-auto">
+                                  <div class="card text-center w-100">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-start">Azioni</h6>
+                                          <button type="button" class="btn btn-info text-wrap" style="width:100%" id="crea-nuova-ricetta"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                          <button type="button" class="btn search-modal-button mt-1" style="width:100%" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
+                                          <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
+                                          <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
+                                          <input type="hidden" id="id_ricetta_per_pelli" value="{{ ricetta.ricetta_per_pelli }}">
+                                          <input type="hidden" id="id_note" value="{{ ricetta.note }}">
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          
+                          
+                         
                         </div>
-                        <div class="row">
-                          <div class="col-6">
+                      </div>
+
+                        <div class="row mt-1">
+                          <div class="col-md-5">
+                            
                             {{ form.note|as_crispy_field }}
                           </div>
                             
-
-                          <div class="col-5 text-end">
-                          <h3>Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
-                          
-                          <h3>Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
-                          
+                          <div class="col-md-7 d-flex flex-row-reverse align-items-center">
+                            <div class="row">
+                              <div class="col-12 ml-auto">
+                                  <div class="card text-start w-100">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-start">Stats</h6>
+                                        <hr>
+                                        <h3 style="width:100%">Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
+                                
+                                        <h3 style="width:100%">Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
+                                      </div>
+                                  </div>
+                              </div>
                           </div>
-
-                          <div class="col-md-1">
-                              {{ form.created_by|as_crispy_field }}
-                          </div>
+                          
+                          
+                         
                         </div>
+
+                        
+                        
+                      </div>
+                      <div class="row">
+                      <div class="col-md-1">
+                          {{ form.created_by|as_crispy_field }}
+                      </div>
+                    </div>
                         
                         <hr>
                         
