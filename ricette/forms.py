@@ -98,6 +98,7 @@ class RicettaColoreRifinizioneModelForm(forms.ModelForm):
             )
         
         
+        
         widgets = {
             'numero_ricetta': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
             'data_ricetta': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
