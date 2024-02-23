@@ -1,0 +1,209 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Dettaglio Ricetta Colore Rifinizione{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_ricette.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_rifinizione' %}">Home Ricette Rifinizione</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:modifica_ricetta_colore_rifinizione' pk=ricetta_colore_rifinizione %}">{{ dettagli_ricetta }}</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Ricetta Rifinizione</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica Dettaglio</h3>
+      {% else %}
+          <h3> Aggiungi Dettaglio Ricetta Rifinizione</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    {% include "ricette/_modal_ricerca.html" %}
+    
+    <!-- Form nuovo dettaglio -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row mt-3">
+                          <div class = "col-md-1">
+                              {{ form.numero_riga|as_crispy_field }}
+                            </div>
+                            
+                            <div class = "col-md-2">
+                              {{ form.fk_operazione_ricette|as_crispy_field }}
+                            </div>
+
+                            <div class = "col-md-6">
+                              {{ form.fk_prodotto_chimico|as_crispy_field }}
+                            </div>
+                            <div class = "col-md-1 d-flex align-items-center">
+                              <button type="button" class="btn btn-block search-modal-button" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Cerca</button>
+                            </div>
+
+                            <div class = "col-md-2">
+                              {{ form.quantity|as_crispy_field }}
+                            </div>
+                            
+
+                            
+                        </div>
+                        
+                        <div class="row">
+                        <div class="col-8">
+                            {{ form.note|as_crispy_field }}
+                        </div>
+                          <div class="col-1">
+                            {{ form.fk_ricetta_colore_rifinizione|as_crispy_field }}
+                        </div>
+                            <div class="col-md-1">
+                              {{ form.created_by|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+                      <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+                      <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:modifica_ricetta_colore_rifinizione' pk=ricetta_colore_rifinizione %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    
+
+</div> <!--Fine container-->
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+// Per aggiornare il select ogni volta che lo si seleziona
+$(document).ready(function() {
+  $("#id_fk_prodotto_chimico").change(function() {
+    var selectedProductId = $(this).val();
+    var fkImballaggioSelect = $("#id_fk_imballaggio");
+
+    // Esegui una richiesta AJAX per ottenere il prodotto chimico selezionato
+    $.ajax({
+      url: "{% url 'chem_man:get_prodotto_chimico' %}",
+      data: { 'product_id': selectedProductId },
+      dataType: 'json',
+      success: function(data) {
+        // Imposta il campo fk_imballaggio con il valore associato al prodotto chimico
+        fkImballaggioSelect.val(data.fk_imballaggio);
+      },
+      error: function() {
+        // Gestisci l'errore qui, se necessario
+      }
+    });
+  });
+});
+
+
+// Per cercare live i prodotti chimici
+$(document).ready(function() {
+  $("#searchInput").on("input", function() {
+    var searchTerm = $(this).val().trim();
+    if (searchTerm.length >= 1) {
+      $.ajax({
+        url: "{% url 'ricette:search_prodotto_chimico' %}",
+        method: "GET",
+        data: { search: searchTerm },
+        dataType: 'json',
+        success: function(data) {
+          var resultsContainer = $("#searchResults");
+          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
+
+          // Aggiunge i nuovi risultati al DOM
+          if (data && data.html) {
+            resultsContainer.html(data.html);
+          } else {
+            resultsContainer.append("<p>Nessun risultato trovato.</p>");
+          }
+        },
+        error: function(xhr, errmsg, err) {
+          console.log(errmsg);
+          // Gestisci eventuali errori qui
+        }
+      });
+    } else {
+      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
+    }
+  });
+
+
+
+  $('#searchModal').on('hide.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+     
+    // Imposta il focus sul campo 'id_quantity' dopo un breve ritardo
+    setTimeout(function() {
+        $('#id_quantity').focus(); // Imposta il focus sul campo 'id_quantity'
+    }, 500); 
+  });
+
+  // Pulisci i campi quando il modal viene aperto
+  $('#searchModal').on('shown.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+    $('#searchInput').focus();
+  });
+
+
+  // Gestisce il clic su una riga della tabella dei risultati
+  $('#searchResults').on('click', 'tr', function() {
+    // Ottiene l'id del prodotto chimico dalla riga cliccata
+    var prodottoId = $(this).find('.prodotto-id').text();
+    
+    // Chiude il modal
+    $('#searchModal').modal('hide');
+    
+    // Compila il campo del form con l'id del prodotto chimico
+    $('#id_fk_prodotto_chimico').val(prodottoId);
+    
+    
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_fk_operazione_ricette');
+        });
+
+</script>
+{% endblock %}

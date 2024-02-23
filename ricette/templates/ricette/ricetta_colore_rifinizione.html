@@ -4,7 +4,7 @@
 {% load custom_filters %}
 {% load widget_tweaks %}
 
-{% block head_title %}{{ block.super }} - Ricetta Rifinizione{% endblock head_title %} 
+{% block head_title %}{{ block.super }} - Ricetta Colore Rifinizione{% endblock head_title %} 
 
 
 
@@ -21,9 +21,9 @@
         <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_rifinizione' %}">Home Ricette</a></li>     
         
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettarifinizione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettacolorerifinizione }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Rifinizione</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Colore Rifinizione</li>
         {% endif %}     
     </ol>
 
@@ -34,9 +34,9 @@
     
     <div class="container">
       {% if form.instance.id  %}
-          <h3>Modifica {{ ricettarifinizione }}</h3>
+          <h3>Modifica {{ ricettacolorerifinizione }}</h3>
       {% else %}
-          <h3> Aggiungi Ricetta Rifinizione</h3>
+          <h3> Aggiungi Ricetta Colore Rifinizione</h3>
       {% endif %}
     <hr>
     <br>
@@ -85,9 +85,7 @@
                             <div class="col-md-2">
                               {{ form.data_revisione|as_crispy_field }}
                             </div>
-                            <div class="col-md-2">
-                              {{ form.ricetta_per_pelli|as_crispy_field }}
-                            </div>
+                            
                             
                         </div>
                         <div class="row">  
@@ -128,7 +126,7 @@
                                           <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
                                           <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
                                           <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
-                                          <input type="hidden" id="id_ricetta_per_pelli" value="{{ ricetta.ricetta_per_pelli }}">
+                                          
                                           <input type="hidden" id="id_note" value="{{ ricetta.note }}">
                                       </div>
                                   </div>
@@ -139,9 +137,9 @@
                                       <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-start">Stats</h6>
                                         <hr>
-                                        <h3 style="width:100%">Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
+                                        <h3 style="width:100%">Costo: {{ ricettacolorerifinizione.calcola_totale_prezzi }}</h3>
                                 
-                                        <h3 style="width:100%">Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
+                                        <h3 style="width:100%">Solvente: Kg. {% if ricettacolorerifinizione.calcola_solvente_totale %}{{ ricettacolorerifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
                                       </div>
                                   </div>
                               
@@ -175,7 +173,7 @@
 
       {% if form.instance.id  %}
           
-      {% include "ricette/partials/_dettaglio_ricetta_rifinizione_table.html" %}
+      {% include "ricette/partials/_dettaglio_ricetta_colore_rifinizione_table.html" %}
   
       {% else %}
           <h3> Non sono presenti righe di dettaglio.</h3>

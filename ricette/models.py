@@ -36,6 +36,65 @@ class OperazioneRicette(models.Model):
     def __str__(self):        
         return self.descrizione
 
+
+# Definisco le funzioni valide per più modelli
+# Calcola il totale del prezzo tra quantità e ultimo prezzo del prodotto chimico dell'istanza
+def calcola_totale(model_instance):
+    if model_instance.fk_prodotto_chimico:
+        # Ottieni l'ultimo prezzo dal modello ProdottoChimico
+        ultimo_prezzo = model_instance.fk_prodotto_chimico.ultimo_prezzo
+        if ultimo_prezzo is not None:
+            return model_instance.quantity * ultimo_prezzo
+    return 0  # Restituisci 0 se non c'è un prezzo disponibile o un prodotto chimico associato
+
+# Crea l'elenco dei prodotti chimici in base al reparto
+def get_choices_chemical(reparto):
+    reparto_rifinizione = ProdottoChimico.objects.filter(reparto=reparto)
+    reparto_null = ProdottoChimico.objects.filter(Q(reparto__isnull=True) | Q(reparto=''))
+    
+    reparto_choices = list(reparto_rifinizione) + list(reparto_null)
+
+    reparto_choices_dict = [{'id': choice.id, 'descrizione': choice.descrizione} for choice in reparto_choices]
+    return Q(id__in=[choice['id'] for choice in reparto_choices_dict])
+
+
+# Calcolo il totale del dettaglio di un'istanza
+def calcola_totale_prezzi(dettagli_ricette):
+    # Inizializza il totale a zero
+    totale_prezzi = 0.0
+
+    for dettaglio_ricetta in dettagli_ricette:
+        recent_prezzi = PrezzoProdotto.objects.filter(
+            fk_prodottochimico=dettaglio_ricetta.fk_prodotto_chimico
+        ).order_by('-data_inserimento').values('prezzo')[:1]
+
+        # Verifica se ci sono prezzi disponibili
+        if recent_prezzi:
+            # Converti il prezzo da Decimal a float
+            prezzo_float = float(recent_prezzi[0]['prezzo'])
+
+            # Converte quantity in float e moltiplica
+            totale_prezzi += float(dettaglio_ricetta.quantity) * prezzo_float
+
+    locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')  # Imposta la localizzazione italiana
+    totale_prezzi = locale.currency(totale_prezzi, grouping=True, symbol=True)
+
+    return totale_prezzi
+
+# Per calcolare il solvente
+def calcola_solvente_totale(dettagli_ricette):
+        
+        # Inizializza il totale del solvente a zero
+        totale_solvente = 0.0
+
+        for dettaglio_ricetta in dettagli_ricette:
+            if dettaglio_ricetta.fk_prodotto_chimico and dettaglio_ricetta.fk_prodotto_chimico.solvente:
+                # Calcola il solvente per il dettaglio della ricetta
+                solvente_dettaglio = float(dettaglio_ricetta.quantity) * float((dettaglio_ricetta.fk_prodotto_chimico.solvente / 100))
+                totale_solvente += solvente_dettaglio
+
+        return totale_solvente
+
 # Ricette bagnato    
 class RicettaBagnato(models.Model):
     numero_ricetta = models.IntegerField(default=None)
@@ -230,7 +289,7 @@ class DettaglioRevisioneRicettaFondo(models.Model):
         ordering = ["numero_riga"]
         
 # Ricette Rifinizione    
-# Faccio una prova per vedere di gestire numero ricetta e revisione in un'unico modello
+
 class RicettaRifinizione(models.Model):
     numero_ricetta = models.IntegerField(blank=True, null=True)
     data_ricetta = models.DateField(default=date.today)
@@ -242,32 +301,12 @@ class RicettaRifinizione(models.Model):
     created_by = models.ForeignKey(User, related_name='ricette_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def calcola_totale_prezzi(self):
-        # Ottieni tutti i dettagli delle ricette associati a questa RicettaRifinizione
-        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
-
-        # Inizializza il totale a zero
-        totale_prezzi = 0.0
-
-        for dettaglio_ricetta in dettagli_ricette:
-            recent_prezzi = PrezzoProdotto.objects.filter(
-                fk_prodottochimico=dettaglio_ricetta.fk_prodotto_chimico
-            ).order_by('-data_inserimento').values('prezzo')[:1]
-
-            # Verifica se ci sono prezzi disponibili
-            if recent_prezzi:
-                # Converti il prezzo da Decimal a float
-                prezzo_float = float(recent_prezzi[0]['prezzo'])
-
-                # Converte quantity in float e moltiplica
-                totale_prezzi += float(dettaglio_ricetta.quantity) * prezzo_float
-
-        locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')  # Imposta la localizzazione italiana
-        totale_prezzi = locale.currency(totale_prezzi, grouping=True, symbol=True)
-
-        
-        return totale_prezzi
     
+    def calcola_totale_prezzi(self):
+        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
+        return calcola_totale_prezzi(dettagli_ricette)
+    
+    '''
     def calcola_solvente_totale(self):
         # Ottieni tutti i dettagli delle ricette associati a questa RicettaRifinizione
         dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
@@ -282,6 +321,10 @@ class RicettaRifinizione(models.Model):
                 totale_solvente += solvente_dettaglio
 
         return totale_solvente
+        '''
+    def calcola_solvente_totale(self):
+        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
+        return calcola_solvente_totale(dettagli_ricette)
     
     def save(self, *args, **kwargs):
         # Se il numero ricetta è vuoto
@@ -401,19 +444,8 @@ class DettaglioRicettaRifinizione(models.Model):
     quantity = models.DecimalField(max_digits=8, decimal_places=4)
 
     
-    #def get_choices_chemical():
-    #    return {'reparto': ProdottoChimico.RIFINIZIONE}  # Filtra i prodotti con reparto "Rifinizione"
-    
-    
     def get_choices_chemical():
-        reparto_rifinizione = ProdottoChimico.objects.filter(reparto=ProdottoChimico.RIFINIZIONE)
-        reparto_null = ProdottoChimico.objects.filter(Q(reparto__isnull=True) | Q(reparto=''))
-        
-        reparto_choices = list(reparto_rifinizione) + list(reparto_null)
-    
-        reparto_choices_dict = [{'id': choice.id, 'descrizione': choice.descrizione} for choice in reparto_choices]
-        return Q(id__in=[choice['id'] for choice in reparto_choices_dict])
-
+        return get_choices_chemical(ProdottoChimico.RIFINIZIONE)
 
     fk_prodotto_chimico = models.ForeignKey(
         ProdottoChimico,
@@ -423,19 +455,77 @@ class DettaglioRicettaRifinizione(models.Model):
     )
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglio_ricette_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
     
-
+    
     def calcola_totale(self):
-        if self.fk_prodotto_chimico:
-            # Ottieni l'ultimo prezzo dal modello ProdottoChimico
-            ultimo_prezzo = self.fk_prodotto_chimico.ultimo_prezzo
-            if ultimo_prezzo is not None:
-                return self.quantity * ultimo_prezzo
-        return 0  # Restituisci 0 se non c'è un prezzo disponibile o un prodotto chimico associato
+        return calcola_totale(self)
     
     class Meta:
         ordering = ["numero_riga"]
 
 
+
+class RicettaColoreRifinizione(models.Model):
+    numero_ricetta = models.IntegerField(blank=True, null=True)
+    data_ricetta = models.DateField(default=date.today)
+    numero_revisione = models.IntegerField(blank=True, null=True)
+    data_revisione = models.DateField(default=date.today)
+    fk_articolo = models.ForeignKey(Articolo, related_name='ricette_colore_rifinizione', on_delete=models.CASCADE)
+    fk_colore = models.ForeignKey(Colore, related_name='ricette_colore_rifinizione', on_delete=models.CASCADE)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='ricette_colore_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    
+    def calcola_totale_prezzi(self):
+        dettagli_ricette = self.dettaglio_colore_rifinizione.all()
+        return calcola_totale_prezzi(dettagli_ricette)
+    
+    def calcola_solvente_totale(self):
+        dettagli_ricette = self.dettaglio_colore_rifinizione.all()
+        return calcola_solvente_totale(dettagli_ricette)
+    
+    class Meta:
+        ordering = ["-data_ricetta"]
+        
+    def __str__(self):
+        formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
+        return f"Ricetta Colore Rifinizione n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
     
 
+class DettaglioRicettaColoreRifinizione(models.Model):
+    fk_ricetta_colore_rifinizione = models.ForeignKey(RicettaColoreRifinizione, related_name='dettaglio_colore_rifinizione', on_delete=models.CASCADE)
+    numero_riga = models.IntegerField()
+
+    def get_choices_operations():
+        #return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+        return {'ward_ref': "Rifinizione"}
+    
+    fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
+                                            related_name='dettaglio_colore_rifinizione', 
+                                            on_delete=models.CASCADE,                                            
+                                            limit_choices_to=get_choices_operations,
+                                            )
+    quantity = models.DecimalField(max_digits=8, decimal_places=4)
+    
+    def get_choices_chemical():
+        return get_choices_chemical(ProdottoChimico.RIFINIZIONE)
+
+
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,
+        related_name='dettaglio_colore_rifinizione',
+        on_delete=models.CASCADE,
+        limit_choices_to=get_choices_chemical,
+    )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_colore_rifinizione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calcola_totale(self):
+        return calcola_totale(self)
+
+
+    class Meta:
+        ordering = ["numero_riga"]

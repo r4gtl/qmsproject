@@ -48,6 +48,35 @@ def home_ricette_rifinizione(request):
     return render(request, "ricette/home_ricette_rifinizione.html", context)
     
 
+def home_ricette_colori_rifinizione(request):
+    ricette_colori_rifinizione = RicettaColoreRifinizione.objects.all()
+    
+    ricette_colori_rifinizione_filter = RicettaColoreRifinizioneFilter(request.GET, queryset=ricette_colori_rifinizione)
+    filtered_ricette_colori_rifinizione = ricette_colori_rifinizione_filter.qs  # Ottieni i record filtrati
+    
+
+    # Paginazione operazioni
+    page_ricette_colori_rifinizione = request.GET.get('page', 1)
+    paginator_ricette_colori_rifinizione = Paginator(filtered_ricette_colori_rifinizione, 50)
+    try:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(page_ricette_colori_rifinizione)
+    except PageNotAnInteger:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(1)
+    except EmptyPage:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(paginator_ricette_colori_rifinizione.num_pages)
+
+
+    context = {
+        # Operazioni
+        'ricette_colori_rifinizione': ricette_colori_rifinizione,
+        'ricette_colori_rifinizione_paginator': ricette_colori_rifinizione_paginator,        
+        'filter': ricette_colori_rifinizione_filter,  
+            
+        
+
+    }
+
+    return render(request, "ricette/home_ricette_colori_rifinizione.html", context)
 
 
 
@@ -209,8 +238,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
             last_recipe = RicettaRifinizione.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
             numero_revisione=last_recipe.numero_revisione+1
             numero_ricetta = self.request.GET.get('numero_ricetta')
-            data_ricetta = self.request.GET.get('data_ricetta')
-            fk_articolo = self.request.GET.get('fk_articolo')
+            data_ricetta = self.request.GET.get('data_ricetta')            
             numero_revisione = numero_revisione
             data_revisione = self.request.GET.get('data_revisione')
             note = self.request.GET.get('note')
@@ -225,7 +253,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
             initial['note'] = note
             initial['ricetta_per_pelli'] = ricetta_per_pelli
             initial['created_by'] = self.request.user
-            initial['ricetta_per_pelli'] = 100
+            
         else:
             initial['created_by'] = self.request.user
             initial['ricetta_per_pelli'] = 100
@@ -338,4 +366,184 @@ def delete_dettaglio_ricetta_rifinizione(request, pk):
         fk_ricetta_rifinizione = deleteobject.fk_ricetta_rifinizione.pk
         deleteobject.delete()
         url_match = reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+        return redirect(url_match)
+
+# RICETTE COLORE RIFINIZIONE
+class RicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView):
+    model = RicettaColoreRifinizione
+    form_class = RicettaColoreRifinizioneModelForm
+    template_name = 'ricette/ricetta_colore_rifinizione.html'
+    success_message = 'Ricetta aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_rifinizione')
+        
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':pk_ricetta})
+
+
+
+    '''def form_valid(self, form):        
+        form.instance.created_by = self.request.user
+        
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)'''
+    def form_valid(self, form):
+        if 'salva_esci' in self.request.POST:
+            return redirect('ricette:home_ricette_rifinizione')
+        else:
+            form.instance.created_by = self.request.user
+            messages.info(self.request, self.success_message)
+            return super().form_valid(form)
+
+
+    def get_initial(self):
+        initial = super().get_initial()
+        
+        if self.request.GET.get('numero_ricetta'):
+            print(f"Articolo: ")
+            fk_articolo=self.request.GET.get('fk_articolo')
+            fk_colore=self.request.GET.get('fk_colore')
+            last_recipe = RicettaColoreRifinizione.objects.filter(fk_articolo=fk_articolo, fk_colore=fk_colore).order_by('-numero_revisione').first()
+            numero_revisione=last_recipe.numero_revisione+1
+            numero_ricetta = self.request.GET.get('numero_ricetta')
+            data_ricetta = self.request.GET.get('data_ricetta')            
+            numero_revisione = numero_revisione
+            data_revisione = self.request.GET.get('data_revisione')
+            note = self.request.GET.get('note')
+            
+
+            # Inizializza i campi del form con i valori recuperati
+            initial['numero_ricetta'] = numero_ricetta
+            initial['data_ricetta'] = data_ricetta
+            initial['fk_articolo'] = fk_articolo
+            initial['numero_revisione'] = numero_revisione
+            initial['data_revisione'] = data_revisione
+            initial['note'] = note            
+            initial['created_by'] = self.request.user
+            
+        else:
+            ultima_ricetta=RicettaColoreRifinizione.objects.all().order_by('-numero_ricetta').first()
+            data_odierna = date.today()
+            if ultima_ricetta:
+                initial['numero_ricetta'] = ultima_ricetta.numero_ricetta + 1
+            else:
+                # Nessuna ultima ricetta trovata, quindi impostare il numero di ricetta iniziale a 1 o a un altro valore predefinito
+                initial['numero_ricetta'] = 1
+            initial['data_ricetta'] = data_odierna
+            initial['numero_revisione'] = 1
+            initial['data_revisione'] = data_odierna
+            initial['created_by'] = self.request.user
+            
+        print(f"Initial: {initial}")
+        return initial
+        
+
+class RicettaColoreRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = RicettaColoreRifinizione
+    form_class = RicettaColoreRifinizioneModelForm
+    template_name = 'ricette/ricetta_colore_rifinizione.html'
+    success_message = 'Ricetta modificata correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_rifinizione')
+
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':pk_ricetta})
+    
+        
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta_colore_rifinizione = self.object.pk        
+        context['elenco_dettagli'] = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_colore_rifinizione=pk_ricetta_colore_rifinizione)
+
+        return context
+
+
+def delete_ricetta_colore_rifinizione(request, pk):
+        deleteobject = get_object_or_404(RicettaColoreRifinizione, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:home_ricette_rifinizione')
+        return redirect(url_match)
+
+
+# Dettaglio
+class DettaglioRicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioRicettaColoreRifinizione
+    form_class = DettaglioRicettaColoreRifinizioneModelForm
+    template_name = 'ricette/dettaglio_ricetta_colore_rifinizione.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_colore_rifinizione=self.object.fk_ricetta_colore_rifinizione.pk        
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        ricetta_id = self.kwargs.get('fk_ricetta_colore_rifinizione')
+        max_numero_riga = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_colore_rifinizione=ricetta_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga
+
+        ricetta_id = self.kwargs.get('fk_ricetta_colore_rifinizione')
+        
+        initial['fk_ricetta_colore_rifinizione'] = ricetta_id
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_colore_rifinizione']         
+        context['ricetta_colore_rifinizione'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreRifinizione, pk=pk_ricetta)
+        return context
+        
+
+class DettaglioRicettaColoreRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioRicettaRifinizione
+    form_class = DettaglioRicettaRifinizioneModelForm
+    template_name = 'ricette/dettaglio_ricetta_colore_rifinizione.html'
+    success_message = 'Dettaglio modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk        
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_colore_rifinizione']         
+        context['ricetta_colore_rifinizione'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreRifinizione, pk=pk_ricetta)
+        return context
+
+
+def delete_dettaglio_ricetta_colore_rifinizione(request, pk):
+        deleteobject = get_object_or_404(DettaglioRicettaColoreRifinizione, pk = pk)
+        fk_ricetta_colore_rifinizione = deleteobject.fk_ricetta_colore_rifinizione.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
         return redirect(url_match)
