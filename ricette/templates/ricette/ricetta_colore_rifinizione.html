@@ -93,7 +93,19 @@
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
                           <div class="col-md-1">
-                            <button type="button" class="btn btn-info mt-3" data-toggle="tooltip" data-placement="top" title="Cerca Articolo" style="width:100%"><i class="bi bi-search"></i></button>
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Articolo" 
+                              style="width:100%"
+                              id="openSearchArticleButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_articolo' %}" 
+                              data-modal-title="Cerca Articolo" 
+                              data-search-input-label="Cerca Articoli"
+                              ><i class="bi bi-search"></i></button>
                           </div>
                           <div class="col-md-5">
                             {{ form.fk_colore|as_crispy_field }} 
@@ -125,11 +137,19 @@
                                       <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-start">Azioni</h6>
                                           {% if form.instance.id  %}
-                                            <button type="button" class="btn btn-info text-wrap" style="width:100%" id="crea-nuova-ricetta"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
-                                            <button type="button" class="btn search-modal-button mt-1" style="width:100%" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                            <button type="button" 
+                                              class="btn btn-info text-wrap" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Crea automaticamente nuova revisione della ricetta attiva." 
+                                                style="width:100%" 
+                                                id="crea-nuova-ricetta"
+                                                >
+                                                <i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" class="btn search-modal-button mt-1" data-toggle="tooltip" data-placement="top" title="Cerca ricetta da accodare alla ricetta attiva." style="width:100%" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}
-                                            <button type="button" class="btn btn-secondary text-wrap" style="width:100%"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
-                                            <button type="button" class="btn btn-secondary mt-1" style="width:100%"><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                            <button type="button" class="btn btn-secondary text-wrap" data-toggle="tooltip" data-placement="top" title="Creazione automatica revisione. Salvare per attivare questo pulsante." style="width:100%"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" class="btn btn-secondary mt-1" data-toggle="tooltip" data-placement="top" title="Accoda ricetta. Salvare per attivare il pulsante." style="width:100%"><i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% endif %}
                                           
                                           <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
@@ -200,19 +220,33 @@
 {% endblock content %}
 
 {% block extra_scripts %}
+
 <script>
 
 document.addEventListener('DOMContentLoaded', function() {
 
   const table = document.getElementById('myTable');
-  makeTableRowsDraggable(table);
+  if (table) {
+    makeTableRowsDraggable(table);
+  }
 });
 
 
-  const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
-  const modelName = document.getElementById('myTable').dataset.model_name;
-  const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
-  const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
+
+
+  if (document.getElementById('myTable')){
+    const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
+    const modelName = document.getElementById('myTable').dataset.model_name;
+
+    const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
+    const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
+  }
+
+
+
+
+
+
 
 // Per creare una nuova revisione della ricetta
 $(document).ready(function() {
@@ -345,6 +379,19 @@ $(document).ready(function() {
   });
   
 
+});
+
+
+
+$(document).ready(function() {
+  $('#openSearchArticleButton').click(function(event) {
+    console.log("Premuto")
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
 });
 
 
