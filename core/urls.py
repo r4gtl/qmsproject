@@ -19,6 +19,9 @@ urlpatterns = [
 
     # Ricerche
     path('search_articolo/', search_articolo, name='search_articolo'),
+    path('search_colore/', search_colore, name='search_colore'),
+    path('search_revisione_rifinizione/', search_revisione_rifinizione, name='search_revisione_rifinizione'),
+    path('search_revisione_colore_rifinizione/', search_revisione_colore_rifinizione, name='search_revisione_colore_rifinizione'),
 
        
      

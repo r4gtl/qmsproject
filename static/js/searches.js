@@ -1,10 +1,42 @@
+
+// Funzione per la ricerca generica:
+// Indicare le variabili nella chiamata dall'evento click del pulsante
+// Esempio d'uso:
+// il pulsante deve essere così
+/*
+<button type="button" 
+      class="btn btn-info mt-3" 
+      id="openSearchArticleButton"
+      data-bs-toggle="modal" 
+      data-bs-target="#searchModal"
+      data-url="{% url 'core:search_articolo' %}" 
+      data-modal-title="Cerca Articolo" 
+      data-search-input-label="Cerca Articoli"
+      ><i class="bi bi-search"></i></button>
+  </div>
+*/    
+// La gestione dell'evento click del pulsante deve essere così
+/*
+$(document).ready(function() {
+  $('#openSearchArticleButton').click(function(event) {
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+*/
+// Questo chiamerà e gestirà il modal baseModalGenericSearch.html che va ovviamente incluso nel template
+// {% include "core/modals/baseModalGenericSearch.html" %}
+
+
 function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event) {
-  console.log("searchFunctionGeneral")
   
-  console.log("callerButtonId iniziale: " + callerButtonId)
   $('#searchResults').data('callerButtonId', callerButtonId);
-  $(document).ready(function() {
+
     $("#searchInput").on("input", function() {
+      
       var searchTerm = $(this).val().trim();
       if (searchTerm.length >= 1) {
         $.ajax({
@@ -35,8 +67,10 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
     });
 
     $('#searchModal').on('hide.bs.modal', function() {
+      console.log("Modal chiuso")
       $('#searchInput').val('');  // Pulisce il campo di ricerca
       $('#searchResults').empty(); // Pulisce i risultati della ricerca
+      $('#searchModal').removeData();
     });
 
     // Pulisci i campi quando il modal viene aperto
@@ -45,13 +79,15 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
       $('#searchResults').empty(); // Pulisce i risultati della ricerca
       $('#searchInput').focus();
 
+      $.ajaxSetup({ cache: false }); // Pulisce la cache
+
       // Imposta il titolo del modal e l'etichetta del campo di ricerca
       $('#searchModalLabel').text(modalTitle);
       $('#searchInputLabel').text(searchInputLabel);
     });
     
     
-  });
+ 
 
 
  
@@ -60,14 +96,110 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
 
 $('#searchResults').on('click', 'tr', function() {
   var callerButtonId = $('#searchResults').data('callerButtonId');
-  console.log("callerButtonID: " + callerButtonId)
-  // Esegui azioni aggiuntive in base all'ID del pulsante chiamante
-  if (callerButtonId === 'openSearchArticleButton') {
-    console.log("Cliccato")
-    // Azioni specifiche per il pulsante chiamante openSearchArticleButton
-  } else {
-    // Azioni di default
+  
+  
+  switch (callerButtonId) {
+    // Valuta il caso in cui si stia cercando un articolo
+    case 'openSearchArticleButton':
+      var id_fk_articolo = $(this).find('.articolo-id').text();    
+      $('#id_fk_articolo').val(id_fk_articolo);    
+      $('#searchModal').modal('hide');
+      break;
+    
+      // Valuta il caso in cui si stia cercando un colore
+    case 'openSearchColorButton':
+      var id_fk_colore = $(this).find('.colore-id').text();    
+      $('#id_fk_colore').val(id_fk_colore);    
+      $('#searchModal').modal('hide');
+      break;
+
+      // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione
+    case 'openSearchRevisionButton':
+      var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
+  
+      if (conferma) {
+        // Ottiene l'id del prodotto chimico dalla riga cliccata
+        var ricettaId = $(this).find('.ricetta-id').text();
+        var ricettaAttiva = $('#openSearchRevisionButton').data('ricettaAttiva'); // Passa l'id della ricetta attiva alla quale accodare. Dato passato nel button
+                
+        // Chiude il modal
+        $('#searchModal').modal('hide');
+        // recupera il CSRF-Token dal form
+        var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+        console.log("csrftoken: " + csrftoken)
+        // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+        $.ajax({
+            url: "/ricette/accoda_dettaglio_ricetta_rifinizione/",  
+            method: "POST",
+            data: {
+                ricetta_id: ricettaId,
+                ricettaAttiva: ricettaAttiva,
+                csrfmiddlewaretoken: csrftoken
+            },
+            dataType: 'json',
+            success: function(data) {
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                  console.error('Errore durante il reindirizzamento:', data.error);
+              }
+              
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+                
+            }
+        });
+      }
+      break;
+      
+        // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione
+    case 'openSearchColorRevisionButton':
+      var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
+  
+      if (conferma) {
+        // Ottiene l'id del prodotto chimico dalla riga cliccata
+        var ricettaId = $(this).find('.ricetta-id').text();
+        var ricettaAttiva = $('#openSearchColorRevisionButton').data('ricettaAttiva'); // Passa l'id della ricetta attiva alla quale accodare. Dato passato nel button
+                
+        // Chiude il modal
+        $('#searchModal').modal('hide');
+        // recupera il CSRF-Token dal form
+        var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+        console.log("csrftoken: " + csrftoken)
+        // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+        $.ajax({
+            url: "/ricette/accoda_dettaglio_ricetta_colore_rifinizione/",  
+            method: "POST",
+            data: {
+                ricetta_id: ricettaId,
+                ricettaAttiva: ricettaAttiva,
+                csrfmiddlewaretoken: csrftoken
+            },
+            dataType: 'json',
+            success: function(data) {
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                  console.error('Errore durante il reindirizzamento:', data.error);
+              }
+              
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+                
+            }
+        });
+      }
+      break;
+
+
+    default:
+      // Azioni di default
+      break;
   }
+  
+  
   
 });
 

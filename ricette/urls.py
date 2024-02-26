@@ -56,6 +56,7 @@ urlpatterns = [
     
     # Automatismi
     path('accoda_dettaglio_ricetta_rifinizione/', accoda_dettaglio_ricetta_rifinizione, name="accoda_dettaglio_ricetta_rifinizione"),
+    path('accoda_dettaglio_ricetta_colore_rifinizione/', accoda_dettaglio_ricetta_colore_rifinizione, name="accoda_dettaglio_ricetta_colore_rifinizione"),
     
     
 ]

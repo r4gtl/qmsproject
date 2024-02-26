@@ -41,7 +41,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
-    {% include "core/modals/baseModalGenericSearch.html" %}
+    {% include "ricette/baseModalGenericSearch.html" %}
     
     <!-- Form nuovo registro -->
     
@@ -63,7 +63,7 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_rifinizione' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
-            
+            {% if form.instance.id  %}<a href="{% url 'ricette:ricetta_rifinizione_print' pk=ricettarifinizione.pk %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>{% endif %}
             
 
             
@@ -111,19 +111,7 @@
                             {{ form.fk_colore|as_crispy_field }} 
                           </div> 
                           <div class="col-md-1 ">
-                            <button type="button" 
-                              class="btn btn-info mt-3" 
-                              data-toggle="tooltip" 
-                              data-placement="top" 
-                              title="Cerca Colore" 
-                              style="width:100%"
-                              id="openSearchColorButton"
-                              data-bs-toggle="modal" 
-                              data-bs-target="#searchModal"
-                              data-url="{% url 'core:search_colore' %}" 
-                              data-modal-title="Cerca Colore" 
-                              data-search-input-label="Cerca Colori"
-                            ><i class="bi bi-search"></i></button>
+                            <button type="button" class="btn btn-info mt-3" data-toggle="tooltip" data-placement="top" title="Cerca Colore" style="width:100%"><i class="bi bi-search"></i></button>
                           </div>
                           </div> 
 
@@ -151,30 +139,14 @@
                                           {% if form.instance.id  %}
                                             <button type="button" 
                                               class="btn btn-info text-wrap" 
-                                              data-toggle="tooltip" 
-                                              data-placement="top" 
-                                              title="Crea automaticamente nuova revisione della ricetta attiva." 
-                                              style="width:100%" 
-                                              id="crea-nuova-ricetta"
-                                              
-                                              >
-                                              <i class="bi bi-list-task"></i> Crea nuova revisione</button>
-                                            <button type="button" 
-                                              class="btn search-modal-button mt-1" 
-                                              data-toggle="tooltip" 
-                                              data-placement="top" 
-                                              title="Cerca ricetta da accodare alla ricetta attiva." 
-                                              style="width:100%" 
-                                              data-bs-toggle="modal" 
-                                              data-bs-target="#searchModal"
-                                              id="openSearchColorRevisionButton"
-                                              data-bs-toggle="modal" 
-                                              data-bs-target="#searchModal"
-                                              data-url="{% url 'core:search_revisione_colore_rifinizione' %}" 
-                                              data-modal-title="Cerca Revisione" 
-                                              data-search-input-label="Cerca Revisione"
-                                              >
-                                              <i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Crea automaticamente nuova revisione della ricetta attiva." 
+                                                style="width:100%" 
+                                                id="crea-nuova-ricetta"
+                                                >
+                                                <i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" class="btn search-modal-button mt-1" data-toggle="tooltip" data-placement="top" title="Cerca ricetta da accodare alla ricetta attiva." style="width:100%" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}
                                             <button type="button" class="btn btn-secondary text-wrap" data-toggle="tooltip" data-placement="top" title="Creazione automatica revisione. Salvare per attivare questo pulsante." style="width:100%"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
                                             <button type="button" class="btn btn-secondary mt-1" data-toggle="tooltip" data-placement="top" title="Accoda ricetta. Salvare per attivare il pulsante." style="width:100%"><i class="bi bi-lightning"></i> Accoda ricetta</button>
@@ -313,6 +285,104 @@ $(document).ready(function() {
 });
 
 
+// Per cercare live le ricette da accodare
+$(document).ready(function() {
+  $("#searchInput").on("input", function() {
+    var searchTerm = $(this).val().trim();
+    if (searchTerm.length >= 1) {
+      $.ajax({
+        url: "{% url 'ricette:search_revisione_rifinizione' %}",
+        method: "GET",
+        data: { search: searchTerm },
+        dataType: 'json',
+        success: function(data) {
+          var resultsContainer = $("#searchResults");
+          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
+
+          // Aggiunge i nuovi risultati al DOM
+          if (data && data.html) {
+            resultsContainer.html(data.html);
+            
+          } else {
+            resultsContainer.append("<p>Nessun risultato trovato.</p>");
+          }
+        },
+        error: function(xhr, errmsg, err) {
+          console.log(errmsg);
+          // Gestisci eventuali errori qui
+        }
+      });
+    } else {
+      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
+    }
+  });
+
+
+
+  $('#searchModal').on('hide.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+     
+    
+  });
+
+  // Pulisci i campi quando il modal viene aperto
+  $('#searchModal').on('shown.bs.modal', function() {
+    $('#searchInput').val('');  // Pulisce il campo di ricerca
+    $('#searchResults').empty(); // Pulisce i risultati della ricerca
+    $('#searchInput').focus();
+  });
+
+
+  // Gestisce il clic su una riga della tabella dei risultati
+  $('#searchResults').on('click', 'tr', function() {
+    
+    var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
+
+    if (conferma) {
+      // Ottiene l'id del prodotto chimico dalla riga cliccata
+
+      var ricettaId = $(this).find('.ricetta-id').text();
+      var ricettaAttiva = '{{ ricettarifinizione.pk }}';
+      console.log("ricettaAttiva: " + ricettaAttiva)
+      
+      
+      // Chiude il modal
+      $('#searchModal').modal('hide');
+      
+      // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+      $.ajax({
+          url: "{% url 'ricette:accoda_dettaglio_ricetta_rifinizione' %}",  // Sostituisci 'nome_tuo_url_aggiunta_dettaglio' con il tuo URL reale
+          method: "POST",
+          data: {
+              ricetta_id: ricettaId,
+              ricettaAttiva: ricettaAttiva,
+              csrfmiddlewaretoken: '{{ csrf_token }}'  // Assicurati di includere il token CSRF
+          },
+          dataType: 'json',
+          success: function(data) {
+            if (data.redirect_url) {
+              // L'URL di reindirizzamento è stato restituito dal backend, esegui il reindirizzamento
+              window.location.href = data.redirect_url;
+            } else {
+                // L'operazione non è stata completata con successo, gestisci eventuali errori qui
+                console.error('Errore durante il reindirizzamento:', data.error);
+            }
+            
+          },
+          error: function(xhr, errmsg, err) {
+              console.log(errmsg);
+              
+          }
+      });
+    };
+  });
+  
+
+});
+
+
+
 $(document).ready(function() {
   $('#openSearchArticleButton').click(function(event) {
     console.log("Premuto")
@@ -322,30 +392,6 @@ $(document).ready(function() {
     var searchInputLabel = $(this).data('search-input-label');
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
   });
-});
-
-$(document).ready(function() {
-  $('#openSearchColorButton').click(function(event) {
-    console.log("Premuto openSearchColorButton")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-});
-
-// Intercetto l'evento relativo al pulsante per cercare le revisioni
-$(document).ready(function() {
-  $('#openSearchColorRevisionButton').click(function(event) {
-    console.log("Premuto openSearchColorRevisionButton")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-
 });
 
 

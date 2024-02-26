@@ -1,19 +1,14 @@
-import json
 from datetime import datetime
 
-from articoli.models import Articolo
 from chem_man.models import ProdottoChimico
-from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.template import RequestContext
-from django.template.loader import get_template, render_to_string
+from django.http import JsonResponse
 from django.urls import reverse
-from django.views.decorators.http import require_POST
 
 from .forms import RicettaRifinizioneModelForm
-from .models import DettaglioRicettaRifinizione, RicettaRifinizione
+from .models import (DettaglioRicettaColoreRifinizione,
+                     DettaglioRicettaRifinizione, RicettaColoreRifinizione,
+                     RicettaRifinizione)
 
 
 def search_prodotto_chimico(request):
@@ -134,12 +129,42 @@ def accoda_dettaglio_ricetta_rifinizione(request):
         print(f"ricetta_id: {ricetta_id}" )
         ricetta_attiva = RicettaRifinizione.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
         # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
-        dettagli_ricetta = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id)
+        dettagli_ricetta = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id)
 
         # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
         for dettaglio in dettagli_ricetta:
             DettaglioRicettaRifinizione.objects.create(
                 fk_ricetta_rifinizione=ricetta_attiva,
+                fk_operazione_ricette=dettaglio.fk_operazione_ricette,
+                numero_riga=dettaglio.numero_riga,
+                quantity=dettaglio.quantity,
+                fk_prodotto_chimico=dettaglio.fk_prodotto_chimico,
+                note=dettaglio.note,
+                created_by=dettaglio.created_by
+            )
+        print(f"ricetta_attiva.pk: {ricetta_attiva.pk}")
+        #return redirect(reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': int(ricetta_attiva.pk)}))
+        #return JsonResponse({'message': 'Dettagli della ricetta rifinizione aggiunti correttamente.'})
+        redirect_url = reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': ricetta_attiva.pk})
+        return JsonResponse({'redirect_url': redirect_url}) 
+    else:
+        return JsonResponse({'error': 'Richiesta non valida.'})
+    
+
+def accoda_dettaglio_ricetta_colore_rifinizione(request):
+    if request.method == 'POST':
+        ricetta_id = request.POST.get('ricetta_id')
+        ricetta_attiva = request.POST.get('ricettaAttiva')
+        print(f"ricetta_attiva: {ricetta_attiva}" )
+        print(f"ricetta_id: {ricetta_id}" )
+        ricetta_attiva = RicettaColoreRifinizione.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
+        # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
+        dettagli_ricetta = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_colore_rifinizione=ricetta_id)
+
+        # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
+        for dettaglio in dettagli_ricetta:
+            DettaglioRicettaColoreRifinizione.objects.create(
+                fk_ricetta_colore_rifinizione=ricetta_attiva,
                 fk_operazione_ricette=dettaglio.fk_operazione_ricette,
                 numero_riga=dettaglio.numero_riga,
                 quantity=dettaglio.quantity,
