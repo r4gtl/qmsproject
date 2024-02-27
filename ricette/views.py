@@ -543,3 +543,101 @@ def delete_dettaglio_ricetta_colore_rifinizione(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
         return redirect(url_match)
+    
+    
+# RICETTE BAGNATO
+
+class RicettaBagnatoCreateView(LoginRequiredMixin,CreateView):
+    model = RicettaBagnato
+    form_class = RicettaBagnatoModelForm
+    template_name = 'ricette/ricetta_bagnato.html'
+    success_message = 'Ricetta aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_bagnato')
+        
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':pk_ricetta})
+
+
+
+    def form_valid(self, form):
+        if 'salva_esci' in self.request.POST:
+            return redirect('ricette:home_ricette_bagnato')
+        else:
+            form.instance.created_by = self.request.user
+            messages.info(self.request, self.success_message)
+            return super().form_valid(form)
+
+
+    def get_initial(self):
+        initial = super().get_initial()
+        if self.request.GET.get('numero_ricetta'):
+            print(f"Articolo: ")
+            fk_articolo=self.request.GET.get('fk_articolo')
+            last_recipe = RicettaBagnato.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
+            numero_revisione=last_recipe.numero_revisione+1
+            numero_ricetta = self.request.GET.get('numero_ricetta')
+            data_ricetta = self.request.GET.get('data_ricetta')            
+            numero_revisione = numero_revisione
+            data_revisione = self.request.GET.get('data_revisione')
+            fk_tipogrezzo = self.request.GET.get('fk_tipogrezzo')
+            fk_tipoanimale = self.request.GET.get('fk_tipoanimale')
+            note = self.request.GET.get('note')
+            kg_ricetta = self.request.GET.get('kg_ricetta')
+
+            # Inizializza i campi del form con i valori recuperati
+            initial['numero_ricetta'] = numero_ricetta
+            initial['data_ricetta'] = data_ricetta
+            initial['fk_articolo'] = fk_articolo
+            initial['numero_revisione'] = numero_revisione
+            initial['data_revisione'] = data_revisione
+            initial['fk_tipogrezzo'] = fk_tipogrezzo
+            initial['fk_tipoanimale'] = fk_tipoanimale
+            initial['note'] = note
+            initial['kg_ricetta'] = kg_ricetta
+            initial['created_by'] = self.request.user
+            
+        else:
+            initial['created_by'] = self.request.user
+            initial['kg_ricetta'] = 100
+        print(f"Initial: {initial}")
+        return initial
+        
+
+class RicettaBagnatoUpdateView(LoginRequiredMixin, UpdateView):
+    model = RicettaBagnato
+    form_class = RicettaBagnatoModelForm
+    template_name = 'ricette/ricetta_bagnato.html'
+    success_message = 'Ricetta modificata correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_bagnato')
+
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':pk_ricetta})
+    
+        
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta_bagnato = self.object.pk        
+        context['elenco_dettagli'] = DettaglioRicettaBagnato.objects.filter(fk_ricetta_bagnato=pk_ricetta_bagnato)
+
+        return context
+
+
+def delete_ricetta_bagnato(request, pk):
+        deleteobject = get_object_or_404(RicettaBagnato, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:home_ricette_bagnato')
+        return redirect(url_match)

@@ -157,6 +157,7 @@ class RevisioneRicettaBagnato(models.Model):
         
         super().save(*args, **kwargs)
 
+# Eliminare
 class DettaglioRevisioneRicettaBagnato(models.Model):
     # Questo modello serve per le righe effettive della ricetta
     fk_revisione = models.ForeignKey(RevisioneRicettaBagnato, related_name='dettaglio_revisione_ricette_bagnato', on_delete=models.CASCADE)
@@ -192,8 +193,55 @@ class DettaglioRevisioneRicettaBagnato(models.Model):
     
     class Meta:
         ordering = ["numero_riga"]
-        
+# Fine eliminazione    
+class DettaglioRicettaBagnato(models.Model):
+    # Questo modello serve per le righe effettive della ricetta
+    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='dettaglio_ricette_bagnato', on_delete=models.CASCADE)
+    numero_riga = models.IntegerField()
     
+    def get_choices(self):
+        return OperazioneRicette.objects.filter(ward_ref="Bagnato")
+    
+    fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
+                                            related_name='dettaglio_ricette_bagnato', 
+                                            on_delete=models.CASCADE,                                            
+                                            limit_choices_to=get_choices,
+                                            )
+    
+    temperatura = models.CharField(max_length=50)
+    quantity = models.DecimalField(max_digits=8, decimal_places=3)
+    
+    def get_choices_chemical():
+        return get_choices_chemical(ProdottoChimico.BAGNATO)
+
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,
+        related_name='dettaglio_ricette_bagnato',
+        on_delete=models.CASCADE,
+        limit_choices_to=get_choices_chemical,
+    )
+    
+    tempo = models.CharField(max_length=50)
+    procedura = models.CharField(max_length=100)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        # Controllo se il campo numero_riga è già stato assegnato, altrimenti lo calcolo
+        if not self.numero_riga:
+            # Trova il numero più alto in base alla fk_revisione
+            max_numero_riga = DettaglioRicettaBagnato.objects.filter(fk_ricetta_bagnato=self.fk_ricetta_bagnato).aggregate(models.Max('numero_riga'))['numero_riga__max']
+            # Se non ci sono righe esistenti per questa revisione, inizia da 1, altrimenti incrementa di 1
+            self.numero_riga = 1 if max_numero_riga is None else max_numero_riga + 1
+
+        super().save(*args, **kwargs)
+        
+    def calcola_totale(self):
+        return calcola_totale(self)
+    
+    class Meta:
+        ordering = ["numero_riga"]
     
         
 class RicettaFondo(models.Model):

@@ -1,7 +1,7 @@
 {% extends 'core/base.html' %}
 {% load widget_tweaks %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Ricette Bagnato {% endblock %}
+{% block title %}{{ block.super }} | Ricette {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_ricette.html" %}
@@ -13,13 +13,13 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item active" aria-current="page">Ricette Bagnato</li>
+        <li class="breadcrumb-item active" aria-current="page">Ricette</li>
     </ol>
 </nav>
 
     <div class="container">
         
-        <h3>Ricette Bagnato</h3>
+        <h3>Ricette</h3>
         <!-- Statistiche -->
         <div class="row">
         <div class="col-md-8"></div>
@@ -51,12 +51,8 @@
                   <table class="table table-hover table-striped table-bordered">
                     <thead class="thead-dark">
                       <tr>     
-                        <th>Numero Ricetta</th>
-                        <th>Numero Revisione</th>
-                        <th>Descrizione Articolo</th>
-                        <th>Descrizione Pelli</th>
-                        <th>Tipo Animale</th>
-
+                        <th>Ricetta PROVA</th>
+                        <th>PROVA</th>
                         
                       </tr>
                     </thead>
@@ -64,23 +60,11 @@
                     <tbody>
                     <tr>
                       <td style="width: 20%">                
-                        {% render_field filter.form.numero_ricetta class="form-control" %}
+                        {% render_field filter.form.descrizione class="form-control" %}
                       </td>
                       
                       <td style="width: 20%">
-                        {% render_field filter.form.numero_revisione class="form-control" %}
-                      </td>
-
-                      <td style="width: 20%">
-                        {% render_field filter.form.descrizione_articolo class="form-control" %}
-                      </td>
-
-                      <td style="width: 20%">
-                        {% render_field filter.form.descrizione_tipo_pelli class="form-control" %}
-                      </td>
-
-                      <td style="width: 20%">
-                        {% render_field filter.form.descrizione_tipo_animale class="form-control" %}
+                        {% render_field filter.form.fk_fornitore class="form-control" %}
                       </td>
                       
                     </tr>
@@ -105,27 +89,23 @@
           
         </div>
         <!-- Fine filtro -->
-        
+
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="{% url 'ricette:aggiungi_ricetta_bagnato' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Ricetta</a>
+        <a href="#" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Prodotto</a>
         </div>  
         <br>
 
 
         <div class="container-fluid">
             <div class="table-responsive">
-            <table class="table table-hover table-striped table-bordered" id="TabellaRicetteRifinizione">
+            <table class="table table-hover table-striped table-bordered">
               <thead class="thead-dark">
               <tr>        
-                <th>Descrizione Articolo</th>
-                <th>Numero Ricetta</th>
-                <th>Data Ricetta</th>
-                <th>Numero Revisione</th>
-                <th>Data Revisione</th>
-                <th>Tipo Pelli</th>
-                <th>Tipo Animale</th>
-                <th>Costo</th>
+                <th>Prodotto Chimico</th>
+                <th>Prezzo Corrente</th>
+                <th>Solvente</th>
+                <th>Fornitore</th>
                 <th>Azione</th>
 
                 
@@ -134,18 +114,17 @@
             </thead>
               
               <tbody>
-                {% for ricetta in ricette_rifinizione_paginator %}
-                
-                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_bagnato' pk=ricetta.pk %}">{{ ricetta.fk_articolo }}</a></td>                    
-                    <td class="col-md text-end">{{ ricetta.numero_ricetta }}</td>
-                    <td class="col-md text-end">{{ ricetta.data_ricetta }}</td>                    
-                    <td class="col-md text-end">{{ ricetta.numero_revisione }}</td>                    
-                    <td class="col-md text-end">{{ ricetta.data_revisione }}</td>  
-                    <td class="col-md text-end">{{ ricetta.fk_tipo_grezzo }}</td>  
-                    <td class="col-md text-end">{{ ricetta.fk_tipo_animale }}</td>  
-                    <td class="col-md text-end">{{ ricetta.calcola_totale_prezzi }}</td>
-
-                    <td class="col-md text-center"><a href="{% url 'ricette:delete_ricetta_bagnato' pk=ricetta.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ricetta.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                {% for prodotto in prodotti_chimici_paginator %}
+                    
+                    <td class="col-md"><a href="#">{{ prodotto.descrizione }}</a></td>
+                     {% if prodotto.ultimo_prezzo %}
+                        <td class="col-md text-end">{{ prodotto.ultimo_prezzo }}</td>
+                    {% else %}
+                        <td class="col-md text-center">Nessun prezzo</td>
+                    {% endif %}
+                    <td class="col-md text-end">{{ prodotto.solvente }}</td>  
+                    <td class="col-md">{{ prodotto.fk_fornitore  }} </td>
+                    <td class="col-md text-center"><a href="#" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{prodotto.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
@@ -158,12 +137,12 @@
 
 
     <!-- Pagination -->
-{% if ricette_bagnato_paginator.has_other_pages %}
+{% if prodotti_chimici_paginator.has_other_pages %}
 <nav>
   <ul class="pagination justify-content-center">
-    {% if ricette_bagnato_paginator.has_previous %}
+    {% if prodotti_chimici_paginator.has_previous %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ ricette_bagnato_paginator.previous_page_number }}" aria-label="Previous">
+        <a class="page-link" href="?page={{ prodotti_chimici_paginator.previous_page_number }}" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -173,8 +152,8 @@
       </li>
     {% endif %}
 
-    {% for page in ricette_bagnato_paginator.paginator.page_range %}
-      {% if page == ricette_bagnato_paginator.number %}
+    {% for page in prodotti_chimici_paginator.paginator.page_range %}
+      {% if page == prodotti_chimici_paginator.number %}
         <li class="page-item active">
           <span class="page-link">{{ page }}</span>
         </li>
@@ -185,9 +164,9 @@
       {% endif %}
     {% endfor %}
 
-    {% if ricette_bagnato_paginator.has_next %}
+    {% if prodotti_chimici_paginator.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ ricette_bagnato_paginator.next_page_number }}" aria-label="Next">
+        <a class="page-link" href="?page={{ prodotti_chimici_paginator.next_page_number }}" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>
@@ -213,18 +192,9 @@
 
 
 {% endblock %}
-
-<script>
-  
-  
-
-
-</script>
-
 {% block extra_scripts %}
 <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            //initializeDataTable('TabellaRicetteRifinizione');
-        });
-    </script>
+  
+
+</script>
 {% endblock %}

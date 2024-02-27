@@ -142,3 +142,46 @@ class DettaglioRicettaColoreRifinizioneModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+        
+
+class RicettaBagnatoModelForm(forms.ModelForm):
+    
+    
+    class Meta:
+        model = RicettaBagnato
+        fields= '__all__'
+        fk_articolo = forms.ModelChoiceField(
+            queryset=Articolo.objects.all(),            
+            widget=forms.Select
+            )
+        fk_tipogrezzo = forms.ModelChoiceField(
+            queryset=TipoGrezzo.objects.all(),            
+            widget=forms.Select
+            )
+        fk_tipoanimale = forms.ModelChoiceField(
+            queryset=TipoAnimale.objects.all(),            
+            widget=forms.Select
+            )
+        
+        
+        widgets = {
+            'numero_ricetta': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'data_ricetta': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
+            'numero_revisione': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
+            'kg_ricetta': forms.NumberInput(attrs={'class': 'form-control text-end'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+        }
+        labels = {
+            'fk_articolo': 'Articolo',
+            'numero_ricetta': 'Numero Ricetta',
+            'data_ricetta': 'Data Ricetta',
+            'numero_revisione': 'Numero Revisione',
+            'data_revisione': 'Data Revisione',
+            'fk_tipogrezzo': 'Tipo Grezzo',
+            'fk_tipoanimale': 'Tipo Animale',
+            'kg_ricetta': 'Ricetta per kg.',
+            'note': 'Note'
+
+        }

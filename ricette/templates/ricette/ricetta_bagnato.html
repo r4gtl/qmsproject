@@ -4,7 +4,7 @@
 {% load custom_filters %}
 {% load widget_tweaks %}
 
-{% block head_title %}{{ block.super }} - Ricetta Rifinizione{% endblock head_title %} 
+{% block head_title %}{{ block.super }} - Ricetta Bagnato{% endblock head_title %} 
 
 
 
@@ -18,12 +18,12 @@
 <nav aria-label="breadcrumb" class="mt-3"> 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_rifinizione' %}">Home Ricette</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_bagnato' %}">Home Ricette</a></li>     
         
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettarifinizione }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettabagnato }}</li>
         {% else %}
-            <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Rifinizione</li>
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Bagnato</li>
         {% endif %}     
     </ol>
 
@@ -34,9 +34,9 @@
     
     <div class="container">
       {% if form.instance.id  %}
-          <h3>Modifica {{ ricettarifinizione }}</h3>
+          <h3>Modifica {{ ricettabagnato }}</h3>
       {% else %}
-          <h3> Aggiungi Ricetta Rifinizione</h3>
+          <h3> Aggiungi Ricetta Bagnato</h3>
       {% endif %}
     <hr>
     <br>
@@ -62,8 +62,8 @@
             value="/previous/page/url">
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
-            <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_rifinizione' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
-            {% if form.instance.id  %}<a href="{% url 'ricette:ricetta_rifinizione_print' pk=ricettarifinizione.pk %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>{% endif %}
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_bagnato' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
+            
             
 
             
@@ -86,7 +86,7 @@
                               {{ form.data_revisione|as_crispy_field }}
                             </div>
                             <div class="col-md-2">
-                              {{ form.ricetta_per_pelli|as_crispy_field }}
+                              {{ form.kg_ricetta|as_crispy_field }}
                             </div>
                             
                         </div>
@@ -108,6 +108,12 @@
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
                               ><i class="bi bi-search"></i></button>
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.fk_tipogrezzo|as_crispy_field }} 
+                          </div>
+                          <div class="col-md-3">
+                            {{ form.fk_tipoanimale|as_crispy_field }} 
                           </div>
                           </div> 
 
@@ -171,7 +177,7 @@
                                       <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-start">Stats</h6>
                                         <hr>
-                                        <h3 style="width:100%">Costo: {{ ricettarifinizione.calcola_totale_prezzi }}</h3>
+                                        <h3 style="width:100%">Costo: {{ ricettabagnato.calcola_totale_prezzi }}</h3>
                                 
                                         <h3 style="width:100%">Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
                                       </div>

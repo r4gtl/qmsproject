@@ -45,7 +45,12 @@ urlpatterns = [
     path('<int:fk_ricetta_colore_rifinizione>/modifica_dettaglio_ricetta_colore_rifinizione/<int:pk>/', DettaglioRicettaColoreRifinizioneUpdateView.as_view(), name="modifica_dettaglio_ricetta_colore_rifinizione"), 
     path('delete_dettaglio_ricetta_colore_rifinizione/<int:pk>', delete_dettaglio_ricetta_colore_rifinizione, name="delete_dettaglio_ricetta_colore_rifinizione"),
 
-
+    # Ricette bagnato
+    path('aggiungi_ricetta_bagnato/', RicettaBagnatoCreateView.as_view(), name="aggiungi_ricetta_bagnato"), 
+    path('modifica_ricetta_bagnato/<int:pk>/', RicettaBagnatoUpdateView.as_view(), name="modifica_ricetta_bagnato"), 
+    path('delete_ricetta_bagnato/<int:pk>', delete_ricetta_bagnato, name="delete_ricetta_bagnato"),
+    
+    
     # Ricerche    
     path('search_revisione_rifinizione/', search_revisione_rifinizione, name="search_revisione_rifinizione"), # Ricette Rifinizione
 

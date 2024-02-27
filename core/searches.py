@@ -35,7 +35,7 @@ def search_articolo(request):
         for articolo in articoli:
             results_html += f"<tr data-id='{articolo.pk}'><td class='articolo-id'>{articolo.pk}</td><td class='articolo-descrizione'>{articolo.descrizione}</td></tr>"
         results_html += "</tbody></table>"
-        print(f"results_html: {results_html}")
+        
         return JsonResponse({'html': results_html})
     else:
         return JsonResponse({'html': ''})
@@ -54,7 +54,7 @@ def search_colore(request):
         for colore in colori:
             results_html += f"<tr data-id='{colore.pk}'><td class='colore-id'>{colore.pk}</td><td class='colore-descrizione'>{colore.descrizione}</td></tr>"
         results_html += "</tbody></table>"
-        print(f"results_html: {results_html}")
+        
         return JsonResponse({'html': results_html})
     else:
         return JsonResponse({'html': ''})
