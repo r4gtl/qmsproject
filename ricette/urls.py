@@ -11,6 +11,7 @@ urlpatterns = [
     # Home Ricette
     path('', home_ricette, name='home_ricette'),  
     path('ricette_rifinizione/', home_ricette_rifinizione, name='home_ricette_rifinizione'),  
+    path('ricette_bagnato/', home_ricette_bagnato, name='home_ricette_bagnato'),  
     path('ricette_colori_rifinizione/', home_ricette_colori_rifinizione, name='home_ricette_colori_rifinizione'),  
     
     # Tabelle Generiche
@@ -45,8 +46,7 @@ urlpatterns = [
     path('delete_dettaglio_ricetta_colore_rifinizione/<int:pk>', delete_dettaglio_ricetta_colore_rifinizione, name="delete_dettaglio_ricetta_colore_rifinizione"),
 
 
-    # Ricerche
-    path('search_prodotto_chimico/', search_prodotto_chimico, name="search_prodotto_chimico"), # Prodotto Chimico
+    # Ricerche    
     path('search_revisione_rifinizione/', search_revisione_rifinizione, name="search_revisione_rifinizione"), # Ricette Rifinizione
 
 

@@ -183,6 +183,7 @@
                                           <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
                                           <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
                                           <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
+                                          <input type="hidden" id="id_fk_colore" value="{{ ricetta.fk_colore }}">
                                           
                                           <input type="hidden" id="id_note" value="{{ ricetta.note }}">
                                       </div>
@@ -288,19 +289,20 @@ $(document).ready(function() {
       var numeroRicetta = $('#id_numero_ricetta').val();
       var dataRicetta = $('#id_data_ricetta').val();
       var fkArticolo = $('#id_fk_articolo').val();
+      var fkColore = $('#id_fk_colore').val();
       var numeroRevisione = $('#id_numero_revisione').val();
       var dataOdierna = new Date().toISOString().split('T')[0];
       var note = $('#id_note').val();
-      var ricettaPerPelli = $('#id_ricetta_per_pelli').val();
+      
 
-      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_ricetta_rifinizione' %}";
+      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_ricetta_colore_rifinizione' %}";
       aggiungiRevisioneRifinizioneURL += '?numero_ricetta=' + encodeURIComponent(numeroRicetta) +
                                           '&data_ricetta=' + encodeURIComponent(dataRicetta) +
                                           '&fk_articolo=' + encodeURIComponent(fkArticolo) +
+                                          '&fk_colore=' + encodeURIComponent(fkColore) +
                                           '&numero_revisione=' + encodeURIComponent(numeroRevisione) +
                                           '&data_revisione=' + encodeURIComponent(dataOdierna) +
-                                          '&note=' + encodeURIComponent(note) +
-                                          '&ricetta_per_pelli=' + encodeURIComponent(ricettaPerPelli);
+                                          '&note=' + encodeURIComponent(note)
 
       // Reindirizza l'utente all'URL costruito solo dopo la conferma dell'utente
       if (aggiungiRevisioneRifinizioneURL) {
@@ -313,40 +315,6 @@ $(document).ready(function() {
 });
 
 
-$(document).ready(function() {
-  $('#openSearchArticleButton').click(function(event) {
-    console.log("Premuto")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-});
-
-$(document).ready(function() {
-  $('#openSearchColorButton').click(function(event) {
-    console.log("Premuto openSearchColorButton")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-});
-
-// Intercetto l'evento relativo al pulsante per cercare le revisioni
-$(document).ready(function() {
-  $('#openSearchColorRevisionButton').click(function(event) {
-    console.log("Premuto openSearchColorRevisionButton")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-
-});
 
 
 </script>

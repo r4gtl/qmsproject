@@ -278,31 +278,6 @@ $(document).ready(function() {
 
 
 
-// Intercetto l'evento relativo al pulsante per cercare le revisioni
-$(document).ready(function() {
-  $('#openSearchRevisionButton').click(function(event) {
-    console.log("Premuto openSearchRevisionButton")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-
-});
-
-// Intercetto l'evento relativo al pulsante per cercare gli articoli
-$(document).ready(function() {
-  $('#openSearchArticleButton').click(function(event) {
-    console.log("Premuto")
-    var callerButtonId = $(this).attr('id');
-    var url = $(this).data('url');
-    var modalTitle = $(this).data('modal-title');
-    var searchInputLabel = $(this).data('search-input-label');
-    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-  });
-});
-
 
 </script>
 {% endblock %}

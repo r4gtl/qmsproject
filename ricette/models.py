@@ -100,6 +100,8 @@ class RicettaBagnato(models.Model):
     numero_ricetta = models.IntegerField(default=None)
     data_ricetta = models.DateField(default=date.today)
     fk_articolo = models.ForeignKey(Articolo, related_name='ricette_bagnato', on_delete=models.CASCADE)
+    numero_revisione = models.IntegerField(blank=True, null=True)
+    data_revisione = models.DateField(default=date.today)
     fk_tipoanimale = models.ForeignKey(TipoAnimale, null=True, blank=True, on_delete=models.SET_NULL, related_name='ricette_bagnato')
     fk_tipogrezzo = models.ForeignKey(TipoGrezzo, null=True, blank=True, on_delete=models.SET_NULL, related_name='ricette_bagnato')
     kg_ricetta = models.DecimalField(max_digits=4, decimal_places=0)

@@ -100,3 +100,27 @@ def search_revisione_colore_rifinizione(request):
         return JsonResponse({'html': results_html})
     else:
         return JsonResponse({'html': ''})
+    
+
+
+def search_prodotto_chimico_rifinizione(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        prodotti_chimici_rifinizione = ProdottoChimico.objects.filter(
+                Q(reparto='rifinizione') | Q(reparto__isnull=True)
+            )
+        
+        # Effettua la ricerca dei prodotti chimici
+        prodotti_chimici = prodotti_chimici_rifinizione.filter(
+            Q(descrizione__icontains=search_term)
+        )
+        
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Descrizione</th><th>Fornitore</th></tr></thead><tbody>"
+        for prodotto in prodotti_chimici:
+            results_html += f"<tr data-id='{prodotto.pk}'><td class='prodotto-id'>{prodotto.pk}</td><td class='prodotto-descrizione'>{prodotto.descrizione}</td><td>{prodotto.fk_fornitore}</td></tr>"
+        results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})

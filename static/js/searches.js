@@ -33,7 +33,12 @@ $(document).ready(function() {
 
 function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event) {
   
+  var callerButton = $('#' + callerButtonId);
+  var setFocusValue = callerButton.data('setfocus');
+
   $('#searchResults').data('callerButtonId', callerButtonId);
+  $('#searchResults').data('setFocusValue', setFocusValue); // Assegno il valore di setfocus in modo da impostare il focus su un controllo dopo la scelta
+  
 
     $("#searchInput").on("input", function() {
       
@@ -96,7 +101,8 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
 
 $('#searchResults').on('click', 'tr', function() {
   var callerButtonId = $('#searchResults').data('callerButtonId');
-  
+  var setFocusValue = $('#searchResults').data('setFocusValue');
+  console.log("setFocusValue: " + setFocusValue)
   
   switch (callerButtonId) {
     // Valuta il caso in cui si stia cercando un articolo
@@ -112,6 +118,14 @@ $('#searchResults').on('click', 'tr', function() {
       $('#id_fk_colore').val(id_fk_colore);    
       $('#searchModal').modal('hide');
       break;
+      
+    case 'openSearchChemicalButton':
+        var id_fk_prodotto_chimico = $(this).find('.prodotto-id').text();    
+        $('#id_fk_prodotto_chimico').val(id_fk_prodotto_chimico);    
+        $('#searchModal').modal('hide');
+        
+
+      break;
 
       // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione
     case 'openSearchRevisionButton':
@@ -126,7 +140,7 @@ $('#searchResults').on('click', 'tr', function() {
         $('#searchModal').modal('hide');
         // recupera il CSRF-Token dal form
         var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-        console.log("csrftoken: " + csrftoken)
+        
         // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
         $.ajax({
             url: "/ricette/accoda_dettaglio_ricetta_rifinizione/",  
@@ -166,7 +180,7 @@ $('#searchResults').on('click', 'tr', function() {
         $('#searchModal').modal('hide');
         // recupera il CSRF-Token dal form
         var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
-        console.log("csrftoken: " + csrftoken)
+        
         // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
         $.ajax({
             url: "/ricette/accoda_dettaglio_ricetta_colore_rifinizione/",  
@@ -193,13 +207,88 @@ $('#searchResults').on('click', 'tr', function() {
       }
       break;
 
+      
 
     default:
       // Azioni di default
       break;
+      
+  }
+
+  if (typeof setFocusValue !== 'undefined') {
+    setFocus=$('#' + setFocusValue);
+    setTimeout(function() {
+      setFocus.focus(); // Imposta il focus sul campo indicato
+  }, 500);
   }
   
   
   
 });
+
+
+// PULSANTI DI RICERCA STANDARD 
+
+// Intercetto l'evento relativo al pulsante per cercare i prodotti chimici
+$(document).ready(function() {
+  $('#openSearchChemicalButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+
+
+// Intercetto l'evento relativo al pulsante per cercare le revisioni ricette rifinizione
+$(document).ready(function() {
+  $('#openSearchRevisionButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+
+});
+
+
+// Intercetto l'evento relativo al pulsante per cercare le revisioni dei colori rifinizione
+$(document).ready(function() {
+  $('#openSearchColorRevisionButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+
+});
+
+// Intercetto l'evento relativo al pulsante per cercare gli articoli
+$(document).ready(function() {
+  $('#openSearchArticleButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+// Intercetto l'evento relativo al pulsante per cercare i colori
+$(document).ready(function() {
+  $('#openSearchColorButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+
+
 

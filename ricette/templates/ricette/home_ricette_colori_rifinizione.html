@@ -129,8 +129,8 @@
               <tbody>
                 {% for ricetta in ricette_colori_rifinizione_paginator %}
                 
-                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_rifinizione' pk=ricetta.pk %}">{{ ricetta.fk_articolo }}</a></td>                    
-                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_rifinizione' pk=ricetta.pk %}">{{ ricetta.fk_colore }}</a></td>                    
+                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_colore_rifinizione' pk=ricetta.pk %}">{{ ricetta.fk_articolo }}</a></td>                    
+                    <td class="col-md"><a href="{% url 'ricette:modifica_ricetta_colore_rifinizione' pk=ricetta.pk %}">{{ ricetta.fk_colore }}</a></td>                    
                     <td class="col-md text-end">{{ ricetta.numero_ricetta }}</td>
                     <td class="col-md text-end">{{ ricetta.data_ricetta }}</td>                    
                     <td class="col-md text-end">{{ ricetta.numero_revisione }}</td>                    

@@ -22,6 +22,7 @@ urlpatterns = [
     path('search_colore/', search_colore, name='search_colore'),
     path('search_revisione_rifinizione/', search_revisione_rifinizione, name='search_revisione_rifinizione'),
     path('search_revisione_colore_rifinizione/', search_revisione_colore_rifinizione, name='search_revisione_colore_rifinizione'),
+    path('search_prodotto_chimico_rifinizione/', search_prodotto_chimico_rifinizione, name='search_prodotto_chimico_rifinizione'),
 
        
      

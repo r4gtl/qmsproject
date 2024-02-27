@@ -41,7 +41,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
-    {% include "ricette/_modal_ricerca_ricette_rifinizione.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
     
     <!-- Form nuovo registro -->
     
@@ -70,10 +70,9 @@
             
 
             
-                    <div class="row mb-4">
-                      
-                      <div class="col-md-12 border rounded shadow-sm">
-                        <div class="row mt-3">
+                    <div class="row mb-4 border rounded shadow-sm">
+                      <div class="col-sm-8">
+                          <div class="row mt-3">
                             <div class = "col-md-2">
                               {{ form.numero_ricetta|as_crispy_field }}
                             </div>
@@ -91,19 +90,73 @@
                             </div>
                             
                         </div>
-                        <div class="row">  
+                        <div class="row row-cols-md-auto align-items-center">  
                           <div class="col-md-5">
                             {{ form.fk_articolo|as_crispy_field }} 
                           </div> 
-                          
-                          <div class="col-md-7 d-flex flex-row-reverse align-items-center">
-                            <div class="row">
-                              <div class="col-12 ml-auto">
-                                  <div class="card text-center w-100">
+                          <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Articolo" 
+                              style="width:100%"
+                              id="openSearchArticleButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_articolo' %}" 
+                              data-modal-title="Cerca Articolo" 
+                              data-search-input-label="Cerca Articoli"
+                              ><i class="bi bi-search"></i></button>
+                          </div>
+                          </div> 
+
+                          <div class="row">  
+                          <div class="col-md-5">
+                            {{ form.note|as_crispy_field }}
+                          </div> 
+                          </div> 
+
+                          <div class="row">  
+                          <div class="col-md-5">
+                            {{ form.created_by|as_crispy_field }}
+                          </div> 
+                          </div> 
+
+
+                        </div> <!-- Chiusura colonna a sinistra -->
+
+                        <!-- Colonna a destra -->
+                        <div class="col-sm-4">
+                          <div class="row mt-1 me-1 ">
+                            <div class="card text-center w-100">
                                       <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-start">Azioni</h6>
-                                          <button type="button" class="btn btn-info text-wrap" style="width:100%" id="crea-nuova-ricetta"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
-                                          <button type="button" class="btn search-modal-button mt-1" style="width:100%" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          {% if form.instance.id  %}
+                                            <button type="button" class="btn btn-info text-wrap" style="width:100%" id="crea-nuova-ricetta"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            
+                                            <button type="button" 
+                                              class="btn search-modal-button mt-1" 
+                                              data-toggle="tooltip" 
+                                              data-placement="top" 
+                                              title="Cerca ricetta da accodare alla ricetta attiva." 
+                                              style="width:100%" 
+                                              data-bs-toggle="modal" 
+                                              data-bs-target="#searchModal"
+                                              id="openSearchRevisionButton"
+                                              data-bs-toggle="modal" 
+                                              data-bs-target="#searchModal"
+                                              data-url="{% url 'core:search_revisione_rifinizione' %}" 
+                                              data-modal-title="Cerca Revisione" 
+                                              data-search-input-label="Cerca Revisione"
+                                              data-ricetta-attiva="{{ ricettarifinizione.pk }}" 
+                                              >
+                                              <i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          {% else %}
+                                            <button type="button" class="btn btn-secondary text-wrap" style="width:100%"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" class="btn btn-secondary mt-1" style="width:100%" id=""><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          {% endif %}
+                                          
                                           <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
                                           <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
                                           <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
@@ -111,23 +164,9 @@
                                           <input type="hidden" id="id_note" value="{{ ricetta.note }}">
                                       </div>
                                   </div>
-                              </div>
                           </div>
-                          
-                          
-                         
-                        </div>
-                      </div>
-
-                        <div class="row mt-1">
-                          <div class="col-md-5">
+                          <div class="row mt-1 me-1 ">
                             
-                            {{ form.note|as_crispy_field }}
-                          </div>
-                            
-                          <div class="col-md-7 d-flex flex-row-reverse align-items-center">
-                            <div class="row">
-                              <div class="col-12 ml-auto">
                                   <div class="card text-start w-100">
                                       <div class="card-body">
                                         <h6 class="card-subtitle mb-2 text-start">Stats</h6>
@@ -137,29 +176,22 @@
                                         <h3 style="width:100%">Solvente: Kg. {% if ricettarifinizione.calcola_solvente_totale %}{{ ricettarifinizione.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
                                       </div>
                                   </div>
-                              </div>
+                              
                           </div>
-                          
-                          
-                         
-                        </div>
 
+                        </div> <!-- Chiusura Colonna a destra -->
+
+                      
+                        
+                      
                         
                         
-                      </div>
-                      <div class="row">
-                      <div class="col-md-1">
-                          {{ form.created_by|as_crispy_field }}
-                      </div>
-                    </div>
-                        
-                        <hr>
                         
 
                         
 
                     </div>
-                      </div>
+                      
 
         <!-- fine form -->
         </form>
@@ -244,101 +276,7 @@ $(document).ready(function() {
 });
 
 
-// Per cercare live le ricette da accodare
-$(document).ready(function() {
-  $("#searchInput").on("input", function() {
-    var searchTerm = $(this).val().trim();
-    if (searchTerm.length >= 1) {
-      $.ajax({
-        url: "{% url 'ricette:search_revisione_rifinizione' %}",
-        method: "GET",
-        data: { search: searchTerm },
-        dataType: 'json',
-        success: function(data) {
-          var resultsContainer = $("#searchResults");
-          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
 
-          // Aggiunge i nuovi risultati al DOM
-          if (data && data.html) {
-            resultsContainer.html(data.html);
-            
-          } else {
-            resultsContainer.append("<p>Nessun risultato trovato.</p>");
-          }
-        },
-        error: function(xhr, errmsg, err) {
-          console.log(errmsg);
-          // Gestisci eventuali errori qui
-        }
-      });
-    } else {
-      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
-    }
-  });
-
-
-
-  $('#searchModal').on('hide.bs.modal', function() {
-    $('#searchInput').val('');  // Pulisce il campo di ricerca
-    $('#searchResults').empty(); // Pulisce i risultati della ricerca
-     
-    
-  });
-
-  // Pulisci i campi quando il modal viene aperto
-  $('#searchModal').on('shown.bs.modal', function() {
-    $('#searchInput').val('');  // Pulisce il campo di ricerca
-    $('#searchResults').empty(); // Pulisce i risultati della ricerca
-    $('#searchInput').focus();
-  });
-
-
-  // Gestisce il clic su una riga della tabella dei risultati
-  $('#searchResults').on('click', 'tr', function() {
-    
-    var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
-
-    if (conferma) {
-      // Ottiene l'id del prodotto chimico dalla riga cliccata
-
-      var ricettaId = $(this).find('.ricetta-id').text();
-      var ricettaAttiva = '{{ ricettarifinizione.pk }}';
-      console.log("ricettaAttiva: " + ricettaAttiva)
-      
-      
-      // Chiude il modal
-      $('#searchModal').modal('hide');
-      
-      // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
-      $.ajax({
-          url: "{% url 'ricette:accoda_dettaglio_ricetta_rifinizione' %}",  // Sostituisci 'nome_tuo_url_aggiunta_dettaglio' con il tuo URL reale
-          method: "POST",
-          data: {
-              ricetta_id: ricettaId,
-              ricettaAttiva: ricettaAttiva,
-              csrfmiddlewaretoken: '{{ csrf_token }}'  // Assicurati di includere il token CSRF
-          },
-          dataType: 'json',
-          success: function(data) {
-            if (data.redirect_url) {
-              // L'URL di reindirizzamento è stato restituito dal backend, esegui il reindirizzamento
-              window.location.href = data.redirect_url;
-            } else {
-                // L'operazione non è stata completata con successo, gestisci eventuali errori qui
-                console.error('Errore durante il reindirizzamento:', data.error);
-            }
-            
-          },
-          error: function(xhr, errmsg, err) {
-              console.log(errmsg);
-              
-          }
-      });
-    };
-  });
-  
-
-});
 
 
 </script>

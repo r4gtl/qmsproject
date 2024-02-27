@@ -65,7 +65,20 @@
                               {{ form.fk_prodotto_chimico|as_crispy_field }}
                             </div>
                             <div class = "col-md-1 d-flex align-items-center">
-                              <button type="button" class="btn btn-block search-modal-button" id="searchButton" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="bi bi-search"></i> Cerca</button>
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Prodotto Chimico" 
+                                style="width:100%"
+                                id="openSearchChemicalButton"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_prodotto_chimico_rifinizione' %}" 
+                                data-modal-title="Cerca Prodotto Chimico" 
+                                data-search-input-label="Cerca Prodotto Chimico"
+                                data-setfocus="id_quantity"
+                                ><i class="bi bi-search"></i></button>
                             </div>
 
                             <div class = "col-md-2">
@@ -91,7 +104,6 @@
                         <hr>
                         
 
-                        
 
                     </div>
                       </div>
@@ -134,72 +146,6 @@ $(document).ready(function() {
   });
 });
 
-
-// Per cercare live i prodotti chimici
-$(document).ready(function() {
-  $("#searchInput").on("input", function() {
-    var searchTerm = $(this).val().trim();
-    if (searchTerm.length >= 1) {
-      $.ajax({
-        url: "{% url 'ricette:search_prodotto_chimico' %}",
-        method: "GET",
-        data: { search: searchTerm },
-        dataType: 'json',
-        success: function(data) {
-          var resultsContainer = $("#searchResults");
-          resultsContainer.empty(); // Pulisce eventuali risultati precedenti
-
-          // Aggiunge i nuovi risultati al DOM
-          if (data && data.html) {
-            resultsContainer.html(data.html);
-          } else {
-            resultsContainer.append("<p>Nessun risultato trovato.</p>");
-          }
-        },
-        error: function(xhr, errmsg, err) {
-          console.log(errmsg);
-          // Gestisci eventuali errori qui
-        }
-      });
-    } else {
-      $("#searchResults").empty(); // Pulisce i risultati se la stringa di ricerca è troppo corta
-    }
-  });
-
-
-
-  $('#searchModal').on('hide.bs.modal', function() {
-    $('#searchInput').val('');  // Pulisce il campo di ricerca
-    $('#searchResults').empty(); // Pulisce i risultati della ricerca
-     
-    // Imposta il focus sul campo 'id_quantity' dopo un breve ritardo
-    setTimeout(function() {
-        $('#id_quantity').focus(); // Imposta il focus sul campo 'id_quantity'
-    }, 500); 
-  });
-
-  // Pulisci i campi quando il modal viene aperto
-  $('#searchModal').on('shown.bs.modal', function() {
-    $('#searchInput').val('');  // Pulisce il campo di ricerca
-    $('#searchResults').empty(); // Pulisce i risultati della ricerca
-    $('#searchInput').focus();
-  });
-
-
-  // Gestisce il clic su una riga della tabella dei risultati
-  $('#searchResults').on('click', 'tr', function() {
-    // Ottiene l'id del prodotto chimico dalla riga cliccata
-    var prodottoId = $(this).find('.prodotto-id').text();
-    
-    // Chiude il modal
-    $('#searchModal').modal('hide');
-    
-    // Compila il campo del form con l'id del prodotto chimico
-    $('#id_fk_prodotto_chimico').val(prodottoId);
-    
-    
-  });
-});
 
 document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_fk_operazione_ricette');
