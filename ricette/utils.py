@@ -5,30 +5,10 @@ from django.http import JsonResponse
 from django.urls import reverse
 
 from .forms import RicettaRifinizioneModelForm
-from .models import (DettaglioRicettaColoreRifinizione,
-                     DettaglioRicettaRifinizione, RicettaColoreRifinizione,
-                     RicettaRifinizione)
-
-
-def search_revisione_rifinizione(request):
-    search_term = request.GET.get('search', '')
-    if search_term:
-        # Effettua la ricerca dei prodotti chimici
-        ricette_rifinizione = RicettaRifinizione.objects.filter(
-            Q(fk_articolo__descrizione__icontains=search_term)
-        )
-        # Costruisci il markup HTML per la tabella dei risultati della ricerca
-        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Articolo</th><th>Revisione N.</th><th>Data Revisione</th></tr></thead><tbody>"
-        for ricetta in ricette_rifinizione:
-            results_html += f"<tr data-id='{ricetta.pk}'><td class='ricetta-id'>{ricetta.pk}</td><td class='ricetta-articolo'>{ricetta.fk_articolo}</td><td class='ricetta-revisione'>{ricetta.numero_revisione}</td><td class='ricetta-revisione-data'>{ricetta.data_revisione}</td></tr>"
-        results_html += "</tbody></table>"
-        
-        
-        return JsonResponse({'html': results_html})
-    else:
-        return JsonResponse({'html': ''})
-
-
+from .models import (DettaglioRicettaBagnato,
+                     DettaglioRicettaColoreRifinizione,
+                     DettaglioRicettaRifinizione, RicettaBagnato,
+                     RicettaColoreRifinizione, RicettaRifinizione)
 
 
 def new_finishing_revision(request):
@@ -122,6 +102,36 @@ def accoda_dettaglio_ricetta_colore_rifinizione(request):
             )
         
         redirect_url = reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': ricetta_attiva.pk})
+        return JsonResponse({'redirect_url': redirect_url}) 
+    else:
+        return JsonResponse({'error': 'Richiesta non valida.'})
+    
+
+
+def accoda_dettaglio_ricetta_bagnato(request):
+    if request.method == 'POST':
+        ricetta_id = request.POST.get('ricetta_id')
+        ricetta_attiva = request.POST.get('ricettaAttiva')        
+        ricetta_attiva = RicettaBagnato.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
+        # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
+        dettagli_ricetta = DettaglioRicettaBagnato.objects.filter(fk_ricetta_bagnato=ricetta_id)
+
+        # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
+        for dettaglio in dettagli_ricetta:
+            DettaglioRicettaBagnato.objects.create(
+                fk_ricetta_bagnato=ricetta_attiva,
+                fk_operazione_ricette=dettaglio.fk_operazione_ricette,
+                numero_riga=dettaglio.numero_riga,
+                quantity=dettaglio.quantity,
+                tempo=dettaglio.tempo,
+                temperatura=dettaglio.temperatura,
+                procedura=dettaglio.procedura,
+                fk_prodotto_chimico=dettaglio.fk_prodotto_chimico,
+                note=dettaglio.note,
+                created_by=dettaglio.created_by
+            )
+        
+        redirect_url = reverse('ricette:modifica_ricetta_bagnato', kwargs={'pk': ricetta_attiva.pk})
         return JsonResponse({'redirect_url': redirect_url}) 
     else:
         return JsonResponse({'error': 'Richiesta non valida.'})

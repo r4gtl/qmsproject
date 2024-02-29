@@ -2,7 +2,8 @@ from articoli.models import Articolo, Colore
 from chem_man.models import ProdottoChimico
 from django.db.models import Q
 from django.http import JsonResponse
-from ricette.models import RicettaColoreRifinizione, RicettaRifinizione
+from ricette.models import (RicettaBagnato, RicettaColoreRifinizione,
+                            RicettaRifinizione)
 
 
 def search_prodotto_chimico(request):
@@ -120,6 +121,26 @@ def search_prodotto_chimico_rifinizione(request):
         for prodotto in prodotti_chimici:
             results_html += f"<tr data-id='{prodotto.pk}'><td class='prodotto-id'>{prodotto.pk}</td><td class='prodotto-descrizione'>{prodotto.descrizione}</td><td>{prodotto.fk_fornitore}</td></tr>"
         results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
+    
+
+
+def search_revisione_bagnato(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        ricette_bagnato = RicettaBagnato.objects.filter(
+            Q(fk_articolo__descrizione__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Articolo</th><th>Revisione N.</th><th>Data Revisione</th></tr></thead><tbody>"
+        for ricetta in ricette_bagnato:
+            results_html += f"<tr data-id='{ricetta.pk}'><td class='ricetta-id'>{ricetta.pk}</td><td class='ricetta-articolo'>{ricetta.fk_articolo}</td><td class='ricetta-revisione'>{ricetta.numero_revisione}</td><td class='ricetta-revisione-data'>{ricetta.data_revisione}</td></tr>"
+        results_html += "</tbody></table>"
+        
         
         return JsonResponse({'html': results_html})
     else:

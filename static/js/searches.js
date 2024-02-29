@@ -207,6 +207,45 @@ $('#searchResults').on('click', 'tr', function() {
       }
       break;
 
+      case 'openSearchRevisionDrumButton':
+      var conferma = confirm("Sei sicuro di voler accodare questa ricetta?");
+  
+      if (conferma) {
+        // Ottiene l'id del prodotto chimico dalla riga cliccata
+        var ricettaId = $(this).find('.ricetta-id').text();
+        var ricettaAttiva = $('#openSearchRevisionDrumButton').data('ricettaAttiva'); // Passa l'id della ricetta attiva alla quale accodare. Dato passato nel button
+                
+        // Chiude il modal
+        $('#searchModal').modal('hide');
+        // recupera il CSRF-Token dal form
+        var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+        
+        // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+        $.ajax({
+            url: "/ricette/accoda_dettaglio_ricetta_bagnato/",  
+            method: "POST",
+            data: {
+                ricetta_id: ricettaId,
+                ricettaAttiva: ricettaAttiva,
+                csrfmiddlewaretoken: csrftoken
+            },
+            dataType: 'json',
+            success: function(data) {
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                  console.error('Errore durante il reindirizzamento:', data.error);
+              }
+              
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+                
+            }
+        });
+      }
+      break;
+
       
 
     default:
@@ -245,6 +284,19 @@ $(document).ready(function() {
 // Intercetto l'evento relativo al pulsante per cercare le revisioni ricette rifinizione
 $(document).ready(function() {
   $('#openSearchRevisionButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+
+});
+
+
+// Intercetto l'evento relativo al pulsante per cercare le revisioni ricette rifinizione
+$(document).ready(function() {
+  $('#openSearchRevisionDrumButton').click(function(event) {    
     var callerButtonId = $(this).attr('id');
     var url = $(this).data('url');
     var modalTitle = $(this).data('modal-title');

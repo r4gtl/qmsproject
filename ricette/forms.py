@@ -185,3 +185,34 @@ class RicettaBagnatoModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+
+
+class DettaglioRicettaBagnatoModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = DettaglioRicettaBagnato
+        fields= '__all__'
+        
+        widgets = {
+            'numero_riga': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
+            'fk_operazione_ricette': forms.Select(),
+            'fk_prodotto_chimico': forms.Select(attrs={'class': 'form-control'}),
+            'temperatura': forms.TextInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control text-end'}),            
+            'tempo': forms.TextInput(attrs={'class': 'form-control'}),
+            'procedura': forms.TextInput(attrs={'class': 'form-control'}),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'fk_ricetta_bagnato': forms.HiddenInput()
+        }
+        labels = {
+            'numero_riga': 'Ordinale',
+            'fk_operazione_ricette': 'Operazione',
+            'fk_prodotto_chimico': 'Prodotto Chimico',
+            'temperatura': 'Temperatura',
+            'tempo': 'Tempo',
+            'procedura': 'Procedura',
+            'quantity': 'Quantità',
+            'note': 'Note'
+
+        }

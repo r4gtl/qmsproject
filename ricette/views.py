@@ -110,6 +110,37 @@ def home_ricette_bagnato(request):
     }
 
     return render(request, "ricette/home_ricette_bagnato.html", context)
+
+
+def home_ricette_colori_bagnato(request):
+    ricette_colori_bagnato = RicettaColoreBagnato.objects.all()
+    
+    ricette_colori_bagnato_filter = RicettaColoreRifinizioneFilter(request.GET, queryset=ricette_colori_rifinizione)
+    filtered_ricette_colori_rifinizione = ricette_colori_rifinizione_filter.qs  # Ottieni i record filtrati
+    
+
+    # Paginazione operazioni
+    page_ricette_colori_rifinizione = request.GET.get('page', 1)
+    paginator_ricette_colori_rifinizione = Paginator(filtered_ricette_colori_rifinizione, 50)
+    try:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(page_ricette_colori_rifinizione)
+    except PageNotAnInteger:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(1)
+    except EmptyPage:
+        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(paginator_ricette_colori_rifinizione.num_pages)
+
+
+    context = {
+        # Operazioni
+        'ricette_colori_rifinizione': ricette_colori_rifinizione,
+        'ricette_colori_rifinizione_paginator': ricette_colori_rifinizione_paginator,        
+        'filter': ricette_colori_rifinizione_filter,  
+            
+        
+
+    }
+
+    return render(request, "ricette/home_ricette_colori_rifinizione.html", context)
     
 # Fine ricette bagnato pagine principali
 
@@ -577,14 +608,16 @@ class RicettaBagnatoCreateView(LoginRequiredMixin,CreateView):
         if self.request.GET.get('numero_ricetta'):
             print(f"Articolo: ")
             fk_articolo=self.request.GET.get('fk_articolo')
-            last_recipe = RicettaBagnato.objects.filter(fk_articolo=fk_articolo).order_by('-numero_revisione').first()
+            fk_tipogrezzo = self.request.GET.get('fk_tipogrezzo')
+            fk_tipoanimale = self.request.GET.get('fk_tipoanimale')
+            last_recipe = RicettaBagnato.objects.filter(fk_articolo=fk_articolo, fk_tipogrezzo=fk_tipogrezzo, fk_tipoanimale=fk_tipoanimale).order_by('-numero_revisione').first()
+            
             numero_revisione=last_recipe.numero_revisione+1
             numero_ricetta = self.request.GET.get('numero_ricetta')
             data_ricetta = self.request.GET.get('data_ricetta')            
             numero_revisione = numero_revisione
             data_revisione = self.request.GET.get('data_revisione')
-            fk_tipogrezzo = self.request.GET.get('fk_tipogrezzo')
-            fk_tipoanimale = self.request.GET.get('fk_tipoanimale')
+            
             note = self.request.GET.get('note')
             kg_ricetta = self.request.GET.get('kg_ricetta')
 
@@ -601,6 +634,16 @@ class RicettaBagnatoCreateView(LoginRequiredMixin,CreateView):
             initial['created_by'] = self.request.user
             
         else:
+            data_odierna = date.today()
+            last_recipe = RicettaBagnato.objects.all().order_by('-numero_ricetta').first()
+            if last_recipe:
+                initial['numero_ricetta'] = last_recipe.numero_ricetta+1
+            else:
+                initial['numero_ricetta'] = 1
+            
+            initial['data_ricetta'] = data_odierna
+            initial['numero_revisione'] = 1
+            initial['data_revisione'] = data_odierna
             initial['created_by'] = self.request.user
             initial['kg_ricetta'] = 100
         print(f"Initial: {initial}")
@@ -640,4 +683,74 @@ def delete_ricetta_bagnato(request, pk):
         deleteobject = get_object_or_404(RicettaBagnato, pk = pk)
         deleteobject.delete()
         url_match = reverse_lazy('ricette:home_ricette_bagnato')
+        return redirect(url_match)
+
+
+# Dettaglio
+class DettaglioRicettaBagnatoCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioRicettaBagnato
+    form_class = DettaglioRicettaBagnatoModelForm
+    template_name = 'ricette/dettaglio_ricetta_bagnato.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_bagnato=self.object.fk_ricetta_bagnato.pk        
+        return reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':fk_ricetta_bagnato})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        ricetta_id = self.kwargs.get('fk_ricetta_bagnato')
+        max_numero_riga = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga
+        ricetta_id = self.kwargs.get('fk_ricetta_bagnato')        
+        initial['fk_ricetta_bagnato'] = ricetta_id
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_bagnato']         
+        context['ricetta_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaBagnato, pk=pk_ricetta)
+        return context
+        
+
+class DettaglioRicettaBagnatoUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioRicettaBagnato
+    form_class = DettaglioRicettaBagnatoModelForm
+    template_name = 'ricette/dettaglio_ricetta_bagnato.html'
+    success_message = 'Dettaglio modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_bagnato=self.object.fk_ricetta_bagnato.pk        
+        return reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':fk_ricetta_bagnato})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_bagnato']         
+        context['ricetta_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaBagnato, pk=pk_ricetta)
+        return context
+
+
+def delete_dettaglio_ricetta_bagnato(request, pk):
+        deleteobject = get_object_or_404(DettaglioRicettaBagnato, pk = pk)
+        fk_ricetta_bagnato = deleteobject.fk_ricetta_bagnato.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':fk_ricetta_bagnato})
         return redirect(url_match)

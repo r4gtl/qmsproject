@@ -49,19 +49,23 @@ urlpatterns = [
     path('aggiungi_ricetta_bagnato/', RicettaBagnatoCreateView.as_view(), name="aggiungi_ricetta_bagnato"), 
     path('modifica_ricetta_bagnato/<int:pk>/', RicettaBagnatoUpdateView.as_view(), name="modifica_ricetta_bagnato"), 
     path('delete_ricetta_bagnato/<int:pk>', delete_ricetta_bagnato, name="delete_ricetta_bagnato"),
+
+    # Dettaglio Ricette Bagnato
+    path('<int:fk_ricetta_bagnato>/aggiungi_dettaglio_ricetta_bagnato/', DettaglioRicettaBagnatoCreateView.as_view(), name="aggiungi_dettaglio_ricetta_bagnato"), 
+    path('<int:fk_ricetta_bagnato>/modifica_dettaglio_ricetta_bagnato/<int:pk>/', DettaglioRicettaBagnatoUpdateView.as_view(), name="modifica_dettaglio_ricetta_bagnato"), 
+    path('delete_dettaglio_ricetta_bagnato/<int:pk>', delete_dettaglio_ricetta_bagnato, name="delete_dettaglio_ricetta_bagnato"),
     
     
-    # Ricerche    
-    path('search_revisione_rifinizione/', search_revisione_rifinizione, name="search_revisione_rifinizione"), # Ricette Rifinizione
-
-
     # Stampa ricette
     path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),
+    path('ricetta_bagnato_print/<int:pk>', ricetta_bagnato_print, name="ricetta_bagnato_print"),
     
     
     # Automatismi
     path('accoda_dettaglio_ricetta_rifinizione/', accoda_dettaglio_ricetta_rifinizione, name="accoda_dettaglio_ricetta_rifinizione"),
     path('accoda_dettaglio_ricetta_colore_rifinizione/', accoda_dettaglio_ricetta_colore_rifinizione, name="accoda_dettaglio_ricetta_colore_rifinizione"),
+
+    path('accoda_dettaglio_ricetta_bagnato/', accoda_dettaglio_ricetta_bagnato, name="accoda_dettaglio_ricetta_bagnato"),
     
     
 ]

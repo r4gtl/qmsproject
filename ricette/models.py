@@ -109,6 +109,7 @@ class RicettaBagnato(models.Model):
     created_by = models.ForeignKey(User, related_name='ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    '''
     def save(self, *args, **kwargs):
         if self.numero_ricetta is None:
             # Trova il valore massimo esistente in numero_ricetta
@@ -121,6 +122,7 @@ class RicettaBagnato(models.Model):
                 self.numero_ricetta = 1
         
         super().save(*args, **kwargs)
+        '''
     
     class Meta:
         ordering = ["-data_ricetta"]
@@ -128,7 +130,8 @@ class RicettaBagnato(models.Model):
     def __str__(self):
         formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
         return f"Ricetta n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
-        
+
+# Eliminare        
 class RevisioneRicettaBagnato(models.Model):
     fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='revisione_ricette_bagnato', on_delete=models.CASCADE)
     numero_revisione = models.IntegerField(default=None)
@@ -157,7 +160,7 @@ class RevisioneRicettaBagnato(models.Model):
         
         super().save(*args, **kwargs)
 
-# Eliminare
+
 class DettaglioRevisioneRicettaBagnato(models.Model):
     # Questo modello serve per le righe effettive della ricetta
     fk_revisione = models.ForeignKey(RevisioneRicettaBagnato, related_name='dettaglio_revisione_ricette_bagnato', on_delete=models.CASCADE)
@@ -202,13 +205,17 @@ class DettaglioRicettaBagnato(models.Model):
     def get_choices(self):
         return OperazioneRicette.objects.filter(ward_ref="Bagnato")
     
+    def get_choices_operations():
+        #return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+        return {'ward_ref': "Bagnato"}
+    
     fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
                                             related_name='dettaglio_ricette_bagnato', 
                                             on_delete=models.CASCADE,                                            
-                                            limit_choices_to=get_choices,
+                                            limit_choices_to=get_choices_operations,
                                             )
     
-    temperatura = models.CharField(max_length=50)
+    temperatura = models.CharField(max_length=50, null=True, blank=True)
     quantity = models.DecimalField(max_digits=8, decimal_places=3)
     
     def get_choices_chemical():
@@ -221,8 +228,8 @@ class DettaglioRicettaBagnato(models.Model):
         limit_choices_to=get_choices_chemical,
     )
     
-    tempo = models.CharField(max_length=50)
-    procedura = models.CharField(max_length=100)
+    tempo = models.CharField(max_length=50, null=True, blank=True)
+    procedura = models.CharField(max_length=100, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglio_ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -244,20 +251,23 @@ class DettaglioRicettaBagnato(models.Model):
         ordering = ["numero_riga"]
     
         
-class RicettaFondo(models.Model):
+class RicettaColoreBagnato(models.Model):
+    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_colore_bagnato', on_delete=models.CASCADE)
     numero_ricetta = models.IntegerField(default=None)
     data_ricetta = models.DateField(default=date.today)
-    fk_colore = models.ForeignKey(Colore, related_name='ricette_fondo', on_delete=models.CASCADE)
-    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_fondo', on_delete=models.CASCADE)
+    numero_revisione = models.IntegerField(blank=True, null=True)
+    data_revisione = models.DateField(default=date.today)
+    fk_articolo = models.ForeignKey(Articolo, related_name='ricette_colore_bagnato', on_delete=models.CASCADE)
+    fk_colore = models.ForeignKey(Colore, related_name='ricette_colore_bagnato', on_delete=models.CASCADE)
     note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='ricette_fondo', null=True, blank=True, on_delete=models.SET_NULL)
+    created_by = models.ForeignKey(User, related_name='ricette_colore_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
         
     def save(self, *args, **kwargs):
         if self.numero_ricetta is None:
             # Trova il valore massimo esistente in numero_ricetta
-            max_numero_ricetta = RicettaFondo.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            max_numero_ricetta = RicettaColoreBagnato.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
             
             if max_numero_ricetta is not None:
                 self.numero_ricetta = max_numero_ricetta + 1
@@ -273,6 +283,41 @@ class RicettaFondo(models.Model):
     def __str__(self):
         formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
         return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
+
+
+class RicettaFondo(models.Model):
+    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_fondo', on_delete=models.CASCADE)
+    numero_ricetta = models.IntegerField(default=None)
+    data_ricetta = models.DateField(default=date.today)
+    numero_revisione = models.IntegerField(blank=True, null=True)
+    data_revisione = models.DateField(default=date.today)
+    fk_articolo = models.ForeignKey(Articolo, related_name='ricette_fondo', on_delete=models.CASCADE)
+    fk_colore = models.ForeignKey(Colore, related_name='ricette_fondo', on_delete=models.CASCADE)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='ricette_fondo', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+        
+    def save(self, *args, **kwargs):
+        if self.numero_ricetta is None:
+            # Trova il valore massimo esistente in numero_ricetta
+            max_numero_ricetta = RicettaColoreBagnato.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
+            
+            if max_numero_ricetta is not None:
+                self.numero_ricetta = max_numero_ricetta + 1
+            else:
+                # Se non ci sono ancora elementi, imposta il default a 1
+                self.numero_ricetta = 1
+        
+        super().save(*args, **kwargs)
+    
+    class Meta:
+        ordering = ["-data_ricetta"]
+        
+    def __str__(self):
+        formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
+        return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
+    
 
 class RevisioneRicettaFondo(models.Model):
     fk_ricetta_fondo = models.ForeignKey(RicettaFondo, related_name='revisione_ricette_fondo', on_delete=models.CASCADE)
@@ -356,22 +401,7 @@ class RicettaRifinizione(models.Model):
         dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
         return calcola_totale_prezzi(dettagli_ricette)
     
-    '''
-    def calcola_solvente_totale(self):
-        # Ottieni tutti i dettagli delle ricette associati a questa RicettaRifinizione
-        dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
-
-        # Inizializza il totale del solvente a zero
-        totale_solvente = 0.0
-
-        for dettaglio_ricetta in dettagli_ricette:
-            if dettaglio_ricetta.fk_prodotto_chimico and dettaglio_ricetta.fk_prodotto_chimico.solvente:
-                # Calcola il solvente per il dettaglio della ricetta
-                solvente_dettaglio = float(dettaglio_ricetta.quantity) * float((dettaglio_ricetta.fk_prodotto_chimico.solvente / 100))
-                totale_solvente += solvente_dettaglio
-
-        return totale_solvente
-        '''
+    
     def calcola_solvente_totale(self):
         dettagli_ricette = self.dettaglio_ricette_rifinizione.all()
         return calcola_solvente_totale(dettagli_ricette)

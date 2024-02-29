@@ -24,6 +24,8 @@ urlpatterns = [
     path('search_revisione_colore_rifinizione/', search_revisione_colore_rifinizione, name='search_revisione_colore_rifinizione'),
     path('search_prodotto_chimico_rifinizione/', search_prodotto_chimico_rifinizione, name='search_prodotto_chimico_rifinizione'),
 
+    path('search_revisione_bagnato/', search_revisione_bagnato, name="search_revisione_bagnato"), # Ricette Bagnato
+
        
      
 ]
