@@ -1,11 +1,9 @@
+from anagrafiche.models import Fornitore, Macello
 from django import forms
-from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-from .models import (TipoAnimale, TipoGrezzo, Lotto, Scelta,
-                     SceltaLotto
-                     )
+from django_countries.widgets import CountrySelectWidget
 
-from anagrafiche.models import Fornitore
+from .models import Lotto, Scelta, SceltaLotto, TipoAnimale, TipoGrezzo
 
 
 class TipoAnimaleModelForm(forms.ModelForm):
@@ -66,6 +64,7 @@ class LottoModelForm(forms.ModelForm):
         fk_tipoanimale = forms.ModelChoiceField(queryset=TipoAnimale.objects.all())
         fk_tipogrezzo = forms.ModelChoiceField(queryset=TipoGrezzo.objects.all())
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
+        fk_macello = forms.ModelChoiceField(queryset=Macello.objects.all())
         origine = CountryField().formfield()
         is_lwg = forms.BooleanField(widget=forms.CheckboxInput())
 
@@ -75,6 +74,7 @@ class LottoModelForm(forms.ModelForm):
             'fk_tipoanimale': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_tipogrezzo': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'fk_fornitore': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
+            'fk_macello' : forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'origine': CountrySelectWidget(),
             'documento': forms.TextInput(attrs={'placeholder': 'Riferimenti documento'}),            
             'is_lwg': forms.CheckboxInput(),
@@ -93,6 +93,7 @@ class LottoModelForm(forms.ModelForm):
             'fk_tipoanimale': 'Tipo Animale',
             'fk_tipogrezzo': 'Tipo Grezzo',
             'fk_fornitore': 'Fornitore',
+            'fk_macello': 'Macello',
             'origine': 'Origine',
             'documento': 'Riferimento Documento',
             'is_lwg': 'Lwg',

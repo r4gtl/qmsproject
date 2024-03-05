@@ -90,6 +90,7 @@ class Fornitore(models.Model):
     MANUTENZIONI = 'manutenzioni'
     RIFIUTI = 'rifiuti'
     
+    
     CHOICES_CATEGORY = (
         (NESSUNA, 'Manca categoria'),
         (PELLI, 'Pelli'),
@@ -98,6 +99,7 @@ class Fornitore(models.Model):
         (SERVIZI, 'Servizi'),
         (MANUTENZIONI, 'Manutenzioni'),
         (RIFIUTI, 'Rifiuti'),
+        
     )
     ragionesociale = models.CharField(max_length=50, blank=False, null=False)
     indirizzo = models.CharField(max_length=100, blank=True, null=True)
@@ -187,9 +189,15 @@ class FornitoreRifiuti(models.Model):
 class FornitoreManutenzioni(models.Model):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_manutenzioni')
     prova = models.CharField(max_length=50, blank=True, null=True)
+
+
     
 '''FINE MODELLI CATEGORIE'''
 
+
+class Macello(Fornitore):
+    is_group = models.BooleanField(default=False)
+    
 
 class TransferValue(models.Model):
     description = models.CharField(max_length=50)

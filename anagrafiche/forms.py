@@ -5,7 +5,7 @@ from django_countries.widgets import CountrySelectWidget
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitoreManutenzioni,
                      FornitorePelli, FornitoreProdottiChimici,
-                     FornitoreRifiuti, FornitoreServizi, LwgFornitore,
+                     FornitoreRifiuti, FornitoreServizi, LwgFornitore, Macello,
                      TransferValue, XrTransferValueLwgFornitore)
 
 
@@ -103,6 +103,43 @@ class FormFornitoreManutenzioni(forms.ModelForm):
     class Meta:
         model = FornitoreManutenzioni
         fields = '__all__'
+
+
+
+class FormMacello(forms.ModelForm):
+    
+
+    class Meta:
+        model = Macello
+        #exclude=()
+        fields='__all__'
+        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
+        indirizzo = forms.CharField()
+        cap = forms.CharField()
+        city = forms.CharField()
+        provincia = forms.CharField()
+        country = CountryField().formfield()
+        # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
+        
+        sito_web = forms.CharField()
+        e_mail = forms.EmailField()
+        created_at=forms.DateInput()
+        
+        widgets = {'country': CountrySelectWidget(),
+                    'created_by': forms.HiddenInput(),                    
+                    #'created_at': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+                    #'created_at': forms.HiddenInput(),
+                    #'categoria': forms.TextInput(attrs={'readonly': 'readonly'})
+                }
+        labels = {
+            'ragionesociale': 'Ragione Sociale',
+            'country': 'Paese',
+            'city': 'Città',    
+            'e_mail': 'E-Mail',        
+            'sito_web': 'Sito Web',
+            'is_group': 'Raccoglitore'
+            
+        }
 
 '''FINE FORMS PER LA GESTIONE DEI MODELLI DELLE CATEGORIE ASSOCIATE'''
 
