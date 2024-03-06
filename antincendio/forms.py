@@ -147,7 +147,7 @@ class ImpiantoSpegnimentoModelForm(forms.ModelForm):
 
 class RegistroControlliAntincendioModelForm(forms.ModelForm):   
     fk_fornitore = forms.ModelChoiceField(
-        queryset=Fornitore.objects.filter(categoria=Fornitore.PRODOTTI_CHIMICI),
+        queryset=Fornitore.objects.filter(categoria=Fornitore.MANUTENZIONI),
         label='Fornitore',
         required=False
     )
