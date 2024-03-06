@@ -106,7 +106,7 @@ class HumanResource(models.Model):
 
     
     def get_absolute_url(self):
-        return reverse("human_resources:update-human-resource", kwargs={"pk": self.pk})
+        return reverse("human_resources:update_human_resource", kwargs={"pk": self.pk})
 
     class Meta:
         ordering = ["-dataassunzione"]
