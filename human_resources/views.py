@@ -675,7 +675,7 @@ class RegistroOreLavoroUpdateView(LoginRequiredMixin, UpdateView):
 def delete_registro_ore(request, pk): 
         deleteobject = get_object_or_404(RegistroOreLavoro, pk = pk)                 
         deleteobject.delete()
-        url_match = reverse_lazy('human_resources:delete_registro_ore')
+        url_match = reverse_lazy('human_resources:dashboard_registro_ore')
         return redirect(url_match)
 
 '''FINE SEZIONE REGISTRO ORE'''
