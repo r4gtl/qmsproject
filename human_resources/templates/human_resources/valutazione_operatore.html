@@ -13,7 +13,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
         <li class="breadcrumb-item"><a href="{% url 'human_resources:human_resources' %}">Risorse Umane</a></li>        
-        <li class="breadcrumb-item"><a href="{% url 'human_resources:update-human-resource' pk=fk_hr %}">{{ operatore.cognomedipendente }} {{ operatore.nomedipendente }}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'human_resources:update_human_resource' pk=fk_hr %}">{{ operatore.cognomedipendente }} {{ operatore.nomedipendente }}</a></li>
         {% if form.instance.id  %}
         <li class="breadcrumb-item active" aria-current="page">Valutazione</li>
         {% else %}
