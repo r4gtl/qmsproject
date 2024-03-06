@@ -18,7 +18,7 @@ urlpatterns = [
     # Human Resources
     path('', human_resources_home, name="human_resources"),
     path('update_human_resource/<int:pk>/', HRUpdateView.as_view(), name="update_human_resource"),
-    path('create_human_resource/', HumanResourceCreateView.as_view(), name="create-human-resource"), 
+    path('create_human_resource/', HumanResourceCreateView.as_view(), name="create_human_resource"), 
     
     # Dashboard formazione 
     path('dashboard_formazione/', dashboard_formazione, name="dashboard_formazione"), 
