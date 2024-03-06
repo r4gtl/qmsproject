@@ -1,18 +1,21 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-from django.urls import reverse, reverse_lazy
-from django.db.models import Sum, Count
 import datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 
-from django.views.generic.edit import CreateView, UpdateView
-from .models import *
-from .forms import *
-from .filters import HRFilter
-
-from .charts import get_average_age, get_gender_perc, get_ita_perc, num_tot_dipendenti
 from core.utils import get_records_with_upcoming_expiry
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Sum
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
+from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView
+
+from .charts import (get_average_age, get_gender_perc, get_ita_perc,
+                     num_tot_dipendenti)
+from .filters import HRFilter
+from .forms import *
+from .models import *
+
 
 # Create your views here.
 def human_resources_home(request):
@@ -615,7 +618,9 @@ def delete_dettaglio_registro_formazione(request, pk):
 
 def dashboard_registro_ore(request):
     current_year = datetime.date.today().year
-    registri_ore = RegistroOreLavoro.objects.filter(entry_year=current_year)
+    last_three_years = [current_year - i for i in range(3)]
+    
+    registri_ore = RegistroOreLavoro.objects.filter(entry_year__in=last_three_years)
     somma_ore_lavorate = registri_ore.aggregate(Sum('ore_lavorate'))
     somma_ore_lavorabili = registri_ore.aggregate(Sum('ore_lavorabili'))
     somma_ore_ferie = registri_ore.aggregate(Sum('ferie_permessi'))
