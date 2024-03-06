@@ -35,7 +35,7 @@
         
         
         <hr>
-        
+        {% include "core/modals/baseModalGenericSearch.html" %}
         
         
         
@@ -54,7 +54,22 @@
                 <div class="col-4">
                     {{ form.fk_hazard_statement|as_crispy_field }}
                 </div>
-
+                <div class = "col-1 align-items-center">
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Frase di Rischio" 
+                                style="width:100%"
+                                id="openSearchHazardStatement"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_hazard_statement' %}" 
+                                data-modal-title="Cerca Frase di Rischio" 
+                                data-search-input-label="Cerca Frase di Rischio"
+                                data-setfocus=""
+                                ><i class="bi bi-search"></i></button>
+                            </div>
                 <div class="col-4">
                     {{ form.note|as_crispy_field }}
                 </div>
@@ -75,7 +90,7 @@
 
             
             <input type="submit" class="btn btn-success" value="Salva">
-            <button type="button" class="btn btn-danger" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+            <button type="button" class="btn btn-danger" onclick="cancelAndRedirectTo('{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
         

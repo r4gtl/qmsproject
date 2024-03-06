@@ -1,5 +1,6 @@
 from articoli.models import Articolo, Colore
-from chem_man.models import ProdottoChimico
+from chem_man.models import (HazardStatement, PrecautionaryStatement,
+                             ProdottoChimico, SimboloGHS)
 from django.db.models import Q
 from django.http import JsonResponse
 from ricette.models import (RicettaBagnato, RicettaColoreRifinizione,
@@ -145,3 +146,60 @@ def search_revisione_bagnato(request):
         return JsonResponse({'html': results_html})
     else:
         return JsonResponse({'html': ''})
+    
+
+def search_ghs_symbol(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        simboli = SimboloGHS.objects.filter(
+            Q(codice__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Codice</th><th>Immagine</th></tr></thead><tbody>"
+        for simbolo in simboli:
+            results_html += f"<tr data-id='{simbolo.pk}'><td class='simbolo-id'>{simbolo.pk}</td><td class='simbolo-codice'>{simbolo.codice}</td><td><img src='{simbolo.symbol_image.url}' alt='Simbolo GHS'></td></tr>"
+        results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
+    
+
+
+def search_hazard_statement(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        hazard_statements = HazardStatement.objects.filter(
+            Q(hazard_statement__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Codice</th><th>Descrizione</th></tr></thead><tbody>"
+        for hazard_statement in hazard_statements:
+            results_html += f"<tr data-id='{hazard_statement.pk}'><td class='hazard_statement-id'>{hazard_statement.pk}</td><td class='hazard_statement-codice'>{hazard_statement.hazard_statement}</td><td class='hazard_statement-descrizione'>{hazard_statement.descrizione}></td></tr>"
+        results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
+
+
+
+def search_precautionary_statement(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        precautionary_statements = PrecautionaryStatement.objects.filter(
+            Q(codice__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Codice</th><th>Descrizione</th></tr></thead><tbody>"
+        for precautionary_statement in precautionary_statements:
+            results_html += f"<tr data-id='{precautionary_statement.pk}'><td class='precautionary_statement-id'>{precautionary_statement.pk}</td><td class='precautionary_statement-codice'>{precautionary_statement.codice}</td><td class='hazard_statement-descrizione'>{precautionary_statement.descrizione}></td></tr>"
+        results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
+    

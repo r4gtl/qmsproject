@@ -33,7 +33,7 @@
             <h3> Aggiungi Simbolo GHS</h3>
         {% endif %}
         
-        
+        {% include "core/modals/baseModalGenericSearch.html" %}
         <hr>
         
         
@@ -75,10 +75,28 @@
                     
                 </div>
 
+                <div class = "col-1 align-items-center">
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Simbolo GHS" 
+                                style="width:100%"
+                                id="openSearchGHSSymbol"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_ghs_symbol' %}" 
+                                data-modal-title="Cerca Simbolo GHS" 
+                                data-search-input-label="Cerca Simbolo GHS"
+                                data-setfocus=""
+                                ><i class="bi bi-search"></i></button>
+                            </div>
+
                 <div class="col-4">
                     {{ form.note|as_crispy_field }}
                 </div>
-                
+                </div>
+                <div class="row">
                 <div class="col-2">
                     {{ form.created_by|as_crispy_field }}
                 </div>

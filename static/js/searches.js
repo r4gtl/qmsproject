@@ -120,12 +120,29 @@ $('#searchResults').on('click', 'tr', function() {
       break;
       
     case 'openSearchChemicalButton':
-        var id_fk_prodotto_chimico = $(this).find('.prodotto-id').text();    
-        $('#id_fk_prodotto_chimico').val(id_fk_prodotto_chimico);    
-        $('#searchModal').modal('hide');
-        
-
+      var id_fk_prodotto_chimico = $(this).find('.prodotto-id').text();    
+      $('#id_fk_prodotto_chimico').val(id_fk_prodotto_chimico);    
+      $('#searchModal').modal('hide');
       break;
+
+    case 'openSearchGHSSymbol':
+      var id_fk_simbolo_ghs = $(this).find('.simbolo-id').text();    
+      $('#id_fk_simbolo_ghs').val(id_fk_simbolo_ghs);    
+      $('#searchModal').modal('hide');
+      break;
+
+    case 'openSearchHazardStatement':
+      var id_fk_hazard_statement = $(this).find('.hazard_statement-id').text();    
+      $('#id_fk_hazard_statement').val(id_fk_hazard_statement);    
+      $('#searchModal').modal('hide');
+      break;
+
+      case 'openSearchPrecautionaryStatement':
+        var id_fk_precautionary_statement = $(this).find('.precautionary_statement-id').text();    
+        $('#id_fk_precautionary_statement').val(id_fk_precautionary_statement);    
+        $('#searchModal').modal('hide');
+        break;
+
 
       // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione
     case 'openSearchRevisionButton':
@@ -333,6 +350,40 @@ $(document).ready(function() {
 // Intercetto l'evento relativo al pulsante per cercare i colori
 $(document).ready(function() {
   $('#openSearchColorButton').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+// Intercetto l'evento relativo al pulsante per cercare i simboli GHS
+$(document).ready(function() {
+  $('#openSearchGHSSymbol').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+// Intercetto l'evento relativo al pulsante per cercare frasi di rischio
+$(document).ready(function() {
+  $('#openSearchHazardStatement').click(function(event) {    
+    var callerButtonId = $(this).attr('id');
+    var url = $(this).data('url');
+    var modalTitle = $(this).data('modal-title');
+    var searchInputLabel = $(this).data('search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+  });
+});
+
+
+// Intercetto l'evento relativo al pulsante per cercare consigli di prudenza
+$(document).ready(function() {
+  $('#openSearchPrecautionaryStatement').click(function(event) {    
     var callerButtonId = $(this).attr('id');
     var url = $(this).data('url');
     var modalTitle = $(this).data('modal-title');

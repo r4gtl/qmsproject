@@ -35,7 +35,7 @@
         
         
         <hr>
-        
+        {% include "core/modals/baseModalGenericSearch.html" %}
         
         
         
@@ -54,11 +54,28 @@
                 <div class="col-4">
                     {{ form.fk_precautionary_statement|as_crispy_field }}
                 </div>
-
+                <div class = "col-1 align-items-center">
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Consigli di Prudenza" 
+                                style="width:100%"
+                                id="openSearchPrecautionaryStatement"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_hazard_statement' %}" 
+                                data-modal-title="Cerca Consigli di Prudenza" 
+                                data-search-input-label="Cerca Consigli di Prudenza"
+                                data-setfocus=""
+                                ><i class="bi bi-search"></i></button>
+                            </div>
                 <div class="col-4">
                     {{ form.note|as_crispy_field }}
                 </div>
                 
+                </div>
+                <div class="row">
                 <div class="col-2">
                     {{ form.created_by|as_crispy_field }}
                 </div>
