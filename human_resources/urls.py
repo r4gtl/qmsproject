@@ -1,13 +1,11 @@
 from django.urls import path
 
+from .charts import (age_groups, num_tot_dipendenti,
+                     num_tot_dipendenti_assunti_anno,
+                     num_tot_dipendenti_dimessi_anno,
+                     num_tot_dipendenti_orario, num_tot_dipendenti_plot,
+                     operatori_per_reparto, ore_formazione)
 from .views import *
-from .charts import (ore_formazione, operatori_per_reparto, 
-                    age_groups, num_tot_dipendenti,
-                    num_tot_dipendenti_plot, num_tot_dipendenti_orario,
-                    num_tot_dipendenti_assunti_anno, num_tot_dipendenti_dimessi_anno
-)
-
-
 
 app_name = 'human_resources'
 
@@ -19,7 +17,7 @@ urlpatterns = [
     
     # Human Resources
     path('', human_resources_home, name="human_resources"),
-    path('update_human_resource/<int:pk>/', HRUpdateView.as_view(), name="update-human-resource"),
+    path('update_human_resource/<int:pk>/', HRUpdateView.as_view(), name="update_human_resource"),
     path('create_human_resource/', HumanResourceCreateView.as_view(), name="create-human-resource"), 
     
     # Dashboard formazione 
