@@ -70,7 +70,7 @@ class HumanResourceCreateView(LoginRequiredMixin,CreateView):
             return reverse_lazy('human_resources:human_resources')
         
         pk_hr=self.object.pk
-        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -152,7 +152,7 @@ class ValutazioneOperatoreCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):        
         pk_hr=self.object.fk_hr.pk
-        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
 
     
@@ -169,7 +169,7 @@ class ValutazioneOperatoreUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self):        
         pk_hr=self.object.fk_hr.pk
-        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
@@ -182,7 +182,7 @@ def delete_valutazione_operatore(request, pk):
         deleteobject = get_object_or_404(ValutazioneOperatore, pk = pk)         
         pk_hr=deleteobject.fk_hr.pk       
         deleteobject.delete()
-        url_match= reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        url_match= reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
         return redirect(url_match)  
 
 
@@ -208,7 +208,7 @@ class HR_SafetyCreateView(LoginRequiredMixin,CreateView):
     
     def get_success_url(self):        
         pk_hr=self.object.fk_hr.pk
-        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
@@ -231,7 +231,7 @@ class HR_SafetyUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_success_url(self):        
         pk_hr=self.object.fk_hr.pk
-        return reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        return reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
@@ -244,7 +244,7 @@ def delete_hr_safety(request, pk):
         deleteobject = get_object_or_404(HR_Safety, pk = pk)         
         pk_hr=deleteobject.fk_hr.pk       
         deleteobject.delete()
-        url_match= reverse_lazy('human_resources:update-human-resource', kwargs={'pk':pk_hr})
+        url_match= reverse_lazy('human_resources:update_human_resource', kwargs={'pk':pk_hr})
         return redirect(url_match)  
 
 
