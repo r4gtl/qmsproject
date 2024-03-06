@@ -196,7 +196,7 @@ def search_precautionary_statement(request):
         # Costruisci il markup HTML per la tabella dei risultati della ricerca
         results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Codice</th><th>Descrizione</th></tr></thead><tbody>"
         for precautionary_statement in precautionary_statements:
-            results_html += f"<tr data-id='{precautionary_statement.pk}'><td class='precautionary_statement-id'>{precautionary_statement.pk}</td><td class='precautionary_statement-codice'>{precautionary_statement.codice}</td><td class='hazard_statement-descrizione'>{precautionary_statement.descrizione}></td></tr>"
+            results_html += f"<tr data-id='{precautionary_statement.pk}'><td class='precautionary_statement-id'>{precautionary_statement.pk}</td><td class='precautionary_statement-codice'>{precautionary_statement.codice}</td><td class='precautionary_statement-descrizione'>{precautionary_statement.descrizione}></td></tr>"
         results_html += "</tbody></table>"
         
         return JsonResponse({'html': results_html})

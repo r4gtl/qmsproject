@@ -25,6 +25,7 @@ urlpatterns = [
     path('search_prodotto_chimico_rifinizione/', search_prodotto_chimico_rifinizione, name='search_prodotto_chimico_rifinizione'),
     path('search_ghs_symbol/', search_ghs_symbol, name='search_ghs_symbol'),
     path('search_hazard_statement/', search_hazard_statement, name='search_hazard_statement'),
+    path('search_precautionary_statement/', search_precautionary_statement, name='search_precautionary_statement'),
 
     path('search_revisione_bagnato/', search_revisione_bagnato, name="search_revisione_bagnato"), # Ricette Bagnato
 

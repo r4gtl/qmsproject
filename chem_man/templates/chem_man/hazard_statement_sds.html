@@ -67,7 +67,7 @@
                                 data-url="{% url 'core:search_hazard_statement' %}" 
                                 data-modal-title="Cerca Frase di Rischio" 
                                 data-search-input-label="Cerca Frase di Rischio"
-                                data-setfocus=""
+                                data-setfocus="salva_button"
                                 ><i class="bi bi-search"></i></button>
                             </div>
                 <div class="col-4">
@@ -89,7 +89,7 @@
             
 
             
-            <input type="submit" class="btn btn-success" value="Salva">
+            <input type="submit" class="btn btn-success" value="Salva" id="salva_button">
             <button type="button" class="btn btn-danger" onclick="cancelAndRedirectTo('{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
