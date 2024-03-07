@@ -1,12 +1,11 @@
 from cProfile import label
+
+from anagrafiche.models import Fornitore
 from django import forms
-from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField
-
-
+from django_countries.widgets import CountrySelectWidget
 
 from .models import *
-from anagrafiche.models import Fornitore
 
 
 class HumanResourceModelForm(forms.ModelForm):
@@ -158,6 +157,7 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
             'fk_registro_formazione': forms.HiddenInput(),            
             'fk_hr': forms.Select(attrs={'style':'background_color:#F5F8EC'}),
             'prossima_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),
+            'ore': forms.NumberInput(attrs={'class': 'form-control'}),
             'efficace': forms.CheckboxInput(),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             
@@ -166,6 +166,7 @@ class DettaglioRegistroFormazioneModelForm(forms.ModelForm):
             'fk_hr': 'Operatore',
             'certificato': 'Certificato',
             'presenza': 'Presenza',
+            'ore': 'Ore presenza',
             'efficace': 'Efficace',
             'prossima_scadenza': 'Prossima Scadenza',
             'note': 'Annotazioni'

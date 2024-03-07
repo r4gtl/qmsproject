@@ -44,21 +44,24 @@
                               {{ form.fk_hr|as_crispy_field }}
                             </div>
                             
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                               {{ form.certificato|as_crispy_field }}
                             </div>
                             <div class="col-md-2">
                               {{ form.presenza|as_crispy_field }} 
                             </div> 
+                            <div class="col-md-1">
+                              {{ form.ore|as_crispy_field }} 
+                            </div> 
                             
                             <div class="col-md-1">
                               {{ form.efficace|as_crispy_field }}
                             </div>  
+                        </div>
+                        <div class="row">                          
                             <div class="col-md-3">
                               {{ form.prossima_scadenza|as_crispy_field }}
                             </div>   
-                        </div>
-                        <div class="row">                          
                           <div class="col-3">
                             {{ form.note|as_crispy_field }}
                         </div>
