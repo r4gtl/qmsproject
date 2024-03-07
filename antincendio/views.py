@@ -539,6 +539,7 @@ def stampa_mezzi_antincendio(request):
     impianti_spegnimento = ImpiantoSpegnimento.objects.all()
     attrezzature = AttrezzaturaAntincendio.objects.all()
     data_odierna = date.today()
+    year_today = date.today().year
 
     context = {
         'estintori': estintori,
@@ -546,7 +547,8 @@ def stampa_mezzi_antincendio(request):
         'porte_uscite': porte_uscite,
         'impianti_spegnimento': impianti_spegnimento,
         'attrezzature': attrezzature,
-        'data_odierna': data_odierna
+        'data_odierna': data_odierna,
+        'year_today': year_today
 
     }
 

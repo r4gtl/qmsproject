@@ -23,8 +23,12 @@
             <td>{{ estintore.peso }}</td>
             <td>{{ estintore.matricola }}</td>
             <td>{{ estintore.anno }}</td>
-            <td>{{ estintore.scadenza_revisione }}</td>
-            <td>{{ estintore.scadenza_collaudo }}</td>
+            <td style="{% if estintore.scadenza_revisione < data_odierna %}background-color: red;{% elif estintore.scadenza_revisione.year == year_today %}background-color: yellow;{% endif %}">
+            {{ estintore.scadenza_revisione }}
+        </td>
+            <td style="{% if estintore.scadenza_collaudo.year == year_today %}background-color: yellow;{% endif %}">
+            {{ estintore.scadenza_collaudo }}
+            </td>
             <td class="text-wrap d-block" style="color:red">{{ estintore.ubicazione }}</td>
             
         </tr>
