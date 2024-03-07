@@ -8,43 +8,43 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-6 border">
+    <div class="col-6 border d-flex">
 
       <div class="row">
-      <div class="col-md-12">
+      
         <h3>Registro mezzi antincendio</h3>
-      </div>
-      </div>
-
-      <div class="row">
-      <div class="col-md-12">
         <h5>Data di stampa: {{ data_odierna }}</h5>
-      </div>
-      </div>
+      
       </div>
 
+      
+      
+      
+      
+    </div>
 
-      <div class="col-md-6 border">
+
+      <div class="col-6 border d-flex">
       <div class="row mt-2">
-      <div class="col-md-12">
+      
         {% if ultimo_controllo_interno %}
           <p class="mb-0">Ultimo controllo interno: {{ ultimo_controllo_interno.data_intervento }} | {{ ultimo_controllo_interno.fk_operatore }}</p>
         {% endif %}
         {% if ultimo_controllo_interno.prossima_scadenza %}
           <p class="mt-0">Prossimo controllo interno: {{ ultimo_controllo_interno.prossima_scadenza }}</p>
         {% endif %}
-      </div>
+      
       </div>
       
       <div class="row">
-      <div class="col-md-12">
+      
         {% if ultimo_controllo_esterno %}
           <p class="mb-0">Ultimo controllo esterno: {{ ultimo_controllo_esterno.data_intervento }} | {{ ultimo_controllo_esterno.fk_fornitore }}</p>
         {% endif %}
         {% if ultimo_controllo_esterno.prossima_scadenza %}
           <p>Prossimo controllo esterno: {{ ultimo_controllo_esterno.prossima_scadenza }}</p>
         {% endif %}
-      </div>
+      
       </div>
       </div>
 
@@ -52,7 +52,7 @@
   
   </div>
   
-</div>
+
 
 
 <div class="container">
