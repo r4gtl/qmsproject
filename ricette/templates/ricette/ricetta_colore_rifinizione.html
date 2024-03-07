@@ -105,6 +105,7 @@
                               data-url="{% url 'core:search_articolo' %}" 
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
+                              onclick="handleSearchButtonClick(event)"
                               ><i class="bi bi-search"></i></button>
                           </div>
                           <div class="col-md-5">
@@ -123,6 +124,7 @@
                               data-url="{% url 'core:search_colore' %}" 
                               data-modal-title="Cerca Colore" 
                               data-search-input-label="Cerca Colori"
+                              onclick="handleSearchButtonClick(event)"
                             ><i class="bi bi-search"></i></button>
                           </div>
                           </div> 
@@ -173,6 +175,7 @@
                                               data-url="{% url 'core:search_revisione_colore_rifinizione' %}" 
                                               data-modal-title="Cerca Revisione" 
                                               data-search-input-label="Cerca Revisione"
+                                              onclick="handleSearchButtonClick(event)"
                                               >
                                               <i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}

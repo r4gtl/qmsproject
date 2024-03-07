@@ -108,6 +108,7 @@
                               data-url="{% url 'core:search_articolo' %}" 
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
+                              onclick="handleSearchButtonClick(event)"
                               ><i class="bi bi-search"></i></button>
                           </div>
                           <div class="col-md-3">
@@ -157,6 +158,7 @@
                                               data-modal-title="Cerca Revisione" 
                                               data-search-input-label="Cerca Revisione"
                                               data-ricetta-attiva="{{ ricettabagnato.pk }}" 
+                                              onclick="handleSearchButtonClick(event)"
                                               >
                                               <i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}

@@ -285,6 +285,17 @@ $('#searchResults').on('click', 'tr', function() {
 
 // PULSANTI DI RICERCA STANDARD 
 
+
+function handleSearchButtonClick(event) {
+  var callerButtonId = event.target.id;
+  var url = event.target.getAttribute('data-url');
+  var modalTitle = event.target.getAttribute('data-modal-title');
+  var searchInputLabel = event.target.getAttribute('data-search-input-label');
+  searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+}
+
+
+/*
 // Intercetto l'evento relativo al pulsante per cercare i prodotti chimici
 $(document).ready(function() {
   $('#openSearchChemicalButton').click(function(event) {    
@@ -323,7 +334,6 @@ $(document).ready(function() {
 
 });
 
-
 // Intercetto l'evento relativo al pulsante per cercare le revisioni dei colori rifinizione
 $(document).ready(function() {
   $('#openSearchColorRevisionButton').click(function(event) {    
@@ -336,6 +346,10 @@ $(document).ready(function() {
 
 });
 
+
+
+
+
 // Intercetto l'evento relativo al pulsante per cercare gli articoli
 $(document).ready(function() {
   $('#openSearchArticleButton').click(function(event) {    
@@ -346,6 +360,8 @@ $(document).ready(function() {
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
   });
 });
+
+
 
 // Intercetto l'evento relativo al pulsante per cercare i colori
 $(document).ready(function() {
@@ -358,6 +374,8 @@ $(document).ready(function() {
   });
 });
 
+
+
 // Intercetto l'evento relativo al pulsante per cercare i simboli GHS
 $(document).ready(function() {
   $('#openSearchGHSSymbol').click(function(event) {    
@@ -368,6 +386,8 @@ $(document).ready(function() {
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
   });
 });
+
+
 
 // Intercetto l'evento relativo al pulsante per cercare frasi di rischio
 $(document).ready(function() {
@@ -391,6 +411,8 @@ $(document).ready(function() {
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
   });
 });
+
+*/
 
 
 
