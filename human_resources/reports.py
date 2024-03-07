@@ -54,7 +54,7 @@ def scadenze_formazione(request):
     today = datetime.date.today()
     year_today = datetime.date.today().year
     elenco_formazione = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today,
-        fk_hr__datadimissioni__isnull=True).order_by('-prossima_scadenza')
+        fk_hr__datadimissioni__isnull=True).order_by('prossima_scadenza')
 
 
     context = {
