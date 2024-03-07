@@ -148,7 +148,7 @@ class RegistroFormazione(models.Model):
     data_formazione = models.DateField(null=False, blank=False)
     fk_corso = models.ForeignKey(CorsoFormazione, on_delete=models.CASCADE)
     fk_fornitore = models.ForeignKey(Fornitore, null=True, blank=True, on_delete=models.SET_NULL)
-    ore = models.DecimalField(max_digits=5, decimal_places=2, default=0, null=True, blank=True)
+    ore = models.DecimalField(max_digits=5, decimal_places=2, default=0, null=True, blank=True)    
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='registro_formazione', null=True, blank=True, on_delete=models.SET_NULL)
     

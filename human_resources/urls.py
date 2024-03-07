@@ -5,6 +5,7 @@ from .charts import (age_groups, num_tot_dipendenti,
                      num_tot_dipendenti_dimessi_anno,
                      num_tot_dipendenti_orario, num_tot_dipendenti_plot,
                      operatori_per_reparto, ore_formazione)
+from .reports import *
 from .views import *
 
 app_name = 'human_resources'
@@ -100,4 +101,7 @@ urlpatterns = [
 
     # Scadenzario
     path('scadenzario/', scadenzario, name="scadenzario"), 
+    path('scadenze_formazione/', scadenze_formazione, name="scadenze_formazione"), 
+
+    
 ]
