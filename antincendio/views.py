@@ -540,7 +540,10 @@ def stampa_mezzi_antincendio(request):
     attrezzature = AttrezzaturaAntincendio.objects.all()
     data_odierna = date.today()
     year_today = date.today().year
+    ultimo_controllo_interno = RegistroControlliAntincendio.objects.filter(interno_esterno='interno').order_by('-data_intervento').first()
+    ultimo_controllo_esterno = RegistroControlliAntincendio.objects.filter(interno_esterno='esterno').order_by('-data_intervento').first()
 
+       
     context = {
         'estintori': estintori,
         'idranti': idranti,
@@ -548,7 +551,9 @@ def stampa_mezzi_antincendio(request):
         'impianti_spegnimento': impianti_spegnimento,
         'attrezzature': attrezzature,
         'data_odierna': data_odierna,
-        'year_today': year_today
+        'year_today': year_today,
+        'ultimo_controllo_interno':ultimo_controllo_interno,
+        'ultimo_controllo_esterno': ultimo_controllo_esterno
 
     }
 
