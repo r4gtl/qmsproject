@@ -1,13 +1,14 @@
 import json
 from datetime import date, timedelta
-from django.core.exceptions import ValidationError
+
+from articoli.models import *
 from django.apps import apps
+from django.core.exceptions import ValidationError
 from django.core.serializers import serialize
-from django.db.models import Max, Q
 from django.db import models
+from django.db.models import Max, Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from articoli.models import *
 
 '''
 Questa funzione serve per conteggiare quanti record hanno la prossima scadenza nei prossimi x giorni.
@@ -56,100 +57,6 @@ def get_record_last_interval(model, date_field, days):
     ).count()
     
     return count
-
-
-
-
-@csrf_exempt
-def update_numero_riga_down(request):
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        model_name = request.POST.get('model')
-        app_label = request.POST.get('app_label')
-        dettaglio_id = request.POST.get('dettaglio_id')
-        action = request.POST.get('action')
-
-        # Ottieni il modello dinamicamente
-        model = apps.get_model(app_label=app_label, model_name=model_name)
-        dettaglio = model.objects.get(pk=dettaglio_id)
-
-        # Controlla se c'è una riga precedente
-        riga_precedente = model.objects.filter(
-            fk_procedura=dettaglio.fk_procedura,
-            numero_riga=dettaglio.numero_riga - 1
-        ).first()
-
-        if riga_precedente:
-            # Scambia le posizioni delle due righe
-            dettaglio.numero_riga, riga_precedente.numero_riga = riga_precedente.numero_riga, dettaglio.numero_riga
-            dettaglio.save()
-            riga_precedente.save()
-
-            # Dopo aver salvato le righe, ottieni l'elenco aggiornato delle righe
-            elenco_aggiornato = serialize('json', model.objects.filter(fk_procedura=dettaglio.fk_procedura).order_by('numero_riga'))
-            elenco_aggiornato_dict = json.loads(elenco_aggiornato)
-            print(f'Elenco aggiornato down: {elenco_aggiornato_dict}')
-
-            return JsonResponse({'success': True, 'elenco_aggiornato': elenco_aggiornato_dict, 'numero_riga': dettaglio.numero_riga})
-
-        return JsonResponse({'success': False, 'error': 'Nessuna riga precedente disponibile'})
-
-    return JsonResponse({'success': False, 'error': 'Richiesta non valida'}, status=400)
-
-# Nella funzione update_numero_riga_up
-@csrf_exempt
-def update_numero_riga_up(request):
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        model_name = request.POST.get('model')
-        app_label = request.POST.get('app_label')
-        dettaglio_id = request.POST.get('dettaglio_id')
-        action = request.POST.get('action')
-
-        # Ottieni il modello dinamicamente
-        model = apps.get_model(app_label=app_label, model_name=model_name)
-        dettaglio = model.objects.get(pk=dettaglio_id)
-
-        # Controlla se c'è una riga successiva
-        riga_successiva = model.objects.filter(
-            fk_procedura=dettaglio.fk_procedura,
-            numero_riga=dettaglio.numero_riga + 1
-        ).first()
-
-        # Verifica se la riga è già al massimo delle righe con lo stesso ID
-        max_numero_riga = model.objects.filter(fk_procedura=dettaglio.fk_procedura).aggregate(Max('numero_riga'))['numero_riga__max']
-        
-        if riga_successiva:
-            # Abbassa la riga successiva di 1
-            riga_successiva.numero_riga -= 1
-            riga_successiva.save()
-
-            # Aumenta la riga corrente di 1
-            dettaglio.numero_riga += 1
-            dettaglio.save()
-
-            # Dopo aver salvato le righe, ottieni l'elenco aggiornato delle righe
-            elenco_aggiornato = serialize('json', model.objects.filter(fk_procedura=dettaglio.fk_procedura).order_by('numero_riga'))
-            elenco_aggiornato_dict = json.loads(elenco_aggiornato)
-            print(f'Elenco aggiornato up: {elenco_aggiornato_dict}')
-
-            return JsonResponse({'success': True, 'elenco_aggiornato': elenco_aggiornato_dict, 'numero_riga': dettaglio.numero_riga})
-
-        elif dettaglio.numero_riga < max_numero_riga:
-            # Aumenta la riga corrente di 1
-            dettaglio.numero_riga += 1
-            dettaglio.save()
-
-            # Dopo aver salvato le righe, ottieni l'elenco aggiornato delle righe
-            elenco_aggiornato = serialize('json', model.objects.filter(fk_procedura=dettaglio.fk_procedura).order_by('numero_riga'))
-            elenco_aggiornato_dict = json.loads(elenco_aggiornato)
-            print(f'Elenco aggiornato up: {elenco_aggiornato_dict}')
-
-            return JsonResponse({'success': True, 'elenco_aggiornato': elenco_aggiornato_dict, 'numero_riga': dettaglio.numero_riga})
-
-        return JsonResponse({'success': False, 'error': 'La riga è già al massimo delle righe disponibili'})
-
-    return JsonResponse({'success': False, 'error': 'Richiesta non valida'}, status=400)
-
-
 
 # Prova astrazione update_row_numbers per drag 'n drop
 

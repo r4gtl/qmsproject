@@ -29,24 +29,7 @@
           <td>{{ dettaglio.fk_faselavoro.descrizione }}</td>            
           <td class="text-center">
             <a href="{% url 'articoli:delete_dettaglio_procedura' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a>
-            <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              data-bs-custom-class="custom-tooltip"
-              data-bs-title="Sposta la riga in alto"
-              id="btnUp"
-              onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'down', '{% url 'core:update_numero_riga_down' %}')"
-              >
-              <i class="bi bi-arrow-bar-up"></i>
-            </button>
-            <button type="button" class="btn btn-sm btn-outline-primary ms-1" 
-              data-bs-toggle="tooltip" data-bs-placement="top"
-              data-bs-custom-class="custom-tooltip"
-              data-bs-title="Sposta la riga in basso"
-              id="btnDown"
-              onclick="updateNumeroRigaServer('articoli','DettaglioProcedura', '{{ dettaglio.pk }}', 1, 'up', '{% url 'core:update_numero_riga_up' %}')"
-              >
-              <i class="bi bi-arrow-bar-down"></i>
-            </button>
+            
           </td>
 
         </tr>  
