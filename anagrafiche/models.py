@@ -84,6 +84,7 @@ class Fornitore(models.Model):
     # Categoria
     NESSUNA = 'nessuna'
     PELLI = 'pelli'
+    MACELLO = 'macello'
     PRODOTTI_CHIMICI = 'prodotti chimici'
     LAVORAZIONI_ESTERNE = 'lavorazioni esterne'
     SERVIZI = 'servizi'
@@ -94,6 +95,7 @@ class Fornitore(models.Model):
     CHOICES_CATEGORY = (
         (NESSUNA, 'Manca categoria'),
         (PELLI, 'Pelli'),
+        (MACELLO, 'Macello'),
         (PRODOTTI_CHIMICI, 'Prodotti Chimici'),
         (LAVORAZIONI_ESTERNE, 'Lavorazioni Esterne'),
         (SERVIZI, 'Servizi'),
@@ -197,6 +199,8 @@ class FornitoreManutenzioni(models.Model):
 
 class Macello(Fornitore):
     is_group = models.BooleanField(default=False)
+    
+    
     
 
 class TransferValue(models.Model):

@@ -245,3 +245,36 @@ class FormCliente(forms.ModelForm):
             
             
         }
+        
+        
+class FormMacello(forms.ModelForm):
+    
+    class Meta:
+        model = Macello
+        #exclude=()
+        fields='__all__'
+        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
+        indirizzo = forms.CharField()
+        cap = forms.CharField()
+        city = forms.CharField()
+        provincia = forms.CharField()
+        country = CountryField().formfield()
+        # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)        
+        
+        sito_web = forms.CharField()
+        e_mail = forms.EmailField()
+        created_at=forms.DateInput()
+        is_group = forms.BooleanField()
+        
+        widgets = {'country': CountrySelectWidget(),
+                    'created_by': forms.HiddenInput(),                   
+                }
+        labels = {
+            'ragionesociale': 'Ragione Sociale',
+            'country': 'Paese',
+            'city': 'Città',    
+            'e_mail': 'E-Mail',        
+            'sito_web': 'Sito Web',
+            'is_group': 'Raccoglitore'
+            
+        }
