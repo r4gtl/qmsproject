@@ -315,7 +315,12 @@ class RicettaRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk_ricetta_rifinizione = self.object.pk        
+        pk_ricetta_rifinizione = self.object.pk  
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus
+            print(f'focus_button_param: {focus_button_param}')
+            context['focus_button'] = focus_button_param
+                  
         context['elenco_dettagli'] = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=pk_ricetta_rifinizione)
 
         return context
