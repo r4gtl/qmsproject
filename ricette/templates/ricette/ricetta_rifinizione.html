@@ -233,7 +233,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const table = document.getElementById('myTable');
   makeTableRowsDraggable(table);
+
+  var focusButtonId = "{{ focus_button }}"
+            console.log('focus button id: ' + focusButtonId)
+            setFocusOnField(focusButtonId);
 });
+
+
 
 
   const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  

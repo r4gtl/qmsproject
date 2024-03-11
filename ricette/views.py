@@ -247,6 +247,7 @@ class RicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
             return reverse_lazy('ricette:home_ricette_rifinizione')
         
         pk_ricetta=self.object.pk
+        
         return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':pk_ricetta})
 
 
@@ -336,8 +337,11 @@ class DettaglioRicettaRifinizioneCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk        
-        return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk   
+        focus_button = 'btn_new_detail'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('ricette:modifica_dettaglio_ricetta_rifinizione_with_focus_button', kwargs={'pk':fk_ricetta_rifinizione, 'focus_button': focus_button})     
+        #return reverse_lazy('ricette:modifica_ricetta_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
     
       
     def form_valid(self, form):

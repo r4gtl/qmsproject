@@ -26,6 +26,7 @@ urlpatterns = [
     # Ricette Rifinizione
     path('aggiungi_ricetta_rifinizione/', RicettaRifinizioneCreateView.as_view(), name="aggiungi_ricetta_rifinizione"), 
     path('modifica_ricetta_rifinizione/<int:pk>/', RicettaRifinizioneUpdateView.as_view(), name="modifica_ricetta_rifinizione"), 
+    path('modifica_dettaglio_ricetta_rifinizione_with_focus_button/<int:pk>/<str:focus_button>/', RicettaRifinizioneUpdateView.as_view(), name="modifica_dettaglio_ricetta_rifinizione_with_focus_button"), 
     path('delete_ricetta_rifinizione/<int:pk>', delete_ricetta_rifinizione, name="delete_ricetta_rifinizione"),
     
 
