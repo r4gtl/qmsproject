@@ -35,6 +35,13 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
   
   var callerButton = $('#' + callerButtonId);
   var setFocusValue = callerButton.data('setfocus');
+  if (callerButton.length) {
+    console.log("callerButton: " + callerButton)
+    // Puoi procedere con il resto della logica
+} else {
+    console.error("L'elemento con l'ID specificato non esiste nel DOM.");
+    // Aggiungi un gestore degli errori o un'altra logica per gestire questa situazione
+}
   console.log("callerButton: " + callerButton)
   console.log("url: " + url)
   console.log("modalTitle: " + modalTitle)
@@ -290,11 +297,16 @@ $('#searchResults').on('click', 'tr', function() {
 // PULSANTI DI RICERCA STANDARD 
 
 
+
 function handleSearchButtonClick(event) {
   var callerButtonId = event.target.id;
   var url = event.target.getAttribute('data-url');
   var modalTitle = event.target.getAttribute('data-modal-title');
   var searchInputLabel = event.target.getAttribute('data-search-input-label');
+  console.log("callerButton da button: " + callerButtonId)
+  console.log("url da button: " + url)
+  console.log("modalTitle da button: " + modalTitle)
+  console.log("searchInputLabel da button: " + searchInputLabel)
   searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
 }
 
