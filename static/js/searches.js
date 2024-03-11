@@ -35,7 +35,11 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
   
   var callerButton = $('#' + callerButtonId);
   var setFocusValue = callerButton.data('setfocus');
-
+  console.log("callerButton: " + callerButton)
+  console.log("url: " + url)
+  console.log("modalTitle: " + modalTitle)
+  console.log("searchInputLabel: " + searchInputLabel)
+  
   $('#searchResults').data('callerButtonId', callerButtonId);
   $('#searchResults').data('setFocusValue', setFocusValue); // Assegno il valore di setfocus in modo da impostare il focus su un controllo dopo la scelta
   
