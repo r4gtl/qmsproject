@@ -78,7 +78,7 @@
                                 data-modal-title="Cerca Prodotto Chimico" 
                                 data-search-input-label="Cerca Prodotto Chimico"
                                 data-setfocus="id_quantity"
-                                onclick="handleSearchButtonClick(event)"
+                                
                                 ><i class="bi bi-search"></i></button>
                             </div>
 
@@ -147,6 +147,19 @@ $(document).ready(function() {
   });
 });
 
+
+
+document.getElementById('openSearchChemicalButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    console.log("callerButton da button: " + callerButtonId);
+    console.log("url da button: " + url);
+    console.log("modalTitle da button: " + modalTitle);
+    console.log("searchInputLabel da button: " + searchInputLabel);
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
 document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_fk_operazione_ricette');
