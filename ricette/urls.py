@@ -39,6 +39,7 @@ urlpatterns = [
     # Ricette Colore Rifinizione
     path('aggiungi_ricetta_colore_rifinizione/', RicettaColoreRifinizioneCreateView.as_view(), name="aggiungi_ricetta_colore_rifinizione"), 
     path('modifica_ricetta_colore_rifinizione/<int:pk>/', RicettaColoreRifinizioneUpdateView.as_view(), name="modifica_ricetta_colore_rifinizione"), 
+    path('modifica_ricetta_colore_rifinizione_with_focus_button/<int:pk>/<str:focus_button>/', RicettaColoreRifinizioneUpdateView.as_view(), name="modifica_ricetta_colore_rifinizione_with_focus_button"), 
     path('delete_ricetta_colore_rifinizione/<int:pk>', delete_ricetta_colore_rifinizione, name="delete_ricetta_colore_rifinizione"),
 
     # Dettaglio Ricette Colore Rifinizione

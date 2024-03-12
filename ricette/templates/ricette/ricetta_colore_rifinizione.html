@@ -261,6 +261,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (table) {
     makeTableRowsDraggable(table);
   }
+
+  var focusButtonId = "{{ focus_button }}"
+            console.log('focus button id: ' + focusButtonId)
+            setFocusOnField(focusButtonId);
 });
 
 

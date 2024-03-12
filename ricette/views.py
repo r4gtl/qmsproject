@@ -422,7 +422,7 @@ class RicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView):
         
         pk_ricetta=self.object.pk
         return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':pk_ricetta})
-
+        
 
     def form_valid(self, form):
         if 'salva_esci' in self.request.POST:
@@ -498,7 +498,10 @@ class RicettaColoreRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk_ricetta_colore_rifinizione = self.object.pk        
+        pk_ricetta_colore_rifinizione = self.object.pk   
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus            
+            context['focus_button'] = focus_button_param     
         context['elenco_dettagli'] = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_colore_rifinizione=pk_ricetta_colore_rifinizione)
 
         return context
@@ -521,7 +524,11 @@ class DettaglioRicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView)
 
     def get_success_url(self):
         fk_ricetta_colore_rifinizione=self.object.fk_ricetta_colore_rifinizione.pk        
-        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
+        focus_button = 'btn_new_detail'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione_with_focus_button', kwargs={'pk':fk_ricetta_colore_rifinizione, 'focus_button': focus_button})     
+    
+        #return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
     
       
     def form_valid(self, form):
@@ -546,7 +553,9 @@ class DettaglioRicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView)
         context = super().get_context_data(**kwargs)
         for key, value in kwargs.items():
             print(f"{key}: {value}")
-        pk_ricetta = self.kwargs['fk_ricetta_colore_rifinizione']         
+        pk_ricetta = self.kwargs['fk_ricetta_colore_rifinizione']   
+        
+
         context['ricetta_colore_rifinizione'] = pk_ricetta
         context['dettagli_ricetta'] = get_object_or_404(RicettaColoreRifinizione, pk=pk_ricetta)
         return context
