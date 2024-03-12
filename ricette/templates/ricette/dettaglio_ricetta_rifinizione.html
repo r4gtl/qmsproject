@@ -154,10 +154,6 @@ document.getElementById('openSearchChemicalButton').addEventListener('click', fu
     var url = this.getAttribute('data-url');
     var modalTitle = this.getAttribute('data-modal-title');
     var searchInputLabel = this.getAttribute('data-search-input-label');
-    console.log("callerButton da button: " + callerButtonId);
-    console.log("url da button: " + url);
-    console.log("modalTitle da button: " + modalTitle);
-    console.log("searchInputLabel da button: " + searchInputLabel);
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
 });
 

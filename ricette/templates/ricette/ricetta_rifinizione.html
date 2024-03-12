@@ -107,7 +107,7 @@
                               data-url="{% url 'core:search_articolo' %}" 
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
-                              onclick="handleSearchButtonClick(event)"
+                              
                               ><i class="bi bi-search"></i></button>
                           </div>
                           </div> 
@@ -151,7 +151,7 @@
                                               data-modal-title="Cerca Revisione" 
                                               data-search-input-label="Cerca Revisione"
                                               data-ricetta-attiva="{{ ricettarifinizione.pk }}" 
-                                              onclick="handleSearchButtonClick(event)"
+                                              
                                               >
                                               <i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}
@@ -240,7 +240,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.getElementById('openSearchArticleButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
+
+document.getElementById('openSearchRevisionButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
   const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
   const modelName = document.getElementById('myTable').dataset.model_name;
