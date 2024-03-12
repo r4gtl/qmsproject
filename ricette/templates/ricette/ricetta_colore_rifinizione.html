@@ -105,7 +105,7 @@
                               data-url="{% url 'core:search_articolo' %}" 
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
-                              onclick="handleSearchButtonClick(event)"
+                              
                               ><i class="bi bi-search"></i></button>
                           </div>
                           <div class="col-md-5">
@@ -124,7 +124,7 @@
                               data-url="{% url 'core:search_colore' %}" 
                               data-modal-title="Cerca Colore" 
                               data-search-input-label="Cerca Colori"
-                              onclick="handleSearchButtonClick(event)"
+                              
                             ><i class="bi bi-search"></i></button>
                           </div>
                           </div> 
@@ -317,7 +317,21 @@ $(document).ready(function() {
   });
 });
 
+document.getElementById('openSearchArticleButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
+document.getElementById('openSearchColorButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
 
 </script>
