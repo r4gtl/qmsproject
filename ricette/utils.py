@@ -61,7 +61,7 @@ def accoda_dettaglio_ricetta_rifinizione(request):
         ricetta_attiva = request.POST.get('ricettaAttiva')        
         ricetta_attiva = RicettaRifinizione.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
         # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
-        dettagli_ricetta = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id)
+        dettagli_ricetta = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id)
 
         # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
         for dettaglio in dettagli_ricetta:
