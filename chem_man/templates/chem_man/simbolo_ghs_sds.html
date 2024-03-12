@@ -89,7 +89,7 @@
                                 data-modal-title="Cerca Simbolo GHS" 
                                 data-search-input-label="Cerca Simbolo GHS"
                                 data-setfocus=""
-                                onclick="handleSearchButtonClick(event)"
+                                
                                 ><i class="bi bi-search"></i></button>
                             </div>
 
@@ -178,7 +178,13 @@ document.addEventListener("DOMContentLoaded", function() {
     setFocusOnField('id_fk_simbolo_ghs');
 });
     
-
+document.getElementById('openSearchGHSSymbol').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
 </script>
 

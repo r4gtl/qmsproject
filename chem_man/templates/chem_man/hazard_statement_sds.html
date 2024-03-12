@@ -68,7 +68,7 @@
                                 data-modal-title="Cerca Frase di Rischio" 
                                 data-search-input-label="Cerca Frase di Rischio"
                                 data-setfocus="salva_button"
-                                onclick="handleSearchButtonClick(event)"
+                                
                                 ><i class="bi bi-search"></i></button>
                             </div>
                 <div class="col-4">
@@ -106,6 +106,14 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_fk_hazard_statement');
+        });
+
+        document.getElementById('openSearchHazardStatement').addEventListener('click', function(event) {
+            var callerButtonId = this.id;
+            var url = this.getAttribute('data-url');
+            var modalTitle = this.getAttribute('data-modal-title');
+            var searchInputLabel = this.getAttribute('data-search-input-label');
+            searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
         });
     </script>
 {% endblock %}
