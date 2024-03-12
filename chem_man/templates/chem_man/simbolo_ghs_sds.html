@@ -113,7 +113,7 @@
             
 
             
-            <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+            <input type="submit" class="btn btn-success mb-2 me-1" value="Salva" id="salva_button">
             <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'chem_man:modifica_scheda_sicurezza' fk_prodottochimico=fk_prodottochimico.pk pk=fk_sds.pk %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
@@ -175,7 +175,7 @@ $(window).on('load', function() {
 
 
 document.addEventListener("DOMContentLoaded", function() {
-    setFocusOnField('id_fk_simbolo_ghs');
+    setFocusOnField('openSearchGHSSymbol');
 });
     
 document.getElementById('openSearchGHSSymbol').addEventListener('click', function(event) {

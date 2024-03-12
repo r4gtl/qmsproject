@@ -19,6 +19,7 @@ urlpatterns = [
     # Prodotti Chimici
     path('aggiungi_prodotto_chimico/', ProdottoChimicoCreateView.as_view(), name="aggiungi_prodotto_chimico"), 
     path('modifica_prodotto_chimico/<int:pk>/', ProdottoChimicoUpdateView.as_view(), name="modifica_prodotto_chimico"), 
+    path('modifica_prodotto_chimico_with_focus_button/<int:pk>/<str:focus_button>/', ProdottoChimicoUpdateView.as_view(), name="modifica_prodotto_chimico_with_focus_button"), 
     path('delete_prodotto_chimico/<int:pk>', delete_prodotto_chimico, name="delete_prodotto_chimico"),
     
     # Prezzi Prodotti Chimici
@@ -67,7 +68,7 @@ urlpatterns = [
     # Schede Sicurezza
     path('<int:fk_prodottochimico>/aggiungi_scheda_sicurezza/', SchedaSicurezzaCreateView.as_view(), name="aggiungi_scheda_sicurezza"), 
     path('<int:fk_prodottochimico>/modifica_scheda_sicurezza/<int:pk>/', SchedaSicurezzaUpdateView.as_view(), name="modifica_scheda_sicurezza"), 
-    path('<int:fk_prodottochimico>/modifica_scheda_sicurezza/<int:pk>/<str:focus_button>/', SchedaSicurezzaUpdateView.as_view(), name='modifica_scheda_sicurezza_with_focus_button'),
+    path('<int:fk_prodottochimico>/modifica_scheda_sicurezza_with_focus_button/<int:pk>/<str:focus_button>/', SchedaSicurezzaUpdateView.as_view(), name='modifica_scheda_sicurezza_with_focus_button'),
     path('delete_scheda_sicurezza/<int:pk>', delete_scheda_sicurezza, name="delete_scheda_sicurezza"),
     
     # Simbolo_ghs_sds

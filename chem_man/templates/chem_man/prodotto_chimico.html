@@ -120,7 +120,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Prezzo</a>
+          <a href="{% url 'chem_man:aggiungi_prezzo_prodotto_chimico' fk_prodottochimico=prodottochimico.pk %}" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi Prezzo</a>
 
         </div>
       </div>
@@ -248,8 +248,9 @@
 
 {% block extra_scripts %}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            setFocusOnField('id_descrizione');
+        document.addEventListener("DOMContentLoaded", function() {            
+            var focusButtonId = "{{ focus_button }}"            
+            setFocusOnField(focusButtonId);
             
         });
 
@@ -284,5 +285,7 @@
               });
           });
       });
+
+
     </script>
 {% endblock %}

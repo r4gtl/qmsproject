@@ -122,6 +122,12 @@ class ProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk_prodottochimico = self.object.pk
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus            
+            context['focus_button'] = focus_button_param
+        else:
+            context['focus_button'] = 'id_descrizione'
+
         context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
         context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         context['elenco_schede_sicurezza'] = SchedaSicurezza.objects.filter(fk_prodottochimico=pk_prodottochimico)
@@ -148,7 +154,11 @@ class PrezzoProdottoCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         fk_prodottochimico=self.object.fk_prodottochimico.pk
-        return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+        focus_button = 'btn_prezzo'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('chem_man:modifica_prodotto_chimico_with_focus_button', kwargs={'pk':fk_prodottochimico, 'focus_button': focus_button})
+        #return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+    
 
 
 
