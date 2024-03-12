@@ -84,7 +84,9 @@ def accoda_dettaglio_ricetta_rifinizione(request):
 def accoda_dettaglio_ricetta_colore_rifinizione(request):
     if request.method == 'POST':
         ricetta_id = request.POST.get('ricetta_id')
+        print(f"ricetta_id: {ricetta_id}")
         ricetta_attiva = request.POST.get('ricettaAttiva')
+        print(f"ricetta_attiva: {ricetta_attiva}")
         ricetta_attiva = RicettaColoreRifinizione.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
         # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
         dettagli_ricetta = DettaglioRicettaColoreRifinizione.objects.filter(fk_ricetta_colore_rifinizione=ricetta_id)
@@ -101,7 +103,7 @@ def accoda_dettaglio_ricetta_colore_rifinizione(request):
                 created_by=dettaglio.created_by
             )
         
-        redirect_url = reverse('ricette:modifica_ricetta_rifinizione', kwargs={'pk': ricetta_attiva.pk})
+        redirect_url = reverse('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk': ricetta_attiva.pk})
         return JsonResponse({'redirect_url': redirect_url}) 
     else:
         return JsonResponse({'error': 'Richiesta non valida.'})
@@ -111,7 +113,10 @@ def accoda_dettaglio_ricetta_colore_rifinizione(request):
 def accoda_dettaglio_ricetta_bagnato(request):
     if request.method == 'POST':
         ricetta_id = request.POST.get('ricetta_id')
-        ricetta_attiva = request.POST.get('ricettaAttiva')        
+        print(f"ricetta_id: {ricetta_id}")
+        ricetta_attiva = request.POST.get('ricettaAttiva')    
+        print(f"ricetta_attiva: {ricetta_attiva}")
+
         ricetta_attiva = RicettaBagnato.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
         # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
         dettagli_ricetta = DettaglioRicettaBagnato.objects.filter(fk_ricetta_bagnato=ricetta_id)

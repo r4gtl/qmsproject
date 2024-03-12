@@ -175,7 +175,8 @@
                                               data-url="{% url 'core:search_revisione_colore_rifinizione' %}" 
                                               data-modal-title="Cerca Revisione" 
                                               data-search-input-label="Cerca Revisione"
-                                              onclick="handleSearchButtonClick(event)"
+                                              data-ricetta-attiva="{{ ricettacolorerifinizione.pk }}" 
+                                              
                                               >
                                               <i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}
@@ -337,6 +338,14 @@ document.getElementById('openSearchColorButton').addEventListener('click', funct
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
 });
 
+
+document.getElementById('openSearchColorRevisionButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
 </script>
 {% endblock %}

@@ -203,7 +203,7 @@ $('#searchResults').on('click', 'tr', function() {
         // Ottiene l'id del prodotto chimico dalla riga cliccata
         var ricettaId = $(this).find('.ricetta-id').text();
         var ricettaAttiva = $('#openSearchColorRevisionButton').data('ricettaAttiva'); // Passa l'id della ricetta attiva alla quale accodare. Dato passato nel button
-                
+        console.log("ricettaAttiva: " + ricettaAttiva)    
         // Chiude il modal
         $('#searchModal').modal('hide');
         // recupera il CSRF-Token dal form
