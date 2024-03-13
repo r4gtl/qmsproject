@@ -1,0 +1,110 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% load custom_filters %}
+{% block title %}Ricetta Colore rifinizione {% endblock %}
+
+
+
+{% block content %}
+
+  <h4 class="text-start">Ricetta COlore Rifinizione</h1>
+  <div class="row">
+    <h5 class="text-start">Articolo: <strong>{{ ricetta.fk_articolo.descrizione }}</strong></h5>
+    <h5 class="text-start">Colore: <strong>{{ ricetta.fk_colore.descrizione }}</strong></h5>
+  </div>
+  <div class="row">
+    <div class="col-6">
+        <h5 class="text-start">N. Ricetta: <strong>{{ ricetta.numero_ricetta }} del {{ ricetta.data_ricetta }}</strong></h5>
+    </div>
+    <div class="col-6">
+        <h5 class="text-end">N. Revisione: <strong>{{ ricetta.numero_revisione }} del {{ ricetta.data_revisione }}</strong></h5>
+    </div>
+  </div>
+  <div class="row">    
+    <div class="col-9">
+        <h5 class="text-center">Note: <strong>{{ ricetta.note }}</strong></h5>
+    </div>
+  </div>
+  
+
+
+<br>
+<hr>
+
+<hr>
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+        <tr style="font-size: 14px;">        
+            <th>Operazione</th>
+            <th>Quantità (Kg.)</th>
+            <th>Prodotto</th>
+            <th>Prezzo</th>
+            <th>Costo Totale</th>
+                        
+        </tr>
+        </thead>
+        
+        <tbody>
+    {% regroup dettagli_ricetta by fk_operazione_ricette as dettagli_per_operazione %}
+    {% for operazione in dettagli_per_operazione %}
+        {% with operazione.list as dettagli %}
+            {% for dettaglio in dettagli %}
+                <tr style="font-size: 14px;">        
+                    <td>{{ dettaglio.fk_operazione_ricette }}</td>
+                    <td class="text-end">{{ dettaglio.quantity }}</td>
+                    <td>{{ dettaglio.fk_prodotto_chimico }}</td>
+                    <td class="text-end">{{ dettaglio.fk_prodotto_chimico.ultimo_prezzo|default_if_none:"0" }}</td>
+                    <td class="text-end">{{ dettaglio.calcola_totale|format_number_dec_thousand }}</td>
+                </tr>
+            {% endfor %}
+            <tr style="background-color: #faf0ca; font-size: 14px;">
+                <td class="text-end"><em>Totale Quantità {{ operazione.grouper }}:</em></td>
+                <td class="text-end">
+                    {% for dettaglio_raggruppato in dettagli_raggruppati %}
+                    
+                        {% if dettaglio_raggruppato.fk_operazione_ricette == operazione.grouper.pk %}
+                            <strong>{{ dettaglio_raggruppato.subquantity|floatformat:"3" }}</strong>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td colspan="2" class="text-end"><em>Totale {{ operazione.grouper }}:</em></td>
+                <td class="text-end">
+                    {% for dettaglio_raggruppato in dettagli_raggruppati %}
+                    
+                        {% if dettaglio_raggruppato.fk_operazione_ricette == operazione.grouper.pk %}
+                            <strong>{{ dettaglio_raggruppato.subtotale|floatformat:"2" }}</strong>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endwith %}
+    {% endfor %}
+    <tr style="background-color:#7678ed; font-size: 16px;">
+        <td colspan="4" class="text-end"><em>Totale ricetta:</em></td>
+        <td class="text-end"><strong>{{ totale|floatformat:"2" }}</strong></td>
+    </tr>
+</tbody>
+
+
+
+        </table>
+</div>
+
+
+    
+
+		
+		
+
+
+
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+{% endblock %}

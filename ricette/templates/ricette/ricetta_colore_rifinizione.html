@@ -63,7 +63,7 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_rifinizione' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
-            
+            {% if form.instance.id  %}<a href="{% url 'ricette:ricetta_colore_rifinizione_print' pk=ricettacolorerifinizione.pk %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>{% endif %}
             
 
             

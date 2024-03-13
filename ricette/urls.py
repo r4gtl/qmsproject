@@ -60,6 +60,7 @@ urlpatterns = [
     
     # Stampa ricette
     path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),
+    path('ricetta_colore_rifinizione_print/<int:pk>', ricetta_colore_rifinizione_print, name="ricetta_colore_rifinizione_print"),
     path('ricetta_bagnato_print/<int:pk>', ricetta_bagnato_print, name="ricetta_bagnato_print"),
     
     

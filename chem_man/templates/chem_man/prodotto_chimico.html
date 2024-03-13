@@ -248,9 +248,14 @@
 
 {% block extra_scripts %}
     <script>
-        document.addEventListener("DOMContentLoaded", function() {            
+        document.addEventListener("DOMContentLoaded", function() {   
+                   
             var focusButtonId = "{{ focus_button }}"            
-            setFocusOnField(focusButtonId);
+            if (focusButtonId !== "") {
+                setFocusOnField(focusButtonId);
+            } else {
+                setFocusOnField('id_descrizione');
+            }         
             
         });
 
