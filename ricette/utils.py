@@ -102,7 +102,7 @@ def accoda_dettaglio_ricetta_colore_rifinizione(request):
                 note=dettaglio.note,
                 created_by=dettaglio.created_by
             )
-        
+        print(f"Ricetta attiva pk: {ricetta_attiva.pk}")
         redirect_url = reverse('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk': ricetta_attiva.pk})
         return JsonResponse({'redirect_url': redirect_url}) 
     else:

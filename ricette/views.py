@@ -562,15 +562,15 @@ class DettaglioRicettaColoreRifinizioneCreateView(LoginRequiredMixin,CreateView)
         
 
 class DettaglioRicettaColoreRifinizioneUpdateView(LoginRequiredMixin, UpdateView):
-    model = DettaglioRicettaRifinizione
-    form_class = DettaglioRicettaRifinizioneModelForm
+    model = DettaglioRicettaColoreRifinizione
+    form_class = DettaglioRicettaColoreRifinizioneModelForm
     template_name = 'ricette/dettaglio_ricetta_colore_rifinizione.html'
     success_message = 'Dettaglio modificato correttamente!'
 
 
     def get_success_url(self):
-        fk_ricetta_rifinizione=self.object.fk_ricetta_rifinizione.pk        
-        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_rifinizione})
+        fk_ricetta_colore_rifinizione=self.object.fk_ricetta_colore_rifinizione.pk        
+        return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
     
 
 
@@ -585,6 +585,7 @@ class DettaglioRicettaColoreRifinizioneUpdateView(LoginRequiredMixin, UpdateView
         context['dettagli_ricetta'] = get_object_or_404(RicettaColoreRifinizione, pk=pk_ricetta)
         return context
 
+    
 
 def delete_dettaglio_ricetta_colore_rifinizione(request, pk):
         deleteobject = get_object_or_404(DettaglioRicettaColoreRifinizione, pk = pk)
