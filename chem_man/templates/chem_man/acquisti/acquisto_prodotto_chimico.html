@@ -12,6 +12,7 @@
 {% block content %}
 {% include 'core/modals/delConfirm.html' %}
 
+
 <nav aria-label="breadcrumb" class="mt-3"> 
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
@@ -38,6 +39,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
     
     <!-- Form nuovo registro -->
     
@@ -58,7 +60,22 @@
                           <div class = "col-md-4">
                               {{ form.fk_fornitore|as_crispy_field }}
                             </div>
-                            
+                            <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Fornitore" 
+                              style="width:100%"
+                              id="openSearchSupplierButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_chem_supplier' %}" 
+                              data-modal-title="Cerca Fornitore" 
+                              data-search-input-label="Cerca Fornitore"
+                              
+                              ><i class="bi bi-search"></i></button>
+                          </div>
                             <div class = "col-md-2">
                               {{ form.numero_documento|as_crispy_field }}
                             </div>
@@ -168,6 +185,17 @@
   document.addEventListener("DOMContentLoaded", function() {
     setFocusOnField('id_fk_fornitore');
 });
+
+
+
+document.getElementById('openSearchSupplierButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
 
 </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+from anagrafiche.models import Fornitore
 from articoli.models import Articolo, Colore
 from chem_man.models import (HazardStatement, PrecautionaryStatement,
                              ProdottoChimico, SimboloGHS)
@@ -203,3 +204,21 @@ def search_precautionary_statement(request):
     else:
         return JsonResponse({'html': ''})
     
+
+
+def search_chem_supplier(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dell'Articolo
+        fornitori = Fornitore.objects.filter(
+            Q(ragionesociale__icontains=search_term) & Q(categoria='prodotti chimici')
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>RagioneSociale</th></tr></thead><tbody>"
+        for fornitore in fornitori:
+            results_html += f"<tr data-id='{fornitore.pk}'><td class='fornitore-id'>{fornitore.pk}</td><td class='fornitore-ragionesociale'>{fornitore.ragionesociale}</td></tr>"
+        results_html += "</tbody></table>"
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})

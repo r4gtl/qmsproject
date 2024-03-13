@@ -148,11 +148,17 @@ $('#searchResults').on('click', 'tr', function() {
       $('#searchModal').modal('hide');
       break;
 
-      case 'openSearchPrecautionaryStatement':
-        var id_fk_precautionary_statement = $(this).find('.precautionary_statement-id').text();    
-        $('#id_fk_precautionary_statement').val(id_fk_precautionary_statement);    
-        $('#searchModal').modal('hide');
-        break;
+    case 'openSearchPrecautionaryStatement':
+      var id_fk_precautionary_statement = $(this).find('.precautionary_statement-id').text();    
+      $('#id_fk_precautionary_statement').val(id_fk_precautionary_statement);    
+      $('#searchModal').modal('hide');
+      break;
+
+    case 'openSearchSupplierButton':
+      var id_fk_fornitore = $(this).find('.fornitore-id').text();    
+      $('#id_fk_fornitore').val(id_fk_fornitore);    
+      $('#searchModal').modal('hide');
+      break;
 
 
       // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione

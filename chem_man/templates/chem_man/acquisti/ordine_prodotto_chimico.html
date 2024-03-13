@@ -37,6 +37,7 @@
     <hr>
     <br>
     {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
     
     <!-- Form nuovo ordine -->
     
@@ -58,7 +59,22 @@
                           <div class = "col-md-4">
                               {{ form.fk_fornitore|as_crispy_field }}
                             </div>
-                            
+                            <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Fornitore" 
+                              style="width:100%"
+                              id="openSearchSupplierButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_chem_supplier' %}" 
+                              data-modal-title="Cerca Fornitore" 
+                              data-search-input-label="Cerca Fornitore"
+                              
+                              ><i class="bi bi-search"></i></button>
+                          </div>
                             <div class = "col-md-2">
                               {{ form.numero_ordine|as_crispy_field }}
                             </div>
@@ -190,7 +206,17 @@
 
 
 
-
 </script>
 {% endif %}
+<script>
+document.getElementById('openSearchSupplierButton').addEventListener('click', function(event) {
+    console.log("Premuto")
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+</script>
 {% endblock %}
