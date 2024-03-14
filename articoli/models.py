@@ -104,6 +104,8 @@ class DettaglioFaseLavoro(models.Model):
     created_by = models.ForeignKey(User, related_name='dettagliofaselavoro', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.attributo
 
 
 class LavorazioneEsterna(models.Model):
@@ -246,7 +248,7 @@ class CaratteristicaProcedura(models.Model):
     fk_dettaglio_procedura = models.ForeignKey(DettaglioProcedura, related_name='caratteristicaprocedura', on_delete=models.CASCADE)
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
     fk_dettaglio_fase_lavoro = models.ForeignKey(DettaglioFaseLavoro, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
-    valore = models.CharField(max_length=100)
+    valore = models.CharField(max_length=100, null=True, blank=True)
     fk_lavorazione_esterna = models.ForeignKey(LavorazioneEsterna, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='caratteristicaprocedura', null=True, blank=True, on_delete=models.SET_NULL)

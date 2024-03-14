@@ -1,0 +1,42 @@
+<div class="row">
+      
+    
+    
+      <h5>Caratteristiche Procedura</h5>
+                
+    
+    <div class="col-12 text-end">
+      
+      <a href="{% url 'articoli:aggiungi_caratteristica_procedura' fk_dettaglio_procedura=dettaglioprocedura.pk %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Caratteristica</a>
+
+    </div>
+  </div>
+  <div class="table-container" >
+    <table class="table table-bordered table-striped mt-2" id="myTable" data-model_name="DettaglioProcedura">
+      <thead>
+        <tr>          
+          <th>Caratteristica</th> 
+          <th>Valore</th> 
+          <th>Azioni</th>
+          
+        </tr>
+      </thead>
+      <tbody id="table-body">
+        {% for caratteristica in caratteristiche_procedura %}
+        <tr>        
+          <td ><a href="{% url 'articoli:modifica_caratteristica_procedura' fk_dettaglio_procedura=pk pk=caratteristica.pk %}">{{ caratteristica.fk_dettaglio_fase_lavoro.descrizione }}</a></td>
+          
+          <td>{{ caratteristica.valore }}</td>            
+          <td class="text-center">
+            <a href="{% url 'articoli:delete_caratteristica_procedura' pk=caratteristica.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{caratteristica.pk}}"><i class="bi bi-trash"></i>Elimina</a>
+            
+          </td>
+
+        </tr>  
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% block extra_scripts %}{% endblock %}
+  

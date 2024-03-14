@@ -178,3 +178,39 @@ class DettaglioProceduraModelForm(forms.ModelForm):
             
             
         }
+
+
+class CaratteristicaProceduraModelForm(forms.ModelForm):
+    class Meta:
+        model = CaratteristicaProcedura
+        fields = '__all__'        
+        fk_fornitore = forms.ModelChoiceField(
+            queryset=Fornitore.objects.all(),            
+            widget=forms.Select
+            )
+        fk_dettaglio_fase_lavoro = forms.ModelChoiceField(
+            queryset=DettaglioFaseLavoro.objects.all(),            
+            widget=forms.Select
+            )
+        fk_lavorazione_esterna = forms.ModelChoiceField(
+            queryset=LavorazioneEsterna.objects.all(),            
+            widget=forms.Select
+            )
+
+        
+        widgets = {
+            'valore': forms.TextInput(attrs={'placeholder': 'Inserisci valore'}), 
+            'fk_dettaglio_procedura': forms.HiddenInput(), 
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput()
+        }
+        labels = {
+            'fk_fornitore': 'Terzista',
+            'fk_dettaglio_fase_lavoro': 'Attributo',            
+            'fk_lavorazione_esterna': 'Lavorazione esterna',
+            'valore': 'Valore',
+            'note': 'Note'
+            
+            
+            
+        }

@@ -59,6 +59,11 @@ urlpatterns = [
     path('<int:fk_procedura>/modifica_dettaglio_procedura/<int:pk>/', DettaglioProceduraUpdateView.as_view(), name="modifica_dettaglio_procedura"), 
     path('delete_dettaglio_procedura/<int:pk>', delete_dettaglio_procedura, name="delete_dettaglio_procedura"),
 
+    # Caratteristica Procedura
+    path('<int:fk_dettaglio_procedura>/aggiungi_caratteristica_procedura/', CaratteristicaProceduraCreateView.as_view(), name="aggiungi_caratteristica_procedura"), 
+    path('<int:fk_dettaglio_procedura>/modifica_caratteristica_procedura/<int:pk>/', CaratteristicaProceduraUpdateView.as_view(), name="modifica_caratteristica_procedura"), 
+    path('delete_caratteristica_procedura/<int:pk>', delete_caratteristica_procedura, name="delete_caratteristica_procedura"),
+
     # Automatismi
     path('accoda_dettaglio_fase_lavoro/', accoda_dettaglio_fase_lavoro, name="accoda_dettaglio_fase_lavoro"),
 

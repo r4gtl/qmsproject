@@ -674,11 +674,11 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pk_procedura = self.kwargs['fk_procedura'] 
-        procedura = get_object_or_404(Procedura, pk=pk_procedura)        
-        context['procedura'] = pk_procedura
-        context['dati_procedura'] = Procedura.objects.get(pk=pk_procedura)
-        context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=self.kwargs['pk'])
+        fk_procedura = self.kwargs['fk_procedura'] 
+        procedura = get_object_or_404(Procedura, pk=fk_procedura)        
+        context['procedura'] = fk_procedura
+        context['dati_procedura'] = Procedura.objects.get(pk=fk_procedura)
+        context['caratteristiche_procedura'] = CaratteristicaProcedura.objects. filter(pk=self.kwargs['pk'])
         context['fk_articolo'] = procedura.fk_articolo.pk
         return context
 
@@ -705,3 +705,78 @@ def delete_dettaglio_procedura(request, pk):
     url_match = reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo': fk_articolo, 'pk': fk_procedura})
     return redirect(url_match)
 
+
+# Caratteristica Procedura
+class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
+    model = CaratteristicaProcedura
+    form_class = CaratteristicaProceduraModelForm
+    template_name = 'articoli/caratteristica_procedura.html'
+    success_message = 'Caratteristica aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        fk_dettaglio_procedura=self.object.fk_dettaglio_procedura.pk 
+        fk_procedura = self.object.fk_dettaglio_procedura.fk_procedura.pk     
+        return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        
+        initial['fk_dettaglio_procedura'] = self.kwargs.get('fk_dettaglio_procedura')
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura']
+        dettaglio_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)
+        context['dettaglio_procedura'] = dettaglio_procedura
+        #context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=pk_procedura)
+        #context['fk_articolo'] = procedura.fk_articolo.pk
+        
+        #context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
+        return context
+        
+
+class CaratteristicaProceduraUpdateView(LoginRequiredMixin, UpdateView):
+    model = CaratteristicaProcedura
+    form_class = CaratteristicaProceduraModelForm
+    template_name = 'articoli/caratteristica_procedura.html'
+    success_message = 'Caratteristica modificata correttamente!'
+
+
+    def get_success_url(self):
+        fk_dettaglio_procedura=self.object.fk_dettaglio_procedura.pk 
+        fk_procedura = self.object.fk_dettaglio_procedura.fk_procedura.pk     
+        return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura'] 
+        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)        
+        context['dettaglio_procedura'] = fk_dettaglio_procedura
+        context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=fk_dettaglio_procedura)
+        context['dettagli_procedura'] = dettagli_procedura
+        #context['fk_articolo'] = procedura.fk_articolo.pk
+        return context
+
+
+
+def delete_caratteristica_procedura(request, pk):
+    caratteristica_procedura = get_object_or_404(CaratteristicaProcedura, pk=pk)    
+    fk_dettaglio_procedura = caratteristica_procedura.fk_dettaglio_procedura.pk    
+    fk_procedura = fk_dettaglio_procedura.fk_procedura.pk     
+    caratteristica_procedura.delete()
+    
+    url_match = reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
+    return redirect(url_match)

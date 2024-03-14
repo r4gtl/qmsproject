@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-
+{% include 'core/modals/delConfirm.html' %}
 <div class="container">
     <br>
     <nav aria-label="breadcrumb" class="mt-3">
@@ -93,6 +93,7 @@
             </div>
                 </div>
         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+        <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
         
         <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'articoli:modifica_procedura' fk_articolo=fk_articolo pk=procedura %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
 
@@ -102,6 +103,12 @@
         
 
     </div>
+    {% if form.instance.id  %}
+        {% include "articoli/partials/_elenco_caratteristiche_procedura.html" %}
+    {% else %}
+        <p>Ancora nessuna caratteristica aggiunta</p>
+    {% endif %}
+
 </div>
 
 {% endblock content %}
