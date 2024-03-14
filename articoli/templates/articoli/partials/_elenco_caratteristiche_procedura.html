@@ -24,7 +24,7 @@
       <tbody id="table-body">
         {% for caratteristica in caratteristiche_procedura %}
         <tr>        
-          <td ><a href="{% url 'articoli:modifica_caratteristica_procedura' fk_dettaglio_procedura=pk pk=caratteristica.pk %}">{{ caratteristica.fk_dettaglio_fase_lavoro.descrizione }}</a></td>
+          <td ><a href="{% url 'articoli:modifica_caratteristica_procedura' fk_dettaglio_procedura=dettaglioprocedura.pk pk=caratteristica.pk %}">{{ caratteristica.fk_dettaglio_fase_lavoro }}</a></td>
           
           <td>{{ caratteristica.valore }}</td>            
           <td class="text-center">

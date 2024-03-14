@@ -675,10 +675,12 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fk_procedura = self.kwargs['fk_procedura'] 
-        procedura = get_object_or_404(Procedura, pk=fk_procedura)        
+        procedura = get_object_or_404(Procedura, pk=fk_procedura) 
+        caratteristiche= CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura=self.kwargs['pk'])
+        print(f"caratteristiche: {caratteristiche}")       
         context['procedura'] = fk_procedura
         context['dati_procedura'] = Procedura.objects.get(pk=fk_procedura)
-        context['caratteristiche_procedura'] = CaratteristicaProcedura.objects. filter(pk=self.kwargs['pk'])
+        context['caratteristiche_procedura'] = caratteristiche
         context['fk_articolo'] = procedura.fk_articolo.pk
         return context
 
@@ -716,7 +718,10 @@ class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         fk_dettaglio_procedura=self.object.fk_dettaglio_procedura.pk 
-        fk_procedura = self.object.fk_dettaglio_procedura.fk_procedura.pk     
+        print(f"fk_dettaglio_procedura: {fk_dettaglio_procedura}")
+        fk_procedura = self.object.fk_dettaglio_procedura.fk_procedura.pk 
+        print(f"fk_procedura: {fk_procedura}")
+            
         return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
     
       
@@ -775,8 +780,8 @@ class CaratteristicaProceduraUpdateView(LoginRequiredMixin, UpdateView):
 def delete_caratteristica_procedura(request, pk):
     caratteristica_procedura = get_object_or_404(CaratteristicaProcedura, pk=pk)    
     fk_dettaglio_procedura = caratteristica_procedura.fk_dettaglio_procedura.pk    
-    fk_procedura = fk_dettaglio_procedura.fk_procedura.pk     
+    fk_procedura = caratteristica_procedura.fk_dettaglio_procedura.fk_procedura.pk       
     caratteristica_procedura.delete()
-    
+    messages.warning(request, "Caratteristica Procedura eliminata con successo.")
     url_match = reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
     return redirect(url_match)
