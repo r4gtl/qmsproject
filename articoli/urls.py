@@ -59,5 +59,8 @@ urlpatterns = [
     path('<int:fk_procedura>/modifica_dettaglio_procedura/<int:pk>/', DettaglioProceduraUpdateView.as_view(), name="modifica_dettaglio_procedura"), 
     path('delete_dettaglio_procedura/<int:pk>', delete_dettaglio_procedura, name="delete_dettaglio_procedura"),
 
+    # Automatismi
+    path('accoda_dettaglio_fase_lavoro/', accoda_dettaglio_fase_lavoro, name="accoda_dettaglio_fase_lavoro"),
+
     
 ]

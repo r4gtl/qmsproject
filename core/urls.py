@@ -28,6 +28,9 @@ urlpatterns = [
 
     path('search_revisione_bagnato/', search_revisione_bagnato, name="search_revisione_bagnato"), # Ricette Bagnato
 
+
+    path('search_fase_lavoro/', search_fase_lavoro, name="search_fase_lavoro"), # Fase lavoro
+
        
      
 ]

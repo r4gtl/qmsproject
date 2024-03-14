@@ -280,7 +280,46 @@ $('#searchResults').on('click', 'tr', function() {
       }
       break;
 
-      
+    
+     // Valuta il caso in cui si stia cercando una fase da accodare alla fase
+     case 'openSearchFaseButton':
+      var conferma = confirm("Sei sicuro di voler accodare questa fase?");
+  
+      if (conferma) {
+        // Ottiene l'id del prodotto chimico dalla riga cliccata
+        var faseID = $(this).find('.fase-id').text();
+        var faseAttiva = $('#openSearchFaseButton').data('fase-attiva'); // Passa l'id della ricetta attiva alla quale accodare. Dato passato nel button
+        console.log("fase attiva: " + faseAttiva)
+        // Chiude il modal
+        $('#searchModal').modal('hide');
+        // recupera il CSRF-Token dal form
+        var csrftoken = $('input[name="csrfmiddlewaretoken"]').val();
+        
+        // Invia una richiesta AJAX per aggiungere i record DettaglioRicettaRifinizione
+        $.ajax({
+            url: "/articoli/accoda_dettaglio_fase_lavoro/",  
+            method: "POST",
+            data: {
+                fase_id: faseID,
+                faseAttiva: faseAttiva,
+                csrfmiddlewaretoken: csrftoken
+            },
+            dataType: 'json',
+            success: function(data) {
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url;
+              } else {
+                  console.error('Errore durante il reindirizzamento:', data.error);
+              }
+              
+            },
+            error: function(xhr, errmsg, err) {
+                console.log(errmsg);
+                
+            }
+        });
+      }
+      break;
 
     default:
       // Azioni di default

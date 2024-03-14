@@ -29,6 +29,7 @@
     <hr>
     <!-- Inseriamo il partial dei messaggi per visualizzare il messaggio su Salva e Continua -->
     {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
     <br>
     {% if form.instance.id  %}
             <h5 class="text-end">{{ faselavoro.descrizione }}</h5>
@@ -71,7 +72,28 @@
         <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
         <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">        
         <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'articoli:tabelle_generiche' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
-
+        {% if form.instance.id  %}
+        <button type="button" 
+                class="btn search-modal-button mb-2 me-1" 
+                data-toggle="tooltip" 
+                data-placement="top" 
+                title="Cerca fase da accodare alla fase attiva." 
+                style="" 
+                data-bs-toggle="modal" 
+                data-bs-target="#searchModal"
+                id="openSearchFaseButton"
+                data-bs-toggle="modal" 
+                data-bs-target="#searchModal"
+                data-url="{% url 'core:search_fase_lavoro' %}" 
+                data-modal-title="Cerca Fase" 
+                data-search-input-label="Cerca Fase"
+                data-fase-attiva="{{ faselavoro.pk }}" 
+                
+                >
+                <i class="bi bi-lightning"></i> Accoda fase</button>
+                {% else %}                  
+                  <button type="button" class="btn btn-secondary mt-1" style="width:100%" id=""><i class="bi bi-lightning"></i> Accoda Fase</button>
+                {% endif %}
         <!-- fine form -->
         </form>
 
@@ -131,5 +153,15 @@
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_descrizione');
         });
+
+
+    document.getElementById('openSearchFaseButton').addEventListener('click', function(event) {
+        var callerButtonId = this.id;
+        var url = this.getAttribute('data-url');
+        var modalTitle = this.getAttribute('data-modal-title');
+        var searchInputLabel = this.getAttribute('data-search-input-label');
+        searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+    });
     </script>
+
 {% endblock %}

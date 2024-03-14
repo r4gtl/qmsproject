@@ -104,6 +104,22 @@ class DettaglioFaseLavoro(models.Model):
     created_by = models.ForeignKey(User, related_name='dettagliofaselavoro', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
+
+
+class LavorazioneEsterna(models.Model):
+    descrizione = models.CharField(max_length=200)
+    codice = models.CharField(max_length=9)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='lavorazione_esterna', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.descrizione
+    
+    class Meta:
+        ordering = ["descrizione"]
+        verbose_name_plural = "Lavorazioni esterne"
+
     
 class Procedura(models.Model):
     fk_articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
@@ -226,6 +242,16 @@ class DettaglioProcedura(models.Model):
         ordering = ["numero_riga"]
         verbose_name_plural = "dettaglio procedure"
 
+class CaratteristicaProcedura(models.Model):
+    fk_dettaglio_procedura = models.ForeignKey(DettaglioProcedura, related_name='caratteristicaprocedura', on_delete=models.CASCADE)
+    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
+    fk_dettaglio_fase_lavoro = models.ForeignKey(DettaglioFaseLavoro, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
+    valore = models.CharField(max_length=100)
+    fk_lavorazione_esterna = models.ForeignKey(LavorazioneEsterna, on_delete=models.CASCADE, related_name='caratteristicaprocedura', null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='caratteristicaprocedura', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class ElencoTest(models.Model):
     descrizione = models.CharField(max_length=100)
@@ -263,19 +289,7 @@ class TestArticolo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class LavorazioneEsterna(models.Model):
-    descrizione = models.CharField(max_length=200)
-    codice = models.CharField(max_length=9)
-    note = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(User, related_name='lavorazione_esterna', null=True, blank=True, on_delete=models.SET_NULL)
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.descrizione
-    
-    class Meta:
-        ordering = ["descrizione"]
-        verbose_name_plural = "Lavorazioni esterne"
 
 
 
