@@ -97,13 +97,22 @@
         <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
         
         <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'articoli:modifica_procedura' fk_articolo=fk_articolo pk=procedura %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
-
+        <button type="button" 
+                class="btn btn-warning text-wrap mb-2 me-1" 
+                title="Accoda attributi della caratteristica selezionata."
+                style="" 
+                id="aggiungi-attributi"
+                >
+                <i class="bi bi-lightning">
+                </i> Accoda attributi</button>
         <!-- fine form -->
         </form>
 
         
 
     </div>
+    <hr>
+
     {% if form.instance.id  %}
         {% include "articoli/partials/_elenco_caratteristiche_procedura.html" %}
     {% else %}
@@ -117,6 +126,56 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             setFocusOnField('id_fk_faselavoro');
+
+            const table = document.getElementById('myTable');
+            makeTableRowsDraggable(table);
         });
+        const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match        
+        const modelName = document.getElementById('myTable').dataset.model_name;
+        const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
+        const linkTemplate = "/articoli/modifica_caratteristica_procedura/{pk}/";
+
+
+
+
+$(document).ready(function(){
+    $('#aggiungi-attributi').click(function(){
+        // Chiedi conferma all'utente
+        var conferma = confirm("Questa funzione eliminerà eventuali attributi già assegnati per aggiungere quelli della caratteristica inserita. Vuoi continuare?");
+        
+        // Se l'utente conferma
+        if (conferma) {
+            // Recupera i valori necessari
+            var fk_procedura = $('#id_fk_procedura').val();  // Assicurati di avere un elemento con id="fk_procedura" nel tuo template
+            var fk_faselavoro = $('#id_fk_faselavoro').val();  // Assicurati di avere un elemento con id="fk_faselavoro" nel tuo template
+            var dettaglioAttivo = '{{ dettaglioprocedura.pk }}'; 
+            console.log("fk_procedura: " + fk_procedura)
+            console.log("fk_faselavoro: " + fk_faselavoro)
+            console.log("dettaglioAttivo: " + dettaglioAttivo)
+            var csrf_token = $('input[name="csrfmiddlewaretoken"]').val();
+            // Invia la richiesta AJAX
+            $.ajax({
+                type: 'POST',
+                url: '{% url "articoli:accoda_caratteristiche_fase_lavoro_dettaglio_procedura" %}',
+                data: {
+                    'fk_procedura': fk_procedura,
+                    'fk_faselavoro': fk_faselavoro,
+                    'dettaglioAttivo': dettaglioAttivo,
+                    'csrfmiddlewaretoken': csrf_token
+                    // Aggiungi eventuali altre variabili qui
+                },
+                dataType: 'json',
+                success: function(response){
+                    // Se la richiesta ha avuto successo, esegui qualcosa
+                    window.location.href = response.redirect_url;  // Redirect alla nuova URL fornita dalla risposta
+                },
+                error: function(xhr, status, error){
+                    // Se c'è stato un errore nella richiesta, gestiscilo qui
+                    console.error(xhr.responseText);
+                }
+            });
+        }
+    });
+});
     </script>
 {% endblock %}

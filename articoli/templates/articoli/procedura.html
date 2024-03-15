@@ -135,7 +135,7 @@
         const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match        
         const modelName = document.getElementById('myTable').dataset.model_name;
         const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
-        const linkTemplate = "/articoli/modifica_dettaglio_procedura/{pk}/";
+        const linkTemplate = "/articoli/{{procedura.pk}}/modifica_dettaglio_procedura/{pk}/";
 
     
 

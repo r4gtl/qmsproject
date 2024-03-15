@@ -12,9 +12,10 @@
     </div>
   </div>
   <div class="table-container" >
-    <table class="table table-bordered table-striped mt-2" id="myTable" data-model_name="DettaglioProcedura">
+    <table class="table table-bordered table-striped mt-2" id="myTable" data-model_name="CaratteristicaProcedura">
       <thead>
         <tr>          
+          <th>Riga</th> 
           <th>Caratteristica</th> 
           <th>Valore</th> 
           <th>Azioni</th>
@@ -23,7 +24,8 @@
       </thead>
       <tbody id="table-body">
         {% for caratteristica in caratteristiche_procedura %}
-        <tr>        
+        <tr data-pk="{{ caratteristica.pk }}">   
+          <td class="numero-riga" id="numero-riga-{{ caratteristica.pk }}"><a href="{% url 'articoli:modifica_caratteristica_procedura' fk_dettaglio_procedura=dettaglioprocedura.pk pk=caratteristica.pk %}">{{ caratteristica.numero_riga }}</a></td>     
           <td ><a href="{% url 'articoli:modifica_caratteristica_procedura' fk_dettaglio_procedura=dettaglioprocedura.pk pk=caratteristica.pk %}">{{ caratteristica.fk_dettaglio_fase_lavoro }}</a></td>
           
           <td>{{ caratteristica.valore }}</td>            
