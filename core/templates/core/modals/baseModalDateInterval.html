@@ -75,7 +75,7 @@ inserire in un tag <a>
   });
 
 
-  function setModalUrl(url, title) {
+  function setModalUrl(url, title, submitButtonText = "Genera report") {
     // Imposta l'URL nel campo azione del form nel modal
     document.getElementById('date_form').action = url;
 
@@ -84,6 +84,9 @@ inserire in un tag <a>
     
     // Aggiungi il valore di title al testo esistente del titolo
     modalTitle.innerText = modalTitle.innerText + ' | ' + title;
+
+    var submitButton = document.querySelector('#myModal button[type="submit"]');
+    submitButton.innerText = submitButtonText;
 
 
     

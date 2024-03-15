@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from .utils import count_records_with_upcoming_expiry
 from manutenzioni.models import Taratura, ManutenzioneOrdinaria
+from monitoraggi.models import *
 from autorizzazioni.models import DettaglioScadenzaAutorizzazione
 from human_resources.models import DettaglioRegistroFormazione
 # Create your views here.
@@ -18,6 +19,7 @@ def home(request):
     return render(request, 'core/home.html', context)
 
 def dashboard(request):
+    
     return render(request, 'core/dashboard.html')
 
 

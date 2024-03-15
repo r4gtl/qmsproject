@@ -1,5 +1,5 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block title %}QMS {% endblock %}
 
 {% block sidenav %}
@@ -7,14 +7,22 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Dashboard</h1>
+{% include 'core/modals/baseModalDateInterval.html' %}
+    <div class="row mb-3 mt-3">
+    <div class="col-3">
+    <h5>Dashboard</h5>
+</div>
+    <div class="col-3">
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl('{% url 'monitoraggi:report_dati_produzione' %}', 'Dati Produzione', 'Aggiorna intervallo')" id="btnIntervallo"><i class="bi bi-calendar3"></i> Ultimi 365 gg</button>
+    </div>
+    </div>
     <div class="row">
         <div class="col-6">
             <div class="card" style="width: 100%;">
                 <div class="card-body">
-                  <h5 class="card-title">Chart 1</h5>
+                  <h5 class="card-title">Grafico Produzione</h5>
                   
-                  <canvas id="acquisitions-bar"></canvas>
+                  <canvas id="produzione_ultimo_anno" data-url=""></canvas>
                   <a href="#" class="card-link">Card link</a>
                   <a href="#" class="card-link">Another link</a>
                 </div>
@@ -50,8 +58,15 @@
     </div>
 {% endblock %}
 
-{% block scripts %}
+{% block extra_scripts %}
+<script src="{% static '/js/monitoraggi/monitoraggi.js' %}"></script>
 <script>
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        updateChart("{% url 'monitoraggi:produzione_ultimo_anno' %}");
+        renderizzaGrafico("{% url 'monitoraggi:consumi_mj_mq_ultimo_anno' %}");
+      });
 
 (async function() {
     const data = [
