@@ -731,20 +731,30 @@ class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
     
 
     def get_initial(self):
-        initial = super().get_initial()        
+        initial = super().get_initial()     
+                
+        dettaglio_procedura_id = self.kwargs.get('fk_dettaglio_procedura')
+        max_numero_riga = CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura=dettaglio_procedura_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga   
         
-        initial['fk_dettaglio_procedura'] = self.kwargs.get('fk_dettaglio_procedura')
+        initial['fk_dettaglio_procedura'] = dettaglio_procedura_id
         initial['created_by'] = self.request.user        
         return initial
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura']
-        dettaglio_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)
-        context['dettaglio_procedura'] = dettaglio_procedura
+        #fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura']
+        #dettaglio_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)
+        #context['dettaglio_procedura'] = dettaglio_procedura
         #context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=pk_procedura)
         #context['fk_articolo'] = procedura.fk_articolo.pk
+        fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura'] 
+        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)        
         
+        context['dettaglio_procedura'] = fk_dettaglio_procedura
+        context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=dettagli_procedura.pk)
+        context['dettagli_procedura'] = dettagli_procedura
         #context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
         return context
         
@@ -769,8 +779,9 @@ class CaratteristicaProceduraUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura'] 
         dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)        
+        
         context['dettaglio_procedura'] = fk_dettaglio_procedura
-        context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=fk_dettaglio_procedura)
+        context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=dettagli_procedura.pk)
         context['dettagli_procedura'] = dettagli_procedura
         #context['fk_articolo'] = procedura.fk_articolo.pk
         return context

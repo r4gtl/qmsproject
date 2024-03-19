@@ -201,6 +201,7 @@ class CaratteristicaProceduraModelForm(forms.ModelForm):
         widgets = {
             'valore': forms.TextInput(attrs={'placeholder': 'Inserisci valore'}), 
             'fk_dettaglio_procedura': forms.HiddenInput(), 
+            'numero_riga': forms.HiddenInput(), 
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
         }
