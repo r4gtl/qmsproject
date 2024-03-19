@@ -621,9 +621,14 @@ class DettaglioProceduraCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):
         fk_procedura=self.object.fk_procedura.pk 
-        fk_articolo = self.object.fk_procedura.fk_articolo.pk     
-        return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo': fk_articolo, 'pk':fk_procedura})
+        fk_articolo = self.object.fk_procedura.fk_articolo.pk   
+        pk_dettaglio=self.kwargs.get('pk')
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo':fk_articolo, 'pk':fk_procedura})
+
+        return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':pk_dettaglio})
     
+
       
     def form_valid(self, form):
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -662,9 +667,13 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
 
 
     def get_success_url(self):
-        fk_procedura=self.object.fk_procedura.pk   
-        fk_articolo = self.object.fk_procedura.fk_articolo.pk     
-        return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo': fk_articolo, 'pk':fk_procedura})     
+        fk_procedura=self.object.fk_procedura.pk 
+        fk_articolo = self.object.fk_procedura.fk_articolo.pk   
+        pk_dettaglio=self.kwargs.get('pk')
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('articoli:modifica_procedura', kwargs={'fk_articolo':fk_articolo, 'pk':fk_procedura})
+
+        return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':pk_dettaglio})     
 
     def form_valid(self, form):
         messages.info(self.request, self.success_message) # Compare sul success_url
