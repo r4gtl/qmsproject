@@ -674,7 +674,7 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         fk_procedura = self.kwargs['fk_procedura'] 
         procedura = get_object_or_404(Procedura, pk=fk_procedura) 
-        caratteristiche= CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura=self.kwargs['pk'])
+        caratteristiche= CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura=self.kwargs['pk']).order_by('numero_riga')
            
         context['procedura'] = fk_procedura
         context['dati_procedura'] = Procedura.objects.get(pk=fk_procedura)
@@ -715,10 +715,8 @@ class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
 
 
     def get_success_url(self):
-        fk_dettaglio_procedura=self.object.fk_dettaglio_procedura.pk 
-        print(f"fk_dettaglio_procedura: {fk_dettaglio_procedura}")
+        fk_dettaglio_procedura=self.object.fk_dettaglio_procedura.pk         
         fk_procedura = self.object.fk_dettaglio_procedura.fk_procedura.pk 
-        print(f"fk_procedura: {fk_procedura}")
             
         return reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
     
@@ -743,7 +741,9 @@ class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)        
         fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura'] 
-        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)                
+        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)
+        
+                        
         context['dettaglio_procedura'] = fk_dettaglio_procedura
         context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=dettagli_procedura.pk)
         context['dettagli_procedura'] = dettagli_procedura
@@ -775,7 +775,7 @@ class CaratteristicaProceduraUpdateView(LoginRequiredMixin, UpdateView):
         context['dettaglio_procedura'] = fk_dettaglio_procedura
         context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=dettagli_procedura.pk)
         context['dettagli_procedura'] = dettagli_procedura
-        #context['fk_articolo'] = procedura.fk_articolo.pk
+        
         return context
 
 
