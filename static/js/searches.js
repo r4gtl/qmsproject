@@ -36,7 +36,7 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
   var callerButton = $('#' + callerButtonId);
   var setFocusValue = callerButton.data('setfocus');
   if (callerButton.length) {
-    console.log("callerButton: " + callerButton)
+    console.log("callerButton: " + callerButtonId)
     // Puoi procedere con il resto della logica
 } else {
     console.error("L'elemento con l'ID specificato non esiste nel DOM.");
