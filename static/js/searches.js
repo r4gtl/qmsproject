@@ -112,8 +112,10 @@ function searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId
 
 $('#searchResults').on('click', 'tr', function() {
   var callerButtonId = $('#searchResults').data('callerButtonId');
+  console.log("callerButtonId: " + callerButtonId)
   var setFocusValue = $('#searchResults').data('setFocusValue');
   console.log("setFocusValue: " + setFocusValue)
+  
   
   switch (callerButtonId) {
     // Valuta il caso in cui si stia cercando un articolo
@@ -160,11 +162,13 @@ $('#searchResults').on('click', 'tr', function() {
       $('#searchModal').modal('hide');
       break;
 
-      case 'openSearchOutoSourcingButton':
-        var id_fk_lavorazione_esterna = $(this).find('.lavorazione-id').text();    
-        $('#id_fk_lavorazione_esterna').val(id_fk_lavorazione_esterna);    
-        $('#searchModal').modal('hide');
-        break;
+    case 'openSearchOutSourcingButton':
+      console.log("id_fk_lavorazione_esterna: " + id_fk_lavorazione_esterna)
+      var id_fk_lavorazione_esterna = $(this).find('.lavorazione-id').text();  
+      console.log("id_fk_lavorazione_esterna: " + id_fk_lavorazione_esterna)  
+      $('#id_fk_lavorazione_esterna').val(id_fk_lavorazione_esterna);    
+      $('#searchModal').modal('hide');
+      break;
 
 
       // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione

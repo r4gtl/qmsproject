@@ -91,7 +91,7 @@
                               data-placement="top" 
                               title="Cerca Lavorazione" 
                               style="width:100%"
-                              id="openSearchOutoSourcingButton"
+                              id="openSearchOutSourcingButton"
                               data-bs-toggle="modal" 
                               data-bs-target="#searchModal"
                               data-url="{% url 'core:search_outsourcing' %}" 
@@ -157,11 +157,14 @@
           searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
       });
 
-      document.getElementById('openSearchOutoSourcingButton').addEventListener('click', function(event) {
+      document.getElementById('openSearchOutSourcingButton').addEventListener('click', function(event) {
           var callerButtonId = this.id;
           var url = this.getAttribute('data-url');
           var modalTitle = this.getAttribute('data-modal-title');
           var searchInputLabel = this.getAttribute('data-search-input-label');
+          console.log("callerButtonId: " + callerButtonId)
+          console.log("url: " + url)
+          
           searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
       });
 
