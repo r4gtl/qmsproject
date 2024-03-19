@@ -15,10 +15,10 @@
     <nav aria-label="breadcrumb" class="mt-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-            <li class="breadcrumb-item"><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=dettagli_procedura.fk_procedura.pk pk=dettaglio_procedura %}">{{ dettaglio_procedura.fk_faselavoro.descrizione }}</a></li>        
+            <li class="breadcrumb-item"><a href="{% url 'articoli:modifica_dettaglio_procedura' fk_procedura=dettagli_procedura.fk_procedura.pk pk=dettaglio_procedura %}">{{ dettagli_procedura.fk_faselavoro.descrizione }}</a></li>        
     
             {% if form.instance.id  %}
-                <li class="breadcrumb-item active" aria-current="page">{{ caratteristicaprocedura.descrizione }}</li>
+                <li class="breadcrumb-item active" aria-current="page">{{ caratteristicaprocedura.fk_dettaglio_fase_lavoro.attributo }}</li>
             {% else %}
                 <li class="breadcrumb-item active" aria-current="page">Aggiungi Caratteristica Procedura</li>
             {% endif %}             
@@ -26,9 +26,7 @@
             
         </ol>
     </nav>    
-    <hr>
-    <!-- Inseriamo il partial dei messaggi per visualizzare il messaggio su Salva e Continua -->
-    {% include "core/partials/_messages.html" %}
+    <hr>    
     {% include "core/modals/baseModalGenericSearch.html" %}
     <br>
     {% if form.instance.id  %}
@@ -61,14 +59,50 @@
                             <div class = "col-md-3">
                               {{ form.fk_dettaglio_fase_lavoro|as_crispy_field }}
                             </div>
+
                             <div class = "col-md-3">
                               {{ form.fk_fornitore|as_crispy_field }}
                             </div>
+                            <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-4" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Fornitore" 
+                              style="width:100%"
+                              id="openSearchSupplierButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_supplier' %}?categoria={{ Fornitore.LAVORAZIONI_ESTERNE }}" 
+                              data-modal-title="Cerca Fornitore" 
+                              data-search-input-label="Cerca Fornitore"
+                              
+                              ><i class="bi bi-search"></i></button>
+                          </div>
+                          </div>
+                          <div class="row">
                             <div class = "col-md-3">
                               {{ form.fk_lavorazione_esterna|as_crispy_field }}
                             </div>
+                            <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-4" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Lavorazione" 
+                              style="width:100%"
+                              id="openSearchOutoSourcingButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_outsourcing' %}" 
+                              data-modal-title="Cerca Lavorazione Esterna" 
+                              data-search-input-label="Cerca Lavorazione Esterna per codice o descrizione"
+                              
+                              ><i class="bi bi-search"></i></button>
+                          </div>
                             <div class = "col-md-3">
                               {{ form.valore|as_crispy_field }}
+                            </div>
                             </div>
                         </div>
                         <div class="row">
@@ -114,13 +148,23 @@
         });
 
 
-    document.getElementById('openSearchFaseButton').addEventListener('click', function(event) {
-        var callerButtonId = this.id;
-        var url = this.getAttribute('data-url');
-        var modalTitle = this.getAttribute('data-modal-title');
-        var searchInputLabel = this.getAttribute('data-search-input-label');
-        searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
-    });
+    
+      document.getElementById('openSearchSupplierButton').addEventListener('click', function(event) {
+          var callerButtonId = this.id;
+          var url = this.getAttribute('data-url');
+          var modalTitle = this.getAttribute('data-modal-title');
+          var searchInputLabel = this.getAttribute('data-search-input-label');
+          searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+      });
+
+      document.getElementById('openSearchOutoSourcingButton').addEventListener('click', function(event) {
+          var callerButtonId = this.id;
+          var url = this.getAttribute('data-url');
+          var modalTitle = this.getAttribute('data-modal-title');
+          var searchInputLabel = this.getAttribute('data-search-input-label');
+          searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+      });
+
 
 
 

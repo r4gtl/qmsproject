@@ -1,5 +1,5 @@
 from anagrafiche.models import Fornitore
-from articoli.models import Articolo, Colore, FaseLavoro
+from articoli.models import Articolo, Colore, FaseLavoro, LavorazioneEsterna
 from chem_man.models import (HazardStatement, PrecautionaryStatement,
                              ProdottoChimico, SimboloGHS)
 from django.db.models import Q
@@ -224,6 +224,26 @@ def search_chem_supplier(request):
         return JsonResponse({'html': ''})
     
 
+def search_supplier(request):
+    search_term = request.GET.get('search', '')
+    categoria = request.GET.get('categoria', None)
+
+    fornitori = Fornitore.objects.all()
+
+    if search_term:
+        fornitori = fornitori.filter(ragionesociale__icontains=search_term)
+
+    if categoria:
+        fornitori = fornitori.filter(categoria=categoria)
+
+    results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>RagioneSociale</th></tr></thead><tbody>"
+    for fornitore in fornitori:
+        results_html += f"<tr data-id='{fornitore.pk}'><td class='fornitore-id'>{fornitore.pk}</td><td class='fornitore-ragionesociale'>{fornitore.ragionesociale}</td></tr>"
+    results_html += "</tbody></table>"
+        
+    return JsonResponse({'html': results_html})
+
+
 
 def search_fase_lavoro(request):
     search_term = request.GET.get('search', '')
@@ -236,6 +256,26 @@ def search_fase_lavoro(request):
         results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Fase di Lavoro</th></tr></thead><tbody>"
         for fase in fasi_lavoro:
             results_html += f"<tr data-id='{fase.pk}'><td class='fase-id'>{fase.pk}</td><td class='fase-articolo'>{fase.descrizione}</td></tr>"
+        results_html += "</tbody></table>"
+        
+        
+        return JsonResponse({'html': results_html})
+    else:
+        return JsonResponse({'html': ''})
+    
+
+
+def search_outsourcing(request):
+    search_term = request.GET.get('search', '')
+    if search_term:
+        # Effettua la ricerca dei prodotti chimici
+        lavorazioni = LavorazioneEsterna.objects.filter(
+             Q(descrizione__icontains=search_term) | Q(codice__icontains=search_term)
+        )
+        # Costruisci il markup HTML per la tabella dei risultati della ricerca
+        results_html = "<table class='table table-search'><thead><tr><th>ID</th><th>Codice</th><th>Lavorazione</th></tr></thead><tbody>"
+        for lavorazione in lavorazioni:
+            results_html += f"<tr data-id='{lavorazione.pk}'><td class='lavorazione-id'>{lavorazione.pk}</td><td class='lavorazione-codice'>{lavorazione.codice}</td><td class='lavorazione-descrizione'>{lavorazione.descrizione}</td></tr>"
         results_html += "</tbody></table>"
         
         

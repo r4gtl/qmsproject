@@ -25,6 +25,8 @@ urlpatterns = [
     path('search_hazard_statement/', search_hazard_statement, name='search_hazard_statement'),
     path('search_precautionary_statement/', search_precautionary_statement, name='search_precautionary_statement'),
     path('search_chem_supplier/', search_chem_supplier, name='search_chem_supplier'),
+    path('search_supplier/', search_supplier, name='search_supplier'),
+    path('search_outsourcing/', search_outsourcing, name='search_outsourcing'),
 
     path('search_revisione_bagnato/', search_revisione_bagnato, name="search_revisione_bagnato"), # Ricette Bagnato
 

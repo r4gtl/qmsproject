@@ -18,7 +18,7 @@
             <li class="breadcrumb-item"><a href="{% url 'articoli:modifica_procedura' fk_articolo=fk_articolo pk=procedura %}">{{ dati_procedura }}</a></li>        
     
             {% if form.instance.id  %}
-                <li class="breadcrumb-item active" aria-current="page">Riga in modifica: {{ dettagli_procedura.numero_riga }}</li>
+                <li class="breadcrumb-item active" aria-current="page">Riga in modifica: {{ dettaglioprocedura.numero_riga }}</li>
             {% else %}
                 <li class="breadcrumb-item active" aria-current="page">Aggiungi dettaglio</li>
             {% endif %}             

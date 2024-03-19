@@ -160,6 +160,12 @@ $('#searchResults').on('click', 'tr', function() {
       $('#searchModal').modal('hide');
       break;
 
+      case 'openSearchOutoSourcingButton':
+        var id_fk_lavorazione_esterna = $(this).find('.lavorazione-id').text();    
+        $('#id_fk_lavorazione_esterna').val(id_fk_lavorazione_esterna);    
+        $('#searchModal').modal('hide');
+        break;
+
 
       // Valuta il caso in cui si stia cercando una revisione da accodare alla Ricetta di Rifinizione
     case 'openSearchRevisionButton':

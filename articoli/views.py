@@ -651,8 +651,6 @@ class DettaglioProceduraCreateView(LoginRequiredMixin,CreateView):
         context['procedura'] = pk_procedura
         context['dati_procedura'] = Procedura.objects.get(pk=pk_procedura)
         context['fk_articolo'] = procedura.fk_articolo.pk
-        
-        #context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
         return context
         
 
@@ -677,7 +675,7 @@ class DettaglioProceduraUpdateView(LoginRequiredMixin, UpdateView):
         fk_procedura = self.kwargs['fk_procedura'] 
         procedura = get_object_or_404(Procedura, pk=fk_procedura) 
         caratteristiche= CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura=self.kwargs['pk'])
-        print(f"caratteristiche: {caratteristiche}")       
+           
         context['procedura'] = fk_procedura
         context['dati_procedura'] = Procedura.objects.get(pk=fk_procedura)
         context['caratteristiche_procedura'] = caratteristiche
@@ -743,19 +741,13 @@ class CaratteristicaProceduraCreateView(LoginRequiredMixin,CreateView):
         return initial
     
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        #fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura']
-        #dettaglio_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)
-        #context['dettaglio_procedura'] = dettaglio_procedura
-        #context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=pk_procedura)
-        #context['fk_articolo'] = procedura.fk_articolo.pk
+        context = super().get_context_data(**kwargs)        
         fk_dettaglio_procedura = self.kwargs['fk_dettaglio_procedura'] 
-        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)        
-        
+        dettagli_procedura = get_object_or_404(DettaglioProcedura, pk=fk_dettaglio_procedura)                
         context['dettaglio_procedura'] = fk_dettaglio_procedura
         context['dati_dettaglio_procedura'] = DettaglioProcedura.objects.get(pk=dettagli_procedura.pk)
         context['dettagli_procedura'] = dettagli_procedura
-        #context['dettagli_procedura'] = get_object_or_404(DettaglioProcedura, pk=pk_procedura)
+        
         return context
         
 
