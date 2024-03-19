@@ -32,9 +32,9 @@
           
           <td>{{ caratteristica.fk_fornitore|default_if_none:"" }}</td>  
           {% if caratteristica.fk_lavorazione_esterna %}          
-            <td></td>
-          {% else %}
             <td>{{ caratteristica.fk_lavorazione_esterna|default_if_none:"" }} | Cod. {{ caratteristica.fk_lavorazione_esterna.codice|default_if_none:"" }}</td>            
+          {% else %}
+            <td></td>
           {% endif %}
           <td>{{ caratteristica.valore }}</td>            
           <td class="text-center">
