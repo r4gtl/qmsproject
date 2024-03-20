@@ -13,7 +13,7 @@
     <h5>Dashboard</h5>
 </div>
     <div class="col-3">
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl('{% url 'monitoraggi:report_dati_produzione' %}', 'Dati Produzione', 'Aggiorna intervallo')" id="btnIntervallo"><i class="bi bi-calendar3"></i> Ultimi 365 gg</button>
+        <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl(`{% url 'core:dashboard' %}`, 'Dati Produzione', 'Aggiorna intervallo')" id="btnIntervallo"><i class="bi bi-calendar3"></i> Ultimi 365 gg</button>
     </div>
     </div>
     <div class="row">

@@ -3,6 +3,7 @@ from django.urls import path
 
 from .searches import *
 from .utils import update_row_numbers
+from .dash_charts import *
 
 app_name="core"
 
@@ -32,6 +33,10 @@ urlpatterns = [
 
 
     path('search_fase_lavoro/', search_fase_lavoro, name="search_fase_lavoro"), # Fase lavoro
+    
+    
+    #Grafici dashboard
+    path('produzione_intervallo_date/', produzione_intervallo_date, name="produzione_intervallo_date"),
 
        
      
