@@ -183,6 +183,7 @@ class DettaglioRevisioneRicettaBagnato(models.Model):
     class Meta:
         ordering = ["numero_riga"]
 # Fine eliminazione    
+        
 class DettaglioRicettaBagnato(models.Model):
     # Questo modello serve per le righe effettive della ricetta
     fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='dettaglio_ricette_bagnato', on_delete=models.CASCADE)
