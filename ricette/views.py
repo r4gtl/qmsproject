@@ -700,6 +700,7 @@ class RicettaBagnatoUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_ricetta_bagnato(request, pk):
         deleteobject = get_object_or_404(RicettaBagnato, pk = pk)
+        print("Sto cancellando!!!")
         deleteobject.delete()
         url_match = reverse_lazy('ricette:home_ricette_bagnato')
         return redirect(url_match)

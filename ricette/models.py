@@ -109,20 +109,6 @@ class RicettaBagnato(models.Model):
     created_by = models.ForeignKey(User, related_name='ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
-    '''
-    def save(self, *args, **kwargs):
-        if self.numero_ricetta is None:
-            # Trova il valore massimo esistente in numero_ricetta
-            max_numero_ricetta = RicettaBagnato.objects.aggregate(Max('numero_ricetta'))['numero_ricetta__max']
-            
-            if max_numero_ricetta is not None:
-                self.numero_ricetta = max_numero_ricetta + 1
-            else:
-                # Se non ci sono ancora elementi, imposta il default a 1
-                self.numero_ricetta = 1
-        
-        super().save(*args, **kwargs)
-        '''
     
     class Meta:
         ordering = ["-data_ricetta"]
@@ -250,7 +236,7 @@ class DettaglioRicettaBagnato(models.Model):
     class Meta:
         ordering = ["numero_riga"]
     
-        
+      
 class RicettaColoreBagnato(models.Model):
     fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_colore_bagnato', on_delete=models.CASCADE)
     numero_ricetta = models.IntegerField(default=None)
@@ -282,7 +268,7 @@ class RicettaColoreBagnato(models.Model):
         
     def __str__(self):
         formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
-        return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"
+        return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"        
 
 
 class RicettaFondo(models.Model):
