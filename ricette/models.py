@@ -233,6 +233,9 @@ class DettaglioRicettaColoreBagnato(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to=get_choices_chemical,
     )
+    temperatura = models.CharField(max_length=50, null=True, blank=True)
+    tempo = models.CharField(max_length=50, null=True, blank=True)
+    procedura = models.CharField(max_length=100, null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='dettaglio_colore_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)

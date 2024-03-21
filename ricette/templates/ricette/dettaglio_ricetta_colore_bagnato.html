@@ -92,6 +92,19 @@
                         
                         <div class="row">
                         <div class="col-8">
+                            {{ form.tempo|as_crispy_field }}
+                        </div>
+                          <div class="col-1">
+                            {{ form.temperatura|as_crispy_field }}
+                        </div>
+                            <div class="col-md-1">
+                              {{ form.procedura|as_crispy_field }}
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                        <div class="col-8">
                             {{ form.note|as_crispy_field }}
                         </div>
                           <div class="col-1">
