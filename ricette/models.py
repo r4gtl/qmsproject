@@ -173,8 +173,7 @@ class DettaglioRicettaBagnato(models.Model):
         ordering = ["numero_riga"]
     
       
-class RicettaColoreBagnato(models.Model):
-    fk_ricetta_bagnato = models.ForeignKey(RicettaBagnato, related_name='ricette_colore_bagnato', on_delete=models.CASCADE)
+class RicettaColoreBagnato(models.Model):    
     numero_ricetta = models.IntegerField(default=None)
     data_ricetta = models.DateField(default=date.today)
     numero_revisione = models.IntegerField(blank=True, null=True)
@@ -205,6 +204,45 @@ class RicettaColoreBagnato(models.Model):
     def __str__(self):
         formatted_data_ricetta = self.data_ricetta.strftime('%d/%m/%Y')
         return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"        
+
+
+
+
+class DettaglioRicettaColoreBagnato(models.Model):
+    fk_ricetta_colore_bagnato = models.ForeignKey(RicettaColoreBagnato, related_name='dettaglio_colore_bagnato', on_delete=models.CASCADE)
+    numero_riga = models.IntegerField()
+
+    def get_choices_operations():
+        #return OperazioneRicette.objects.filter(ward_ref="Rifinizione")
+        return {'ward_ref': "Bagnato"}
+    
+    fk_operazione_ricette = models.ForeignKey(OperazioneRicette, 
+                                            related_name='dettaglio_colore_bagnato', 
+                                            on_delete=models.CASCADE,                                            
+                                            limit_choices_to=get_choices_operations,
+                                            )
+    quantity = models.DecimalField(max_digits=8, decimal_places=4)
+    
+    def get_choices_chemical():
+        return get_choices_chemical(ProdottoChimico.BAGNATO)
+
+
+    fk_prodotto_chimico = models.ForeignKey(
+        ProdottoChimico,
+        related_name='dettaglio_colore_bagnato',
+        on_delete=models.CASCADE,
+        limit_choices_to=get_choices_chemical,
+    )
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='dettaglio_colore_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def calcola_totale(self):
+        return calcola_totale(self)
+
+
+    class Meta:
+        ordering = ["numero_riga"]
 
 
         

@@ -30,6 +30,7 @@ urlpatterns = [
     path('search_outsourcing/', search_outsourcing, name='search_outsourcing'),
 
     path('search_revisione_bagnato/', search_revisione_bagnato, name="search_revisione_bagnato"), # Ricette Bagnato
+    path('search_revisione_colore_bagnato/', search_revisione_colore_bagnato, name="search_revisione_colore_bagnato"), # Ricette Colore Bagnato
 
 
     path('search_fase_lavoro/', search_fase_lavoro, name="search_fase_lavoro"), # Fase lavoro

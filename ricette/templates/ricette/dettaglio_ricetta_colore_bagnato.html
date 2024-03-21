@@ -1,0 +1,172 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Dettaglio Ricetta Colore Bagnato{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_ricette.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_bagnato' %}">Home Ricette Bagnato</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:modifica_ricetta_colore_bagnato' pk=ricetta_colore_bagnato %}">{{ dettagli_ricetta }}</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Dettaglio Ricetta Bagnato</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica Dettaglio</h3>
+      {% else %}
+          <h3> Aggiungi Dettaglio Ricetta Bagnato</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
+    
+    <!-- Form nuovo dettaglio -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row mt-3">
+                          <div class = "col-md-1">
+                              {{ form.numero_riga|as_crispy_field }}
+                            </div>
+                            
+                            <div class = "col-md-2">
+                              {{ form.fk_operazione_ricette|as_crispy_field }}
+                            </div>
+
+                            <div class = "col-md-6">
+                              {{ form.fk_prodotto_chimico|as_crispy_field }}
+                            </div>
+                            <div class = "col-md-1 d-flex align-items-center">
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Prodotto Chimico" 
+                                style="width:100%"
+                                id="openSearchChemicalButton"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_prodotto_chimico' %}?reparto=bagnato"  
+                                data-modal-title="Cerca Prodotto Chimico" 
+                                data-search-input-label="Cerca Prodotto Chimico"
+                                data-setfocus="id_quantity"
+                                
+                                ><i class="bi bi-search"></i></button>
+                            </div>
+
+                            <div class = "col-md-2">
+                              {{ form.quantity|as_crispy_field }}
+                            </div>
+                            
+
+                            
+                        </div>
+                        
+                        <div class="row">
+                        <div class="col-8">
+                            {{ form.note|as_crispy_field }}
+                        </div>
+                          <div class="col-1">
+                            {{ form.fk_ricetta_colore_bagnato|as_crispy_field }}
+                        </div>
+                            <div class="col-md-1">
+                              {{ form.created_by|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+                      <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+                      <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:modifica_ricetta_colore_bagnato' pk=ricetta_colore_bagnato %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    
+
+</div> <!--Fine container-->
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+// Per aggiornare il select ogni volta che lo si seleziona
+$(document).ready(function() {
+  $("#id_fk_prodotto_chimico").change(function() {
+    var selectedProductId = $(this).val();
+    var fkImballaggioSelect = $("#id_fk_imballaggio");
+
+    // Esegui una richiesta AJAX per ottenere il prodotto chimico selezionato
+    $.ajax({
+      url: "{% url 'chem_man:get_prodotto_chimico' %}",
+      data: { 'product_id': selectedProductId },
+      dataType: 'json',
+      success: function(data) {
+        // Imposta il campo fk_imballaggio con il valore associato al prodotto chimico
+        fkImballaggioSelect.val(data.fk_imballaggio);
+      },
+      error: function() {
+        // Gestisci l'errore qui, se necessario
+      }
+    });
+  });
+});
+
+
+
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('id_fk_operazione_ricette');
+        });
+
+
+document.getElementById('openSearchChemicalButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+</script>
+
+
+{% endblock %}

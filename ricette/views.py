@@ -115,32 +115,32 @@ def home_ricette_bagnato(request):
 def home_ricette_colori_bagnato(request):
     ricette_colori_bagnato = RicettaColoreBagnato.objects.all()
     
-    ricette_colori_bagnato_filter = RicettaColoreRifinizioneFilter(request.GET, queryset=ricette_colori_rifinizione)
-    filtered_ricette_colori_rifinizione = ricette_colori_rifinizione_filter.qs  # Ottieni i record filtrati
+    ricette_colori_bagnato_filter = RicettaColoreBagnatoFilter(request.GET, queryset=ricette_colori_bagnato)
+    filtered_ricette_colori_bagnato = ricette_colori_bagnato_filter.qs  # Ottieni i record filtrati
     
 
     # Paginazione operazioni
-    page_ricette_colori_rifinizione = request.GET.get('page', 1)
-    paginator_ricette_colori_rifinizione = Paginator(filtered_ricette_colori_rifinizione, 50)
+    page_ricette_colori_bagnato = request.GET.get('page', 1)
+    paginator_ricette_colori_bagnato = Paginator(filtered_ricette_colori_bagnato, 50)
     try:
-        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(page_ricette_colori_rifinizione)
+        ricette_colori_bagnato_paginator = paginator_ricette_colori_bagnato.page(page_ricette_colori_bagnato)
     except PageNotAnInteger:
-        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(1)
+        ricette_colori_bagnato_paginator = paginator_ricette_colori_bagnato.page(1)
     except EmptyPage:
-        ricette_colori_rifinizione_paginator = paginator_ricette_colori_rifinizione.page(paginator_ricette_colori_rifinizione.num_pages)
+        ricette_colori_bagnato_paginator = paginator_ricette_colori_bagnato.page(paginator_ricette_colori_bagnato.num_pages)
 
 
     context = {
         # Operazioni
-        'ricette_colori_rifinizione': ricette_colori_rifinizione,
-        'ricette_colori_rifinizione_paginator': ricette_colori_rifinizione_paginator,        
-        'filter': ricette_colori_rifinizione_filter,  
+        'ricette_colori_bagnato': ricette_colori_bagnato,
+        'ricette_colori_bagnato_paginator': ricette_colori_bagnato_paginator,        
+        'filter': ricette_colori_bagnato_filter,  
             
         
 
     }
 
-    return render(request, "ricette/home_ricette_colori_rifinizione.html", context)
+    return render(request, "ricette/home_ricette_colori_bagnato.html", context)
     
 # Fine ricette bagnato pagine principali
 
@@ -775,3 +775,193 @@ def delete_dettaglio_ricetta_bagnato(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('ricette:modifica_ricetta_bagnato', kwargs={'pk':fk_ricetta_bagnato})
         return redirect(url_match)
+
+
+
+# RICETTE COLORE BAGNATO
+class RicettaColoreBagnatoCreateView(LoginRequiredMixin,CreateView):
+    model = RicettaColoreBagnato
+    form_class = RicettaColoreBagnatoModelForm
+    template_name = 'ricette/ricetta_colore_bagnato.html'
+    success_message = 'Ricetta aggiunta correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_colori_bagnato')
+        
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':pk_ricetta})
+        
+
+    def form_valid(self, form):
+        if 'salva_esci' in self.request.POST:
+            return redirect('ricette:home_ricette_colori_bagnato')
+        else:
+            form.instance.created_by = self.request.user
+            messages.info(self.request, self.success_message)
+            return super().form_valid(form)
+
+
+    def get_initial(self):
+        initial = super().get_initial()
+        
+        if self.request.GET.get('numero_ricetta'):
+            fk_articolo=self.request.GET.get('fk_articolo')
+            fk_colore=self.request.GET.get('fk_colore')            
+            last_recipe = RicettaColoreBagnato.objects.filter(fk_articolo=fk_articolo, fk_colore=fk_colore).order_by('-numero_revisione').first()
+            numero_revisione=last_recipe.numero_revisione+1
+            numero_ricetta = self.request.GET.get('numero_ricetta')
+            data_ricetta = self.request.GET.get('data_ricetta')            
+            numero_revisione = numero_revisione
+            data_revisione = self.request.GET.get('data_revisione')
+            note = self.request.GET.get('note')
+            
+
+            # Inizializza i campi del form con i valori recuperati
+            initial['numero_ricetta'] = numero_ricetta
+            initial['data_ricetta'] = data_ricetta
+            initial['fk_articolo'] = fk_articolo
+            initial['fk_colore'] = fk_colore
+            initial['numero_revisione'] = numero_revisione
+            initial['data_revisione'] = data_revisione
+            initial['note'] = note            
+            initial['created_by'] = self.request.user
+            
+        else:
+            ultima_ricetta=RicettaColoreBagnato.objects.all().order_by('-numero_ricetta').first()            
+            data_odierna = date.today()
+            if ultima_ricetta:
+                initial['numero_ricetta'] = ultima_ricetta.numero_ricetta + 1                
+            else:
+                # Nessuna ultima ricetta trovata, quindi impostare il numero di ricetta iniziale a 1 o a un altro valore predefinito
+                initial['numero_ricetta'] = 1
+                
+            initial['data_ricetta'] = data_odierna
+            initial['numero_revisione'] = 1
+            initial['data_revisione'] = data_odierna
+            initial['created_by'] = self.request.user            
+        
+        return initial
+        
+
+class RicettaColoreBagnatoUpdateView(LoginRequiredMixin, UpdateView):
+    model = RicettaColoreBagnato
+    form_class = RicettaColoreBagnatoModelForm
+    template_name = 'ricette/ricetta_colore_bagnato.html'
+    success_message = 'Ricetta modificata correttamente!'
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('ricette:home_ricette_colori_bagnato')
+
+        pk_ricetta=self.object.pk
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':pk_ricetta})
+    
+        
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta_colore_bagnato = self.object.pk   
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus            
+            context['focus_button'] = focus_button_param     
+        context['elenco_dettagli'] = DettaglioRicettaColoreBagnato.objects.filter(fk_ricetta_colore_bagnato=pk_ricetta_colore_bagnato)
+
+        return context
+
+
+def delete_ricetta_colore_bagnato(request, pk):
+        deleteobject = get_object_or_404(RicettaColoreBagnato, pk = pk)
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:home_ricette_colori_bagnato')
+        return redirect(url_match)
+
+
+
+# Dettaglio
+class DettaglioRicettaColoreBagnatoCreateView(LoginRequiredMixin,CreateView):
+    model = DettaglioRicettaColoreBagnato
+    form_class = DettaglioRicettaColoreBagnatoModelForm
+    template_name = 'ricette/dettaglio_ricetta_colore_bagnato.html'
+    success_message = 'Dettaglio aggiunto correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_colore_bagnato=self.object.fk_ricetta_colore_bagnato.pk        
+        focus_button = 'btn_new_detail'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato_with_focus_button', kwargs={'pk':fk_ricetta_colore_bagnato, 'focus_button': focus_button})     
+    
+        #return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        ricetta_id = self.kwargs.get('fk_ricetta_colore_bagnato')
+        max_numero_riga = DettaglioRicettaColoreBagnato.objects.filter(fk_ricetta_colore_bagnato=ricetta_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
+        next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        initial['numero_riga'] = next_numero_riga
+
+        ricetta_id = self.kwargs.get('fk_ricetta_colore_bagnato')
+        
+        initial['fk_ricetta_colore_bagnato'] = ricetta_id
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for key, value in kwargs.items():
+            print(f"{key}: {value}")
+        pk_ricetta = self.kwargs['fk_ricetta_colore_bagnato']   
+        
+
+        context['ricetta_colore_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)
+        return context
+        
+
+class DettaglioRicettaColoreBagnatoUpdateView(LoginRequiredMixin, UpdateView):
+    model = DettaglioRicettaColoreBagnato
+    form_class = DettaglioRicettaColoreBagnatoModelForm
+    template_name = 'ricette/dettaglio_ricetta_colore_bagnato.html'
+    success_message = 'Dettaglio modificato correttamente!'
+
+
+    def get_success_url(self):
+        fk_ricetta_colore_bagnato=self.object.fk_ricetta_colore_bagnato.pk        
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':fk_ricetta_colore_bagnato})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['fk_ricetta_colore_bagnato']         
+        context['ricetta_colore_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)
+        return context
+
+    
+
+def delete_dettaglio_ricetta_colore_bagnato(request, pk):
+        deleteobject = get_object_or_404(DettaglioRicettaColoreBagnato, pk = pk)
+        fk_ricetta_colore_bagnato = deleteobject.fk_ricetta_colore_bagnato.pk
+        deleteobject.delete()
+        url_match = reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':fk_ricetta_colore_bagnato})
+        return redirect(url_match)
+    

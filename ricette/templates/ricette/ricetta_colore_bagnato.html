@@ -1,0 +1,349 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load custom_filters %}
+{% load widget_tweaks %}
+
+{% block head_title %}{{ block.super }} - Ricetta Colore Bagnato{% endblock head_title %} 
+
+
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_chem_man.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_bagnato' %}">Home Ricette</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica {{ ricettacolorebagnato }}</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Aggiungi Ricetta Colore Bagnato</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica {{ ricettacolorebagnato }}</h3>
+      {% else %}
+          <h3> Aggiungi Ricetta Colore Bagnato</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
+    
+    <!-- Form nuovo registro -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% if form.errors %}
+              {% for field in form %}
+                  {% for error in field.errors %}
+                      <p> errore: {{ error }} </p>
+                      <p> {{ field.label }} </p>
+                  {% endfor %}
+              {% endfor %}
+{% endif %}
+
+
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+            <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:home_ricette_bagnato' %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>            
+            {% if form.instance.id  %}<a href="{% url 'ricette:ricetta_colore_bagnato_print' pk=ricettacolorebagnato.pk %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa</a>{% endif %}
+            
+
+            
+                    <div class="row mb-4 border rounded shadow-sm">
+                      <div class="col-sm-8">
+                          <div class="row mt-3">
+                            <div class = "col-md-2">
+                              {{ form.numero_ricetta|as_crispy_field }}
+                            </div>
+                            <div class = "col-md-2">
+                              {{ form.data_ricetta|as_crispy_field }}
+                            </div>
+                            <div class="col-md-2">
+                              {{ form.numero_revisione|as_crispy_field }}
+                            </div>
+                            <div class="col-md-2">
+                              {{ form.data_revisione|as_crispy_field }}
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="row row-cols-md-auto align-items-center">  
+                          <div class="col-md-5">
+                            {{ form.fk_articolo|as_crispy_field }} 
+                          </div> 
+                          <div class="col-md-1">
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Articolo" 
+                              style="width:100%"
+                              id="openSearchArticleButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_articolo' %}" 
+                              data-modal-title="Cerca Articolo" 
+                              data-search-input-label="Cerca Articoli"
+                              
+                              ><i class="bi bi-search"></i></button>
+                          </div>
+                          <div class="col-md-5">
+                            {{ form.fk_colore|as_crispy_field }} 
+                          </div> 
+                          <div class="col-md-1 ">
+                            <button type="button" 
+                              class="btn btn-info mt-3" 
+                              data-toggle="tooltip" 
+                              data-placement="top" 
+                              title="Cerca Colore" 
+                              style="width:100%"
+                              id="openSearchColorButton"
+                              data-bs-toggle="modal" 
+                              data-bs-target="#searchModal"
+                              data-url="{% url 'core:search_colore' %}" 
+                              data-modal-title="Cerca Colore" 
+                              data-search-input-label="Cerca Colori"
+                              
+                            ><i class="bi bi-search"></i></button>
+                          </div>
+                          </div> 
+
+                          <div class="row">  
+                          <div class="col-md-5">
+                            {{ form.note|as_crispy_field }}
+                          </div> 
+                          </div> 
+
+                          <div class="row">  
+                          <div class="col-md-5">
+                            {{ form.created_by|as_crispy_field }}
+                          </div> 
+                          </div> 
+
+
+                        </div> <!-- Chiusura colonna a sinistra -->
+
+                        <!-- Colonna a destra -->
+                        <div class="col-sm-4">
+                          <div class="row mt-1 me-1 ">
+                            <div class="card text-center w-100">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-start">Azioni</h6>
+                                          {% if form.instance.id  %}
+                                            <button type="button" 
+                                              class="btn btn-info text-wrap" 
+                                              data-toggle="tooltip" 
+                                              data-placement="top" 
+                                              title="Crea automaticamente nuova revisione della ricetta attiva." 
+                                              style="width:100%" 
+                                              id="crea-nuova-ricetta"
+                                              
+                                              >
+                                              <i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" 
+                                              class="btn search-modal-button mt-1" 
+                                              data-toggle="tooltip" 
+                                              data-placement="top" 
+                                              title="Cerca ricetta da accodare alla ricetta attiva." 
+                                              style="width:100%" 
+                                              data-bs-toggle="modal" 
+                                              data-bs-target="#searchModal"
+                                              id="openSearchWetColorRevisionButton"
+                                              data-bs-toggle="modal" 
+                                              data-bs-target="#searchModal"
+                                              data-url="{% url 'core:search_revisione_colore_bagnato' %}" 
+                                              data-modal-title="Cerca Revisione" 
+                                              data-search-input-label="Cerca Revisione"
+                                              data-ricetta-attiva="{{ ricettacolorebagnato.pk }}" 
+                                              
+                                              >
+                                              <i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          {% else %}
+                                            <button type="button" class="btn btn-secondary text-wrap" data-toggle="tooltip" data-placement="top" title="Creazione automatica revisione. Salvare per attivare questo pulsante." style="width:100%"><i class="bi bi-list-task"></i> Crea nuova revisione</button>
+                                            <button type="button" class="btn btn-secondary mt-1" data-toggle="tooltip" data-placement="top" title="Accoda ricetta. Salvare per attivare il pulsante." style="width:100%"><i class="bi bi-lightning"></i> Accoda ricetta</button>
+                                          {% endif %}
+                                          
+                                          <input type="hidden" id="id_numero_ricetta" value="{{ ricetta.numero_ricetta }}">
+                                          <input type="hidden" id="id_data_ricetta" value="{{ ricetta.data_ricetta }}">
+                                          <input type="hidden" id="id_fk_articolo" value="{{ ricetta.fk_articolo }}">
+                                          <input type="hidden" id="id_fk_colore" value="{{ ricetta.fk_colore }}">
+                                          
+                                          <input type="hidden" id="id_note" value="{{ ricetta.note }}">
+                                      </div>
+                                  </div>
+                          </div>
+                          <div class="row mt-1 me-1 ">
+                            
+                                  <div class="card text-start w-100">
+                                      <div class="card-body">
+                                        <h6 class="card-subtitle mb-2 text-start">Stats</h6>
+                                        <hr>
+                                        <h3 style="width:100%">Costo: {{ ricettacolorebagnato.calcola_totale_prezzi }}</h3>
+                                
+                                        <h3 style="width:100%">Solvente: Kg. {% if ricettacolorebagnato.calcola_solvente_totale %}{{ ricettacolorebagnato.calcola_solvente_totale|format_number_dec_thousand }}{% endif %}</h3>
+                                      </div>
+                                  </div>
+                              
+                          </div>
+
+                        </div> <!-- Chiusura Colonna a destra -->
+
+                      
+                        
+                      
+                        
+                        
+                        
+
+                        
+
+                    </div>
+                      
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+
+
+    <div class="row">
+      
+
+      {% if form.instance.id  %}
+          
+      {% include "ricette/partials/_dettaglio_ricetta_colore_bagnato_table.html" %}
+  
+      {% else %}
+          <h3> Non sono presenti righe di dettaglio.</h3>
+      {% endif %}
+
+
+      
+
+</div>
+
+
+    
+
+</div> <!--Fine container-->
+{% endblock content %}
+
+{% block extra_scripts %}
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  const table = document.getElementById('myTable');
+  if (table) {
+    makeTableRowsDraggable(table);
+  }
+
+  var focusButtonId = "{{ focus_button }}"
+            console.log('focus button id: ' + focusButtonId)
+            setFocusOnField(focusButtonId);
+});
+
+
+
+
+  if (document.getElementById('myTable')){
+    const currentApp = "{{ request.resolver_match.app_name }}";  // Ottieni il nome dell'applicazione corrente dal resolver_match  
+    const modelName = document.getElementById('myTable').dataset.model_name;
+
+    const searchURL = `/core/update_row_numbers/${encodeURIComponent(currentApp)}/${encodeURIComponent(modelName)}/`;
+    const linkTemplate = "/ricette/modifica_dettaglio_ricetta_rifinizione/{pk}/";
+  }
+
+
+
+
+
+
+
+// Per creare una nuova revisione della ricetta
+$(document).ready(function() {
+  $('#crea-nuova-ricetta').click(function() {
+    // Mostra un alert di conferma
+    var conferma = confirm("Sei sicuro di voler creare una nuova revisione?");
+    
+    // Se l'utente conferma l'azione, procedi con la creazione della nuova revisione
+    if (conferma) {
+      // Costruisci l'URL per la creazione della nuova revisione
+      var numeroRicetta = $('#id_numero_ricetta').val();
+      var dataRicetta = $('#id_data_ricetta').val();
+      var fkArticolo = $('#id_fk_articolo').val();
+      var fkColore = $('#id_fk_colore').val();
+      var numeroRevisione = $('#id_numero_revisione').val();
+      var dataOdierna = new Date().toISOString().split('T')[0];
+      var note = $('#id_note').val();
+      
+
+      var aggiungiRevisioneRifinizioneURL = "{% url 'ricette:aggiungi_ricetta_colore_bagnato' %}";
+      aggiungiRevisioneRifinizioneURL += '?numero_ricetta=' + encodeURIComponent(numeroRicetta) +
+                                          '&data_ricetta=' + encodeURIComponent(dataRicetta) +
+                                          '&fk_articolo=' + encodeURIComponent(fkArticolo) +
+                                          '&fk_colore=' + encodeURIComponent(fkColore) +
+                                          '&numero_revisione=' + encodeURIComponent(numeroRevisione) +
+                                          '&data_revisione=' + encodeURIComponent(dataOdierna) +
+                                          '&note=' + encodeURIComponent(note)
+
+      // Reindirizza l'utente all'URL costruito solo dopo la conferma dell'utente
+      if (aggiungiRevisioneRifinizioneURL) {
+        window.location.href = aggiungiRevisioneRifinizioneURL;
+      } else {
+        console.error("URL non valido.");
+      }
+    }
+  });
+});
+
+document.getElementById('openSearchArticleButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+document.getElementById('openSearchColorButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+
+document.getElementById('openSearchWetColorRevisionButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+</script>
+{% endblock %}

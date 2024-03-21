@@ -5,10 +5,11 @@ from django.http import JsonResponse
 from django.urls import reverse
 
 from .forms import RicettaRifinizioneModelForm
-from .models import (DettaglioRicettaBagnato,
+from .models import (DettaglioRicettaBagnato, DettaglioRicettaColoreBagnato,
                      DettaglioRicettaColoreRifinizione,
                      DettaglioRicettaRifinizione, RicettaBagnato,
-                     RicettaColoreRifinizione, RicettaRifinizione)
+                     RicettaColoreBagnato, RicettaColoreRifinizione,
+                     RicettaRifinizione)
 
 
 def new_finishing_revision(request):
@@ -137,6 +138,35 @@ def accoda_dettaglio_ricetta_bagnato(request):
             )
         
         redirect_url = reverse('ricette:modifica_ricetta_bagnato', kwargs={'pk': ricetta_attiva.pk})
+        return JsonResponse({'redirect_url': redirect_url}) 
+    else:
+        return JsonResponse({'error': 'Richiesta non valida.'})
+    
+
+
+def accoda_dettaglio_ricetta_colore_bagnato(request):
+    if request.method == 'POST':
+        ricetta_id = request.POST.get('ricetta_id')
+        print(f"ricetta_id: {ricetta_id}")
+        ricetta_attiva = request.POST.get('ricettaAttiva')
+        print(f"ricetta_attiva: {ricetta_attiva}")
+        ricetta_attiva = RicettaColoreBagnato.objects.get(pk=ricetta_attiva) # Recupero l'istanza da passare alla FK
+        # Filtro le istanze di DettaglioRicettaRifinizione in base a ricetta_id
+        dettagli_ricetta = DettaglioRicettaColoreBagnato.objects.filter(fk_ricetta_colore_bagnato=ricetta_id)
+        
+        # Duplico le istanze filtrate e modifico fk_ricetta_rifinizione
+        for dettaglio in dettagli_ricetta:
+            DettaglioRicettaColoreBagnato.objects.create(
+                fk_ricetta_colore_bagnato=ricetta_attiva,
+                fk_operazione_ricette=dettaglio.fk_operazione_ricette,
+                numero_riga=dettaglio.numero_riga,
+                quantity=dettaglio.quantity,
+                fk_prodotto_chimico=dettaglio.fk_prodotto_chimico,
+                note=dettaglio.note,
+                created_by=dettaglio.created_by
+            )
+        print(f"Ricetta attiva pk: {ricetta_attiva.pk}")
+        redirect_url = reverse('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk': ricetta_attiva.pk})
         return JsonResponse({'redirect_url': redirect_url}) 
     else:
         return JsonResponse({'error': 'Richiesta non valida.'})
