@@ -158,7 +158,7 @@
                                               data-modal-title="Cerca Revisione" 
                                               data-search-input-label="Cerca Revisione"
                                               data-ricetta-attiva="{{ ricettabagnato.pk }}" 
-                                              onclick="handleSearchButtonClick(event)"
+                                              
                                               >
                                               <i class="bi bi-lightning"></i> Accoda ricetta</button>
                                           {% else %}
@@ -291,7 +291,13 @@ $(document).ready(function() {
 });
 
 
-
+document.getElementById('openSearchArticleButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
 
 
 </script>
