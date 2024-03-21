@@ -36,6 +36,8 @@ def somma_dato_per_intervallo_per_mese(modello, campo_sommabile, campo_data, dat
             .order_by('mese')\
         
         return somma_dato_per_intervallo_per_mese
+    
+
 
 
 
