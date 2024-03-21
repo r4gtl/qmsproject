@@ -729,6 +729,7 @@ class DettaglioRicettaBagnatoCreateView(LoginRequiredMixin,CreateView):
         ricetta_id = self.kwargs.get('fk_ricetta_bagnato')
         max_numero_riga = DettaglioRicettaRifinizione.objects.filter(fk_ricetta_rifinizione=ricetta_id).aggregate(models.Max('numero_riga'))['numero_riga__max']
         next_numero_riga = max_numero_riga + 1 if max_numero_riga else 1
+        print(f'next_numero_riga: {next_numero_riga}')
         initial['numero_riga'] = next_numero_riga
         ricetta_id = self.kwargs.get('fk_ricetta_bagnato')        
         initial['fk_ricetta_bagnato'] = ricetta_id
