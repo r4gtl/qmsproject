@@ -1,9 +1,9 @@
 from core.views import dashboard
 from django.urls import path
 
+from .dash_charts import *
 from .searches import *
 from .utils import update_row_numbers
-from .dash_charts import *
 
 app_name="core"
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path('search_colore/', search_colore, name='search_colore'),
     path('search_revisione_rifinizione/', search_revisione_rifinizione, name='search_revisione_rifinizione'),
     path('search_revisione_colore_rifinizione/', search_revisione_colore_rifinizione, name='search_revisione_colore_rifinizione'),
-    path('search_prodotto_chimico_rifinizione/', search_prodotto_chimico_rifinizione, name='search_prodotto_chimico_rifinizione'),
+    path('search_prodotto_chimico/', search_prodotto_chimico, name='search_prodotto_chimico'),
     path('search_ghs_symbol/', search_ghs_symbol, name='search_ghs_symbol'),
     path('search_hazard_statement/', search_hazard_statement, name='search_hazard_statement'),
     path('search_precautionary_statement/', search_precautionary_statement, name='search_precautionary_statement'),

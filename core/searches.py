@@ -106,11 +106,12 @@ def search_revisione_colore_rifinizione(request):
     
 
 
-def search_prodotto_chimico_rifinizione(request):
+def search_prodotto_chimico(request):
     search_term = request.GET.get('search', '')
+    reparto = request.GET.get('reparto')
     if search_term:
         prodotti_chimici_rifinizione = ProdottoChimico.objects.filter(
-                Q(reparto='rifinizione') | Q(reparto__isnull=True)
+                Q(reparto=reparto) | Q(reparto__isnull=True)
             )
         
         # Effettua la ricerca dei prodotti chimici
