@@ -108,7 +108,7 @@
                               data-url="{% url 'core:search_articolo' %}" 
                               data-modal-title="Cerca Articolo" 
                               data-search-input-label="Cerca Articoli"
-                              onclick="handleSearchButtonClick(event)"
+                              
                               ><i class="bi bi-search"></i></button>
                           </div>
                           <div class="col-md-3">
@@ -292,6 +292,14 @@ $(document).ready(function() {
 
 
 document.getElementById('openSearchArticleButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+document.getElementById('openSearchRevisionDrumButton').addEventListener('click', function(event) {
     var callerButtonId = this.id;
     var url = this.getAttribute('data-url');
     var modalTitle = this.getAttribute('data-modal-title');
