@@ -109,6 +109,14 @@ class RicettaBagnato(models.Model):
     created_by = models.ForeignKey(User, related_name='ricette_bagnato', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def calcola_totale_prezzi(self):
+        dettagli_ricette = self.dettaglio_ricette_bagnato.all()
+        return calcola_totale_prezzi(dettagli_ricette)
+    
+    
+    def calcola_solvente_totale(self):
+        dettagli_ricette = self.dettaglio_ricette_bagnato.all()
+        return calcola_solvente_totale(dettagli_ricette)
     
     class Meta:
         ordering = ["-data_ricetta"]
