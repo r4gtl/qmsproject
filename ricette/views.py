@@ -869,11 +869,12 @@ class RicettaColoreBagnatoUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk_ricetta_colore_bagnato = self.object.pk   
+        numero_ricetta_colore_bagnato = self.object.numero_ricetta  
         if 'focus_button' in self.kwargs:
             focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus            
             context['focus_button'] = focus_button_param     
         context['elenco_dettagli'] = DettaglioRicettaColoreBagnato.objects.filter(fk_ricetta_colore_bagnato=pk_ricetta_colore_bagnato)
-        context['xr_fondi_colori'] = XRFondoColore.objects.filter(numero_ricetta=pk_ricetta_colore_bagnato)
+        context['xr_fondi_colori'] = XRFondoColore.objects.filter(numero_ricetta=numero_ricetta_colore_bagnato)
 
         return context
 
