@@ -69,6 +69,11 @@ urlpatterns = [
     path('<int:fk_ricetta_colore_bagnato>/modifica_dettaglio_ricetta_colore_bagnato/<int:pk>/', DettaglioRicettaColoreBagnatoUpdateView.as_view(), name="modifica_dettaglio_ricetta_colore_bagnato"), 
     path('delete_dettaglio_ricetta_colore_bagnato/<int:pk>', delete_dettaglio_ricetta_colore_bagnato, name="delete_dettaglio_ricetta_colore_bagnato"),
 
+    # XRFondoColore
+    path('<int:numero_ricetta>/aggiungi_xr_fondo_colore/', XRFondoColoreCreateView.as_view(), name="aggiungi_xr_fondo_colore"), 
+    path('<int:numero_ricetta>/modifica_xr_fondo_colore/<int:pk>/', XRFondoColoreUpdateView.as_view(), name="modifica_xr_fondo_colore"), 
+    path('delete_xr_fondo_colore/<int:pk>', delete_xr_fondo_colore, name="delete_xr_fondo_colore"),
+
 
     # Stampa ricette
     path('ricetta_rifinizione_print/<int:pk>', ricetta_rifinizione_print, name="ricetta_rifinizione_print"),

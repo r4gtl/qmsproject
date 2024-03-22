@@ -1,0 +1,138 @@
+{% extends 'core/base.html' %} 
+{% load static %}
+{% load crispy_forms_tags %} 
+{% load widget_tweaks %}
+{% block head_title %}{{ block.super }} - Associa Colore{% endblock head_title %} 
+
+{% block sidenav %}
+{% include "core/partials/_sidenav_ricette.html" %}
+{% endblock %}
+
+{% block content %}
+{% include 'core/modals/delConfirm.html' %}
+
+<nav aria-label="breadcrumb" class="mt-3"> 
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
+        <li class="breadcrumb-item"><a href="{% url 'ricette:home_ricette_bagnato' %}">Home Ricette Bagnato</a></li>     
+        <li class="breadcrumb-item"><a href="{% url 'ricette:modifica_ricetta_colore_bagnato' pk=ricetta_colore_bagnato %}">{{ dettagli_ricetta }}</a></li>     
+        
+        {% if form.instance.id  %}
+            <li class="breadcrumb-item active" aria-current="page">Modifica Dettaglio</li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page">Associa colore al fondo</li>
+        {% endif %}     
+    </ol>
+
+</nav>
+
+<div class="container">
+    <br>
+    
+    <div class="container">
+      {% if form.instance.id  %}
+          <h3>Modifica Dettaglio</h3>
+      {% else %}
+          <h3> Associa colore al fondo</h3>
+      {% endif %}
+    <hr>
+    <br>
+    {% include "core/partials/_messages.html" %}
+    {% include "core/modals/baseModalGenericSearch.html" %}
+    
+    <!-- Form nuovo dettaglio -->
+    
+    <div class="form-group mt-3">
+        <form class="mt-3" method="POST" >
+            {% csrf_token %}
+            <input type="hidden" id="previous_page" name="previous_page"
+            value="/previous/page/url">
+            
+            
+                    <div class="row mb-4">
+                      
+                      <div class="col-md-12 border rounded shadow-sm">
+                        <div class="row mt-3">
+                          
+                            <div class = "col-md-6">
+                              {{ form.fk_colore|as_crispy_field }}
+                            </div>
+                            <div class = "col-md-1 d-flex align-items-center">
+                              <button type="button" 
+                                class="btn btn-info mt-3" 
+                                data-toggle="tooltip" 
+                                data-placement="top" 
+                                title="Cerca Prodotto Chimico" 
+                                style="width:100%"
+                                id="openSearchColorButton"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#searchModal"
+                                data-url="{% url 'core:search_colore' %}"  
+                                data-modal-title="Cerca Colore" 
+                                data-search-input-label="Cerca Colore"
+                                data-setfocus=""
+                                
+                                ><i class="bi bi-search"></i></button>
+                            </div>
+
+                            <div class="col-5">
+                            {{ form.note|as_crispy_field }}
+                        </div>
+
+                            
+                        </div>
+                        
+                        
+
+
+                        <div class="row">
+                        
+                            <div class="col-md-1">
+                              {{ form.numero_ricetta|as_crispy_field }}
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+
+                        
+
+                    </div>
+                      </div>
+                      <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
+                      <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'ricette:modifica_ricetta_colore_bagnato' pk=ricetta_colore_bagnato %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+
+        <!-- fine form -->
+        </form>
+
+        
+
+    </div>
+
+    
+
+</div> <!--Fine container-->
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+            setFocusOnField('openSearchColorButton');
+        });
+
+
+document.getElementById('openSearchColorButton').addEventListener('click', function(event) {
+    var callerButtonId = this.id;
+    var url = this.getAttribute('data-url');
+    var modalTitle = this.getAttribute('data-modal-title');
+    var searchInputLabel = this.getAttribute('data-search-input-label');
+    searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
+});
+
+</script>
+
+
+{% endblock %}

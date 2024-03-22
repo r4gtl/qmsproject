@@ -286,3 +286,26 @@ class DettaglioRicettaColoreBagnatoModelForm(forms.ModelForm):
             'note': 'Note'
 
         }
+
+class XRFondoColoreModelForm(forms.ModelForm):    
+    
+    class Meta:
+        model = XRFondoColore
+        fields= '__all__'
+        fk_colore = forms.ModelChoiceField(
+            queryset=Colore.objects.all(),            
+            widget=forms.Select
+            )
+        
+        
+        widgets = {
+            'numero_riga': forms.HiddenInput(),
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            
+        }
+        labels = {
+            'fk_colore': 'Colore',
+            'note': 'Note'
+
+        }

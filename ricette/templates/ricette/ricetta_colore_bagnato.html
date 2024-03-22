@@ -232,9 +232,12 @@
       
 
       {% if form.instance.id  %}
-          
-      {% include "ricette/partials/_dettaglio_ricetta_colore_bagnato_table.html" %}
-  
+      <div class="col-8">   
+        {% include "ricette/partials/_dettaglio_ricetta_colore_bagnato_table.html" %}
+      </div>
+      <div class="col-4">   
+        {% include "ricette/partials/_dettaglio_xr_fondo_colore_table.html" %}
+      </div>
       {% else %}
           <h3> Non sono presenti righe di dettaglio.</h3>
       {% endif %}

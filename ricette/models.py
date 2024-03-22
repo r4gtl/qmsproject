@@ -213,6 +213,13 @@ class RicettaColoreBagnato(models.Model):
         return f"Ricetta Fondo n.: {self.numero_ricetta} - Data Ricetta: {formatted_data_ricetta}"        
 
 
+class XRFondoColore(models.Model):
+    # campo da compilare da procedura per associarlo a tute le istanze di RicettaColoreBagnato
+    numero_ricetta = models.IntegerField(default=None) 
+    fk_colore = models.ForeignKey(Colore, related_name='xr_fondo_colore', on_delete=models.CASCADE)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='xr_fondo_colore', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class DettaglioRicettaColoreBagnato(models.Model):

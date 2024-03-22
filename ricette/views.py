@@ -873,6 +873,7 @@ class RicettaColoreBagnatoUpdateView(LoginRequiredMixin, UpdateView):
             focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus            
             context['focus_button'] = focus_button_param     
         context['elenco_dettagli'] = DettaglioRicettaColoreBagnato.objects.filter(fk_ricetta_colore_bagnato=pk_ricetta_colore_bagnato)
+        context['xr_fondi_colori'] = XRFondoColore.objects.filter(numero_ricetta=pk_ricetta_colore_bagnato)
 
         return context
 
@@ -964,4 +965,79 @@ def delete_dettaglio_ricetta_colore_bagnato(request, pk):
         deleteobject.delete()
         url_match = reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':fk_ricetta_colore_bagnato})
         return redirect(url_match)
+
+
+# XR Fondo Colore
+
+class XRFondoColoreCreateView(LoginRequiredMixin,CreateView):
+    model = XRFondoColore
+    form_class = XRFondoColoreModelForm
+    template_name = 'ricette/xr_fondo_colore.html'
+    success_message = 'Colore associato correttamente!'
+
+
+    def get_success_url(self):
+        numero_ricetta=self.object.numero_ricetta
+        focus_button = 'btn_new_assoc'  # Imposto il pulsante su cui settare il focus
+        
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato_with_focus_button', kwargs={'pk':numero_ricetta, 'focus_button': focus_button})     
+    
+        #return reverse_lazy('ricette:modifica_ricetta_colore_rifinizione', kwargs={'pk':fk_ricetta_colore_rifinizione})
+    
+      
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+
+    def get_initial(self):
+        initial = super().get_initial()        
+        numero_ricetta = self.kwargs.get('numero_ricetta')        
+        initial['numero_ricetta'] = numero_ricetta        
+        initial['created_by'] = self.request.user        
+        return initial
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        for key, value in kwargs.items():
+            print(f"{key}: {value}")
+        pk_ricetta = self.kwargs['numero_ricetta']   
+        context['ricetta_colore_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)
+        return context
+        
+
+class XRFondoColoreUpdateView(LoginRequiredMixin, UpdateView):
+    model = XRFondoColore
+    form_class = XRFondoColoreModelForm
+    template_name = 'ricette/xr_fondo_colore.html'
+    success_message = 'Associazione modificata correttamente!'
+
+
+    def get_success_url(self):
+        numero_ricetta=self.object.numero_ricetta        
+        return reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':numero_ricetta})
+    
+
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ricetta = self.kwargs['numero_ricetta']         
+        context['ricetta_colore_bagnato'] = pk_ricetta
+        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)        
+        return context
+
+    
+
+def delete_xr_fondo_colore(request, pk):
+    deleteobject = get_object_or_404(XRFondoColore, pk = pk)
+    numero_ricetta = deleteobject.numero_ricetta
+    deleteobject.delete()
+    url_match = reverse_lazy('ricette:modifica_ricetta_colore_bagnato', kwargs={'pk':numero_ricetta})
+    return redirect(url_match)
+
     

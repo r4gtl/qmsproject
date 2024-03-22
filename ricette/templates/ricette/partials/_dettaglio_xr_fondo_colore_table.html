@@ -1,0 +1,38 @@
+<!-- Tabella dettaglio -->
+<div class="col-12">
+  <div class="row">
+  
+  
+  <div class="col-6">
+    <h5>Colori Associati</h5>
+              
+  </div>
+  <div class="col-6 text-end">
+    
+    <a href="{% url 'ricette:aggiungi_xr_fondo_colore' numero_ricetta=ricettacolorebagnato.pk %}" class="btn btn-sm btn-success" id="btn_new_detail"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+
+  </div>
+</div>
+<div class="container">
+  <table class="table table-bordered table-striped mt-2">
+    <thead>
+      <tr>               
+        <th>Colore</th>              
+        <th>Azione</th>
+        
+      </tr>
+    </thead>
+    <tbody id="tabella_dettaglio">
+      {% for xr_fondo_colore in xr_fondi_colori %}
+      <tr>        
+        
+        <td><a  href="{% url 'ricette:modifica_xr_fondo_colore' numero_ricetta=ricettacolorebagnato.pk pk=xr_fondo_colore.pk %}" >{{ xr_fondo_colore.fk_colore }}</a></td>
+        <td class="text-center"><a href="{% url 'ricette:delete_xr_fondo_colore' pk=xr_fondo_colore.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonXr{{xr_fondo_colore.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+      </tr>  
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+</div><!--Fine tabella dettaglio -->
+
