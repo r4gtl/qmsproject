@@ -299,7 +299,7 @@ class XRFondoColoreModelForm(forms.ModelForm):
         
         
         widgets = {
-            'numero_riga': forms.HiddenInput(),
+            'numero_ricetta': forms.HiddenInput(),
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             
