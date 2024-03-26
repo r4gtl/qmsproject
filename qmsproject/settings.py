@@ -253,6 +253,29 @@ if not DEBUG:
         MEDIA_ROOT = env("MEDIA_ROOT")
 
 
+# Imposta il percorso del file di log di Django dal file .env
+DJANGO_LOG_FILE = env('DJANGO_LOG_FILE')
+
+# Configurazione dei log di Django
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': DJANGO_LOG_FILE,  # Utilizza la variabile d'ambiente per il percorso del file di log
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
+
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'secondary',
