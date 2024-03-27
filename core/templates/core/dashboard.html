@@ -22,7 +22,8 @@
                 <div class="card-body">
                   <h5 class="card-title">Grafico Produzione</h5>
                   
-                  <canvas id="produzione_ultimo_anno" data-url=""></canvas>
+                  <!--<canvas id="produzione_ultimo_anno" data-url=""></canvas>-->
+                  <canvas id="produzione" data-url=""></canvas>
                   <a href="#" class="card-link">Card link</a>
                   <a href="#" class="card-link">Another link</a>
                 </div>
@@ -59,42 +60,102 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{% static '/js/monitoraggi/monitoraggi.js' %}"></script>
+
 <script>
 
 
     document.addEventListener('DOMContentLoaded', function() {
-        updateChart("{% url 'monitoraggi:produzione_ultimo_anno' %}");
-        renderizzaGrafico("{% url 'monitoraggi:consumi_mj_mq_ultimo_anno' %}");
-      });
+            var from_date = '{{ from_date }}';
+        var to_date = '{{ to_date }}';
 
-(async function() {
-    const data = [
-        { year: 2010, count: 10 },
-        { year: 2011, count: 20 },
-        { year: 2012, count: 15 },
-        { year: 2013, count: 25 },
-        { year: 2014, count: 22 },
-        { year: 2015, count: 30 },
-        { year: 2016, count: 28 },
-    ];
+    // Effettua una richiesta AJAX a produzione_intervallo_date
+    fetch("{% url 'core:produzione' %}?from_date=" + from_date + "&to_date=" + to_date)
+        .then(response => response.json())
+        .then(data => {
+        // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
+        updateChartWithData(data, from_date, to_date);
+        //renderDataInTemplate(data, from_date, to_date);
+        
+        })
+        .catch(error => console.log(error));
+    });
+
+
+
+function updateChartWithData(data, from_date, to_date) {
+    // Elabora i dati e aggiorna il grafico utilizzando Chart.js
+  
+    var labels = [];
+    var quantities = [];
+  
+    for (var i = 0; i < data.length; i++) {
+      labels.push(data[i].industries_served);
+      quantities.push(data[i].total_quantity);
+    }
+  
+    var ctx = document.getElementById('produzione').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Total Quantity',
+          data: quantities,
+          backgroundColor: getRandomColor(),
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false  // Imposta il display della legenda su false per rimuoverla
+          }
+        }
+      }
+    });
+  }
+
+    // Chiama la funzione updateChart con l'URL contenente le date, se presenti
     
-    new Chart(
-        document.getElementById('acquisitions-bar'),
-        {
-        type: 'bar',
-        data: {
-            labels: data.map(row => row.year),
-            datasets: [
-            {
-                label: 'Acquisitions by year',
-                data: data.map(row => row.count)
-            }
-            ]
-        }
-        }
-    );
-    })();
+      
+
+      function updateChart(url) {
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const labels = data.map(entry => entry.industries_served);
+                const quantities = data.map(entry => entry.total_quantity);
+    
+                const ctx = document.getElementById('produzione').getContext('2d');
+                const myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Total Quantity',
+                            data: quantities,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.log(error));
+    }
 
     (async function() {
         const data = [

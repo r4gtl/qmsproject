@@ -2,7 +2,7 @@
 Questo modal viene utilizzato quando alla query basta un intervallo di date.
 Uso:
 inserire in un tag <a>
-<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl('{% url 'acquistopelli:report_traceability_in' %}', 'Dati Produzione')">
+<a href="#" data-bs-toggle="modal" data-bs-target="#myModal" onclick="setModalUrl(`{% url 'acquistopelli:report_traceability_in' %}`, 'Dati Produzione')">
   Apri modal
 </a>
 {% endcomment %}
@@ -78,6 +78,7 @@ inserire in un tag <a>
   function setModalUrl(url, title, submitButtonText = "Genera report") {
     // Imposta l'URL nel campo azione del form nel modal
     document.getElementById('date_form').action = url;
+    console.log("url: " + url )
 
     // Ottieni l'elemento del titolo del modal
     var modalTitle = document.getElementById('modal_title');
