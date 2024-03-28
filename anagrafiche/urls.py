@@ -41,6 +41,10 @@ urlpatterns = [
     path("fornitore/<int:fk_fornitore>/aggiungi_voce_listino/", ListinoTerzistaCreateView.as_view(), name="aggiungi_voce_listino"),
     path("modifica_voce_listino/<int:pk>", ListinoTerzistaUpdateView.as_view(), name="modifica_voce_listino"),    
     path("delete_voce_listino/<int:pk>", delete_voce_listino, name="delete_voce_listino"),
+    
+    path("<int:fk_listino_terzista>/aggiungi_prezzo_listino/", PrezzoListinoCreateView.as_view(), name="aggiungi_prezzo_listino"),
+    path("modifica_prezzo_listino/<int:pk>", PrezzoListinoUpdateView.as_view(), name="modifica_prezzo_listino"),    
+    path("delete_prezzo_listino/<int:pk>", delete_prezzo_listino, name="delete_prezzo_listino"),
 
     # Tabelle Generiche
     path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),

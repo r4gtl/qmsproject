@@ -54,11 +54,13 @@
                 {% for listino in listini_terzisti %}
                     
                     <td class="col-md"><a href="{% url 'anagrafiche:modifica_voce_listino' pk=listino.pk %}">{{ listino.fk_lavorazione_esterna.descrizione }}</a></td>
-                     {% if listino.ultimo_prezzo %}
-                        <td class="col-md text-end">{{ listino.ultimo_prezzo }}</td>
-                    {% else %}
-                        <td class="col-md text-center">Nessun prezzo</td>
-                    {% endif %}
+                    <td class="col-md text-end">
+                      {% if listino.ultimo_prezzo %}
+                          {{ listino.ultimo_prezzo }}
+                      {% else %}
+                          Nessun prezzo
+                      {% endif %}
+                  </td>
                     
                     <td class="col-md text-center"><a href="{% url 'anagrafiche:delete_voce_listino' pk=listino.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonListino{{listino.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>

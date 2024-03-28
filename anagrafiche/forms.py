@@ -1,4 +1,4 @@
-from articoli.models import LavorazioneEsterna, ListinoTerzista
+from articoli.models import LavorazioneEsterna, ListinoTerzista, PrezzoListino
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -300,7 +300,7 @@ class ListinoTerzistaModelForm(forms.ModelForm):
         fields = ['fk_lavorazione_esterna', 'fk_fornitore', 'note', 'created_by']
         widgets = {'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
                     'created_by': forms.HiddenInput(),
-                    #'fk_fornitore_lavorazione_esterna': forms.HiddenInput()
+                    'fk_fornitore': forms.HiddenInput()
                 }
         labels = {
             'note': 'Note',
@@ -308,3 +308,24 @@ class ListinoTerzistaModelForm(forms.ModelForm):
             
         }
 
+
+class PrezzoListinoModelForm(forms.ModelForm):
+    
+    
+    class Meta:
+        model = PrezzoListino
+        fields= '__all__'
+        widgets = {
+            'data_inserimento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
+            'prezzo': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'fk_listino_terzista': forms.HiddenInput()
+        }
+        labels = {
+            'data_inserimento': 'Data Inserimento',
+            'prezzo': 'Prezzo',            
+            'note': 'Note'
+
+        }
+        

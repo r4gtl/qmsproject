@@ -307,9 +307,9 @@ class ListinoTerzista(models.Model):
 
     @property
     def ultimo_prezzo(self):
-        ultimo_prezzo = self.prezzo_listino.order_by('-data_inserimento').first()
+        ultimo_prezzo = self.prezzo.order_by('-data_inserimento').first()
         if ultimo_prezzo:
-            return ultimo_prezzo.prezzo_listino
+            return ultimo_prezzo.prezzo
         return None
     
 
@@ -317,7 +317,7 @@ class PrezzoListino(models.Model):
     fk_listino_terzista = models.ForeignKey(
             ListinoTerzista,
             on_delete=models.CASCADE,
-            related_name='prezzo_listino'
+            related_name='prezzo'
             )
     data_inserimento = models.DateField(default=date.today)
     prezzo = models.DecimalField(max_digits=8, decimal_places=3)    

@@ -92,7 +92,7 @@
             <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'anagrafiche:vedi_fornitore' pk=fk_fornitore %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
         </form>
         <hr>
-        
+        {% include "anagrafiche/partials/_prezzi_listino_lavorazioni.html" %}
     </div>
 
 
@@ -102,7 +102,7 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-            setFocusOnField('id_lwg_urn');
+            setFocusOnField('openSearchOutSourcingButton');
         });
 
 document.getElementById('openSearchOutSourcingButton').addEventListener('click', function(event) {

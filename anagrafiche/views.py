@@ -20,7 +20,9 @@ from .forms import (FormCliente, FormFacility, FormFacilityContact,
                     FormFornitore, FormFornitoreLavorazioniEsterne,
                     FormFornitorePelli, FormFornitoreProdottiChimici,
                     FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
-                    FormXrTransferValueLwgFornitore, ListinoTerzistaModelForm)
+                    FormXrTransferValueLwgFornitore, ListinoTerzistaModelForm,
+                    PrezzoListinoModelForm,
+                    )
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
                      FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
@@ -729,10 +731,9 @@ class ListinoTerzistaCreateView(CreateView):
     def get_initial(self):
         initial = super().get_initial() 
         fk_fornitore = self.kwargs['fk_fornitore']
+        created_by = self.request.user
         
-        # Recupera l'istanza di FornitoreLavorazioniEsterne corrispondente a fk_fornitore
-        
-        
+        initial['created_by'] = created_by
         initial['fk_fornitore'] = fk_fornitore
         return initial
         
@@ -741,11 +742,7 @@ class ListinoTerzistaCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         print("kwargs:", kwargs)
         fk_fornitore=self.kwargs['fk_fornitore']
-        print("Fornitore: " + str(fk_fornitore))
-        # Recupera l'istanza di FornitoreLavorazioniEsterne corrispondente a fk_fornitore
-        
-        #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
-        #context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
+        print("Fornitore: " + str(fk_fornitore))        
         context['fk_fornitore'] = fk_fornitore
         return context
 
@@ -756,7 +753,7 @@ class ListinoTerzistaUpdateView(UpdateView):
     success_message = 'Voce listino modificata correttamente!'
     error_message = 'Certificato non salvato. Controlla.'    
     
-    template_name = "anagrafiche/lwg.html"
+    template_name = "anagrafiche/voce_listino.html"
 
 
     def get_success_url(self):
@@ -775,7 +772,9 @@ class ListinoTerzistaUpdateView(UpdateView):
         fk_fornitore = self.object.fk_fornitore.pk
         #context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgcertificato=self.object.id) 
         context['fk_fornitore'] = fk_fornitore
-        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)        
+        context['listino']=self.kwargs['pk']
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)  
+        context['prezzi']=PrezzoListino.objects.filter(fk_listino_terzista=self.object.pk)      
         
         return context
 
@@ -791,3 +790,77 @@ def delete_voce_listino(request, pk):
         url_match= reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
         return redirect(url_match)
 
+
+# Prezzo Listino
+class PrezzoListinoCreateView(CreateView):
+    
+    model = PrezzoListino
+    form_class = PrezzoListinoModelForm
+    success_message = 'Prezzo aggiunto correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
+    
+    template_name = "anagrafiche/prezzo_listino.html"
+
+
+    def get_success_url(self):
+        fk_listino_terzista = self.object.fk_listino_terzista.pk  
+        print(f"fk_listino_terzista_success: {fk_listino_terzista}")      
+        return reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
+
+
+    def get_initial(self):
+        initial = super().get_initial() 
+        created_by = self.request.user
+        fk_listino_terzista = self.kwargs['fk_listino_terzista']        
+        initial['fk_listino_terzista'] = fk_listino_terzista
+        initial['created_by'] = created_by
+        return initial
+        
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        print("kwargs:", kwargs)
+        
+        fk_listino_terzista=self.kwargs['fk_listino_terzista']
+        print(f'fk_listino_terzista: {fk_listino_terzista}')
+        listino_terzista = ListinoTerzista.objects.get(pk=fk_listino_terzista)
+        fk_fornitore = listino_terzista.fk_fornitore.pk
+        print(f"fk_fornitore: {fk_fornitore}")
+        print("fk_listino_terzista: " + str(fk_listino_terzista))
+        context['fk_fornitore']=fk_fornitore
+        context['fk_listino_terzista'] = fk_listino_terzista
+        return context
+
+class PrezzoListinoUpdateView(UpdateView):
+    
+    model = PrezzoListino
+    form_class = PrezzoListinoModelForm
+    success_message = 'Prezzo modificato correttamente!'
+    error_message = 'Prezzo non salvato. Controlla.'    
+    
+    template_name = "anagrafiche/prezzo_listino.html"
+
+
+    def get_success_url(self):    
+        fk_listino_terzista = self.object.fk_listino_terzista.pk        
+        return reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
+
+    
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_listino_terzista = self.object.fk_listino_terzista        
+        context['fk_listino_terzista'] = fk_listino_terzista
+        context['listino'] = ListinoTerzista.objects.get(pk=fk_listino_terzista)        
+        
+        return context
+
+
+
+def delete_prezzo_listino(request, pk): 
+        deleteobject = get_object_or_404(PrezzoListino, pk = pk)
+        fk_listino_terzista=deleteobject.fk_listino_terzista_id               
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
+        return redirect(url_match)
