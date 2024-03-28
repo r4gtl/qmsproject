@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import date
 
 from acquistopelli.models import TipoAnimale, TipoGrezzo
-from anagrafiche.models import Fornitore
+from anagrafiche.models import Fornitore, FornitoreLavorazioniEsterne
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
@@ -297,5 +297,38 @@ class TestArticolo(models.Model):
 
 
     
+class ListinoTerzista(models.Model):
+    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+    fk_lavorazione_esterna= models.ForeignKey(LavorazioneEsterna, on_delete=models.CASCADE)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='listino_terzista', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    @property
+    def ultimo_prezzo(self):
+        ultimo_prezzo = self.prezzo_listino.order_by('-data_inserimento').first()
+        if ultimo_prezzo:
+            return ultimo_prezzo.prezzo_listino
+        return None
+    
+
+class PrezzoListino(models.Model):
+    fk_listino_terzista = models.ForeignKey(
+            ListinoTerzista,
+            on_delete=models.CASCADE,
+            related_name='prezzo_listino'
+            )
+    data_inserimento = models.DateField(default=date.today)
+    prezzo = models.DecimalField(max_digits=8, decimal_places=3)    
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='prezzo_listino', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ["-data_inserimento"]
+        
+    def __str__(self):
+        return f"Prezzo: {self.prezzo} - Data inserimento: {self.data_inserimento}"
 
     

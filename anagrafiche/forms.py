@@ -1,3 +1,4 @@
+from articoli.models import LavorazioneEsterna, ListinoTerzista
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -278,3 +279,32 @@ class FormMacello(forms.ModelForm):
             'is_group': 'Raccoglitore'
             
         }
+
+     
+class ListinoTerzistaModelForm(forms.ModelForm):
+    
+    class Meta:
+        model = ListinoTerzista
+        #exclude=()
+        fields='__all__'
+        
+        '''
+        fk_lavorazione_esterna = forms.ModelChoiceField(
+            queryset=LavorazioneEsterna.objects.all(),
+            label='Lavorazione'),
+
+        fk_fornitore_lavorazione_esterna = forms.ModelChoiceField(
+            queryset=FornitoreLavorazioniEsterne.objects.all(),
+            label='Fornitore')
+        '''
+        fields = ['fk_lavorazione_esterna', 'fk_fornitore', 'note', 'created_by']
+        widgets = {'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+                    'created_by': forms.HiddenInput(),
+                    #'fk_fornitore_lavorazione_esterna': forms.HiddenInput()
+                }
+        labels = {
+            'note': 'Note',
+            'fk_lavorazione_esterna': 'Codice Lavorazione'
+            
+        }
+

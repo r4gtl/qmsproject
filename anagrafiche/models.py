@@ -1,10 +1,11 @@
+from datetime import date
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django_countries.fields import \
     CountryField  # Field from django countries app
 
-# Create your models here.
 
 class Facility(models.Model):
     #
@@ -180,6 +181,10 @@ class FornitoreLavorazioniEsterne(models.Model):
     is_lwg = models.BooleanField(default=False)
     audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, default=NESSUNO)
 
+    def __str__(self):
+        return str(self.pk)
+    
+
 class FornitoreServizi(models.Model):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_servizi')
     prova = models.CharField(max_length=50, blank=True, null=True)
@@ -195,6 +200,8 @@ class FornitoreManutenzioni(models.Model):
 
     
 '''FINE MODELLI CATEGORIE'''
+
+
 
 
 class Macello(Fornitore):

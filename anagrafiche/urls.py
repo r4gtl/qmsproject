@@ -37,6 +37,11 @@ urlpatterns = [
     path("edit_transf_value/<int:pk>", XrTransferValueUpdateView.as_view(), name="edit_transf_value"),
     path("delete_transf_value/<int:pk>", delete_xrtransfervalue, name="delete_transf_value"),
 
+    # Listino terzisti
+    path("fornitore/<int:fk_fornitore>/aggiungi_voce_listino/", ListinoTerzistaCreateView.as_view(), name="aggiungi_voce_listino"),
+    path("modifica_voce_listino/<int:pk>", ListinoTerzistaUpdateView.as_view(), name="modifica_voce_listino"),    
+    path("delete_voce_listino/<int:pk>", delete_voce_listino, name="delete_voce_listino"),
+
     # Tabelle Generiche
     path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),
     

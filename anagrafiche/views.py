@@ -1,16 +1,16 @@
 import datetime
 
+from articoli.models import ListinoTerzista, PrezzoListino
 from django.apps import apps
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db import models
 from django.db.utils import IntegrityError
 from django.forms.models import modelform_factory
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
 from nonconformity.models import RapportoNC
@@ -20,7 +20,7 @@ from .forms import (FormCliente, FormFacility, FormFacilityContact,
                     FormFornitore, FormFornitoreLavorazioniEsterne,
                     FormFornitorePelli, FormFornitoreProdottiChimici,
                     FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
-                    FormXrTransferValueLwgFornitore)
+                    FormXrTransferValueLwgFornitore, ListinoTerzistaModelForm)
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
                      FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
@@ -80,7 +80,8 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
                     context["categoria_instance_missing"] = True  # Aggiungi questa chiave al contesto
                     
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
-        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk) 
+        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk)
+        context["listini_terzisti"] = ListinoTerzista.objects.filter(fk_fornitore=self.object.pk)
         return context
     
     
@@ -701,4 +702,92 @@ def delete_facility_authorization(request, pk):
 
 
 
+class ListinoTerzistaCreateView(CreateView):
+    
+    model = ListinoTerzista
+    form_class = ListinoTerzistaModelForm
+    success_message = 'Voce listino aggiunta correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
+    
+    template_name = "anagrafiche/voce_listino.html"
+
+
+    def get_success_url(self):          
+        #fornitore=self.object.fk_fornitore.pk
+            
+        if 'salva_esci' in self.request.POST:
+            pk_fornitore = self.object.fk_fornitore.pk
+            
+            
+            return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': pk_fornitore})
+
+        pk=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk':pk})
+    
+
+    def get_initial(self):
+        initial = super().get_initial() 
+        fk_fornitore = self.kwargs['fk_fornitore']
+        
+        # Recupera l'istanza di FornitoreLavorazioniEsterne corrispondente a fk_fornitore
+        
+        
+        initial['fk_fornitore'] = fk_fornitore
+        return initial
+        
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        print("kwargs:", kwargs)
+        fk_fornitore=self.kwargs['fk_fornitore']
+        print("Fornitore: " + str(fk_fornitore))
+        # Recupera l'istanza di FornitoreLavorazioniEsterne corrispondente a fk_fornitore
+        
+        #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
+        #context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
+        context['fk_fornitore'] = fk_fornitore
+        return context
+
+class ListinoTerzistaUpdateView(UpdateView):
+    
+    model = ListinoTerzista
+    form_class = ListinoTerzistaModelForm
+    success_message = 'Voce listino modificata correttamente!'
+    error_message = 'Certificato non salvato. Controlla.'    
+    
+    template_name = "anagrafiche/lwg.html"
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            fornitore = self.object.fk_fornitore.pk
+            print("Fornitore: " + str(fornitore))
+            return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+        pk=self.object.pk
+        print(f'pk da success url: {pk}')       
+        return reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk':pk})
+    
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_fornitore = self.object.fk_fornitore.pk
+        #context['transfer_values'] = XrTransferValueLwgFornitore.objects.filter(fk_lwgcertificato=self.object.id) 
+        context['fk_fornitore'] = fk_fornitore
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)        
+        
+        return context
+
+
+
+def delete_voce_listino(request, pk): 
+        deleteobject = get_object_or_404(ListinoTerzista, pk = pk)
+        fornitore=deleteobject.fk_fornitore.pk   
+        #dettaglio=deleteobject.iddettordine           
+        #linea = deleteobject.id_linea  
+        #tempomaster=deleteobject.idtempomaster      
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+        return redirect(url_match)
 

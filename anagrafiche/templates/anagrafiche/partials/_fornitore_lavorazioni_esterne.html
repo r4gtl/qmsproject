@@ -27,3 +27,44 @@
 
 <hr>
 {% include "anagrafiche/partials/_sezione_lwg.html" %}
+
+<hr>
+        <div class="d-flex flex-row-reverse bd-highlight">
+        <a href="{% url 'anagrafiche:aggiungi_voce_listino' fk_fornitore=fornitore.pk %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Voce Listino</a>
+        </div>  
+        <br>
+
+
+<div class="table-responsive">
+            <table class="table table-hover table-striped table-bordered">
+              <thead class="thead-dark">
+              <tr>        
+                <th>Lavorazione</th>
+                <th>Prezzo Corrente</th>                
+                <th>Azione</th>
+
+                
+                            
+              </tr>
+
+
+            </thead>
+              
+              <tbody>
+                {% for listino in listini_terzisti %}
+                    
+                    <td class="col-md"><a href="{% url 'anagrafiche:modifica_voce_listino' pk=listino.pk %}">{{ listino.fk_lavorazione_esterna.descrizione }}</a></td>
+                     {% if listino.ultimo_prezzo %}
+                        <td class="col-md text-end">{{ listino.ultimo_prezzo }}</td>
+                    {% else %}
+                        <td class="col-md text-center">Nessun prezzo</td>
+                    {% endif %}
+                    
+                    <td class="col-md text-center"><a href="{% url 'anagrafiche:delete_voce_listino' pk=listino.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonListino{{listino.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                  </tr>
+                
+                {% endfor %}
+                
+              </tbody>
+            </table>
+            </div>
