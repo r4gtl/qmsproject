@@ -74,7 +74,7 @@ inserire in un tag <a>
     }
   });
 
-
+/*
   function setModalUrl(url, title, submitButtonText = "Genera report") {
     // Imposta l'URL nel campo azione del form nel modal
     document.getElementById('date_form').action = url;
@@ -91,5 +91,30 @@ inserire in un tag <a>
 
 
     
-  }
+  }*/
+  function setModalUrl(url, title, submitButtonText = "Genera report") {
+    // Imposta l'URL nel campo azione del form nel modal
+    document.getElementById('date_form').action = url;
+
+    // Ottieni le date selezionate
+    var fromDate = document.getElementById('from_date').value;
+    var toDate = document.getElementById('to_date').value;
+
+    // Imposta i parametri della query string per le date selezionate
+    var queryParams = new URLSearchParams({from_date: fromDate, to_date: toDate});
+
+    // Crea l'URL per la richiesta AJAX
+    var ajaxUrl = url + '?' + queryParams.toString();
+    console.log('ajaxUrl: ' + ajaxUrl)
+
+    // Esegui una richiesta AJAX per ottenere i dati aggiornati
+    fetch(ajaxUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Aggiorna il grafico con i nuovi dati
+            updateChartWithData(data, fromDate, toDate);
+        })
+        .catch(error => console.log(error));
+}
+
 </script>
