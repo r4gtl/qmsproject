@@ -1,7 +1,7 @@
 from datetime import date
 
 from acquistopelli.models import TipoAnimale, TipoGrezzo
-from anagrafiche.models import Fornitore, FornitoreLavorazioniEsterne
+from anagrafiche.models import Fornitore, Cliente
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
@@ -291,11 +291,6 @@ class TestArticolo(models.Model):
     created_by = models.ForeignKey(User, related_name='test_articolo', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
-
-
-
-
     
 class ListinoTerzista(models.Model):
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
@@ -331,4 +326,15 @@ class PrezzoListino(models.Model):
     def __str__(self):
         return f"Prezzo: {self.prezzo} - Data inserimento: {self.data_inserimento}"
 
+
+class ListinoCliente(models.Model):
+    fk_cliente = models.ForeignKey(Cliente, related_name='listino_cliente', on_delete=models.CASCADE)
+    fk_articolo = models.ForeignKey(Articolo, related_name='listino_cliente', on_delete=models.CASCADE)
+    prezzo = models.DecimalField(max_digits=8, decimal_places=3)    
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='listino_cliente', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.fk_articolo.descrizione
     

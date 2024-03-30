@@ -1,6 +1,6 @@
 import datetime
 
-from articoli.models import ListinoTerzista, PrezzoListino
+from articoli.models import ListinoTerzista, PrezzoListino, ListinoCliente
 from django.apps import apps
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -21,7 +21,7 @@ from .forms import (FormCliente, FormFacility, FormFacilityContact,
                     FormFornitorePelli, FormFornitoreProdottiChimici,
                     FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
                     FormXrTransferValueLwgFornitore, ListinoTerzistaModelForm,
-                    PrezzoListinoModelForm,
+                    PrezzoListinoModelForm, ListinoClienteModelForm,
                     )
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
@@ -460,6 +460,7 @@ def delete_facility_contact(request, pk):
         deleteobject = get_object_or_404(FacilityContact, pk = pk)         
         fk_facility=deleteobject.fk_facility.pk       
         deleteobject.delete()
+        messages.warning(request, 'Voce eliminata correttamente!')
         url_match= reverse_lazy('anagrafiche:edit_facility_details', kwargs={'pk':fk_facility})
         return redirect(url_match)    
 
@@ -493,6 +494,13 @@ class ClienteUpdateView(LoginRequiredMixin,UpdateView):
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_cliente=self.kwargs['pk']
+        listini=ListinoCliente.objects.filter(fk_cliente=fk_cliente)        
+        context['listini'] = listini
+        return context
     
     
 class ClienteListView(LoginRequiredMixin, ListView):
@@ -580,6 +588,7 @@ class TransferValueUpdateView(LoginRequiredMixin,UpdateView):
 def delete_transfer_value(request, pk): 
         deleteobject = get_object_or_404(TransferValue, pk = pk)         
         deleteobject.delete()
+        messages.warning(request, 'Voce eliminata correttamente!')
         url_match= reverse_lazy('anagrafiche:tabelle_generiche') 
         return redirect(url_match)    
 
@@ -787,6 +796,7 @@ def delete_voce_listino(request, pk):
         #linea = deleteobject.id_linea  
         #tempomaster=deleteobject.idtempomaster      
         deleteobject.delete()
+        messages.warning(request, 'Voce eliminata correttamente!')
         url_match= reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
         return redirect(url_match)
 
@@ -802,7 +812,11 @@ class PrezzoListinoCreateView(CreateView):
     
     template_name = "anagrafiche/prezzo_listino.html"
 
-
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
+    
     def get_success_url(self):
         fk_listino_terzista = self.object.fk_listino_terzista.pk  
         print(f"fk_listino_terzista_success: {fk_listino_terzista}")      
@@ -842,6 +856,10 @@ class PrezzoListinoUpdateView(UpdateView):
     template_name = "anagrafiche/prezzo_listino.html"
 
 
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+    
     def get_success_url(self):    
         fk_listino_terzista = self.object.fk_listino_terzista.pk        
         return reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
@@ -862,5 +880,89 @@ def delete_prezzo_listino(request, pk):
         deleteobject = get_object_or_404(PrezzoListino, pk = pk)
         fk_listino_terzista=deleteobject.fk_listino_terzista_id               
         deleteobject.delete()
+        messages.warning(request, 'Voce eliminata correttamente!')
         url_match= reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
+        return redirect(url_match)
+
+
+# Listino Cliente
+
+class ListinoClienteCreateView(CreateView):
+    
+    model = ListinoCliente
+    form_class = ListinoClienteModelForm
+    success_message = 'Voce listino aggiunta correttamente!'
+    
+    template_name = "anagrafiche/voce_listino_cliente.html"
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_success_url(self):          
+        #fornitore=self.object.fk_fornitore.pk
+            
+        if 'salva_esci' in self.request.POST:
+            pk_cliente = self.object.fk_cliente.pk
+            
+            
+            return reverse_lazy('anagrafiche:modifica_cliente', kwargs={'pk': pk_cliente})
+
+        pk=self.object.pk        
+        return reverse_lazy('anagrafiche:modifica_voce_listino_cliente', kwargs={'pk':pk})
+    
+
+    def get_initial(self):
+        initial = super().get_initial() 
+        fk_cliente = self.kwargs['fk_cliente']
+        created_by = self.request.user
+        
+        initial['created_by'] = created_by
+        initial['fk_cliente'] = fk_cliente
+        return initial
+        
+    
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)        
+        fk_cliente=self.kwargs['fk_cliente']                
+        context['fk_cliente'] = fk_cliente
+        return context
+
+class ListinoClienteUpdateView(UpdateView):
+    
+    model = ListinoCliente
+    form_class = ListinoClienteModelForm
+    success_message = 'Voce listino modificata correttamente!'
+    
+    
+    template_name = "anagrafiche/voce_listino_cliente.html"
+
+    def form_valid(self, form):        
+        messages.info(self.request, self.success_message) # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            pk_cliente = self.object.fk_cliente.pk            
+            return reverse_lazy('anagrafiche:modifica_cliente', kwargs={'pk': pk_cliente})
+
+        pk=self.object.pk            
+        return reverse_lazy('anagrafiche:modifica_voce_listino_cliente', kwargs={'pk':pk})
+    
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_cliente = self.object.fk_cliente.pk
+        context['fk_cliente'] = fk_cliente        
+        context['cliente'] = Cliente.objects.get(pk=fk_cliente)  
+        return context
+
+
+
+def delete_voce_listino_cliente(request, pk): 
+        deleteobject = get_object_or_404(ListinoCliente, pk = pk)
+        pk_cliente=deleteobject.fk_cliente.pk   
+        deleteobject.delete()
+        messages.warning(request, 'Voce eliminata correttamente!')
+        url_match= reverse_lazy('anagrafiche:modifica_cliente', kwargs={'pk': pk_cliente})
         return redirect(url_match)

@@ -46,6 +46,12 @@ urlpatterns = [
     path("modifica_prezzo_listino/<int:pk>", PrezzoListinoUpdateView.as_view(), name="modifica_prezzo_listino"),    
     path("delete_prezzo_listino/<int:pk>", delete_prezzo_listino, name="delete_prezzo_listino"),
 
+
+    # Listino Clienti
+    path("cliente/<int:fk_cliente>/aggiungi_voce_listino_cliente/", ListinoClienteCreateView.as_view(), name="aggiungi_voce_listino_cliente"),
+    path("modifica_voce_listino_cliente/<int:pk>", ListinoClienteUpdateView.as_view(), name="modifica_voce_listino_cliente"),    
+    path("delete_voce_listino_cliente/<int:pk>", delete_voce_listino_cliente, name="delete_voce_listino_cliente"),
+    
     # Tabelle Generiche
     path('tabelle_generiche/', tabelle_generiche, name="tabelle_generiche"),
     

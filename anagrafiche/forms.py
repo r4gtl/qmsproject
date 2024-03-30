@@ -1,4 +1,4 @@
-from articoli.models import LavorazioneEsterna, ListinoTerzista, PrezzoListino
+from articoli.models import Articolo, LavorazioneEsterna, ListinoTerzista, PrezzoListino, ListinoCliente
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -315,6 +315,7 @@ class PrezzoListinoModelForm(forms.ModelForm):
     class Meta:
         model = PrezzoListino
         fields= '__all__'
+        
         widgets = {
             'data_inserimento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}),            
             'prezzo': forms.NumberInput(attrs={'class': 'form-control'}),            
@@ -324,6 +325,29 @@ class PrezzoListinoModelForm(forms.ModelForm):
         }
         labels = {
             'data_inserimento': 'Data Inserimento',
+            'prezzo': 'Prezzo',            
+            'note': 'Note'
+
+        }
+        
+
+class ListinoClienteModelForm(forms.ModelForm):
+    
+    
+    class Meta:
+        model = ListinoCliente
+        fields= '__all__'
+        fk_articolo = forms.ModelChoiceField(
+            queryset=Articolo.objects.all(),
+            label='Articolo')
+        widgets = {            
+            'prezzo': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'fk_cliente': forms.HiddenInput()
+        }
+        labels = {   
+            'fk_articolo': 'Articolo',
             'prezzo': 'Prezzo',            
             'note': 'Note'
 
