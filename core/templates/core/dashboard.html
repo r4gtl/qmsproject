@@ -26,19 +26,18 @@
                   
                   <!--<canvas id="produzione_ultimo_anno" data-url=""></canvas>-->
                   <canvas id="produzione" data-url=""></canvas>
-                  <a href="#" class="card-link">Vedi monitoraggio</a>
-                  <a href="#" class="card-link">Another link</a>
+                  <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" target="_blank" class="card-link">Vedi monitoraggio</a>                  
                 </div>
               </div>
         </div>
         <div class="col-6">
             <div class="card" style="width: 100%;">
                 <div class="card-body">
-                  <h5 class="card-title">Chart 2</h5>
+                  <h5 class="card-title">Grafico Energia Mj/produzione</h5>
                   
-                  <canvas id="acquisitions-pie"></canvas>
-                  <a href="#" class="card-link">Card link</a>
-                  <a href="#" class="card-link">Another link</a>
+                  <canvas id="energia"></canvas>
+                  <a href="{% url 'monitoraggi:dashboard_monitoraggi' %}" target="_blank"  class="card-link">Vedi monitoraggio</a>
+                  
                 </div>
               </div>
         </div>
@@ -75,8 +74,19 @@
         .then(response => response.json())
         .then(data => {
         // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
-        updateChartWithData(data, from_date, to_date);
+        updateChartWithData(data, from_date, to_date, 'produzione');
         //renderDataInTemplate(data, from_date, to_date);
+        
+        })
+        .catch(error => console.log(error));
+    // Effettua una richiesta AJAX a produzione_intervallo_date
+    fetch("{% url 'core:energia' %}?from_date=" + from_date + "&to_date=" + to_date)
+        .then(response => response.json())
+        .then(data => {
+            
+            // Elabora i dati ricevuti, ad esempio aggiorna il grafico nel tuo template
+            updateChartWithDataEnergia(data, from_date, to_date);
+            // renderDataInTemplateEnergia(data, from_date, to_date);
         
         })
         .catch(error => console.log(error));
@@ -85,7 +95,7 @@
 // Dichiarare una variabile globale per memorizzare il riferimento al grafico
 var myChart;
 
-function updateChartWithData(data, from_date, to_date) {
+function updateChartWithData(data, from_date, to_date, id_chart) {
     // Elabora i dati e aggiorna il grafico utilizzando Chart.js
     var labels = [];
     var quantities = [];
@@ -102,7 +112,7 @@ function updateChartWithData(data, from_date, to_date) {
         myChart.update(); // Aggiorna il grafico con i nuovi dati
     } else {
         // Altrimenti, crea un nuovo grafico
-        var ctx = document.getElementById('produzione').getContext('2d');
+        var ctx = document.getElementById(id_chart).getContext('2d');
         myChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -131,7 +141,50 @@ function updateChartWithData(data, from_date, to_date) {
     }
 }
 
+
+function updateChartWithDataEnergia(data, from_date, to_date) {
+    // Elabora i dati e aggiorna il grafico utilizzando Chart.js
+    
+    
   
+    var labels = [];
+    var quantities = [];
+  
+    for (var i = 0; i < data.length; i++) {
+      
+      labels.push(data[i].mese);
+      
+      quantities.push(data[i].rapporto);
+      
+    }
+  
+    var ctx = document.getElementById('energia').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Rapporto mensile in MJ tra Mq produzione e Kwh',
+          data: quantities,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)', // Specifica un colore predefinito
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false  // Imposta il display della legenda su false per rimuoverla
+          }
+        }
+      }
+    });
+  };  
 
     // Chiama la funzione updateChart con l'URL contenente le date, se presenti
     
@@ -174,15 +227,15 @@ var toDate = '';
 
 
 
-    function setModalDates() {
-      // Ottieni le date attuali dal grafico
-      //var fromDate = '2023-01-01'; // Data iniziale di riferimento
-      //var toDate = '2023-12-31'; // Data finale di riferimento
-  
+    function setModalDates(submitButtonText = "Aggiorna dati") {
+      
       // Imposta le date nel form del modal
       document.getElementById('from_date').value = fromDate;
       document.getElementById('to_date').value = toDate;
-  
+        
+      // Cambia il testo del pulsante di invio nel modal
+    document.querySelector('#myModal button[type="submit"]').innerText = submitButtonText;
+
       // Apri il modal
       var myModal = new bootstrap.Modal(document.getElementById('myModal'));
       myModal.show();
@@ -213,65 +266,19 @@ var toDate = '';
               updateChartWithData(data, fromDate, toDate);
           })
           .catch(error => console.error('Errore durante il recupero dei dati:', error));
+          var url = "{% url 'core:energia' %}?from_date=" + fromDate + "&to_date=" + toDate;
+          fetch(url)
+              .then(response => response.json())
+              .then(data => {
+                  // Aggiorna il grafico con i nuovi dati
+                  updateChartWithDataEnergia(data, fromDate, toDate);
+              })
+              .catch(error => console.error('Errore durante il recupero dei dati:', error));
   }
 });
 
 
 
-    (async function() {
-        const data = [
-            { year: 2010, count: 10 },
-            { year: 2011, count: 20 },
-            { year: 2012, count: 15 },
-            { year: 2013, count: 25 },
-            { year: 2014, count: 22 },
-            { year: 2015, count: 30 },
-            { year: 2016, count: 28 },
-        ];
-        
-        new Chart(
-            document.getElementById('acquisitions-pie'),
-            {
-            type: 'pie',
-            data: {
-                labels: data.map(row => row.year),
-                datasets: [
-                {
-                    label: 'Acquisitions by year',
-                    data: data.map(row => row.count)
-                }
-                ]
-            }
-            }
-        );
-        })();
-
-        (async function() {
-            const data = [
-                { year: 2010, count: 10 },
-                { year: 2011, count: 20 },
-                { year: 2012, count: 15 },
-                { year: 2013, count: 25 },
-                { year: 2014, count: 22 },
-                { year: 2015, count: 30 },
-                { year: 2016, count: 28 },
-            ];
-            
-            new Chart(
-                document.getElementById('acquisitions-doughnut'),
-                {
-                type: 'doughnut',
-                data: {
-                    labels: data.map(row => row.year),
-                    datasets: [
-                    {
-                        label: 'Acquisitions by year',
-                        data: data.map(row => row.count)
-                    }
-                    ]
-                }
-                }
-            );
-            })();
+   
 </script>
 {% endblock %}

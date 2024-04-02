@@ -4,7 +4,7 @@ from django.urls import path
 from .dash_charts import *
 from .searches import *
 from .utils import update_row_numbers
-from .views import produzione
+from .dash_charts import produzione, energia
 
 app_name="core"
 
@@ -38,8 +38,9 @@ urlpatterns = [
     
     
     #Grafici dashboard
-    path('produzione_intervallo_date/', produzione_intervallo_date, name="produzione_intervallo_date"),
+    #path('produzione_intervallo_date/', produzione_intervallo_date, name="produzione_intervallo_date"),
     path('produzione/', produzione, name="produzione"),
+    path('energia/', energia, name="energia"),
 
        
      

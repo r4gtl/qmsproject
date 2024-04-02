@@ -58,30 +58,5 @@ def produzione_old(request,from_date=None, to_date=None):
         
         pass
 
-def produzione(request, from_date=None, to_date=None):
-    if request.method == 'GET':
-        from_date = request.GET.get('from_date')
-        to_date = request.GET.get('to_date')
-        if from_date and to_date:
-            # Converti le date nel formato "YYYY-MM-DD" utilizzato nel modello
-            from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
-            to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
-        else:
-            today = datetime.now().date()
-            from_date = today - timedelta(days=365)
-            to_date = today
-        #print(f"from_date: {from_date}, to_date: {to_date}")    
-        data = DatoProduzione.objects.filter(
-            data_inserimento__gte=from_date,
-            data_inserimento__lte=to_date
-        ).values('data_inserimento', 'industries_served').annotate(
-            total_quantity=Sum('n_pelli'),
-            total_mq=Sum('mq'),  
-            total_kg=Sum('kg')
-        ).order_by('-data_inserimento')  # Ordina per data_inserimento in modo decrescente
-        
-        data_json = list(data)
-        
-        return JsonResponse(data_json, safe=False)
-    else:
-        pass
+   
+

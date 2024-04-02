@@ -1,103 +1,89 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.shortcuts import render
+from django.utils.dateparse import parse_date
 from django.http import JsonResponse
 from django.db.models import Count, Sum, functions
 from django_countries.fields import CountryField
 from monitoraggi.models import DatoProduzione, MonitoraggioEnergiaElettrica
+from monitoraggi.utils import filtro_dati_produzione, somma_dato_per_intervallo_per_mese
 
 
 
-def produzione_intervallo_date(request):
-    # Ottieni le variabili from_date e to_date dalla richiesta, se presenti
+def produzione(request, from_date=None, to_date=None):
+    if request.method == 'GET':
+        from_date = request.GET.get('from_date')
+        to_date = request.GET.get('to_date')
+        if from_date and to_date:
+            # Converti le date nel formato "YYYY-MM-DD" utilizzato nel modello
+            from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
+            to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
+        else:
+            today = datetime.now().date()
+            from_date = today - timedelta(days=365)
+            to_date = today
+        #print(f"from_date: {from_date}, to_date: {to_date}")    
+        data = DatoProduzione.objects.filter(
+            data_inserimento__gte=from_date,
+            data_inserimento__lte=to_date
+        ).values('data_inserimento', 'industries_served').annotate(
+            total_quantity=Sum('n_pelli'),
+            total_mq=Sum('mq'),  
+            total_kg=Sum('kg')
+        ).order_by('-data_inserimento')  # Ordina per data_inserimento in modo decrescente
+        
+        data_json = list(data)
+        
+        return JsonResponse(data_json, safe=False)
+    else:
+        pass
+
+
+
+
+def energia(request, from_date=None, to_date=None):
     from_date = request.GET.get('from_date')
     to_date = request.GET.get('to_date')
-
-    # Calcola le date di inizio e fine per la ricerca dei dati
+    
+    # Effettua il parsing delle date
+    #from_date = parse_date(from_date)
+    #to_date = parse_date(to_date)
     if from_date and to_date:
+        # Converti le date nel formato "YYYY-MM-DD" utilizzato nel modello
         from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
         to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
     else:
         today = datetime.now().date()
         from_date = today - timedelta(days=365)
         to_date = today
+    print(f"from_date_energia: {from_date}")    
+    print(f"to_date_energia: {to_date}")    
+    
+    produzione_per_mese = somma_dato_per_intervallo_per_mese(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+    
+    somma_energia_per_mese = somma_dato_per_intervallo_per_mese(MonitoraggioEnergiaElettrica, 'kwh_in', 'data_lettura', from_date, to_date)
 
-    # Filtra i dati in base alle date fornite
-    data = DatoProduzione.objects.filter(
-        data_inserimento__gte=from_date,
-        data_inserimento__lte=to_date
-    ).values('industries_served').annotate(total_quantity=Sum('n_pelli'))
+    print(f"produzione_per_mese: {produzione_per_mese}")
+    print(f"somma_energia_per_mese: {somma_energia_per_mese}")
 
-    data_json = list(data)
-
-    return JsonResponse(data_json, safe=False)
-
-
-def report_dati_produzione(request):
-    if request.method == 'GET':
-        from_date = request.GET.get('from_date')
-        to_date = request.GET.get('to_date')
+    rapporto_per_mese_energia = []
+    for prod_mese, energia_mese in zip(produzione_per_mese, somma_energia_per_mese):
+        mese = prod_mese['mese']
+        produzione = prod_mese['somma']
+        somma_energia = energia_mese['somma']
         
-        
-        from_date_formatted = datetime.datetime.strptime(from_date, '%Y-%m-%d').date()
-        to_date_formatted = datetime.datetime.strptime(to_date, '%Y-%m-%d').date()
+        if from_date and to_date and from_date <= mese <= to_date:
+            if somma_energia != 0:
+                rapporto = (float(produzione) / float(somma_energia)) * 3.6
+            else:
+                rapporto = 0
+            rapporto_per_mese_energia.append({'mese': mese, 'rapporto': rapporto})
 
-        produzione_filtrata = filtro_dati_produzione(from_date, to_date)
-        context = {
-                'produzione_filtrata': produzione_filtrata,
-                'from_date_formatted': from_date_formatted,
-                'to_date_formatted': to_date_formatted,
-                'from_date': from_date,
-                'to_date': to_date
-                
-            }
 
-        return render(request, 'monitoraggi/reports/report_produzione.html', context)
-    else:
-        # Gestisci eventuali altri metodi HTTP
-        pass
+    rapporto_energia= rapporto_per_mese_energia
+    # Crea un dizionario con i dati JSON
+    dati_json = list(rapporto_energia)
+    print(f"dati_json_energia: {dati_json}")
     
 
-def filtro_dati_produzione(data_inizio, data_fine):    
-    dati_produzione_filtrati = DatoProduzione.objects.filter(
-            data_inserimento__gte=data_inizio,
-            data_inserimento__lte=data_fine
-        ).values('industries_served').annotate(total_quantity=Sum('n_pelli'))
-   
-
-    return dati_produzione_filtrati
-
-
-def fetch_chart_data(from_date, to_date):
-    # Esegui la logica per recuperare i dati necessari utilizzando from_date e to_date
-    # Questa logica potrebbe essere simile a quella nella tua funzione produzione_intervallo_date
-    # Ad esempio:
-    data = DatoProduzione.objects.filter(
-        data_inserimento__gte=from_date,
-        data_inserimento__lte=to_date
-    ).values('data_inserimento').annotate(
-        total_quantity=Sum('n_pelli'),
-        total_mq=Sum('mq'),  
-        total_kg=Sum('kg')
-    )
-    
-    # Formatta i dati come richiesto dal tuo grafico
-    chart_data = {
-        'labels': [entry['data_inserimento'] for entry in data],
-        'datasets': [
-            {
-                'label': 'Total Quantity',
-                'data': [entry['total_quantity'] for entry in data],
-            },
-            {
-                'label': 'Total MQ',
-                'data': [entry['total_mq'] for entry in data],
-            },
-            {
-                'label': 'Total KG',
-                'data': [entry['total_kg'] for entry in data],
-            }
-        ]
-    }
-
-    return chart_data
+    return JsonResponse(dati_json, safe=False)
