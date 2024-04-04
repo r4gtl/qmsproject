@@ -5,7 +5,7 @@ from django.utils.dateparse import parse_date
 from django.http import JsonResponse
 from django.db.models import Count, Sum, functions
 from django_countries.fields import CountryField
-from monitoraggi.models import DatoProduzione, MonitoraggioEnergiaElettrica
+from monitoraggi.models import DatoProduzione, MonitoraggioEnergiaElettrica, MonitoraggioGas
 from monitoraggi.utils import filtro_dati_produzione, somma_dato_per_intervallo_per_mese
 
 
@@ -45,9 +45,6 @@ def energia(request, from_date=None, to_date=None):
     from_date = request.GET.get('from_date')
     to_date = request.GET.get('to_date')
     
-    # Effettua il parsing delle date
-    #from_date = parse_date(from_date)
-    #to_date = parse_date(to_date)
     if from_date and to_date:
         # Converti le date nel formato "YYYY-MM-DD" utilizzato nel modello
         from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
@@ -84,6 +81,51 @@ def energia(request, from_date=None, to_date=None):
     # Crea un dizionario con i dati JSON
     dati_json = list(rapporto_energia)
     print(f"dati_json_energia: {dati_json}")
+    
+
+    return JsonResponse(dati_json, safe=False)
+
+
+def gas(request, from_date=None, to_date=None):
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+    
+    if from_date and to_date:
+        # Converti le date nel formato "YYYY-MM-DD" utilizzato nel modello
+        from_date = datetime.strptime(from_date, '%Y-%m-%d').date()
+        to_date = datetime.strptime(to_date, '%Y-%m-%d').date()
+    else:
+        today = datetime.now().date()
+        from_date = today - timedelta(days=365)
+        to_date = today
+    print(f"from_date_gas: {from_date}")    
+    print(f"to_date_gas: {to_date}")    
+    
+    produzione_per_mese = somma_dato_per_intervallo_per_mese(DatoProduzione, 'mq', 'data_inserimento', from_date, to_date)
+    
+    somma_gas_per_mese = somma_dato_per_intervallo_per_mese(MonitoraggioGas, 'mc_in', 'data_lettura', from_date, to_date)
+
+    print(f"produzione_per_mese: {produzione_per_mese}")
+    print(f"somma_gas_per_mese: {somma_gas_per_mese}")
+
+    rapporto_per_mese_gas = []
+    for prod_mese, gas_mese in zip(produzione_per_mese, somma_gas_per_mese):
+        mese = prod_mese['mese']
+        produzione = prod_mese['somma']
+        somma_gas = gas_mese['somma']
+        
+        if from_date and to_date and from_date <= mese <= to_date:
+            if somma_gas != 0:
+                rapporto = (float(produzione) / float(somma_gas)) * 38.4
+            else:
+                rapporto = 0
+            rapporto_per_mese_gas.append({'mese': mese, 'rapporto': rapporto})
+
+
+    rapporto_gas= rapporto_per_mese_gas
+    # Crea un dizionario con i dati JSON
+    dati_json = list(rapporto_gas)
+        
     
 
     return JsonResponse(dati_json, safe=False)
