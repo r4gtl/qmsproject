@@ -33,7 +33,7 @@ def produzione(request, from_date=None, to_date=None):
         ).order_by('-data_inserimento')  # Ordina per data_inserimento in modo decrescente
         
         data_json = list(data)
-        
+        print(f"data_json_produzione: {data_json}")
         return JsonResponse(data_json, safe=False)
     else:
         pass
@@ -125,7 +125,7 @@ def gas(request, from_date=None, to_date=None):
     rapporto_gas= rapporto_per_mese_gas
     # Crea un dizionario con i dati JSON
     dati_json = list(rapporto_gas)
-        
+    print(f"dati_json_gas: {dati_json}")
     
 
     return JsonResponse(dati_json, safe=False)
