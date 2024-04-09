@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.http import JsonResponse
-from django.views import View
+from django.shortcuts import get_object_or_404
 
 from .models import (ImballaggioPC, ProdottoChimico, SimboloGHS, Sostanza,
                      SostanzaSVHC)
@@ -65,7 +65,9 @@ def get_sostanza_details(request):
 
 def check_if_svhc(request):
     fk_sostanza_id = request.GET.get('fk_sostanza')
-    exists = SostanzaSVHC.objects.filter(Q(num_cas=fk_sostanza_id) | Q(num_ec=fk_sostanza_id)).exists()
+    print(f"fk_sostanza_id: {fk_sostanza_id}")
+    sostanza = get_object_or_404(Sostanza, pk=fk_sostanza_id)
+    exists = SostanzaSVHC.objects.filter(Q(num_cas=sostanza.num_cas) | Q(num_ec=sostanza.num_ec)).exists()
     return JsonResponse({'exists': exists})
 
 
@@ -119,5 +121,4 @@ def get_imballaggi(request):
     
     imballaggi_list = [{'id': imballaggio.id, 'descrizione': imballaggio.descrizione} for imballaggio in imballaggi]
     return JsonResponse({'imballaggi': imballaggi_list})
-
 

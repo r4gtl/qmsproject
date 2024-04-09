@@ -1119,6 +1119,7 @@ class Sostanza_SDSCreateView(LoginRequiredMixin,CreateView):
         
         # Recupera l'ID della sostanza selezionata dal form
         fk_sostanza_id = self.request.POST.get('fk_sostanza')
+        
         # Ottieni l'istanza del modello Sostanza corrispondente all'ID
         fk_sostanza = get_object_or_404(Sostanza, pk=fk_sostanza_id)
         # Crea un'istanza di Sostanza_SDS senza salvare nel database

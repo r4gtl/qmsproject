@@ -203,23 +203,25 @@ $('#modalSearchInput').on('input', function() {
 
 
  // Funzione per gestire il clic sul pulsante "Salva"
-  function handleSaveButtonClick() {
-    // Esegui il controllo per verificare se la sostanza è presente nell'altro modello
-    $.ajax({
-      url: '{% url "chem_man:check_if_svhc" %}',
-      data: { fk_sostanza: $('#id_fk_sostanza').val() },
-      dataType: 'json',
-      success: function(data) {
-        if (data.exists) {
-          // La sostanza è presente nell'altro modello, apri il modal di conferma
-          $('#confirmModal').modal('show');
-        } else {
-          // La sostanza non è presente nell'altro modello, esegui il salvataggio
-          $('#saveForm').submit();
-        }
+  // Funzione per gestire il clic sul pulsante "Salva"
+function handleSaveButtonClick() {
+  // Esegui il controllo per verificare se la sostanza è presente nell'altro modello
+  $.ajax({
+    url: '{% url "chem_man:check_if_svhc" %}',
+    data: { fk_sostanza: $('#id_fk_sostanza').val() },
+    dataType: 'json',
+    success: function(data) {
+      if (data.exists) {
+        // La sostanza è presente nell'altro modello, mostra un alert
+        window.confirm("La sostanza è presente nella lista SVHC. Confermi di voler procedere con il salvataggio?");
+        $('#saveForm').submit();
+      } else {
+        // La sostanza non è presente nell'altro modello, esegui il salvataggio
+        $('#saveForm').submit();
       }
-    });
-  }
+    }
+  });
+}
 
 
 
@@ -229,7 +231,11 @@ $('#modalSearchInput').on('input', function() {
         setFocusOnField(window.focusId);
     });
     
-
+// Associa la funzione handleSaveButtonClick al click del pulsante "Salva"
+$('#saveForm').on('click', function(event) {
+  event.preventDefault(); // Evita il comportamento predefinito del submit del form
+  handleSaveButtonClick(); // Esegue la funzione di gestione del clic sul pulsante "Salva"
+});
 
 </script>
 
