@@ -318,11 +318,15 @@ def report_energia(request):
         #Somma dei mq per mese
         energia_filtrata_per_mese=somma_dato_per_intervallo_per_mese(MonitoraggioEnergiaElettrica, 'kwh_in', 'data_lettura', from_date, to_date)
         
-        # MegaJoule periodo
-        megajoule_periodo = (float(produzione_filtrata) / float(energia_filtrata))*3.6
+        if energia_filtrata==0 or produzione_filtrata==0:
+            megajoule_periodo=0
+            energia_filtrata_tep=0
+        else:
+            # MegaJoule periodo
+            megajoule_periodo = (float(produzione_filtrata) / float(energia_filtrata))*3.6
 
-        # Totale TEP periodo
-        energia_filtrata_tep = (float(energia_filtrata)*0.23)/1000
+            # Totale TEP periodo
+            energia_filtrata_tep = (float(energia_filtrata)*0.23)/1000
 
         context = {
                 'produzione_filtrata': produzione_filtrata,
@@ -362,12 +366,15 @@ def report_gas(request):
         
         #Somma dei mc per mese
         gas_filtrato_per_mese=somma_dato_per_intervallo_per_mese(MonitoraggioGas, 'mc_in', 'data_lettura', from_date, to_date)
-        
-        # MegaJoule periodo
-        megajoule_periodo = (float(produzione_filtrata) / float(gas_filtrato))*3.6
+        if produzione_filtrata==0 or gas_filtrato==0:
+            megajoule_periodo=0
+            gas_filtrato_tep=0
+        else:
+            # MegaJoule periodo
+            megajoule_periodo = (float(produzione_filtrata) / float(gas_filtrato))*3.6
 
-        # Totale TEP per periodo
-        gas_filtrato_tep = (float(gas_filtrato)*0.82)/1000
+            # Totale TEP per periodo
+            gas_filtrato_tep = (float(gas_filtrato)*0.82)/1000
 
         context = {
                 'produzione_filtrata': produzione_filtrata,
