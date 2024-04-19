@@ -1,16 +1,19 @@
-from django.shortcuts import render, get_object_or_404, HttpResponseRedirect, redirect
-from django.urls import reverse, reverse_lazy
-from django.db.models import Sum, Count, Max, Prefetch
 import datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
 
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count, Max, Prefetch, Sum
+from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
+                              redirect, render)
+from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView
-from .models import (Procedura, RevisioneProcedura, Modulo, RevisioneModulo
-                    )
-from .forms import ProceduraModelForm, RevisioneProceduraModelForm, ModuloModelForm, RevisioneModuloModelForm
+
 from .filters import ProceduraFilter
+from .forms import (ModuloModelForm, ProceduraModelForm,
+                    RevisioneModuloModelForm, RevisioneProceduraModelForm)
+from .models import Modulo, Procedura, RevisioneModulo, RevisioneProcedura
+
 
 def procedure_home(request):
     procedure = Procedura.objects.all()
@@ -169,7 +172,7 @@ class ModuloCreateView(LoginRequiredMixin,CreateView):
     def get_success_url(self):   
         if 'salva_esci' in self.request.POST:
             fk_procedura=self.object.fk_procedura.pk
-            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'fk_procedura':fk_procedura})
+            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
         pk_modulo=self.object.pk
         fk_procedura=self.object.fk_procedura.pk
         return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'fk_procedura':fk_procedura, 'pk': pk_modulo})
@@ -204,7 +207,7 @@ class ModuloUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):        
         if 'salva_esci' in self.request.POST:
             fk_procedura=self.object.fk_procedura.pk
-            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'fk_procedura':fk_procedura})
+            return reverse_lazy('manualeprocedure:modifica_procedura', kwargs={'pk':fk_procedura})
         pk_modulo=self.object.pk
         fk_procedura=self.object.fk_procedura.pk
         return reverse_lazy('manualeprocedure:modifica_modulo', kwargs={'fk_procedura':fk_procedura, 'pk': pk_modulo})
@@ -217,9 +220,7 @@ class ModuloUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
         pk_procedura = self.kwargs['fk_procedura'] 
-        pk_modulo = self.kwargs['pk']
-        print("Procedura: " + str(pk_procedura))
-        print("Modulo: " + str(pk_modulo))
+        pk_modulo = self.kwargs['pk']        
         context['fk_procedura'] = Procedura.objects.get(pk=pk_procedura)
         context['elenco_revisioni'] = RevisioneModulo.objects.filter(fk_modulo=pk_modulo)
         return context

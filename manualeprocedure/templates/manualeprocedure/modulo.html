@@ -15,7 +15,7 @@
         <li class="breadcrumb-item"><a href="{% url 'manualeprocedure:procedure_home' %}">Manuale Procedure</a></li>        
 
         {% if form.instance.id  %}
-            <li class="breadcrumb-item active" aria-current="page">Modifica {{ modulo.identificativo }} del {{ modulo.data_modulo }}</li>
+            <li class="breadcrumb-item active" aria-current="page">Modifica modulo {{ modulo.identificativo }} del {{ modulo.data_modulo }}</li>
         {% else %}
             <li class="breadcrumb-item active" aria-current="page">Aggiungi Modulo</li>
         {% endif %}             
@@ -54,7 +54,7 @@
          {% endif %}
          <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
          <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e Continua">
-         <button type="button" class="btn btn-danger mb-2 me-1" onclick="goBack()"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+         <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'manualeprocedure:procedure_home' %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
             <div class="row">
                 <div class="col-3">
                     {{ form.identificativo|as_crispy_field }}
