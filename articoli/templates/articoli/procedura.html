@@ -68,6 +68,9 @@
                              
                         </div>
                         <div class="row">
+                                {{ form.note|as_crispy_field }}
+                        </div>
+                        <div class="row">
 
                             <div class = "col-md-2">
                                 {{ form.fk_articolo|as_crispy_field }}

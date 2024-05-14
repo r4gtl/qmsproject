@@ -137,7 +137,8 @@ class ProceduraModelForm(forms.ModelForm):
             'nr_procedura': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
             'data_procedura': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
             'nr_revisione': forms.NumberInput(attrs={'class': 'form-control text-end', 'readonly': 'True'}),
-            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),            
+            'data_revisione': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control text-end', 'type': 'date'}),  
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),          
             'fk_articolo': forms.HiddenInput(), 
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput()
