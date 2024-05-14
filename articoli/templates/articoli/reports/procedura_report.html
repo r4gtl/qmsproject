@@ -1,0 +1,129 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale_ordini.html' %}
+{% load static %}
+{% block title %} {{ ordine }} {% endblock %}
+
+
+    <style>
+    
+        @page {
+            
+			size: A4 portrait;
+			
+			
+		}
+
+        
+
+
+		@media print {
+			body {
+				margin: 0.1em 0.6em 0.1em 0.6em ;
+								
+				}
+            
+            table {
+                page-break-inside: auto;
+                
+            }
+            .table-container {
+                /*page-break-before: always; /* Sposta la tabella su una nuova pagina se supera l'altezza massima */
+                /*max-height: none; /* Rimuovi il limite di altezza durante la stampa */
+                /*overflow-y: visible; /* Mostra tutto il contenuto della tabella durante la stampa */
+                /*margin-bottom: 100vh -200px;*/
+        }
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+        }
+
+            .footer {
+                
+                page-break-after: always;
+                
+            }
+			
+		}
+		
+		
+        
+    </style>
+</head>
+{% block content %}
+<div class="container mt-4">
+    <!-- {% include 'chem_man/acquisti/_partials/_header_ordine.html' %} -->
+<hr>
+</div>
+<div class="container">
+<div class="row">
+    <div class="col">
+        <h3>Fasi di Lavorazione</h3>
+    </div>
+    <div class="col">
+        <h3>{{ procedura.fk_articolo }}</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        {{ procedura }}
+    </div>
+</div>
+<hr>
+{% for dettaglio in dettagli_procedura %}
+    <div class="row">
+        <p>Sequenza {{ dettaglio.numero_riga }}</p>
+        <p>Fase {{ dettaglio.fk_faselavoro }}</p>
+    </div>
+    {% if dettaglio.is_interna %}        
+        <div class="row">
+            <p>Attributo {{ dettaglio.fk_dettaglio_fase_lavoro }}</p>
+            <p>Valore {{ dettaglio.valore }}</p>
+        </div>
+    {% else %}
+        <table class="table" >
+            <thead>
+                <tr>
+                <th scope="col">Attributto</th>
+                <th scope="col">Lavorazione</th>
+                <th scope="col">Fornitore</th>                
+                </tr>
+            </thead>
+            <tbody>                
+                <tr>
+                    <td>{{ dettaglio.fk_dettaglio_fase_lavoro }}</td>
+                    <td>{{ dettaglio.fk_lavorazione_esterna.codice }}</td>
+                    <td>{{ dettaglio.fk_fornitore }}</td>
+                    
+                </tr>
+            
+            </tbody>
+            </table>
+               
+        <div class="row">
+            <p>Descrizione {{ dettaglio.fk_lavorazione_esterna }}
+        </div>
+
+    {% endif %}
+    <hr>
+{% endfor %}
+
+
+
+    
+    
+
+    </div>
+   
+
+
+
+
+
+{% endblock %}
+
+
+     
+{% block extra_scripts %}
+<script>
+    
+</script>
+{% endblock %}   

@@ -799,3 +799,22 @@ def delete_caratteristica_procedura(request, pk):
     messages.warning(request, "Caratteristica Procedura eliminata con successo.")
     url_match = reverse_lazy('articoli:modifica_dettaglio_procedura', kwargs={'fk_procedura': fk_procedura, 'pk':fk_dettaglio_procedura})
     return redirect(url_match)
+
+
+
+
+
+
+
+# Stampe
+def stampa_procedura(request, pk):
+    # Recupera il prodotto con l'id fornito o restituisce 404 se non trovato
+    procedura = get_object_or_404(Procedura, id=pk)
+    dettagli_procedura=DettaglioProcedura.objects.filter(fk_procedura=pk)
+    context = {
+        'procedura': procedura,
+        'dettagli_procedura': dettagli_procedura
+    }
+    # Restituisci il prodotto nel template
+    return render(request, 'articoli/reports/procedura_report.html', context)
+    

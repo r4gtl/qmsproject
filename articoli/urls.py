@@ -68,5 +68,8 @@ urlpatterns = [
     path('accoda_dettaglio_fase_lavoro/', accoda_dettaglio_fase_lavoro, name="accoda_dettaglio_fase_lavoro"),
     path('accoda_caratteristiche_fase_lavoro_dettaglio_procedura/', accoda_caratteristiche_fase_lavoro_dettaglio_procedura, name="accoda_caratteristiche_fase_lavoro_dettaglio_procedura"),
 
+    # Stampe
+    path('stampa_procedura/<int:pk>/', stampa_procedura, name='stampa_procedura'),
+
     
 ]
