@@ -811,9 +811,11 @@ def stampa_procedura(request, pk):
     # Recupera il prodotto con l'id fornito o restituisce 404 se non trovato
     procedura = get_object_or_404(Procedura, id=pk)
     dettagli_procedura=DettaglioProcedura.objects.filter(fk_procedura=pk)
+    caratteristiche_procedura=CaratteristicaProcedura.objects.filter(fk_dettaglio_procedura__in=dettagli_procedura)
     context = {
         'procedura': procedura,
-        'dettagli_procedura': dettagli_procedura
+        'dettagli_procedura': dettagli_procedura,
+        'caratteristiche_procedura': caratteristiche_procedura
     }
     # Restituisci il prodotto nel template
     return render(request, 'articoli/reports/procedura_report.html', context)

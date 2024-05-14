@@ -73,7 +73,8 @@
         <p>Sequenza {{ dettaglio.numero_riga }}</p>
         <p>Fase {{ dettaglio.fk_faselavoro }}</p>
     </div>
-    {% if dettaglio.is_interna %}        
+    {% if dettaglio.is_interna %}   
+        {{ dettaglio.is_interna }}     
         <div class="row">
             <p>Attributo {{ dettaglio.fk_dettaglio_fase_lavoro }}</p>
             <p>Valore {{ dettaglio.valore }}</p>
@@ -82,16 +83,18 @@
         <table class="table" >
             <thead>
                 <tr>
-                <th scope="col">Attributto</th>
+                <th scope="col">Attributo</th>
                 <th scope="col">Lavorazione</th>
                 <th scope="col">Fornitore</th>                
                 </tr>
             </thead>
             <tbody>                
                 <tr>
-                    <td>{{ dettaglio.fk_dettaglio_fase_lavoro }}</td>
-                    <td>{{ dettaglio.fk_lavorazione_esterna.codice }}</td>
-                    <td>{{ dettaglio.fk_fornitore }}</td>
+                    {% for caratteristica in caratteristiche_procedura %}
+                        <td>{{ caratteristica.fk_dettaglio_fase_lavoro }}</td>
+                        <td>{{ caratteristica.fk_lavorazione_esterna.codice }}</td>
+                        <td>{{ caratteristica.fk_fornitore }}</td>
+                    {% endfor %}
                     
                 </tr>
             
