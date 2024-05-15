@@ -16,9 +16,23 @@
 
 
 		@media print {
+            @page {
+            size: A4 portrait; 
+            margin: 10mm;;
+            
+          }
+
+
+          @page :first {
+            margin-top: 20mm; /* Margini per la prima pagina */
+          }
+
+
 			body {
-				margin: 0.1em 0.6em 0.1em 0.6em ;
-								
+				/*margin: 0.1em 0.6em 0.1em 0.6em ;*/
+				margin: 0;
+                font-size: 9px;
+
 				}
             
             table {
@@ -41,6 +55,7 @@
                 page-break-after: always;
                 
             }
+            
 			
 		}
 		
