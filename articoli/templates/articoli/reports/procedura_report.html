@@ -87,7 +87,7 @@
                 <tr>
 
                         <td>{{ caratteristica.fk_dettaglio_fase_lavoro }}</td>
-                        <td>{{ caratteristica.valore }}</td>
+                        <td>{{ caratteristica.valore|default_if_none:"" }}</td>
                         
                 </tr>
                     {% endfor %}
