@@ -70,14 +70,31 @@
 <hr>
 {% for dettaglio in dettagli_procedura %}
     <div class="row">
-        <p>Sequenza {{ dettaglio.numero_riga }}</p>
-        <p>Fase {{ dettaglio.fk_faselavoro }}</p>
+        <p>Sequenza: <strong>{{ dettaglio.numero_riga }}</strong></p>
+        <p>Fase: <strong>{{ dettaglio.fk_faselavoro }}</strong></p>
     </div>
     {% if dettaglio.is_interna %}   
-        {{ dettaglio.is_interna }}     
         <div class="row">
-            <p>Attributo {{ dettaglio.fk_dettaglio_fase_lavoro }}</p>
-            <p>Valore {{ dettaglio.valore }}</p>
+            <table class="table" >
+            <thead>
+                <tr>
+                <th scope="col">Attributo</th>
+                <th scope="col">Valore</th>
+                </tr>
+            </thead>
+            <tbody>                
+                    {% for caratteristica in dettaglio.caratteristicaprocedura.all %}
+                <tr>
+
+                        <td>{{ caratteristica.fk_dettaglio_fase_lavoro }}</td>
+                        <td>{{ caratteristica.valore }}</td>
+                        
+                </tr>
+                    {% endfor %}
+                    
+            
+            </tbody>
+            </table>
         </div>
     {% else %}
         <table class="table" >
@@ -89,22 +106,23 @@
                 </tr>
             </thead>
             <tbody>                
-                <tr>
                     {% for caratteristica in dettaglio.caratteristicaprocedura.all %}
+                <tr>
 
                         <td>{{ caratteristica.fk_dettaglio_fase_lavoro }}</td>
                         <td>{{ caratteristica.fk_lavorazione_esterna.codice }}</td>
                         <td>{{ caratteristica.fk_fornitore }}</td>
+                </tr>
+                <tr>
+                <p>Descrizione: <strong>{{ caratteristica.fk_lavorazione_esterna }}</strong></p>
+                </tr>
                     {% endfor %}
                     
-                </tr>
             
             </tbody>
+        
             </table>
                
-        <div class="row">
-            <p>Descrizione {{ dettaglio.fk_lavorazione_esterna }}
-        </div>
 
     {% endif %}
     <hr>
