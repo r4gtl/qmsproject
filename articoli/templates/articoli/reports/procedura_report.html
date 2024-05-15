@@ -90,7 +90,8 @@
             </thead>
             <tbody>                
                 <tr>
-                    {% for caratteristica in caratteristiche_procedura %}
+                    {% for caratteristica in dettaglio.caratteristicaprocedura.all %}
+
                         <td>{{ caratteristica.fk_dettaglio_fase_lavoro }}</td>
                         <td>{{ caratteristica.fk_lavorazione_esterna.codice }}</td>
                         <td>{{ caratteristica.fk_fornitore }}</td>
