@@ -993,7 +993,8 @@ class XRFondoColoreCreateView(LoginRequiredMixin,CreateView):
 
     def get_initial(self):
         initial = super().get_initial()        
-        numero_ricetta = self.kwargs.get('numero_ricetta')        
+        numero_ricetta = self.kwargs.get('numero_ricetta')   
+        #print(f"Numero Ricetta Initial: {numero_ricetta}")     
         initial['numero_ricetta'] = numero_ricetta        
         initial['created_by'] = self.request.user        
         return initial
@@ -1002,9 +1003,11 @@ class XRFondoColoreCreateView(LoginRequiredMixin,CreateView):
         context = super().get_context_data(**kwargs)
         for key, value in kwargs.items():
             print(f"{key}: {value}")
-        pk_ricetta = self.kwargs['numero_ricetta']   
+        pk_ricetta = self.kwargs['numero_ricetta']  
+        #print(f"Numero Ricetta context: {pk_ricetta}")      
+         
         context['ricetta_colore_bagnato'] = pk_ricetta
-        context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)
+        #context['dettagli_ricetta'] = get_object_or_404(RicettaColoreBagnato, pk=pk_ricetta)
         return context
         
 
