@@ -881,6 +881,10 @@ class RicettaColoreBagnatoUpdateView(LoginRequiredMixin, UpdateView):
 
 def delete_ricetta_colore_bagnato(request, pk):
         deleteobject = get_object_or_404(RicettaColoreBagnato, pk = pk)
+
+        # Trova tutte le istanze di XRFondoColore con lo stesso numero_ricetta
+        XRFondoColore.objects.filter(numero_ricetta=deleteobject.numero_ricetta).delete()
+        
         deleteobject.delete()
         url_match = reverse_lazy('ricette:home_ricette_colori_bagnato')
         return redirect(url_match)
