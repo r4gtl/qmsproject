@@ -518,12 +518,12 @@ def piano_manutenzioni(request):
         # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
         if fk_ward_id == 'tutti':
             manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.filter(
-                prossima_scadenza__range=(data_inizio, data_fine)
+                prossima_scadenza__range=(data_inizio, data_fine), is_eseguita=False
             ).order_by('-prossima_scadenza')
         else:
             manutenzioni_ordinarie = ManutenzioneOrdinaria.objects.filter(
                 prossima_scadenza__range=(data_inizio, data_fine),
-                fk_attrezzatura__fk_ward=fk_ward_id
+                fk_attrezzatura__fk_ward=fk_ward_id, is_eseguita=False
             ).order_by('-prossima_scadenza')
         
         print(f"request: {request}")
