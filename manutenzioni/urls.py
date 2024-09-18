@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import *
 
 from .charts import get_monthly_data
+from .views import *
 
 app_name="manutenzioni"
 
@@ -41,6 +41,7 @@ urlpatterns = [
     path('piano_manutenzioni/', piano_manutenzioni, name="piano_manutenzioni"),
     path('piano_controlli_periodici/', piano_controlli_periodici, name="piano_controlli_periodici"),
     path('registro_controllo_periodico/<int:fk_attrezzatura>/', registro_controllo_periodico, name="registro_controllo_periodico"),
+    path('manutenzioni_straordinarie/', manutenzioni_straordinarie, name="manutenzioni_straordinarie"),
 
     # Charts
     path('get_monthly_data/', get_monthly_data, name="get_monthly_data"),

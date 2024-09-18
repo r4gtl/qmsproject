@@ -1,0 +1,78 @@
+{% extends 'core/basi_stampe/base_stampa_a4_verticale.html' %}
+{% load static %}
+{% load countries %}
+{% load custom_filters %}
+{% block title %}Piano delle Manutenzioni {% endblock %}
+
+{% block content %}
+
+  <h1 class="text-center">Manutenzioni Straordinarie</h1>
+  <h2 class="text-center">Intervallo di date selezionato: <strong>{{ data_inizio }} - {{ data_fine }}</strong></h2>
+  <h2 class="text-center">Reparto: <strong>{{ fk_ward_id }}</strong></h2>
+
+  <br>
+  <hr>
+
+  <div class="row">
+    <div class="table-responsive">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Data Manutenzione</th>
+            <th>Descrizione</th>
+            <th>Fornitore</th>
+            <th>Importo</th>
+            <th>Ore fermo</th>
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          {% regroup manutenzioni_straordinarie by fk_attrezzatura as attrezzature_grouped %}
+          
+          {% for gruppo in attrezzature_grouped %}
+            <tr>
+              <td colspan="6"><strong>Cod.: {{ gruppo.grouper.codice_attrezzatura }} - Descrizione: {{ gruppo.grouper.descrizione }} - Modello: {{ gruppo.grouper.modello }} - Serie/Matr.: {{ gruppo.grouper.modello }}</strong></td>
+            </tr>
+            
+            {% for manutenzione in gruppo.list %}
+            <tr>
+              <td>{{ manutenzione.data_manutenzione }}</td>
+              <td>{{ manutenzione.descrizione }}</td>
+              <td>{{ manutenzione.fk_fornitore }}</td>
+              <td class="text-end">{{ manutenzione.importo }}</td>
+              <td class="text-end">{{ manutenzione.ore_fermo }}</td>
+              
+            </tr>
+            {% endfor %}
+            <tr style="background-color: #faf0ca; font-size: 14px;">
+                
+                <td colspan="4" class="text-end">
+                    {% for manutenzione_raggruppata in manutenzioni_raggruppate %}
+                    
+                        {% if manutenzione_raggruppata.fk_attrezzatura == gruppo.grouper.pk %}
+                            <strong>{{ manutenzione_raggruppata.totale_importo|floatformat:"3" }}</strong>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                
+                <td colspan="5" class="text-end">
+                    {% for manutenzione_raggruppata in manutenzioni_raggruppate %}
+                    
+                        {% if manutenzione_raggruppata.fk_attrezzatura == gruppo.grouper.pk %}
+                            <strong>{{ manutenzione_raggruppata.totale_ore_fermo|floatformat:"2" }}</strong>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}
