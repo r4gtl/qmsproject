@@ -23,47 +23,31 @@
             <th>Fornitore</th>
             <th>Importo</th>
             <th>Ore fermo</th>
-            
           </tr>
         </thead>
         
         <tbody>
-          {% regroup manutenzioni_straordinarie by fk_attrezzatura as attrezzature_grouped %}
-          
-          {% for gruppo in attrezzature_grouped %}
+          {% for attrezzatura, manutenzioni in manutenzioni_raggruppate.items %}
             <tr>
-              <td colspan="6"><strong>Cod.: {{ gruppo.grouper.codice_attrezzatura }} - Descrizione: {{ gruppo.grouper.descrizione }} - Modello: {{ gruppo.grouper.modello }} - Serie/Matr.: {{ gruppo.grouper.modello }}</strong></td>
+              <td colspan="6"><strong>Cod.: {{ attrezzatura.codice_attrezzatura }} - Descrizione: {{ attrezzatura.descrizione }} - Modello: {{ attrezzatura.modello }} - Serie/Matr.: {{ attrezzatura.serie_matricola }}</strong></td>
             </tr>
             
-            {% for manutenzione in gruppo.list %}
+            {% for manutenzione in manutenzioni %}
             <tr>
               <td>{{ manutenzione.data_manutenzione }}</td>
               <td>{{ manutenzione.descrizione }}</td>
               <td>{{ manutenzione.fk_fornitore }}</td>
               <td class="text-end">{{ manutenzione.importo }}</td>
               <td class="text-end">{{ manutenzione.ore_fermo }}</td>
-              
             </tr>
             {% endfor %}
+            
             <tr style="background-color: #faf0ca; font-size: 14px;">
-                
-                <td colspan="4" class="text-end">
-                    {% for manutenzione_raggruppata in manutenzioni_raggruppate %}
-                    
-                        {% if manutenzione_raggruppata.fk_attrezzatura == gruppo.grouper.pk %}
-                            <strong>{{ manutenzione_raggruppata.totale_importo|floatformat:"3" }}</strong>
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                
-                <td colspan="5" class="text-end">
-                    {% for manutenzione_raggruppata in manutenzioni_raggruppate %}
-                    
-                        {% if manutenzione_raggruppata.fk_attrezzatura == gruppo.grouper.pk %}
-                            <strong>{{ manutenzione_raggruppata.totale_ore_fermo|floatformat:"2" }}</strong>
-                        {% endif %}
-                    {% endfor %}
-                </td>
+              <td colspan="3" class="text-end"><strong>Subtotale:</strong></td>
+              {% with subtotali.attrezzatura as subtotale %}
+                <td class="text-end"><strong>{{ subtotale.totale_importo|floatformat:"3" }}</strong></td>
+                <td class="text-end"><strong>{{ subtotale.totale_ore_fermo|floatformat:"2" }}</strong></td>
+                {% endwith %}
             </tr>
             
           {% endfor %}

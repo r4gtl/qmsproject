@@ -1,4 +1,5 @@
 # import datetime
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from core.utils import get_records_with_upcoming_expiry
@@ -591,19 +592,19 @@ def registro_controllo_periodico(request, fk_attrezzatura):
     
 
 
+
 def manutenzioni_straordinarie(request):
-    
     if request.method == 'GET':
         
-        data_inizio = request.GET.get('data_inizio')  # Assumi che il campo del modal si chiami 'data_inizio'
-        data_fine = request.GET.get('data_fine')  # Assumi che il campo del modal si chiami 'data_fine'
-        fk_ward_id = request.GET.get('fk_ward_id')  # Assumi che l'ID del campo 'fk_ward' selezionato nel modal venga passato come parametro 'fk_ward_id'
-        
-        # Effettua il parsing delle date in oggetti datetime
+        data_inizio = request.GET.get('data_inizio')
+        data_fine = request.GET.get('data_fine')
+        fk_ward_id = request.GET.get('fk_ward_id')
+
+        # Parsing delle date
         data_inizio = datetime.datetime.strptime(data_inizio, '%Y-%m-%d').date()
         data_fine = datetime.datetime.strptime(data_fine, '%Y-%m-%d').date()
     
-        # Esegui la query per ottenere i record di Taratura filtrati per intervallo di date e fk_ward
+        # Filtra in base a fk_ward e intervallo di date
         if fk_ward_id == 'tutti':
             manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.filter(
                 data_manutenzione__range=(data_inizio, data_fine)
@@ -614,25 +615,26 @@ def manutenzioni_straordinarie(request):
                 fk_attrezzatura__fk_ward=fk_ward_id
             ).order_by('-data_manutenzione')
         
+        # Raggruppa per attrezzatura
+        manutenzioni_raggruppate = defaultdict(list)
+        for manutenzione in manutenzioni_straordinarie:
+            manutenzioni_raggruppate[manutenzione.fk_attrezzatura].append(manutenzione)
         
-        # Raggruppa per attrezzatura e calcola i subtotali
-        manutenzioni_raggruppate = manutenzioni_straordinarie.values(
-            'fk_attrezzatura'
-        ).annotate(
-            totale_importo=Sum('importo'),
-            totale_ore_fermo=Sum('ore_fermo'),
-            manutenzioni=Sum('importo')  # Puoi aggiungere altri campi qui se ti servono per la visualizzazione
-        ).order_by('fk_attrezzatura')
+        # Calcola subtotali per ogni attrezzatura
+        subtotali = {
+            attrezzatura: {
+                'totale_importo': sum(m.importo for m in manutenzioni),
+                'totale_ore_fermo': sum(m.ore_fermo for m in manutenzioni)
+            }
+            for attrezzatura, manutenzioni in manutenzioni_raggruppate.items()
+        }
 
-        
         context = {
-            'manutenzioni_straordinarie': manutenzioni_straordinarie,
             'manutenzioni_raggruppate': manutenzioni_raggruppate,
+            'subtotali': subtotali,
             'data_inizio': data_inizio,
             'data_fine': data_fine,
             'fk_ward_id': fk_ward_id
-            
-            
         }
         
-    return render(request, 'manutenzioni/reports/manutenzioni_straordinarie.html', context)
+        return render(request, 'manutenzioni/reports/manutenzioni_straordinarie.html', context)
