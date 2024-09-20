@@ -607,12 +607,12 @@ def manutenzioni_straordinarie(request):
         if fk_ward_id == 'tutti':
             manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.filter(
                 data_manutenzione__range=(data_inizio, data_fine)
-            ).order_by('-data_manutenzione')
+            ).order_by('fk_attrezzatura', '-data_manutenzione')
         else:
             manutenzioni_straordinarie = ManutenzioneStraordinaria.objects.filter(
                 data_manutenzione__range=(data_inizio, data_fine),
                 fk_attrezzatura__fk_ward=fk_ward_id
-            ).order_by('-data_manutenzione')
+            ).order_by('fk_attrezzatura', '-data_manutenzione')
         
         
         # Raggruppa per attrezzatura e calcola i subtotali
@@ -620,10 +620,10 @@ def manutenzioni_straordinarie(request):
             'fk_attrezzatura'
         ).annotate(
             totale_importo=Sum('importo'),
-            totale_ore_fermo=Sum('ore_fermo'),
-            manutenzioni=Sum('importo')  # Puoi aggiungere altri campi qui se ti servono per la visualizzazione
+            totale_ore_fermo=Sum('ore_fermo')
         ).order_by('fk_attrezzatura')
 
+        
         
         context = {
             'manutenzioni_straordinarie': manutenzioni_straordinarie,
