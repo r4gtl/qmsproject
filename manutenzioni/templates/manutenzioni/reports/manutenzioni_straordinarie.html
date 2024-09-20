@@ -7,7 +7,7 @@
 {% block content %}
 
   <h1 class="text-center">Manutenzioni Straordinarie</h1>
-  <h2 class="text-center">Intervallo di date selezionato: <strong>{{ data_inizio }} - {{ data_fine }}</strong></h2>
+  <h4 class="text-center">Intervallo di date selezionato: <strong>{{ data_inizio }} - {{ data_fine }}</strong></h4>
   <h2 class="text-center">Reparto: <strong>{{ fk_ward_id }}</strong></h2>
 
   <br>
@@ -51,7 +51,7 @@
                     {% for manutenzione_raggruppata in manutenzioni_raggruppate %}
                     
                         {% if manutenzione_raggruppata.fk_attrezzatura == gruppo.grouper.pk %}
-                            <strong>{{ manutenzione_raggruppata.totale_importo|floatformat:"3" }}</strong>
+                            <strong>{{ manutenzione_raggruppata.totale_importo|floatformat:"2" }}</strong>
                         {% endif %}
                     {% endfor %}
                 </td>
