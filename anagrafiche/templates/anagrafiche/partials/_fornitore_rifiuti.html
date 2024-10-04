@@ -12,17 +12,150 @@
             {% endfor %}
         {% endfor %}
     {% endif %}
-    <div class="row">
-        <div class="col-2">
-            {{ modello_form.prova|as_crispy_field }}
-        </div>
-        
-    </div>
     
-    
-
     
     
 </form>
+<hr>
+
+    <div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col-6">
+                <h5>Albo Gestori</h5>
+                            
+            </div>
+            <div class="col-6 text-end">
+                
+                <a href="#" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
+
+            </div>
+        </div>
+    <div class="table-responsive mt-2">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Numero Documento</th>
+            <th>Data Documento</th>
+            <th>Scadenza</th>
+            <th>Documento</th>
+            
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          
+          
+          {% for gestore in gestori_rifiuti %}
+            
+            <tr>
+              <td>{{ gestore.numero }}</td>
+              <td>{{ gestore.data_documento }}</td>
+              <td>{{ gestore.data_scadenza }}</td>
+              <td>{{ gestore.documento }}</td>
+              
+              
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <div class="col">
+        <div class="row">
+            <div class="col-6">
+                <h5>Albo Smaltitori</h5>
+                            
+            </div>
+            <div class="col-6 text-end">
+                
+                <a href="#" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
+
+            </div>
+        </div>
+    <div class="table-responsive mt-2">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Numero Documento</th>
+            <th>Data Documento</th>
+            <th>Scadenza</th>
+            <th>Documento</th>
+            
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          
+          
+          {% for smaltitore in smaltitori_rifiuti %}
+            
+            <tr>
+              <td>{{ smaltitore.numero }}</td>
+              <td>{{ smaltitore.data_documento }}</td>
+              <td>{{ smaltitore.data_scadenza }}</td>
+              <td>{{ smaltitore.documento }}</td>
+              
+              
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <div class="col">
+        <div class="row">
+            <div class="col-6">
+                <h5>Albo Trasportatori</h5>
+                            
+            </div>
+            <div class="col-6 text-end">
+                
+                <a href="#" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
+
+            </div>
+        </div>
+    <div class="table-responsive mt-2">
+      <table class="table table-hover table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th>Numero Documento</th>
+            <th>Data Documento</th>
+            <th>Scadenza</th>
+            <th>Documento</th>
+            
+            
+          </tr>
+        </thead>
+        
+        <tbody>
+          
+          
+          {% for trasportatore in trasportatori_rifiuti %}
+            
+            <tr>
+              <td>{{ trasportatore.numero }}</td>
+              <td>{{ trasportatore.data_documento }}</td>
+              <td>{{ trasportatore.data_scadenza }}</td>
+              <td>{{ trasportatore.documento }}</td>
+              
+              
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+
+  </div>
+
 <hr>
 {% include "nonconformity/partials/_nc_associate.html" %}

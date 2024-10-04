@@ -1,3 +1,4 @@
+import os
 from datetime import date
 
 from django.contrib.auth.models import User
@@ -191,7 +192,60 @@ class FornitoreServizi(models.Model):
     
 class FornitoreRifiuti(models.Model):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_rifiuti')
-    prova = models.CharField(max_length=50, blank=True, null=True)
+    
+
+
+def gestore_documenti_upload_to(instance, filename):
+    # Normalizza la ragione sociale per evitare caratteri non validi nei nomi delle cartelle
+    ragione_sociale_normalizzata = instance.fornitore_rifiuti.fornitore_ptr.ragionesociale.replace(" ", "_").lower()
+    
+    # Crea il percorso: rifiuti/gestore_documenti/[ragionesociale]/[filename]
+    return os.path.join('rifiuti', 'gestore_documenti', ragione_sociale_normalizzata, filename)
+
+
+class XrDocumentiGestore(models.Model):
+    fornitore_rifiuti = models.ForeignKey(FornitoreRifiuti, on_delete=models.CASCADE, related_name='documenti_gestore')
+    numero= models.CharField(max_length=50, blank=True, null=True)
+    data_documento = models.DateField(blank=True, null=True)
+    data_scadenza = models.DateField(blank=True, null=True)
+    documento = models.FileField(upload_to=gestore_documenti_upload_to)
+    
+    class Meta:
+        verbose_name_plural = "Documenti Gestore"
+
+
+def smaltitore_documenti_upload_to(instance, filename):
+    ragione_sociale_normalizzata = instance.fornitore_rifiuti.fornitore_ptr.ragionesociale.replace(" ", "_").lower()
+    return os.path.join('rifiuti', 'smaltitore_documenti', ragione_sociale_normalizzata, filename)
+
+
+class XrDocumentiSmaltitore(models.Model):
+    fornitore_rifiuti = models.ForeignKey(FornitoreRifiuti, on_delete=models.CASCADE, related_name='documenti_smaltitore')
+    numero= models.CharField(max_length=50, blank=True, null=True)
+    data_documento = models.DateField(blank=True, null=True)
+    data_scadenza = models.DateField(blank=True, null=True)
+    documento = models.FileField(upload_to=smaltitore_documenti_upload_to)
+    
+    
+    class Meta:
+        verbose_name_plural = "Documenti Smaltitore"
+
+def trasportatore_documenti_upload_to(instance, filename):
+    ragione_sociale_normalizzata = instance.fornitore_rifiuti.fornitore_ptr.ragionesociale.replace(" ", "_").lower()
+    return os.path.join('rifiuti', '_documenti', ragione_sociale_normalizzata, filename)
+
+class XrDocumentiTrasportatore(models.Model):
+    fornitore_rifiuti = models.ForeignKey(FornitoreRifiuti, on_delete=models.CASCADE, related_name='documenti_trasportatore')
+    numero= models.CharField(max_length=50, blank=True, null=True)
+    data_documento = models.DateField(blank=True, null=True)
+    data_scadenza = models.DateField(blank=True, null=True)
+    documento = models.FileField(upload_to=trasportatore_documenti_upload_to)
+    
+    
+    class Meta:
+        verbose_name_plural = "Documenti Trasportatore"
+
+
 
 class FornitoreManutenzioni(models.Model):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_manutenzioni')

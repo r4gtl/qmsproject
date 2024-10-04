@@ -1,6 +1,6 @@
 import datetime
 
-from articoli.models import ListinoTerzista, PrezzoListino, ListinoCliente
+from articoli.models import ListinoCliente, ListinoTerzista, PrezzoListino
 from django.apps import apps
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,13 +20,13 @@ from .forms import (FormCliente, FormFacility, FormFacilityContact,
                     FormFornitore, FormFornitoreLavorazioniEsterne,
                     FormFornitorePelli, FormFornitoreProdottiChimici,
                     FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
-                    FormXrTransferValueLwgFornitore, ListinoTerzistaModelForm,
-                    PrezzoListinoModelForm, ListinoClienteModelForm,
-                    )
+                    FormXrTransferValueLwgFornitore, ListinoClienteModelForm,
+                    ListinoTerzistaModelForm, PrezzoListinoModelForm)
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
                      FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
-                     TransferValue, XrTransferValueLwgFornitore)
+                     TransferValue, XrDocumentiGestore, XrDocumentiSmaltitore,
+                     XrDocumentiTrasportatore, XrTransferValueLwgFornitore)
 
 # Create your views here.
 
@@ -84,6 +84,9 @@ class UpdateSupplier(LoginRequiredMixin, UpdateView):
         context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk) 
         context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk)
         context["listini_terzisti"] = ListinoTerzista.objects.filter(fk_fornitore=self.object.pk)
+        context["gestori_rifiuti"] = XrDocumentiGestore.objects.filter(fornitore_rifiuti=self.object.pk)
+        context["smaltitori_rifiuti"] = XrDocumentiSmaltitore.objects.filter(fornitore_rifiuti=self.object.pk)
+        context["trasportatori_rifiuti"] = XrDocumentiTrasportatore.objects.filter(fornitore_rifiuti=self.object.pk)
         return context
     
     
