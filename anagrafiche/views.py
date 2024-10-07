@@ -20,12 +20,14 @@ from .forms import (FormCliente, FormFacility, FormFacilityContact,
                     FormFornitore, FormFornitoreLavorazioniEsterne,
                     FormFornitorePelli, FormFornitoreProdottiChimici,
                     FormFornitoreServizi, FormLwgFornitore, FormTransferValue,
-                    FormXrTransferValueLwgFornitore, ListinoClienteModelForm,
-                    ListinoTerzistaModelForm, PrezzoListinoModelForm)
+                    FormXrDocumentiGestore, FormXrTransferValueLwgFornitore,
+                    ListinoClienteModelForm, ListinoTerzistaModelForm,
+                    PrezzoListinoModelForm)
 from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitorePelli,
-                     FornitoreProdottiChimici, FornitoreServizi, LwgFornitore,
-                     TransferValue, XrDocumentiGestore, XrDocumentiSmaltitore,
+                     FornitoreProdottiChimici, FornitoreRifiuti,
+                     FornitoreServizi, LwgFornitore, TransferValue,
+                     XrDocumentiGestore, XrDocumentiSmaltitore,
                      XrDocumentiTrasportatore, XrTransferValueLwgFornitore)
 
 # Create your views here.
@@ -886,6 +888,89 @@ def delete_prezzo_listino(request, pk):
         messages.warning(request, 'Voce eliminata correttamente!')
         url_match= reverse_lazy('anagrafiche:modifica_voce_listino', kwargs={'pk': fk_listino_terzista})
         return redirect(url_match)
+
+
+
+# XR DocumentiGestori rifiuti
+
+class XrDocumentiGestoreCreateView(CreateView):
+    
+    model = XrDocumentiGestore
+    form_class = FormXrDocumentiGestore
+    success_message = 'Documento Gestore aggiunto correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    
+    
+    template_name = "anagrafiche/gestori_rifiuti.html"
+
+
+    def get_success_url(self):          
+       # fornitore=self.object.fk_fornitore.pk
+        pk=self.object.pk        
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk':pk})
+    
+
+    def get_initial(self):
+        initial = super().get_initial()
+        created_by = self.request.user
+        # Aggiungi l'ID del fornitore_rifiuti passato dall'URL
+        initial['fornitore_rifiuti'] = get_object_or_404(FornitoreRifiuti, fornitore_ptr=self.kwargs['fk_fornitore'])
+        initial['created_by'] = created_by
+        print(f'Initial: {initial}')
+        return initial
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_fornitore=self.kwargs['fk_fornitore']
+        print("Fornitore: " + str(fk_fornitore))
+        #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
+        context['fornitore_rifiuti'] = self.kwargs['fk_fornitore']
+        context['fk_fornitore'] = fk_fornitore
+        return context
+
+class XrDocumentiGestoreUpdateView(UpdateView):
+    
+    model = XrDocumentiGestore
+    form_class = FormXrDocumentiGestore
+    success_message = 'Documento Gestore modificato correttamente!'
+    error_message = 'Documento Gestore non salvato. Controlla.'    
+    
+    template_name = "anagrafiche/gestori_rifiuti.html"
+
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            fornitore = self.object.fk_fornitore.pk
+            print("Fornitore: " + str(fornitore))
+            return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': fornitore})
+
+        pk=self.object.pk
+        print(f'pk da success url: {pk}')       
+        return reverse_lazy('anagrafiche:modifica_gestore_rifiuti', kwargs={'pk':pk})
+    
+
+    def get_context_data(self, **kwargs):        
+        context = super().get_context_data(**kwargs)
+        fk_fornitore = self.object.fk_fornitore.pk        
+        context['fk_fornitore'] = fk_fornitore
+        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)        
+        
+        return context
+
+
+
+def delete_gestore_rifiuti(request, pk): 
+        deleteobject = get_object_or_404(XrDocumentiGestore, pk = pk)
+        fornitore=deleteobject.fk_fornitore.pk   
+        #dettaglio=deleteobject.iddettordine           
+        #linea = deleteobject.id_linea  
+        #tempomaster=deleteobject.idtempomaster      
+        deleteobject.delete()
+        url_match= reverse_lazy('anagrafiche:delete_gestore_rifiuti', kwargs={'pk': fornitore})
+        return redirect(url_match)
+
+
 
 
 # Listino Cliente

@@ -46,6 +46,10 @@ urlpatterns = [
     path("modifica_prezzo_listino/<int:pk>", PrezzoListinoUpdateView.as_view(), name="modifica_prezzo_listino"),    
     path("delete_prezzo_listino/<int:pk>", delete_prezzo_listino, name="delete_prezzo_listino"),
 
+    # Gestori Rifiuti
+    path("fornitore/<int:fk_fornitore>/aggiungi_gestore_rifiuti/", XrDocumentiGestoreCreateView.as_view(), name="aggiungi_gestore_rifiuti"),
+    path("modifica_gestore_rifiuti/<int:pk>", XrDocumentiGestoreUpdateView.as_view(), name="modifica_gestore_rifiuti"),    
+    path("delete_gestore_rifiuti/<int:pk>", delete_gestore_rifiuti, name="delete_gestore_rifiuti"),
 
     # Listino Clienti
     path("cliente/<int:fk_cliente>/aggiungi_voce_listino_cliente/", ListinoClienteCreateView.as_view(), name="aggiungi_voce_listino_cliente"),

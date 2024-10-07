@@ -196,8 +196,14 @@ class FornitoreRifiuti(models.Model):
 
 
 def gestore_documenti_upload_to(instance, filename):
+    if not instance.fornitore_rifiuti:
+        raise ValueError("L'istanza 'fornitore_rifiuti' non è definita.")
+    if not instance.fornitore_rifiuti.fornitore_ptr:
+        raise ValueError("L'istanza 'fornitore_ptr' non è definita.")
+    
     # Normalizza la ragione sociale per evitare caratteri non validi nei nomi delle cartelle
-    ragione_sociale_normalizzata = instance.fornitore_rifiuti.fornitore_ptr.ragionesociale.replace(" ", "_").lower()
+    ragione_sociale_normalizzata = instance.fornitore_rifiuti.fornitore_ptr_ragionesociale.replace(" ", "_").lower()
+
     
     # Crea il percorso: rifiuti/gestore_documenti/[ragionesociale]/[filename]
     return os.path.join('rifiuti', 'gestore_documenti', ragione_sociale_normalizzata, filename)
@@ -208,10 +214,16 @@ class XrDocumentiGestore(models.Model):
     numero= models.CharField(max_length=50, blank=True, null=True)
     data_documento = models.DateField(blank=True, null=True)
     data_scadenza = models.DateField(blank=True, null=True)
-    documento = models.FileField(upload_to=gestore_documenti_upload_to)
+    documento = models.FileField(upload_to=gestore_documenti_upload_to, null=True, blank=True)
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='documenti_gestore', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name_plural = "Documenti Gestore"
+
+    def __str__(self):
+        return f'Aut. N. {self.numero} del {self.data_documento}'
 
 
 def smaltitore_documenti_upload_to(instance, filename):

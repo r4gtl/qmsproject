@@ -1,4 +1,5 @@
-from articoli.models import Articolo, LavorazioneEsterna, ListinoTerzista, PrezzoListino, ListinoCliente
+from articoli.models import (Articolo, LavorazioneEsterna, ListinoCliente,
+                             ListinoTerzista, PrezzoListino)
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -7,7 +8,8 @@ from .models import (Cliente, Facility, FacilityContact, Fornitore,
                      FornitoreLavorazioniEsterne, FornitoreManutenzioni,
                      FornitorePelli, FornitoreProdottiChimici,
                      FornitoreRifiuti, FornitoreServizi, LwgFornitore, Macello,
-                     TransferValue, XrTransferValueLwgFornitore)
+                     TransferValue, XrDocumentiGestore, XrDocumentiSmaltitore,
+                     XrDocumentiTrasportatore, XrTransferValueLwgFornitore)
 
 
 class FormFornitore(forms.ModelForm):
@@ -45,6 +47,26 @@ class FormFornitore(forms.ModelForm):
         }
         
 
+class FormXrDocumentiGestore(forms.ModelForm):
+    class Meta:
+        model = XrDocumentiGestore
+        fields= '__all__'
+
+        widgets = {
+            'numero': forms.TextInput(attrs={'placeholder': 'Inserisci il numero dell\'autorizzazione...'}),
+            'data_documento': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}), 
+            'data_scadenza': forms.DateInput(format=('%Y-%m-%d'), attrs={'class':'form-control', 'type': 'date'}), 
+            'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),
+            'fornitore_rifiuti': forms.HiddenInput(),
+        }
+        labels = {
+            'numero': 'Numero Autorizzazione',
+            'data_documento': 'Data Autorizzazione', 
+            'data_scadenza': 'Scadenza',
+            'note': 'Note'
+        }
 
 
 class FormLwgFornitore(forms.ModelForm):
@@ -141,6 +163,8 @@ class FormMacello(forms.ModelForm):
             'is_group': 'Raccoglitore'
             
         }
+
+
 
 '''FINE FORMS PER LA GESTIONE DEI MODELLI DELLE CATEGORIE ASSOCIATE'''
 

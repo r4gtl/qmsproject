@@ -27,7 +27,7 @@
             </div>
             <div class="col-6 text-end">
                 
-                <a href="#" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
+                <a href="{% url 'anagrafiche:aggiungi_gestore_rifiuti' fk_fornitore=fornitore.pk %}" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi</a>
 
             </div>
         </div>
@@ -50,7 +50,7 @@
           {% for gestore in gestori_rifiuti %}
             
             <tr>
-              <td>{{ gestore.numero }}</td>
+              <td><a href="{% url 'anagrafiche:modifica_gestore_rifiuti' pk=fornitore.pk %}">{{ gestore.numero }}</td>
               <td>{{ gestore.data_documento }}</td>
               <td>{{ gestore.data_scadenza }}</td>
               <td>{{ gestore.documento }}</td>
