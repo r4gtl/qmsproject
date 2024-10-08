@@ -190,7 +190,7 @@ class FornitoreServizi(models.Model):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_servizi')
     prova = models.CharField(max_length=50, blank=True, null=True)
     
-class FornitoreRifiuti(models.Model):
+class FornitoreRifiuti(Fornitore):
     fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True, related_name='fornitore_ptr_rifiuti')
     
 
