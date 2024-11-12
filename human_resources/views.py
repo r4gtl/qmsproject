@@ -1,4 +1,5 @@
 import datetime
+from datetime import timedelta
 
 from core.utils import get_records_with_upcoming_expiry
 from django.contrib import messages
@@ -8,6 +9,7 @@ from django.db.models import Count, Sum
 from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
                               redirect, render)
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.views.generic.edit import CreateView, UpdateView
 
 from .charts import (get_average_age, get_gender_perc, get_ita_perc,
@@ -46,7 +48,7 @@ def human_resources_home(request):
     }
     return render(request, "human_resources/human_resources_home.html", context)
 
-def scadenzario(request):
+'''def scadenzario(request):
     prossime_formazioni = get_records_with_upcoming_expiry(DettaglioRegistroFormazione, "prossima_scadenza", 365)
     
 
@@ -55,7 +57,23 @@ def scadenzario(request):
         
     }
 
+    return render(request, "human_resources/scadenzario.html", context)'''
+
+def scadenzario(request):
+    # Filtra i record DettaglioRegistroFormazione in cui la `prossima_scadenza` è entro 365 giorni
+    # e in cui il dipendente associato non ha una data di dimissioni
+    prossime_formazioni = DettaglioRegistroFormazione.objects.filter(
+        prossima_scadenza__isnull=False,
+        prossima_scadenza__lte=timezone.now() + timedelta(days=365),
+        fk_hr__datadimissioni__isnull=True
+    )
+
+    context = {
+        'prossime_formazioni': prossime_formazioni,
+    }
+
     return render(request, "human_resources/scadenzario.html", context)
+
 
 
 class HumanResourceCreateView(LoginRequiredMixin,CreateView):

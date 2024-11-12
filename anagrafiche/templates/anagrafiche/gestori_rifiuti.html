@@ -16,7 +16,7 @@
     <nav aria-label="breadcrumb" class="mt-3">
       <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="{% url 'anagrafiche:home_fornitori' %}">Lista Fornitori</a></li>      
-          <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fornitore_rifiuti %}">Torna al fornitore</a></li>        
+          <li class="breadcrumb-item"><a href="{% url 'anagrafiche:vedi_fornitore' pk=fk_fornitore %}">Torna al fornitore</a></li>        
   
           {% if form.instance.id  %}
               <li class="breadcrumb-item active" aria-current="page">{{ xrdocumentigestore }}</li>
@@ -80,7 +80,8 @@
                 
             </div>
             <div class="col-2">
-                {{ form.fornitore_rifiuti|as_crispy_field }}
+            prova
+                {{ form.fornitore_rifiuti}}
                 
             </div>
             
@@ -92,7 +93,7 @@
 
         
         <input type="submit" class="btn btn-success mb-2 me-1" value="Salva">
-        <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'anagrafiche:vedi_fornitore' pk=fornitore_rifiuti %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+        <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo(`{% url 'anagrafiche:vedi_fornitore' pk=fk_fornitore %}`)"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
     </form>
     <hr>
     

@@ -236,6 +236,72 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
+'''
+class CreateSupplier(LoginRequiredMixin, CreateView):
+    model = Fornitore
+    form_class = FormFornitore
+    success_message = 'Fornitore aggiunto correttamente!'
+    error_message = 'Error saving the Doc, check fields below.'
+    template_name = "anagrafiche/fornitore.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+        categoria = self.request.GET.get('categoria')
+        if categoria in dict(Fornitore.CHOICES_CATEGORY):
+            initial['categoria'] = categoria
+        initial['created_by'] = self.request.user
+        initial['created_at'] = datetime.datetime.now()
+        return initial
+
+    def get_success_url(self):
+        if 'salva_esci' in self.request.POST:
+            return reverse_lazy('anagrafiche:home_fornitori')
+        return reverse_lazy('anagrafiche:vedi_fornitore', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['CHOICES_CATEGORY'] = Fornitore.CHOICES_CATEGORY
+        return context
+
+    def form_valid(self, form):
+        print("Form valido:", form.is_valid())  # Debug
+        forn = form.save(commit=False)
+        forn.created_by = self.request.user
+        forn.created_at = datetime.datetime.now()
+        categoria = form.cleaned_data["categoria"]
+        
+        try:
+            forn.save()  # Salva l'oggetto fornitore
+            print("Fornitore salvato:", forn.pk)  # Debug: conferma se il salvataggio è avvenuto
+        except Exception as e:
+            print(f"Errore durante il salvataggio: {e}")
+            return self.form_invalid(form)
+
+        # Assegna l'oggetto forn a self.object
+        self.object = forn
+
+        # Crea l'istanza del modello di categoria se necessario
+        if categoria != Fornitore.NESSUNA:
+            categoria_model_name = f'Fornitore{categoria.title().replace(" ", "")}'
+            try:
+                categoria_model = apps.get_model(app_label='anagrafiche', model_name=categoria_model_name)
+                if categoria_model:
+                    categoria_model.objects.create(fornitore_ptr=forn)
+            except Exception as e:
+                messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto correttamente!')
+                return self.form_invalid(form)
+
+        messages.success(self.request, 'Il fornitore è stato aggiunto correttamente!')
+        return HttpResponseRedirect(self.get_success_url())
+
+
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Errore! Il fornitore non è stato aggiunto!')
+        return super().form_invalid(form)
+
+'''
+
 class AddLwgCertificate(CreateView):
     
     model = LwgFornitore
@@ -912,22 +978,44 @@ class XrDocumentiGestoreCreateView(CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
+        print(f'Iniziale: {initial}')
         created_by = self.request.user
+        print(f'kwargs: {self.kwargs}')
         # Aggiungi l'ID del fornitore_rifiuti passato dall'URL
-        initial['fornitore_rifiuti'] = get_object_or_404(FornitoreRifiuti, fornitore_ptr=self.kwargs['fk_fornitore'])
+        # fornitore_rifiuti = get_object_or_404(FornitoreRifiuti, fornitore_ptr=self.kwargs['fk_fornitore'])
+        fornitore_rifiuti = get_object_or_404(FornitoreRifiuti, fornitore_ptr_id=self.kwargs['fk_fornitore'])
+        provafornitorerifiuti=FornitoreRifiuti.objects.filter(fornitore_ptr_id=211)
+        for rifiuti in provafornitorerifiuti:
+            print(f'ID: {rifiuti.id}') 
+        print(f'Fornitore rifiuti in get_initial: {fornitore_rifiuti}')
+        print(f'Fornitore rifiuti pk in get_initial: {fornitore_rifiuti.pk}')
+        initial['fornitore_rifiuti'] = fornitore_rifiuti.pk  # Passa solo la PK
         initial['created_by'] = created_by
         print(f'Initial: {initial}')
         return initial
 
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
+        print(f'Contesto: {context}')
         fk_fornitore=self.kwargs['fk_fornitore']
         print("Fornitore: " + str(fk_fornitore))
-        #context['fornitore'] = Fornitore.objects.get(pk=fornitore) # FILTRARE
-        context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
-        context['fornitore_rifiuti'] = self.kwargs['fk_fornitore']
+        fornitore = get_object_or_404(FornitoreRifiuti, fornitore_ptr_id=self.kwargs['fk_fornitore'])
+        fornitore_rifiuti=get_object_or_404(FornitoreRifiuti, id=fornitore.pk)
+        print(f'Fornitore pk dal contesto: {fornitore_rifiuti.pk}')
+        #context['fornitore'] = Fornitore.objects.get(pk=fk_fornitore)
+        #context['fornitore_rifiuti'] = self.kwargs['fk_fornitore']
+        #context['fk_fornitore'] = fk_fornitore
+        context['fornitore'] = fornitore_rifiuti
+        context['fornitore_rifiuti'] = fornitore_rifiuti.pk
         context['fk_fornitore'] = fk_fornitore
+        print(f'Contesto alla fine: {context}')
         return context
+    
+    def form_valid(self, form):
+        # Imposta fornitore_rifiuti prima di salvare
+        print(f'fornitore_rifiuti: {form.cleaned_data["fornitore_rifiuti"]}') 
+        form.instance.fornitore_rifiuti = get_object_or_404(FornitoreRifiuti, fornitore_ptr=self.kwargs['fk_fornitore'])
+        return super().form_valid(form)
 
 class XrDocumentiGestoreUpdateView(UpdateView):
     

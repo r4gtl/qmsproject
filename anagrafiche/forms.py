@@ -59,7 +59,7 @@ class FormXrDocumentiGestore(forms.ModelForm):
             'note': forms.Textarea(attrs={'placeholder': 'Inserisci Annotazioni', 'rows':'3'}),
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),
-            'fornitore_rifiuti': forms.HiddenInput(),
+            #'fornitore_rifiuti': forms.HiddenInput(),
         }
         labels = {
             'numero': 'Numero Autorizzazione',
