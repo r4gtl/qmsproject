@@ -29,12 +29,25 @@ def count_records_with_upcoming_expiry(model, date_field, days):
 
 
 
-def get_records_with_upcoming_expiry(model, date_field, days):
+'''def get_records_with_upcoming_expiry(model, date_field, days):
     current_date = date.today()
     end_date = current_date + timedelta(days=days)
     
     records = model.objects.filter(
         Q(**{f"{date_field}__gte": current_date}) & Q(**{f"{date_field}__lte": end_date})
+    )
+    
+    return records'''
+
+def get_records_with_upcoming_expiry(model, date_field, days):
+    current_date = date.today()
+    end_date = current_date + timedelta(days=days)
+    
+    # Aggiungi il filtro per i dipendenti attualmente in servizio (senza data di dimissioni)
+    records = model.objects.filter(
+        Q(**{f"{date_field}__gte": current_date}) & 
+        Q(**{f"{date_field}__lte": end_date}) &
+        Q(fk_hr__datadimissioni__isnull=True)
     )
     
     return records

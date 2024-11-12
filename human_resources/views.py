@@ -48,7 +48,7 @@ def human_resources_home(request):
     }
     return render(request, "human_resources/human_resources_home.html", context)
 
-'''def scadenzario(request):
+def scadenzario(request):
     prossime_formazioni = get_records_with_upcoming_expiry(DettaglioRegistroFormazione, "prossima_scadenza", 365)
     
 
@@ -57,20 +57,9 @@ def human_resources_home(request):
         
     }
 
-    return render(request, "human_resources/scadenzario.html", context)'''
-
-def scadenzario(request):
-    # Filtra i record DettaglioRegistroFormazione in cui la `prossima_scadenza` è entro 365 giorni
-    # e in cui il dipendente associato non ha una data di dimissioni
-    prossime_formazioni = DettaglioRegistroFormazione.objects.filter(        
-        fk_hr__datadimissioni__isnull=True
-    )
-    prossime_formazioni = get_records_with_upcoming_expiry(prossime_formazioni, "prossima_scadenza", 365)
-    context = {
-        'prossime_formazioni': prossime_formazioni,
-    }
-
     return render(request, "human_resources/scadenzario.html", context)
+
+
 
 
 
