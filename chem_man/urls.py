@@ -133,6 +133,7 @@ urlpatterns = [
 
     # Stampe
     path('stampa_ordine/<int:pk>/', stampa_ordine, name='stampa_ordine'),
+    path('ordine/<int:ordine_id>/report/', generate_order_report, name='ordine_report'),
     
     # Controllo dettaglio ordine    
     path('controlla_dettagli_ordine/<int:pk>/', controlla_dettagli_ordine, name='controlla_dettagli_ordine'),

@@ -49,7 +49,7 @@
             <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
             <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
             {% if form.instance.id %}
-              <a id="stampaOrdineButton" href="{% url 'chem_man:stampa_ordine' pk=ordineprodottochimico.id %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa Ordine</a>
+              <a id="stampaOrdineButton" href="{% url 'chem_man:ordine_report' ordine_id=ordineprodottochimico.id %}" class="btn btn-warning mb-2 me-1" target="_blank"><span class="bi bi-printer"></span> Stampa Ordine</a>
             {% endif %}
             
                     <div class="row mb-4">

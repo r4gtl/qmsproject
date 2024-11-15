@@ -18,7 +18,7 @@ class ImballaggioPC(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.descrizione} - peso unitario: {self.peso_unitario}"
+        return f"{self.descrizione}"
 
 
 
