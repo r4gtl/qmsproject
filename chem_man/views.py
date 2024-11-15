@@ -5,6 +5,7 @@ from datetime import (  # Aggiunta in data 08/02/2024 per il totale solventi acq
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.staticfiles import finders
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import DecimalField, ExpressionWrapper, F, Max, Sum
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -1635,7 +1636,8 @@ def generate_order_report(request, ordine_id):
     # Recupera l'ordine e il fornitore associato
     ordine = OrdineProdottoChimico.objects.get(id=ordine_id)
     fornitore = ordine.fk_fornitore
-    logo_path = "/home/stefano/Documenti/dev/QMSProject/qmsproject/static/images/logo.png"
+    #logo_path = "/home/stefano/Documenti/dev/QMSProject/qmsproject/static/images/logo.png"
+    logo_path = finders.find('images/logo.png')
      # Recupera il nome del sito dal context processor
     nome_sito_value = nome_sito(request).get('nome_sito', '')
     nome_utente=f'{request.user.first_name} {request.user.last_name}'
@@ -1676,6 +1678,7 @@ def draw_header(c, fornitore, ordine, width, height, x_margin, y_margin, logo_pa
     # Posizione iniziale
     y_position = height - y_margin
 
+    
 
     #if logo_path:
         # Aggiungi il logo a sinistra
@@ -1816,7 +1819,7 @@ def draw_footer(c, ordine, width, height, x_margin, y_margin, nome_sito, nome_ut
     # Disegna le righe
     c.drawString(site_x, start_y + 12, nome_sito)  # Nome sito
     c.drawString(user_x, start_y, nome_utente)  # Nome utente
-    
+
     #c.drawString(signature_box_x + 5, signature_box_y + signature_box_height - 10, nome_sito)
     #c.drawString(signature_box_x + 5, signature_box_y + signature_box_height - 22, nome_utente)  # Nome utente
 
