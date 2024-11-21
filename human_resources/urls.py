@@ -5,6 +5,7 @@ from .charts import (age_groups, num_tot_dipendenti,
                      num_tot_dipendenti_dimessi_anno,
                      num_tot_dipendenti_orario, num_tot_dipendenti_plot,
                      operatori_per_reparto, ore_formazione)
+from .report_lab import *
 from .reports import *
 from .views import *
 
@@ -97,7 +98,8 @@ urlpatterns = [
     
     # Stampe
     path('stampa_risorse_umane/', stampa_risorse_umane, name="stampa_risorse_umane"), 
-    path('performance_triennio/', performance_triennio, name="performance_triennio"), 
+    path('performance_triennio/', performance_triennio, name="performance_triennio"),     
+    path('report/performance_chart/', generate_chart_report, name='performance_report_chart'),
 
     # Scadenzario
     path('scadenzario/', scadenzario, name="scadenzario"), 

@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count, Sum
+from django.http import FileResponse
 from django.shortcuts import (HttpResponseRedirect, get_object_or_404,
                               redirect, render)
 from django.urls import reverse, reverse_lazy
@@ -17,7 +18,17 @@ from .charts import (get_average_age, get_gender_perc, get_ita_perc,
 from .filters import HRFilter
 from .forms import *
 from .models import *
+from .report_lab import ChartReport
 
+
+def generate_chart_report(request):
+    report = ChartReport(title="Report con Grafici")
+    pdf_buffer = report.generate_pdf()
+     # Imposta la risposta HTTP per visualizzare il PDF inline
+    response = FileResponse(pdf_buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="chart_report.pdf"'
+    #return FileResponse(pdf_buffer, as_attachment=True, filename="chart_report.pdf", content_type="application/pdf")
+    return response
 
 # Create your views here.
 def human_resources_home(request):

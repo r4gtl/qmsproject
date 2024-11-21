@@ -1636,7 +1636,7 @@ def generate_order_report(request, ordine_id):
     # Recupera l'ordine e il fornitore associato
     ordine = OrdineProdottoChimico.objects.get(id=ordine_id)
     fornitore = ordine.fk_fornitore
-    #logo_path = "/home/stefano/Documenti/dev/QMSProject/qmsproject/static/images/logo.png"
+    
     logo_path = finders.find('images/logo.png')
      # Recupera il nome del sito dal context processor
     nome_sito_value = nome_sito(request).get('nome_sito', '')
