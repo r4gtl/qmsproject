@@ -106,8 +106,15 @@ def generate_gender_report(request):
 # Funzione per generare il grafico "Operatori per Reparto"
 def generate_operatori_per_reparto_chart():
     queryset = HumanResource.objects.values('fk_reparto__description').annotate(hr_count=Count('pk'))
+    for entry in queryset:
+        if entry['fk_reparto__description'] is None:
+            entry['fk_reparto__description'] = "Sconosciuto"
     labels = [entry['fk_reparto__description'] for entry in queryset]
     data = [entry['hr_count'] for entry in queryset]
+
+    if not labels or not data:
+        labels = ["Nessun Dato"]
+        data = [0]
 
     fig, ax = plt.subplots()
     ax.bar(labels, data, color='skyblue')
