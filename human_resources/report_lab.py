@@ -116,12 +116,16 @@ def generate_operatori_per_reparto_chart():
         labels = ["Nessun Dato"]
         data = [0]
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(10, 6)) # Maggiore larghezza (10) e altezza (6)
     ax.bar(labels, data, color='skyblue')
     ax.set_title('Operatori per Reparto')
     ax.set_ylabel('Numero Operatori')
     ax.set_xticks(range(len(labels)))  # Imposta la posizione per ogni etichetta
     ax.set_xticklabels(labels, rotation=45, ha='right')
+
+
+    # Aggiungi margini extra per evitare che le etichette vengano tagliate
+    plt.tight_layout()
 
     buffer = BytesIO()
     plt.savefig(buffer, format='png', dpi=150)
