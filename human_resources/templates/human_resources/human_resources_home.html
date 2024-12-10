@@ -121,73 +121,7 @@
 
   <a class="btn btn-sm btn-success mt-2 mb-4" href="{% url 'human_resources:create_human_resource' %}"><span class="bi bi-person-plus-fill"></span> Aggiungi</a>
   <br>
-    <table class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            
-            <th>Cognome Nome</th>            
-            <th>Data Assunzione</th>
-            <th>Data Dimissioni</th>
-            <th>Reparto</th>
-            <th>Mansione</th>
-
-            
-          </tr>
-        </thead>
-        <tbody>
-          {% for hr in filter.qs %}
-          <tr>        
-            
-            
-            <td><a href="{% url 'human_resources:update_human_resource' pk=hr.pk %}">{{ hr.cognomedipendente }} {{ hr.nomedipendente }}</a></td>
-            
-            <td>{{ hr.dataassunzione|date:'d/m/Y' }}</td>
-            <td>{{ hr.datadimissioni|date:'d/m/Y' }}</td>
-            <td>{{ hr.fk_reparto.description }}</td>
-            <td>{{ hr.fk_mansione.description }}</td>
-          </tr>  
-          {% endfor %}
-        </tbody>
-      </table>
-      <!-- Pagination -->
-      {% if filter.qs.has_other_pages %}
-      <nav>
-        <ul class="pagination justify-content-center">
-          {% if filter.qs.has_previous %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ filter.qs.previous_page_number }}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-              </a>
-            </li>
-          {% else %}
-            <li class="page-item disabled">
-                <span class="page-link" aria-hidden="true">&laquo;</span>
-            </li>
-          {% endif %}
-  
-          {% for p in filter.qs.paginator.page_range %}
-            {% if filter.qs.number == p %}
-              <li class="page-item"><a class="page-link" style="color: red;" href="#">{{ p }}</a></li>
-            {% else %}
-              <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
-            {% endif %}
-          {% endfor %}
-  
-          {% if filter.qs.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="?page={{ filter.qs.next_page_number }}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
-          {% else %}
-            <li class="page-item disabled">
-              <span class="page-link" aria-hidden="true">&raquo;</span>
-            </li>
-          {% endif %}
-      </ul>
-      </nav>
-    {% endif %}
-    <!-- End Pagination -->
+    {% include "human_resources/partials/_human_resources_table.html" %}
 </div>
 
 {% endblock content %}

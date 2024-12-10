@@ -132,7 +132,10 @@ class HRUpdateView(LoginRequiredMixin,UpdateView):
             context['immagine'] = self.object.immagine.url
         else:
             context['immagine'] = False
-        context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        #context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(fk_hr=self.object.pk)
+        context['elenco_formazione'] = DettaglioRegistroFormazione.objects.filter(
+                                            fk_hr=self.object.pk
+                                            ).select_related('fk_registro_formazione').order_by('-fk_registro_formazione__data_formazione')
         context['elenco_valutazioni'] = ValutazioneOperatore.objects.filter(fk_hr=self.object.pk)
         context['elenco_incarichi_sicurezza'] = HR_Safety.objects.filter(fk_hr=self.object.pk)
         return context

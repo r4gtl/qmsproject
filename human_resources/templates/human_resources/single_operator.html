@@ -172,7 +172,7 @@
               <td>{{ formazione.fk_registro_formazione.fk_corso.descrizione }}</td>
               <td>{{ formazione.fk_registro_formazione.ore }}</td>        
               <td>{{ formazione.fk_registro_formazione.fk_corso.fk_areaformazione }}</td>
-              <td>{{ formazione.prossima_scadenza }}</td>
+              <td>{{ formazione.prossima_scadenza|default:"Nessuna Scadenza" }}</td>
             </tr>  
             {% endfor %}
           </tbody>
