@@ -1637,7 +1637,7 @@ def generate_order_report(request, ordine_id):
     ordine = OrdineProdottoChimico.objects.get(id=ordine_id)
     fornitore = ordine.fk_fornitore
     
-    logo_path = finders.find('images/logo.png')
+    logo_path = finders.find('logo/logo.png')
      # Recupera il nome del sito dal context processor
     nome_sito_value = nome_sito(request).get('nome_sito', '')
     nome_utente=f'{request.user.first_name} {request.user.last_name}'
