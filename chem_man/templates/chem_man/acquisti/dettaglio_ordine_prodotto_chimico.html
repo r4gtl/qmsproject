@@ -108,6 +108,18 @@
 
 {% block extra_scripts %}
 <script>
+
+document.addEventListener("DOMContentLoaded", function() {   
+                   
+                setFocusOnField('id_fk_prodotto_chimico');
+            //var focusButtonId = "{{ focus_button }}"            
+            //if (focusButtonId !== "") {
+            //    setFocusOnField(focusButtonId);
+            //} else {
+            //}         
+            
+        });
+
 $(document).ready(function() {
   $("#id_fk_prodotto_chimico").change(function() {
     var selectedProductId = $(this).val();

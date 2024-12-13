@@ -136,7 +136,7 @@
         </div>
         <div class="col-6 text-end">
           
-          <a href="{% url 'chem_man:aggiungi_dettaglio_ordine_prodotto_chimico' fk_ordine=ordineprodottochimico.id %}" class="btn btn-sm btn-success"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+          <a href="{% url 'chem_man:aggiungi_dettaglio_ordine_prodotto_chimico' fk_ordine=ordineprodottochimico.id %}" class="btn btn-sm btn-success" id="btn_dettaglio"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
 
         </div>
       </div>
@@ -217,6 +217,12 @@ document.getElementById('openSearchSupplierButton').addEventListener('click', fu
     var searchInputLabel = this.getAttribute('data-search-input-label');
     searchFunctionGeneral(url, modalTitle, searchInputLabel, callerButtonId, event);
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+            var focusButtonId = "{{ focus_button }}"
+            console.log('focus button id: ' + focusButtonId)
+            setFocusOnField(focusButtonId);
+        });
 
 </script>
 {% endblock %}

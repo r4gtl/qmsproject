@@ -1330,6 +1330,13 @@ class OrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk_ordine = self.object.pk
+        if 'focus_button' in self.kwargs:
+            focus_button_param = self.kwargs['focus_button'] # Leggo kwargs se c'è l'id del pulsante in cui mettere il focus
+            print(f'focus_button_param: {focus_button_param}')
+            context['focus_button'] = focus_button_param
+        else:
+            context['focus_button'] = ''
+
         # context['elenco_prezzi'] = PrezzoProdotto.objects.filter(fk_prodottochimico=pk_prodottochimico)
         # context['elenco_schede_tecniche'] = SchedaTecnica.objects.filter(fk_prodottochimico=pk_prodottochimico)
         context['elenco_dettagli'] = DettaglioOrdineProdottoChimico.objects.filter(fk_ordine=pk_ordine)
@@ -1365,8 +1372,11 @@ class DettaglioOrdineProdottoChimicoCreateView(LoginRequiredMixin,CreateView):
 
     def get_success_url(self):   
         fk_ordine=self.object.fk_ordine.pk
-        
-        return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
+        focus_button = 'btn_dettaglio'  # Imposto il pulsante su cui settare il focus
+        print(f"focus_button: {focus_button}")
+        success_url = reverse_lazy('chem_man:modifica_ordine_prodotto_chimico_with_focus', kwargs={'pk':fk_ordine, 'focus_button': focus_button})
+        return success_url
+        #return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico_with_focus', kwargs={'pk':fk_ordine, 'focus_button': focus_button})
     
     def form_valid(self, form):        
         messages.info(self.request, self.success_message) # Compare sul success_url
@@ -1410,8 +1420,9 @@ class DettaglioOrdineProdottoChimicoUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):        
 
         fk_ordine = self.kwargs['fk_ordine']
-        pk_dettaglio=self.object.pk
-        return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico', kwargs={'pk':fk_ordine})
+        #pk_dettaglio=self.object.pk
+        focus_button = 'btn_dettaglio'  # Imposto il pulsante su cui settare il focus
+        return reverse_lazy('chem_man:modifica_ordine_prodotto_chimico_with_focus', kwargs={'pk':fk_ordine, 'focus_button': focus_button})
 
 
     def form_valid(self, form):
@@ -1637,7 +1648,8 @@ def generate_order_report(request, ordine_id):
     ordine = OrdineProdottoChimico.objects.get(id=ordine_id)
     fornitore = ordine.fk_fornitore
     
-    logo_path = finders.find('logo/logo.png')
+    logo_path = finders.find('images/Lavezzo LOGO.jpg')
+    print(f"logo_path: {logo_path}")
      # Recupera il nome del sito dal context processor
     nome_sito_value = nome_sito(request).get('nome_sito', '')
     nome_utente=f'{request.user.first_name} {request.user.last_name}'
@@ -1686,7 +1698,7 @@ def draw_header(c, fornitore, ordine, width, height, x_margin, y_margin, logo_pa
       #  c.drawImage(logo_path, x_margin, height - y_margin - logo_height, width=logo_width, height=logo_height)
 
     # Disegna il logo a sinistra
-    logo_width = 50
+    logo_width = 200
     logo_height = 50
     c.drawImage(logo_path, x_margin, y_position - logo_height, width=logo_width, height=logo_height, mask='auto')
 
@@ -1701,11 +1713,13 @@ def draw_header(c, fornitore, ordine, width, height, x_margin, y_margin, logo_pa
     box_height = 80
     box_x = width - x_margin - box_width
     box_y = y_position - box_height
+    corner_radius = 10  # Raggio degli angoli arrotondati
 
     # Disegna il bordo del box
     c.setLineWidth(0.5)
     c.setStrokeColor(colors.black)
-    c.rect(box_x, box_y, box_width, box_height)
+    #c.rect(box_x, box_y, box_width, box_height)
+    c.roundRect(box_x, box_y, box_width, box_height, corner_radius)
 
     # Testo dell'indirizzo del fornitore all'interno del box
     text_x = box_x + 5
@@ -1722,8 +1736,10 @@ def draw_header(c, fornitore, ordine, width, height, x_margin, y_margin, logo_pa
     c.drawString(text_x, text_y, f"Email: {fornitore.e_mail}")
 
     # Dettagli dell'ordine al centro sotto il logo
-    details_x = x_margin + logo_width + 20
-    details_y = y_position - 20
+    #details_x = x_margin + logo_width + 20
+    details_x = x_margin
+    #details_y = y_position - 20
+    details_y = y_position - logo_height - 20  # Posiziona sotto il logo con un margine
     c.setFont("Helvetica-Bold", 9)
     c.drawString(details_x, details_y, f"Numero Ordine: {ordine.numero_ordine}")
     details_y -= 14

@@ -103,6 +103,7 @@ urlpatterns = [
     # Acquisti - Ordini
     path('aggiungi_ordine_prodotto_chimico/', OrdineProdottoChimicoCreateView.as_view(), name="aggiungi_ordine_prodotto_chimico"), 
     path('modifica_ordine_prodotto_chimico/<int:pk>/', OrdineProdottoChimicoUpdateView.as_view(), name="modifica_ordine_prodotto_chimico"), 
+    path('modifica_ordine_prodotto_chimico_with_focus/<int:pk>/<str:focus_button>/', OrdineProdottoChimicoUpdateView.as_view(), name="modifica_ordine_prodotto_chimico_with_focus"), 
     path('delete_ordine_prodotto_chimico/<int:pk>', delete_ordine_prodotto_chimico, name="delete_ordine_prodotto_chimico"),
     
     # Dettaglio Ordini
