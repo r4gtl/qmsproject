@@ -1,0 +1,17 @@
+DEBUG=True
+SECRET_KEY="django-insecure-5ws$4ixsm6(tt9yqvjqyz_r0uvez!$e$739#21adxfs2us$dcr"
+ENGINE=
+DATABASE_URL=
+SQLITE_URL=
+CACHE_URL=
+REDIS_URL=
+DATABASE_TYPE=sqlite
+SQLITE_DB_PATH=db.sqlite3
+POSTGRES_DB_NAME=
+POSTGRES_DB_USER=
+POSTGRES_DB_PASSWORD=
+POSTGRES_DB_HOST=
+POSTGRES_DB_PORT=
+STATIC_ROOT=
+MEDIA_ROOT=/home/stefano/Documenti/dev/QMSProject/media-serve/
+DJANGO_LOG_FILE=/home/stefano/Documenti/dev/QMSProject/django.log
