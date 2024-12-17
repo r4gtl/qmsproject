@@ -230,12 +230,12 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
         forn = form.save(commit=False)
         forn.created_by = self.request.user
         forn.created_at = datetime.datetime.now()
-        categoria = form.cleaned_data["categoria"]
+        # categoria = form.cleaned_data["categoria"]
         forn.save()
 
-        print("categoria: " + str(categoria))
+        # print("categoria: " + str(categoria))
 
-        if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
+        """if categoria == Fornitore.NESSUNA:  # Nessuna categoria selezionata
             forn.save()
             messages.info(self.request, "Il fornitore è stato aggiunto!")
             self.object = forn
@@ -276,7 +276,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
                 messages.error(
                     self.request, "Errore! Il fornitore non è stato aggiunto!"
                 )
-                return super().form_invalid(form)
+                return super().form_invalid(form)"""
 
         self.object = forn
         messages.info(self.request, "Il fornitore è stato aggiunto!")

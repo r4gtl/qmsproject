@@ -2,8 +2,9 @@ import os
 from datetime import date
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, IntegrityError
 from django.urls import reverse
+from django.apps import apps
 from django_countries.fields import CountryField  # Field from django countries app
 
 
@@ -140,6 +141,79 @@ class Fornitore(models.Model):
     def get_absolute_url(self):
         return reverse("anagrafiche:vedi_fornitore", kwargs={"pk": self.pk})
 
+    def associa_categoria(self):
+        """
+        Metodo per associare il fornitore alla sottoclasse di categoria corrispondente.
+        """
+        # Stampa il valore corrente della categoria per debug
+        # print(f"Categoria fornita: {self.categoria}")
+
+        # Gestione del caso 'NESSUNA'
+        if self.categoria.upper() == "NESSUNA":
+            # print("Categoria 'NESSUNA' selezionata, nessun modello da associare.")
+            return  # Nessuna associazione necessaria
+
+        # Normalizza il nome del modello
+        categoria_model_name = f'Fornitore{self.categoria.title().replace(" ", "")}'
+
+        # print(f"Nome del modello categoria: {categoria_model_name}")
+
+        try:
+            # Tenta di recuperare il modello per la categoria
+            categoria_model = apps.get_model(
+                app_label="anagrafiche", model_name=categoria_model_name
+            )
+        except LookupError:
+            raise ValidationError(
+                f"Modello per la categoria '{self.categoria}' non trovato."
+            )
+
+        # Mappatura degli attributi per il ptr
+        categoria_attr_map = {
+            "FornitorePelli": "fornitore_ptr_pelli",
+            "FornitoreProdottiChimici": "fornitore_ptr_prodottichimici",
+            "FornitoreManutenzioni": "fornitore_ptr_manutenzioni",
+            "FornitoreLavorazioniEsterne": "fornitore_ptr_lavorazioniesterne",
+            "FornitoreServizi": "fornitore_ptr_servizi",
+            "FornitoreRifiuti": "fornitore_ptr_rifiuti",
+        }
+
+        categoria_attr = categoria_attr_map.get(categoria_model_name)
+        if not categoria_attr:
+            raise ValidationError(
+                f"Attributo per la categoria '{self.categoria}' non trovato."
+            )
+
+        try:
+            # Verifica se esiste già un'istanza della sottoclasse
+            categoria_instance = categoria_model.objects.filter(
+                fornitore_ptr=self
+            ).first()
+            if categoria_instance:
+                """print(
+                    f"Istanza della categoria '{self.categoria}' già esistente: {categoria_instance}"
+                )"""
+                setattr(self, categoria_attr, categoria_instance)
+            else:
+                # Crea una nuova istanza se non esiste
+                categoria_instance = categoria_model.objects.create(fornitore_ptr=self)
+                setattr(self, categoria_attr, categoria_instance)
+                self.save()  # Salva l'istanza del modello generico con la relazione
+        except IntegrityError as e:
+            raise ValidationError(
+                f"Errore durante l'associazione della categoria: {str(e)}"
+            )
+
+    def save(self, *args, **kwargs):
+        """
+        Sovrascrive il metodo save per gestire automaticamente l'associazione della categoria.
+        """
+        super().save(*args, **kwargs)  # Salva l'istanza principale
+        try:
+            self.associa_categoria()  # Associa la categoria
+        except ValidationError as e:
+            raise e
+
 
 class LwgFornitore(models.Model):
     lwg_urn = models.CharField(max_length=50)
@@ -181,7 +255,7 @@ class FornitorePelli(Fornitore):
     longitude = models.FloatField(blank=True, null=True)
 
 
-class FornitoreProdottiChimici(models.Model):
+class FornitoreProdottiChimici(Fornitore):
     fornitore_ptr = models.OneToOneField(
         Fornitore,
         on_delete=models.CASCADE,
@@ -191,7 +265,7 @@ class FornitoreProdottiChimici(models.Model):
     id_zdhc = models.CharField(max_length=50, blank=True, null=True)
 
 
-class FornitoreLavorazioniEsterne(models.Model):
+class FornitoreLavorazioniEsterne(Fornitore):
     # tipo audit sostenuto
     NESSUNO = "not_audited"
     MANUFACTURER = "leather_manufacturer_audit_protocol"
@@ -217,7 +291,7 @@ class FornitoreLavorazioniEsterne(models.Model):
         return str(self.pk)
 
 
-class FornitoreServizi(models.Model):
+class FornitoreServizi(Fornitore):
     fornitore_ptr = models.OneToOneField(
         Fornitore,
         on_delete=models.CASCADE,
