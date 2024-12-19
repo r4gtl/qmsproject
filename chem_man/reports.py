@@ -23,7 +23,10 @@ def generate_order_report(request, ordine_id):
     logo_path = finders.find("images/Lavezzo LOGO.jpg")
     print(f"logo_path: {logo_path}")
     # Recupera il nome del sito dal context processor
-    nome_sito_value = nome_sito(request).get("nome_sito", "")
+    # nome_sito_value = nome_sito(request).get("nome_sito", "")
+    context_data = nome_sito(request)
+    nome_sito_value = context_data.get("nome_sito", "")
+    indirizzo = context_data.get("indirizzo", "")
     nome_utente = f"{request.user.first_name} {request.user.last_name}"
     # Imposta la risposta HTTP per il PDF
     response = HttpResponse(content_type="application/pdf")
@@ -52,6 +55,7 @@ def generate_order_report(request, ordine_id):
         y_margin,
         logo_path,
         nome_sito_value,
+        indirizzo,
     )
 
     # Calcola la posizione verticale dopo l'intestazione
@@ -83,7 +87,16 @@ def generate_order_report(request, ordine_id):
 
 
 def draw_header(
-    c, fornitore, ordine, width, height, x_margin, y_margin, logo_path, nome_sito
+    c,
+    fornitore,
+    ordine,
+    width,
+    height,
+    x_margin,
+    y_margin,
+    logo_path,
+    nome_sito,
+    indirizzo,
 ):
     # Posizione iniziale
     y_position = height - y_margin
@@ -109,6 +122,8 @@ def draw_header(
     if nome_sito:
         c.setFont("Helvetica", 8)
         c.drawString(x_margin, y_position - used_height - 10, nome_sito)
+        used_height += 10  # Altezza del testo aggiunto
+        c.drawString(x_margin, y_position - used_height - 10, indirizzo)
         used_height += 10  # Altezza del testo aggiunto
 
     # Disegna il box con l'indirizzo del fornitore sulla destra
