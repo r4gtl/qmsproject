@@ -81,3 +81,29 @@ def create_summary_report(queryset, fields):
         summary[field] = aggregate_field(queryset, field, Sum)
 
     return summary
+
+
+def check_vertical_limit(
+    c, y_position, bottom_margin, height, draw_page_content, *args
+):
+    """
+    Controlla se la posizione corrente supera il margine inferiore.
+    Se necessario, crea una nuova pagina e chiama una funzione per disegnare contenuti comuni.
+
+    :param c: Canvas su cui disegnare
+    :param y_position: Posizione verticale corrente
+    :param bottom_margin: Margine inferiore
+    :param height: Altezza della pagina
+    :param draw_page_content: Funzione da chiamare per disegnare contenuti comuni
+    :param args: Argomenti aggiuntivi da passare alla funzione draw_page_content
+    :return: Nuova posizione verticale
+    """
+    if y_position <= bottom_margin:
+        c.showPage()  # Crea una nuova pagina
+        draw_page_content(
+            c, *args
+        )  # Disegna contenuti comuni (es. intestazioni, piè di pagina)
+        y_position = (
+            height - bottom_margin - 20
+        )  # Riposiziona in alto per il nuovo contenuto
+    return y_position

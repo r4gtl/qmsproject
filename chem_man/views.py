@@ -1476,10 +1476,17 @@ class DettaglioOrdineProdottoChimicoCreateView(LoginRequiredMixin, CreateView):
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         ordine_id = self.kwargs.get("fk_ordine")
-        ordine = OrdineProdottoChimico.objects.get(pk=ordine_id)
+        # ordine = OrdineProdottoChimico.objects.get(pk=ordine_id)
+        # fornitore = ordine.fk_fornitore
+        try:
+            ordine = OrdineProdottoChimico.objects.get(pk=ordine_id)
+            fornitore = ordine.fk_fornitore
+        except OrdineProdottoChimico.DoesNotExist:
+            fornitore = None
+        print(f"fornitore: {fornitore}")
         form.fields["fk_prodotto_chimico"].queryset = form.fields[
             "fk_prodotto_chimico"
-        ].queryset.filter(fk_fornitore=ordine.fk_fornitore)
+        ].queryset.filter(fk_fornitore=fornitore.pk)
         return form
 
     def get_success_url(self):

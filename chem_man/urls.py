@@ -11,7 +11,7 @@ from .utils import (
     search_sostanza,
 )
 from .views import *
-from .reports import generate_order_report
+from .reports_old import generate_order_report
 
 
 app_name = "chem_man"

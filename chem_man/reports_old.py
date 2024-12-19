@@ -66,7 +66,17 @@ def generate_order_report(request, ordine_id):
         height=height,
     )
 
-    draw_body(c, ordine, width, height, x_margin, y_margin, current_y)
+    draw_body(
+        c,
+        ordine,
+        width,
+        height,
+        x_margin,
+        y_margin,
+        current_y,
+        logo_path,
+        nome_sito_value,
+    )
     draw_footer(
         c, ordine, width, height, x_margin, y_margin, nome_sito_value, nome_utente
     )
@@ -83,7 +93,7 @@ def generate_order_report(request, ordine_id):
 
 
 def draw_header(
-    c, fornitore, ordine, width, height, x_margin, y_margin, logo_path, nome_sito
+    c, fornitore, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
 ):
     # Posizione iniziale
     y_position = height - y_margin
@@ -108,7 +118,7 @@ def draw_header(
     # Aggiungi il nome del sito sotto il logo
     if nome_sito:
         c.setFont("Helvetica", 8)
-        c.drawString(x_margin, y_position - used_height - 10, nome_sito)
+        c.drawString(x_margin, y_position - used_height - 10, nome_sito_value)
         used_height += 10  # Altezza del testo aggiunto
 
     # Disegna il box con l'indirizzo del fornitore sulla destra
@@ -165,9 +175,8 @@ def draw_header(
     return used_height
 
 
-def draw_body(c, ordine, width, height, x_margin, y_margin, current_y):
-    # y_position = height - y_margin - 100  # Posizione sotto l'intestazione
-    y_position = current_y
+"""def draw_body(c, ordine, width, height, x_margin, y_margin):
+    y_position = height - y_margin - 100  # Posizione sotto l'intestazione
 
     # Titoli della tabella
     c.setFont("Helvetica-Bold", 10)
@@ -189,14 +198,13 @@ def draw_body(c, ordine, width, height, x_margin, y_margin, current_y):
 
     # Linea di separazione
     y_position -= 10
-    c.line(x_margin, y_position, width - x_margin, y_position)
-
+    c.line(x_margin, y_position, width - x_margin, y_position)"""
 
 """ Inizio prova con gestione limite verticale """
 
-'''
+
 def draw_body(
-    c, ordine, width, height, x_margin, y_margin, current_y, logo_path, nome_sito
+    c, ordine, width, height, x_margin, y_margin, current_y, logo_path, nome_sito_value
 ):
     # Posizione iniziale sotto l'intestazione
     y_position = current_y
@@ -222,7 +230,7 @@ def draw_body(
             bottom_margin,
             height,
             draw_page_content=draw_header_and_table_headers(
-                c, ordine, width, height, x_margin, y_margin
+                c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
             ),
             # ordine=ordine,
             # width=width,
@@ -243,7 +251,7 @@ def draw_body(
 
 
 def draw_header_and_table_headers(
-    c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito
+    c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
 ):
     """
     Funzione che disegna l'intestazione e i titoli della tabella su ogni pagina nuova.
@@ -260,7 +268,7 @@ def draw_header_and_table_headers(
         x_margin,
         y_margin,
         logo_path,
-        nome_sito,
+        nome_sito_value,
     )
     draw_footer_date_and_pages(
         c, width, height, x_margin, y_margin, 0, 0
@@ -271,7 +279,7 @@ def draw_header_and_table_headers(
     c.drawString(x_margin, height - y_margin - 100, "Prodotto")
     c.drawString(x_margin + 150, height - y_margin - 100, "U. Misura")
     c.drawString(x_margin + 250, height - y_margin - 100, "Quantità")
-    c.drawString(x_margin + 350, height - y_margin - 100, "Aspetto dei beni")'''
+    c.drawString(x_margin + 350, height - y_margin - 100, "Aspetto dei beni")
 
 
 """ Fine prova gestione limite verticale"""
