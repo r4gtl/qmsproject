@@ -64,6 +64,7 @@ def generate_order_report(request, ordine_id):
         logo_path,
         nome_sito_value,
         total_pages,
+        request=request,
     )
 
     c.save()
@@ -154,7 +155,7 @@ def draw_header(
 
 
 """def draw_body(c, ordine, width, height, x_margin, y_margin):
-    y_position = height - y_margin - 100  # Posizione sotto l'intestazione
+    y_position = height - y_margin - 100  # Posizione sotto l'intestazionedraw_footer_date_and_pages
 
     # Titoli della tabella
     c.setFont("Helvetica-Bold", 10)
@@ -192,6 +193,7 @@ def draw_body(
     logo_path,
     nome_sito_value,
     total_pages,
+    request,
 ):
     """
     Disegna il corpo della tabella, gestendo la posizione e le nuove pagine.
@@ -199,6 +201,9 @@ def draw_body(
     y_position = current_y
     bottom_margin = y_margin + 50  # Margine inferiore per il contenuto
     page_num = 1  # Numero di pagina iniziale
+
+    # Ottieni l'utente dalla request
+    nome_utente = f"{request.user.first_name} {request.user.last_name}"
 
     c.setFont("Helvetica", 10)
     for dettaglio in ordine.dettagli_ordine.all():
@@ -211,12 +216,13 @@ def draw_body(
             page_num=page_num,
             total_pages=total_pages,
             ordine=ordine,
+            nome_sito_value=nome_sito_value,
+            nome_utente=nome_utente,
             width=width,
             height=height,
             x_margin=x_margin,
             y_margin=y_margin,
             logo_path=logo_path,
-            nome_sito_value=nome_sito_value,
         )
 
         # Disegna la riga di dettaglio
@@ -229,7 +235,16 @@ def draw_body(
 
     # Disegna il footer sull'ultima pagina
     draw_footer_date_and_pages(
-        c, width, height, x_margin, y_margin, page_num, total_pages
+        c=c,
+        width=width,
+        height=height,
+        x_margin=x_margin,
+        y_margin=y_margin,
+        page_num=page_num,
+        total_pages=total_pages,
+        ordine=ordine,
+        nome_sito=nome_sito_value,
+        nome_utente=nome_utente,
     )
     return page_num
 
@@ -263,6 +278,7 @@ def draw_header_and_table_headers(
     """
     Disegna l'intestazione e i titoli della tabella su ogni nuova pagina.
     """
+    # Disegna l'intestazione
     draw_header(
         c,
         ordine.fk_fornitore,
@@ -277,11 +293,22 @@ def draw_header_and_table_headers(
 
     # Disegna il footer con il numero di pagina
     draw_footer_date_and_pages(
-        c, width, height, x_margin, y_margin, page_num, total_pages
+        c,
+        width,
+        height,
+        x_margin,
+        y_margin,
+        page_num,
+        total_pages,
+        ordine,
+        nome_sito_value,
+        nome_utente="",
     )
 
     # Posizione iniziale per i titoli della tabella
-    y_table_headers = height - y_margin - 120
+    y_table_headers = (
+        height - y_margin - 120
+    )  # Adatta il margine in base all'altezza del footer
     c.setFont("Helvetica-Bold", 10)
     c.drawString(x_margin, y_table_headers, "Prodotto")
     c.drawString(x_margin + 150, y_table_headers, "U. Misura")
@@ -325,7 +352,16 @@ def draw_header_and_table_headers(
 
 
 def check_vertical_limit(
-    c, y_position, bottom_margin, draw_page_content, page_num, total_pages, **kwargs
+    c,
+    y_position,
+    bottom_margin,
+    draw_page_content,
+    page_num,
+    total_pages,
+    ordine,
+    nome_sito_value,
+    nome_utente,
+    **kwargs,
 ):
     """
     Controlla se il contenuto ha raggiunto il margine inferiore.
@@ -334,22 +370,31 @@ def check_vertical_limit(
     if y_position <= bottom_margin:
         # Disegna il footer sulla pagina corrente
         draw_footer_date_and_pages(
-            c,
+            c=c,
             width=kwargs["width"],
             height=kwargs["height"],
             x_margin=kwargs["x_margin"],
             y_margin=kwargs["y_margin"],
             page_num=page_num,
             total_pages=total_pages,
+            ordine=ordine,
+            nome_sito=nome_sito_value,
+            nome_utente=nome_utente,
         )
         c.showPage()  # Crea una nuova pagina
         page_num += 1  # Incrementa il numero di pagina
         # Ridisegna l'intestazione e restituisci la nuova posizione iniziale
         y_position = draw_page_content(
             c=c,
+            ordine=ordine,
+            width=kwargs["width"],
+            height=kwargs["height"],
+            x_margin=kwargs["x_margin"],
+            y_margin=kwargs["y_margin"],
+            logo_path=kwargs["logo_path"],
+            nome_sito_value=nome_sito_value,
             page_num=page_num,
             total_pages=total_pages,
-            **kwargs,
         )
     return y_position, page_num
 
@@ -428,26 +473,40 @@ def draw_footer(c, ordine, width, height, x_margin, y_margin, nome_sito, nome_ut
 
 
 def draw_footer_date_and_pages(
-    c, width, height, x_margin, y_margin, page_num, total_pages
+    c,
+    width,
+    height,
+    x_margin,
+    y_margin,
+    page_num,
+    total_pages,
+    ordine,
+    nome_sito,
+    nome_utente,
 ):
     """
-    Disegna il piè di pagina con la data di stampa e la numerazione delle pagine.
-    Questa funzione verrà eseguita per ogni pagina.
+    Disegna il footer dettagliato con conformità, note e firma,
+    seguito dalla data di stampa e la numerazione delle pagine.
     """
-    y_position = y_margin + 20  # Posizione verticale per il footer
+    # Disegna il footer dettagliato
+    draw_footer(c, ordine, width, height, x_margin, y_margin, nome_sito, nome_utente)
+
+    # Posizione per la data di stampa e il numero di pagina
+    y_position = y_margin + 20  # Posizione per la data e il numero di pagina
     c.setFont("Helvetica", 8)
 
-    # Disegna la linea orizzontale sopra il footer
+    # Linea orizzontale sopra il footer
     c.setStrokeColorRGB(0, 0, 0)
     c.setLineWidth(1)
     c.line(x_margin, y_position, width - x_margin, y_position)
 
+    # Data di stampa
     y_position = y_margin + 10
-    # Disegna la data di stampa
     c.drawString(
         x_margin, y_position, f"Data di Stampa: {datetime.now().strftime('%d/%m/%Y')}"
     )
-    # Numerazione pagine
+
+    # Numero di pagina
     c.drawString(
         width - x_margin - 100, y_position, f"Pagina {page_num} di {total_pages}"
     )
