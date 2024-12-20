@@ -1,3 +1,5 @@
+from chem_man.reports import draw_footer_date_and_pages
+
 # Esempio di struttura iniziale per il modulo `reports.py`
 
 # Funzioni per la gestione dei report
@@ -83,7 +85,7 @@ def create_summary_report(queryset, fields):
     return summary
 
 
-def check_vertical_limit(
+def check_vertical_limit_OLD(
     c, y_position, bottom_margin, height, draw_page_content, *args
 ):
     """

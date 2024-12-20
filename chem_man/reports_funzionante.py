@@ -23,7 +23,10 @@ def generate_order_report(request, ordine_id):
     logo_path = finders.find("images/Lavezzo LOGO.jpg")
     print(f"logo_path: {logo_path}")
     # Recupera il nome del sito dal context processor
-    nome_sito_value = nome_sito(request).get("nome_sito", "")
+    # nome_sito_value = nome_sito(request).get("nome_sito", "")
+    context_data = nome_sito(request)
+    nome_sito_value = context_data.get("nome_sito", "")
+    indirizzo = context_data.get("indirizzo", "")
     nome_utente = f"{request.user.first_name} {request.user.last_name}"
     # Imposta la risposta HTTP per il PDF
     response = HttpResponse(content_type="application/pdf")
@@ -52,6 +55,7 @@ def generate_order_report(request, ordine_id):
         y_margin,
         logo_path,
         nome_sito_value,
+        indirizzo,
     )
 
     # Calcola la posizione verticale dopo l'intestazione
@@ -66,17 +70,7 @@ def generate_order_report(request, ordine_id):
         height=height,
     )
 
-    draw_body(
-        c,
-        ordine,
-        width,
-        height,
-        x_margin,
-        y_margin,
-        current_y,
-        logo_path,
-        nome_sito_value,
-    )
+    draw_body(c, ordine, width, height, x_margin, y_margin, current_y)
     draw_footer(
         c, ordine, width, height, x_margin, y_margin, nome_sito_value, nome_utente
     )
@@ -93,7 +87,16 @@ def generate_order_report(request, ordine_id):
 
 
 def draw_header(
-    c, fornitore, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
+    c,
+    fornitore,
+    ordine,
+    width,
+    height,
+    x_margin,
+    y_margin,
+    logo_path,
+    nome_sito,
+    indirizzo,
 ):
     # Posizione iniziale
     y_position = height - y_margin
@@ -118,7 +121,9 @@ def draw_header(
     # Aggiungi il nome del sito sotto il logo
     if nome_sito:
         c.setFont("Helvetica", 8)
-        c.drawString(x_margin, y_position - used_height - 10, nome_sito_value)
+        c.drawString(x_margin, y_position - used_height - 10, nome_sito)
+        used_height += 10  # Altezza del testo aggiunto
+        c.drawString(x_margin, y_position - used_height - 10, indirizzo)
         used_height += 10  # Altezza del testo aggiunto
 
     # Disegna il box con l'indirizzo del fornitore sulla destra
@@ -175,8 +180,9 @@ def draw_header(
     return used_height
 
 
-"""def draw_body(c, ordine, width, height, x_margin, y_margin):
-    y_position = height - y_margin - 100  # Posizione sotto l'intestazione
+"""def draw_body(c, ordine, width, height, x_margin, y_margin, current_y):
+    # y_position = height - y_margin - 100  # Posizione sotto l'intestazione
+    y_position = current_y
 
     # Titoli della tabella
     c.setFont("Helvetica-Bold", 10)
@@ -200,11 +206,12 @@ def draw_header(
     y_position -= 10
     c.line(x_margin, y_position, width - x_margin, y_position)"""
 
+
 """ Inizio prova con gestione limite verticale """
 
 
 def draw_body(
-    c, ordine, width, height, x_margin, y_margin, current_y, logo_path, nome_sito_value
+    c, ordine, width, height, x_margin, y_margin, current_y, logo_path, nome_sito
 ):
     # Posizione iniziale sotto l'intestazione
     y_position = current_y
@@ -230,7 +237,7 @@ def draw_body(
             bottom_margin,
             height,
             draw_page_content=draw_header_and_table_headers(
-                c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
+                c, ordine, width, height, x_margin, y_margin
             ),
             # ordine=ordine,
             # width=width,
@@ -251,7 +258,7 @@ def draw_body(
 
 
 def draw_header_and_table_headers(
-    c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito_value
+    c, ordine, width, height, x_margin, y_margin, logo_path, nome_sito
 ):
     """
     Funzione che disegna l'intestazione e i titoli della tabella su ogni pagina nuova.
@@ -268,7 +275,7 @@ def draw_header_and_table_headers(
         x_margin,
         y_margin,
         logo_path,
-        nome_sito_value,
+        nome_sito,
     )
     draw_footer_date_and_pages(
         c, width, height, x_margin, y_margin, 0, 0
