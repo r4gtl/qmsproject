@@ -92,8 +92,8 @@ urlpatterns = [
     path('delete_valutazione_operatore/<int:pk>', delete_valutazione_operatore, name="delete_valutazione_operatore"),
 
     # XR Safety_roles-Operatori
-    path('<int:pk>/crea_hr_safety/', HR_SafetyCreateView.as_view(), name="crea_hr_safety"),  
-    path('<int:pk>/modifica_hr_safety/<int:id>', HR_SafetyUpdateView.as_view(), name="modifica_hr_safety"),  
+    path('<int:pk>/crea_hr_safety/', HR_SafetyCreateView.as_view(), name="crea_hr_safety"),
+    path('<int:pk>/modifica_hr_safety/', HR_SafetyUpdateView.as_view(), name="modifica_hr_safety"),  
     path('delete_hr_safety/<int:pk>', delete_hr_safety, name="delete_hr_safety"),
     
     # Stampe

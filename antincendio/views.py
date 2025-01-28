@@ -18,22 +18,30 @@ from .models import *
 
 def antincendio_home(request):
 
-    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)    
+    squadra_antincendio = HR_Safety.objects.filter(fk_safety_role__descrizione="Addetto Antincendio").filter(data_fine_incarico__isnull=True)     
     # Per quanto riguarda lo scadenzario specifico, valutare se generare un elenco di fixture in cui
     # non si possano modificare le descrizioni in modo da potersi fidare delle descrizioni
+    
     today = date.today()
     scadenzario = []
-    scadenze_antincendio = DettaglioRegistroFormazione.objects.filter(prossima_scadenza__gte=today, fk_registro_formazione__fk_corso__descrizione__icontains='incendio')    
+
+    scadenze_antincendio = (
+        DettaglioRegistroFormazione.objects
+        .filter(
+            prossima_scadenza__gte=today,
+            fk_registro_formazione__fk_corso__descrizione__icontains='incendio',
+            fk_hr__hr_safety__data_fine_incarico__isnull=True  # <-- Lookup sulla reverse relation
+        )
+        .distinct()  # <-- per evitare eventuali duplicati se ci sono più record HR_Safety aperti
+    )
+    
     for scadenza in scadenze_antincendio:
-        
         scadenzario.append({
             'scadenza': scadenza.prossima_scadenza,
-            'descrizione': str(scadenza.fk_hr) + ", " + str(scadenza.fk_registro_formazione.fk_corso.descrizione),            
-            'url': "human_resources:human_resources",            
-            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y')
-            
+            'descrizione': f"{scadenza.fk_hr}, {scadenza.fk_registro_formazione.fk_corso.descrizione}",
+            'url': "human_resources:human_resources",
+            'mese_anno': scadenza.prossima_scadenza.strftime('%B %Y'),
         })
-    
     
     
     

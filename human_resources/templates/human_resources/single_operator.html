@@ -251,10 +251,10 @@
               {% for incarico_sicurezza in elenco_incarichi_sicurezza %}
               <tr>        
                 
-                <td><a href="{% url 'human_resources:modifica_hr_safety' pk=humanresource.pk id=incarico_sicurezza.pk %}">{{ incarico_sicurezza.fk_safety_role.descrizione }}</a></td>
+                <td><a href="{% url 'human_resources:modifica_hr_safety' pk=incarico_sicurezza.pk %}">{{ incarico_sicurezza.fk_safety_role.descrizione }}</a></td>
                 <td>{{ incarico_sicurezza.data_inizio_incarico }}</td>                           
                 <td>{{ incarico_sicurezza.data_fine_incarico }}</td>                           
-                <td class="text-center"><a href="{% url 'human_resources:delete_hr_safety' pk=incarico_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{incarico_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
+                <td class="text-center"><a href="{% url 'human_resources:delete_hr_safety' pk=incarico_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonIncarico{{incarico_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
               </tr>  
               {% endfor %}
             </tbody>
