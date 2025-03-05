@@ -152,11 +152,12 @@ class SceltaLottoUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):        
         context = super().get_context_data(**kwargs)
-        pk = self.kwargs['pk']       
-        context['fk_lotto'] = Lotto.objects.get(pk=pk)
-        return context
-    
+        scelta_lotto = self.get_object()  # Recupera l'istanza corrente di SceltaLotto
+        lotto = scelta_lotto.fk_lotto  # Recupera il Lotto associato
 
+        context['fk_lotto'] = lotto  # Passa il Lotto corretto al template
+        return context        
+    
 
 def delete_scelta_lotto(request, pk): 
         deleteobject = get_object_or_404(SceltaLotto, pk = pk)   
