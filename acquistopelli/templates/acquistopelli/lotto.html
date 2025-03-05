@@ -169,6 +169,9 @@
 //            setFocusOnField('id_data_acquisto');
 //        });
 document.addEventListener("DOMContentLoaded", function() {
+    // Imposta il focus di default su id_data_acquisto
+    setFocusOnField('id_data_acquisto');
+
     // Recupera i parametri dalla URL
     const urlParams = new URLSearchParams(window.location.search);
     const focusElement = urlParams.get('focus');
@@ -178,8 +181,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const addButton = document.querySelector("a[href*='crea_scelta_lotto']");
         if (addButton) {
             addButton.focus();
-        } else {
-          setFocusOnField('id_data_acquisto');
         }
     }
 });
