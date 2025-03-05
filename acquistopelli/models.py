@@ -1,4 +1,4 @@
-from anagrafiche.models import Fornitore, Macello
+from anagrafiche.models import Fornitore, FornitoreMacello
 from django.contrib.auth.models import User
 from django.db import models
 from django_countries.fields import \
@@ -57,7 +57,7 @@ class Lotto(models.Model):
     origine = CountryField(blank_label='(seleziona Paese)', null=True, blank=True)
     documento = models.CharField(max_length=10, null=True, blank=True)
     is_lwg = models.BooleanField(default=False)
-    fk_macello = models.ForeignKey(Macello, null=True, blank=True, on_delete=models.CASCADE, related_name='lotto_macello')
+    fk_macello = models.ForeignKey(FornitoreMacello, null=True, blank=True, on_delete=models.CASCADE, related_name='lotto_macello')
     peso_totale = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True, )
     pezzi = models.IntegerField(null=True, blank=True)
     prezzo_unitario = models.DecimalField(max_digits=8, decimal_places=3, null=True, blank=True, )

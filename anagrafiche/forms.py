@@ -1,33 +1,16 @@
-from articoli.models import (
-    Articolo,
-    LavorazioneEsterna,
-    ListinoCliente,
-    ListinoTerzista,
-    PrezzoListino,
-)
+from articoli.models import (Articolo, LavorazioneEsterna, ListinoCliente,
+                             ListinoTerzista, PrezzoListino)
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from .models import (
-    Cliente,
-    Facility,
-    FacilityContact,
-    Fornitore,
-    FornitoreLavorazioniEsterne,
-    FornitoreManutenzioni,
-    FornitorePelli,
-    FornitoreProdottiChimici,
-    FornitoreRifiuti,
-    FornitoreServizi,
-    LwgFornitore,
-    Macello,
-    TransferValue,
-    XrDocumentiGestore,
-    XrDocumentiSmaltitore,
-    XrDocumentiTrasportatore,
-    XrTransferValueLwgFornitore,
-)
+from .models import (Cliente, Facility, FacilityContact, Fornitore,
+                     FornitoreLavorazioniEsterne, FornitoreMacello,
+                     FornitoreManutenzioni, FornitorePelli,
+                     FornitoreProdottiChimici, FornitoreRifiuti,
+                     FornitoreServizi, LwgFornitore, TransferValue,
+                     XrDocumentiGestore, XrDocumentiSmaltitore,
+                     XrDocumentiTrasportatore, XrTransferValueLwgFornitore)
 
 
 class FormFornitore(forms.ModelForm):
@@ -168,10 +151,10 @@ class FormFornitoreManutenzioni(forms.ModelForm):
         fields = "__all__"
 
 
-class FormMacello(forms.ModelForm):
+'''class FormMacello(forms.ModelForm):
 
     class Meta:
-        model = Macello
+        model = FornitoreMacello
         # exclude=()
         fields = "__all__"
         ragionesociale = forms.CharField(max_length=100, label="Facility Name")
@@ -200,8 +183,40 @@ class FormMacello(forms.ModelForm):
             "e_mail": "E-Mail",
             "sito_web": "Sito Web",
             "is_group": "Raccoglitore",
-        }
+        }'''
 
+
+class FormMacello(forms.ModelForm):
+
+    class Meta:
+        model = FornitoreMacello
+        # exclude=()
+        fields = "__all__"
+        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
+        indirizzo = forms.CharField()
+        cap = forms.CharField()
+        city = forms.CharField()
+        provincia = forms.CharField()
+        country = CountryField().formfield()
+        # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)
+
+        sito_web = forms.CharField()
+        e_mail = forms.EmailField()
+        created_at = forms.DateInput()
+        is_group = forms.BooleanField()
+
+        widgets = {
+            "country": CountrySelectWidget(),
+            "created_by": forms.HiddenInput(),
+        }
+        labels = {
+            "ragionesociale": "Ragione Sociale",
+            "country": "Paese",
+            "city": "Città",
+            "e_mail": "E-Mail",
+            "sito_web": "Sito Web",
+            "is_group": "Raccoglitore",
+        }
 
 """FINE FORMS PER LA GESTIONE DEI MODELLI DELLE CATEGORIE ASSOCIATE"""
 
@@ -318,38 +333,6 @@ class FormCliente(forms.ModelForm):
             "city": "Città",
         }
 
-
-class FormMacello(forms.ModelForm):
-
-    class Meta:
-        model = Macello
-        # exclude=()
-        fields = "__all__"
-        ragionesociale = forms.CharField(max_length=100, label="Facility Name")
-        indirizzo = forms.CharField()
-        cap = forms.CharField()
-        city = forms.CharField()
-        provincia = forms.CharField()
-        country = CountryField().formfield()
-        # categoria = forms.ChoiceField(choices=Fornitore.CHOICES_CATEGORY, widget=forms.Select)
-
-        sito_web = forms.CharField()
-        e_mail = forms.EmailField()
-        created_at = forms.DateInput()
-        is_group = forms.BooleanField()
-
-        widgets = {
-            "country": CountrySelectWidget(),
-            "created_by": forms.HiddenInput(),
-        }
-        labels = {
-            "ragionesociale": "Ragione Sociale",
-            "country": "Paese",
-            "city": "Città",
-            "e_mail": "E-Mail",
-            "sito_web": "Sito Web",
-            "is_group": "Raccoglitore",
-        }
 
 
 class ListinoTerzistaModelForm(forms.ModelForm):

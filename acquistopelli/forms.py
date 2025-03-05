@@ -1,4 +1,4 @@
-from anagrafiche.models import Fornitore, Macello
+from anagrafiche.models import Fornitore, FornitoreMacello
 from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
@@ -64,7 +64,7 @@ class LottoModelForm(forms.ModelForm):
         fk_tipoanimale = forms.ModelChoiceField(queryset=TipoAnimale.objects.all())
         fk_tipogrezzo = forms.ModelChoiceField(queryset=TipoGrezzo.objects.all())
         fk_fornitore = forms.ModelChoiceField(queryset=Fornitore.objects.all())
-        fk_macello = forms.ModelChoiceField(queryset=Macello.objects.all())
+        fk_macello = forms.ModelChoiceField(queryset=FornitoreMacello.objects.all())
         origine = CountryField().formfield()
         is_lwg = forms.BooleanField(widget=forms.CheckboxInput())
 

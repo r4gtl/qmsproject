@@ -1,11 +1,13 @@
 import os
 from datetime import date
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from django.db import models, IntegrityError
-from django.urls import reverse
+
 from django.apps import apps
-from django_countries.fields import CountryField  # Field from django countries app
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError, models
+from django.urls import reverse
+from django_countries.fields import \
+    CountryField  # Field from django countries app
 
 
 class Facility(models.Model):
@@ -176,6 +178,7 @@ class Fornitore(models.Model):
             "FornitoreLavorazioniEsterne": "fornitore_ptr_lavorazioniesterne",
             "FornitoreServizi": "fornitore_ptr_servizi",
             "FornitoreRifiuti": "fornitore_ptr_rifiuti",
+            "FornitoreMacello": "fornitore_ptr_macello",
         }
 
         categoria_attr = categoria_attr_map.get(categoria_model_name)
@@ -420,7 +423,8 @@ class FornitoreManutenzioni(models.Model):
 """FINE MODELLI CATEGORIE"""
 
 
-class Macello(Fornitore):
+class FornitoreMacello(Fornitore):
+    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True)
     is_group = models.BooleanField(default=False)
 
 
