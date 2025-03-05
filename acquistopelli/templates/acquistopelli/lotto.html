@@ -165,8 +165,23 @@
 {% endblock content %}
 {% block extra_scripts %}
 <script>
+//document.addEventListener("DOMContentLoaded", function() {
+//            setFocusOnField('id_data_acquisto');
+//        });
 document.addEventListener("DOMContentLoaded", function() {
-            setFocusOnField('id_data_acquisto');
-        });
+    // Recupera i parametri dalla URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const focusElement = urlParams.get('focus');
+
+    // Se il parametro focus è "aggiungi_scelta", imposta il focus sul pulsante "Aggiungi scelta"
+    if (focusElement === "aggiungi_scelta") {
+        const addButton = document.querySelector("a[href*='crea_scelta_lotto']");
+        if (addButton) {
+            addButton.focus();
+        } else {
+          setFocusOnField('id_data_acquisto');
+        }
+    }
+});
 </script>
 {% endblock %} 

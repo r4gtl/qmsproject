@@ -1,21 +1,17 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
 import datetime
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView
-from django.db.models import Sum
 
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView
 
 from .filters import LottoFilter
-
-from .models import *
-
 from .forms import *
-
+from .models import *
 from .utils import filtro_lotti
-
 
 
 def dashboard_acquisto_pelli(request):     
@@ -97,7 +93,10 @@ class LottoUpdateView(LoginRequiredMixin, UpdateView):
             print(f"scelta pk {scelta.pk}")
         context['totale_pezzi'] = totale_pezzi
         lotto = Lotto.objects.get(pk=pk)
-        pezzi_rimanenti = lotto.pezzi - totale_pezzi
+        if lotto.pezzi!=0 and lotto.pezzi is not None:
+            pezzi_rimanenti = lotto.pezzi - totale_pezzi
+        else:
+            pezzi_rimanenti=0
         context['pezzi_rimanenti'] = pezzi_rimanenti
         return context
 
@@ -122,7 +121,8 @@ class SceltaLottoCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):          
         fk_lotto=self.object.fk_lotto.pk   
         print("fkLotto: " + str(fk_lotto))     
-        return reverse_lazy('acquistopelli:modifica_lotto', kwargs={'pk':fk_lotto})
+        #return reverse_lazy('acquistopelli:modifica_lotto', kwargs={'pk':fk_lotto})
+        return f"{reverse('acquistopelli:modifica_lotto', kwargs={'pk': fk_lotto})}?focus=aggiungi_scelta"
     
     def form_valid(self, form):                
         messages.info(self.request, self.success_message) # Compare sul success_url
