@@ -1,0 +1,69 @@
+<!-- Created with Jaspersoft Studio version 7.0.2.final utlizzo versione della libreria JasperReports7.0.2-31532122640f516c6d17238ae0e41a08113d5ac0  -->
+<jasperReport name="Finishing_recipe" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a3fa61cb-09ac-456f-9f56-0c9cf0e86547">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qms.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="PK" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[$P{PK}]]></defaultValueExpression>
+	</parameter>
+	<query language="sql"><![CDATA[SELECT 
+d.id,
+d.numero_ricetta,
+d.data_ricetta,
+d.numero_revisione,
+d.data_revisione
+FROM ricette_ricettarifinizione d
+WHERE 
+	 d.id = $P{PK}]]></query>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ricette_ricettarifinizione"/>
+	</field>
+	<field name="numero_ricetta" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="numero_ricetta"/>
+		<property name="com.jaspersoft.studio.field.label" value="numero_ricetta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ricette_ricettarifinizione"/>
+	</field>
+	<field name="data_ricetta" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="data_ricetta"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_ricetta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ricette_ricettarifinizione"/>
+	</field>
+	<field name="numero_revisione" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="numero_revisione"/>
+		<property name="com.jaspersoft.studio.field.label" value="numero_revisione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ricette_ricettarifinizione"/>
+	</field>
+	<field name="data_revisione" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="data_revisione"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_revisione"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ricette_ricettarifinizione"/>
+	</field>
+	<background splitType="Stretch"/>
+	<pageHeader height="42" splitType="Stretch">
+		<element kind="textField" uuid="b164234f-4629-477a-aafb-561a2272f088" x="460" y="6" width="100" height="30">
+			<expression><![CDATA[$V{PAGE_NUMBER}]]></expression>
+		</element>
+		<element kind="textField" uuid="a6791fbf-b672-4b30-919f-8654be72511b" x="0" y="6" width="100" height="30">
+			<expression><![CDATA[$F{numero_ricetta}]]></expression>
+		</element>
+		<element kind="textField" uuid="9f0bf3bc-68a7-4f5c-b6bf-888da9fd4015" x="110" y="6" width="100" height="30">
+			<expression><![CDATA[$F{data_ricetta}]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch"/>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<element kind="staticText" uuid="e0451488-59dc-4ed6-a860-95abf590ac75" x="195" y="32" width="100" height="30">
+				<text><![CDATA[Prova]]></text>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch">
+		<element kind="textField" uuid="7bff9505-0e7b-411e-ab03-ab3153441af4" x="365" y="17" width="100" height="30" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageFooter>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

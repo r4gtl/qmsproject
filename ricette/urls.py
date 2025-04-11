@@ -1,5 +1,6 @@
 from django.urls import path
 
+from .provareports import *
 from .reports import *
 from .utils import *
 from .views import *
@@ -239,5 +240,11 @@ urlpatterns = [
         "accoda_dettaglio_ricetta_colore_bagnato/",
         accoda_dettaglio_ricetta_colore_bagnato,
         name="accoda_dettaglio_ricetta_colore_bagnato",
+    ),
+
+    path(
+        "stampa_jasper/<pk>/",
+        ricetta_rifinizione_jasper,
+        name="stampa_jasper",
     ),
 ]
