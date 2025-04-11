@@ -2,8 +2,92 @@
 <jasperReport name="Finishing_recipe" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a3fa61cb-09ac-456f-9f56-0c9cf0e86547">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qms.jrdax"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<dataset name="DettaglioRicetta" uuid="d30e1b3b-d053-4c9e-9806-f24838c8984d">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="qms.jrdax"/>
+		<parameter name="id_ricetta" class="java.lang.Long"/>
+		<query language="SQL"><![CDATA[WITH ultimi_prezzi AS (
+    SELECT DISTINCT ON (fk_prodottochimico_id)
+           fk_prodottochimico_id,
+           prezzo
+    FROM chem_man_prezzoprodotto
+    ORDER BY fk_prodottochimico_id, data_inserimento DESC
+)
+
+SELECT 
+    d.id,
+    d.numero_riga,
+    d.quantity,
+    pc.descrizione AS descrizione_prodotto,
+    up.prezzo AS prezzo_unitario,
+    d.quantity * up.prezzo AS totale_riga
+FROM ricette_dettaglioricettarifinizione d
+JOIN chem_man_prodottochimico pc ON d.fk_prodotto_chimico_id = pc.id
+LEFT JOIN ultimi_prezzi up ON pc.id = up.fk_prodottochimico_id
+ORDER BY d.numero_riga;
+]]></query>
+		<field name="id" class="java.lang.Long">
+			<property name="com.jaspersoft.studio.field.name" value="id"/>
+			<property name="com.jaspersoft.studio.field.label" value="id"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="ricette_dettaglioricettarifinizione"/>
+		</field>
+		<field name="numero_riga" class="java.lang.Integer">
+			<property name="com.jaspersoft.studio.field.name" value="numero_riga"/>
+			<property name="com.jaspersoft.studio.field.label" value="numero_riga"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="ricette_dettaglioricettarifinizione"/>
+		</field>
+		<field name="quantity" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="quantity"/>
+			<property name="com.jaspersoft.studio.field.label" value="quantity"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="ricette_dettaglioricettarifinizione"/>
+		</field>
+		<field name="descrizione_prodotto" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="descrizione_prodotto"/>
+			<property name="com.jaspersoft.studio.field.label" value="descrizione_prodotto"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="chem_man_prodottochimico"/>
+		</field>
+		<field name="prezzo_unitario" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="prezzo_unitario"/>
+			<property name="com.jaspersoft.studio.field.label" value="prezzo_unitario"/>
+			<property name="com.jaspersoft.studio.field.tree.path" value="chem_man_prezzoprodotto"/>
+		</field>
+		<field name="totale_riga" class="java.math.BigDecimal">
+			<property name="com.jaspersoft.studio.field.name" value="totale_riga"/>
+			<property name="com.jaspersoft.studio.field.label" value="totale_riga"/>
+		</field>
+	</dataset>
 	<parameter name="PK" class="java.lang.Long">
 		<defaultValueExpression><![CDATA[$P{PK}]]></defaultValueExpression>
+	</parameter>
+	<parameter name="id_ricetta" forPrompting="false" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[$P{id_ricetta}]]></defaultValueExpression>
 	</parameter>
 	<query language="sql"><![CDATA[SELECT 
 d.id,
@@ -53,9 +137,107 @@ WHERE
 	</pageHeader>
 	<columnHeader height="61" splitType="Stretch"/>
 	<detail>
-		<band height="125" splitType="Stretch">
-			<element kind="staticText" uuid="e0451488-59dc-4ed6-a860-95abf590ac75" x="195" y="32" width="100" height="30">
-				<text><![CDATA[Prova]]></text>
+		<band height="224" splitType="Stretch">
+			<element kind="component" uuid="3a5cb201-45e5-4e8a-ae42-72cecd145132" x="-20" y="24" width="560" height="200">
+				<component kind="table">
+					<datasetRun uuid="df20dd5e-14a9-4bbd-9288-7d76c49cc304" subDataset="DettaglioRicetta">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<column kind="single" uuid="74f8cb83-0ccf-4ac3-a71e-d8c605036d7f" width="60">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="f7ff7d75-0580-4ce7-9df1-ac05fa6850bb" x="0" y="0" width="60" height="30">
+								<text><![CDATA[id]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="a1254dd8-32cb-41f1-9d27-c32ee7139a5c" x="0" y="0" width="60" height="30">
+								<expression><![CDATA[$F{id}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="14cd16c9-12de-4b43-a87d-38d8e55c5e27" width="80">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="8ed44097-fc85-4b72-abcd-e193a2574772" x="0" y="0" width="80" height="30">
+								<text><![CDATA[numero_riga]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="fd8f369b-1594-4fde-84cb-0eb62bdd06ac" x="0" y="0" width="80" height="30">
+								<expression><![CDATA[$F{numero_riga}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="aea1a7cb-f13f-4778-a4ac-19c326917b6a" width="80">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="93d3587d-aa3b-425e-81a8-a1dca0bfc320" x="0" y="0" width="80" height="30">
+								<text><![CDATA[quantity]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="4cbfdb69-4b12-4787-897a-edfc9f333843" x="0" y="0" width="80" height="30" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="true">
+								<expression><![CDATA[$F{quantity}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="9b824873-ad16-4bfc-804a-b15c98333dc1" width="140">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="859def04-b0c5-4d4c-ac3c-f449e990551e" x="0" y="0" width="140" height="30">
+								<text><![CDATA[descrizione_prodotto]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="99c07743-2a78-49b6-b73f-cab726696f22" x="0" y="0" width="140" height="30" blankWhenNull="true">
+								<expression><![CDATA[$F{descrizione_prodotto}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="0642d34e-e564-416d-8697-4d2282a6aacc" width="70">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="7fa0ce99-00bc-4051-aeae-5f4f24c8c252" x="0" y="0" width="70" height="30">
+								<text><![CDATA[prezzo_unitario]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="ee2888c2-1cff-40b9-a02e-33507ec44b68" x="0" y="0" width="70" height="30" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="true">
+								<expression><![CDATA[$F{prezzo_unitario}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+					<column kind="single" uuid="7c2598a7-7d0a-4777-be5d-a66b67091fa1" width="100">
+						<tableHeader height="30" style="Table_TH"/>
+						<tableFooter height="30" style="Table_TH"/>
+						<columnHeader height="30" style="Table_CH">
+							<element kind="staticText" uuid="9d243f7e-2e45-4221-9fc2-c95941e96bf7" x="0" y="0" width="100" height="30">
+								<text><![CDATA[totale_riga]]></text>
+							</element>
+						</columnHeader>
+						<columnFooter height="30" style="Table_CH"/>
+						<detailCell height="30" style="Table_TD">
+							<element kind="textField" uuid="0deb724f-0da4-4bca-812b-025f73320f41" x="0" y="0" width="100" height="30" pattern="#,##0.###;(#,##0.###-)" blankWhenNull="true">
+								<expression><![CDATA[$F{totale_riga}]]></expression>
+							</element>
+						</detailCell>
+					</column>
+				</component>
+				<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+				<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+				<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 			</element>
 		</band>
 	</detail>
