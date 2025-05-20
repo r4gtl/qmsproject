@@ -253,7 +253,7 @@
                 
                 <td><a href="{% url 'human_resources:modifica_hr_safety' pk=incarico_sicurezza.pk %}">{{ incarico_sicurezza.fk_safety_role.descrizione }}</a></td>
                 <td>{{ incarico_sicurezza.data_inizio_incarico }}</td>                           
-                <td>{{ incarico_sicurezza.data_fine_incarico }}</td>                           
+                <td>{{ incarico_sicurezza.data_fine_incarico|default_if_none:"" }}</td>                           
                 <td class="text-center"><a href="{% url 'human_resources:delete_hr_safety' pk=incarico_sicurezza.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButtonIncarico{{incarico_sicurezza.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>             
               </tr>  
               {% endfor %}
