@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import DettaglioOrdineCliente, OrdineCliente
+
+admin.site.register(OrdineCliente)
+admin.site.register(DettaglioOrdineCliente)
+
+

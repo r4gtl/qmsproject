@@ -22,8 +22,12 @@ class OrdineCliente(models.Model):
         return str("Ordine n. " + " " + self.numero_ordine) + " del " + str(self.data_ordine)
     
 class DettaglioOrdineCliente(models.Model):
-    fk_ordine= models.ForeignKey(OrdineCliente, related_name= 'dettaglio_ordine', on_delete=models.CASCADE)
-
+    fk_ordine = models.ForeignKey(OrdineCliente, related_name= 'dettaglio_ordine', on_delete=models.CASCADE)
+    riferimento = models.CharField(max_length=15, null=True, blank=True)
+    fk_articolo = models.ForeignKey(Articolo, related_name = 'dettaglio_ordine', on_delete=models.DO_NOTHING, verbose_name = 'Articolo')
+    fk_colore = models.ForeignKey(Colore, related_name = 'dettaglio_ordine', on_delete=models.DO_NOTHING, verbose_name = 'Colore')
+    um = models.CharField(max_length=5, null=True, blank=True)
+    quantity = models.PositiveIntegerField()
 
 
     note = models.TextField(null=True, blank=True)
