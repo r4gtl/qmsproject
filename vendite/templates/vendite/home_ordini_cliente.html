@@ -78,7 +78,7 @@
                 
         
                 <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                <a class="btn btn-success" href="{% url 'vendite:home_ordini_clienti' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                <a class="btn btn-success" href="{% url 'vendite:home_ordini_cliente' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
                 
               </form>
               
@@ -115,12 +115,12 @@
               <tbody>
                 {% for ordine in ordini_cliente_paginator %}
                     
-                    <td class="col-md"><a href="{% url 'chem_man:modifica_ordine_cliente' pk=ordine.pk %}">{{ ordine.numero_ordine }}</a></td>
+                    <td class="col-md"><a href="{% url 'vendite:modifica_ordine_cliente' pk=ordine.pk %}">{{ ordine.numero_ordine }}</a></td>
                     <td class="col-md text-end">{{ ordine.fk_articolo }} {{ ordine.fk_colore }}</td>
                     
                     <td class="col-md text-end">{{ ordine.um }}</td>  
                     <td class="col-md">{{ ordine.quantity  }} </td>
-                    <td class="col-md text-center"><a href="{% url 'chem_man:delete_ordine_cliente' pk=ordine.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ordine.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                    <td class="col-md text-center"><a href="{% url 'vendite:delete_ordine_cliente' pk=ordine.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ordine.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}

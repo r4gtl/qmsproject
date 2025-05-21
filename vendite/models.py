@@ -28,6 +28,11 @@ class DettaglioOrdineCliente(models.Model):
     fk_colore = models.ForeignKey(Colore, related_name = 'dettaglio_ordine', on_delete=models.DO_NOTHING, verbose_name = 'Colore')
     um = models.CharField(max_length=5, null=True, blank=True)
     quantity = models.PositiveIntegerField()
+    data_consegna = models.DateField(null=True, blank=True)
+    in_lavorazione = models.BooleanField(default=False)
+    data_messa_in_lavoro = models.DateField(null=True, blank=True)
+    completato = models.BooleanField(default=False)
+    data_completamento = models.DateField(null=True, blank=True)
 
 
     note = models.TextField(null=True, blank=True)

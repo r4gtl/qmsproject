@@ -17,5 +17,5 @@ class OrdineClienteFilter(django_filters.FilterSet):
     
     class Meta:
         model = OrdineCliente
-        fields = ['numero_ordine', 'cliente']
+        fields = ['numero_ordine', 'fk_cliente']
         

@@ -69,22 +69,7 @@
                             
                         </div>
 
-                        <div class="row">  
-                          <div class="col-md-2">
-                            {{ form.fk_articolo|as_crispy_field }} 
-                          </div> 
-                          
-                          <div class="col-md-3">
-                            {{ form.fk_colore|as_crispy_field }}
-                          </div>                            
-                          <div class="col-md-2">
-                            {{ form.um|as_crispy_field }}
-                          </div>  
-                          <div class="col-md-5">
-                            {{ form.quantity|as_crispy_field }}
-                          </div> 
-                              
-                        </div>
+                        
                         <div class="row">
                           <div class="col-6">
                             {{ form.note|as_crispy_field }}
@@ -105,13 +90,58 @@
         <!-- fine form -->
         </form>
 
+
         
 
     </div>
 
     
     <div class="row">
-      
+      <!-- Tabella dettaglio -->
+      <div class="col-6">
+        <div class="row">
+        
+        {% if form.instance.id  %}
+        <div class="col-6">
+          <h5>Dettaglio Ordine</h5>
+                    
+        </div>
+        <div class="col-6 text-end">
+          
+          <a href="{% url 'vendite:aggiungi_dettaglio_ordine' fk_ordine=ordinecliente.pk %}" class="btn btn-sm btn-success" id="btn_prezzo"><i class="bi bi-file-earmark-plus"></i> Aggiungi Dettaglio</a>
+
+        </div>
+      </div>
+      <div class="table-container">
+        <table class="table table-bordered table-striped mt-2">
+          <thead>
+            <tr>
+              <th>Articolo</th>
+              <th>Colore</th>   
+              <th>UM</th>   
+              <th>Quantità</th> 
+              <th>Data Consegna</th> 
+              <th>Azione</th>
+              
+            </tr>
+          </thead>
+          <tbody>
+            {% for dettaglio in dettaglio_ordini %}
+            <tr>        
+              
+              <td><a href="{% url 'vendite:modifica_dettaglio_ordine' fk_ordine=dettaglio.fk_ordine.pk pk=dettaglio.pk %}">{{ dettaglio.fk_articolo }}</a></td>
+              <td><a href="{% url 'vendite:modifica_dettaglio_ordine' fk_ordine=dettaglio.fk_ordine.pk pk=dettaglio.pk %}">{{ dettaglio.fk_colore }}</a></td>
+              <td class="text-end">{{ dettaglio.um }}</td>
+              <td class="text-end">{{ dettaglio.quantity }}</td>
+              <td class="text-end">{{ dettaglio.data_consegna|default_if_none:"" }}</td>
+              <td class="text-center"><a href="{% url 'vendite:delete_dettaglio_ordine_cliente' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
+            </tr>  
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+  </div>
     </div><!--Fine prima riga tabelle-->
 <br>
 

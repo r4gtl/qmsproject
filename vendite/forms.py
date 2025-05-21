@@ -27,8 +27,9 @@ class DettaglioOrdineClienteModelForm(forms.ModelForm):
             'fk_articolo': forms.Select(attrs={'class': 'form-select select-articolo'}),
             'fk_colore': forms.Select(attrs={'class': 'form-select select-colore'}),
             'um': forms.TextInput(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),            
             'note': forms.Textarea(attrs={'class': 'form-control'}),    
             'created_by': forms.HiddenInput(),
-            'created_at': forms.HiddenInput()   
+            'created_at': forms.HiddenInput(),  
+            'fk_ordine': forms.HiddenInput()  
         }

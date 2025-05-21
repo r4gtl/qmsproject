@@ -16,5 +16,11 @@ urlpatterns = [
     ),
     path('delete_ordine_cliente/<int:pk>',
         delete_ordine_cliente,
-        name="delete_ordine_cliente"),    
+        name="delete_ordine_cliente"),  
+
+    path("<int:fk_ordine>/aggiungi_dettaglio_ordine/", DettaglioOrdineClienteCreateView.as_view(), name="aggiungi_dettaglio_ordine"),
+    path("<int:fk_ordine>/modifica_dettaglio_ordine/<int:pk>", DettaglioOrdineClienteUpdateView.as_view(), name="modifica_dettaglio_ordine"),
+    path('delete_dettaglio_ordine_cliente/<int:pk>',
+        delete_dettaglio_ordine_cliente,
+        name="delete_dettaglio_ordine_cliente"),  
 ]

@@ -58,7 +58,7 @@ class OrdineClienteCreateView(LoginRequiredMixin, CreateView):
 
         pk_ordine_cliente = self.object.pk
         return reverse_lazy(
-            "chem_man:modifica_ordine_cliente", kwargs={"pk": pk_ordine_cliente}
+            "vendite:modifica_ordine_cliente", kwargs={"pk": pk_ordine_cliente}
         )
 
     def form_valid(self, form):
@@ -104,6 +104,15 @@ class OrdineClienteUpdateView(LoginRequiredMixin, UpdateView):
             "Si è verificato un errore nel modulo. Per favore, correggi gli errori.",
         )
         return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk_ordine = self.kwargs["pk"]        
+        filters = {"fk_ordine": pk_ordine}
+        dettaglio_ordini = DettaglioOrdineCliente.objects.filter(**filters)        
+        context["dettaglio_ordini"] = dettaglio_ordini
+        
+        return context
 
 
 def delete_ordine_cliente(request, pk):
@@ -126,10 +135,11 @@ class DettaglioOrdineClienteCreateView(LoginRequiredMixin, CreateView):
         focus_button = "btn_aggiungi_dettaglio"  # Imposto il pulsante su cui settare il focus
 
         return reverse_lazy(
-            "vendite:modifica_dettaglio_ordine_with_focus_button",
-            kwargs={"pk": fk_ordinecliente, "focus_button": focus_button},
+            #"vendite:modifica_dettaglio_ordine_with_focus_button",
+            "vendite:modifica_ordine_cliente", 
+            kwargs={"pk": fk_ordinecliente}
         )
-        # return reverse_lazy('chem_man:modifica_prodotto_chimico', kwargs={'pk':fk_prodottochimico})
+        
 
     def form_valid(self, form):
         messages.info(self.request, self.success_message)  # Compare sul success_url
@@ -158,8 +168,9 @@ class DettaglioOrdineClienteUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         fk_ordinecliente = self.object.fk_ordine.pk
+        #pk_dettaglio=self.object.pk
         return reverse_lazy(
-            "vendite:modifica_dettaglio_ordine", kwargs={"pk": fk_ordinecliente}
+            "vendite:modifica_ordine_cliente", kwargs={"pk": fk_ordinecliente}
         )
 
     def form_valid(self, form):
@@ -169,6 +180,7 @@ class DettaglioOrdineClienteUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         fk_ordinecliente = self.kwargs["fk_ordine"]
+        
         context["fk_ordinecliente"] = OrdineCliente.objects.get(
             pk=fk_ordinecliente
         )
