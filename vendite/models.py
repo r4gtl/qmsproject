@@ -1,4 +1,4 @@
-from acquistopelli.models import Lotto
+from acquistopelli.models import Lotto, SceltaLotto
 from anagrafiche.models import Cliente
 from articoli.models import Articolo, Colore
 from django.contrib.auth.models import User
@@ -42,4 +42,41 @@ class DettaglioOrdineCliente(models.Model):
     class Meta:        
         verbose_name = "Dettaglio Ordine"
         verbose_name_plural = "Dettaglio Ordini Cliente"
+
+class SchedaLavorazione(models.Model):
+    data_scheda = models.DateField(null=True, blank=True)
+    fk_dettaglio_ordine_cliente = models.ForeignKey(DettaglioOrdineCliente, related_name= 'scheda_lavorazione', on_delete=models.CASCADE)
+    fk_articolo = models.ForeignKey(Articolo, related_name = 'scheda_lavorazione', on_delete=models.DO_NOTHING, verbose_name = 'Articolo')
+    fk_colore = models.ForeignKey(Colore, related_name = 'scheda_lavorazione', on_delete=models.DO_NOTHING, verbose_name = 'Colore')
+    tot_pelli = models.PositiveIntegerField()
+    tot_pelli_finale = models.PositiveIntegerField()
+    metri_quadrati_finali = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    verbose_name = "Superficie (m²)",
+    help_text = "Inserisci la superficie in metri quadrati"
+)
+    scheda_chiusa = models.BooleanField(default=False)
+    data_chiusura = models.DateField(null=True, blank=True, verbose_name = 'Data Chiusura Scheda')
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='scheda_lavorazione', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:        
+        verbose_name = "Scheda lavorazione"
+        verbose_name_plural = "Schede Lavorazione"
+
+    def __str__(self):
+        return str("Scheda n. " + " " + self.pk) + " del " + str(self.data_scheda)
+    
+
+
+class XRScelteSchede(models.Model):
+    fk_sceltalotto = models.ForeignKey(SceltaLotto, related_name= 'xrscelteschede', on_delete=models.CASCADE)
+    fk_schedalavorazione = models.ForeignKey(SchedaLavorazione, related_name= 'xrscelteschede', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='xrscelteschede', null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
     

@@ -81,6 +81,8 @@ class SceltaLotto(models.Model):
     fk_lotto = models.ForeignKey(Lotto, null=False, blank=False, on_delete=models.CASCADE)
     fk_scelta = models.ForeignKey(Scelta, null=False, blank=False, on_delete=models.CASCADE)
     pezzi = models.IntegerField(null=True, blank=True)
+    scelta_terminata = models.BooleanField(default=False)
+    data_termine = models.DateField(null=True, blank=True)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='sceltalotto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
