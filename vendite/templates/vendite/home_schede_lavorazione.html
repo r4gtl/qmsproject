@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 {% load custom_filters %}
 {% load crispy_forms_tags %}
-{% block title %}{{ block.super }} | Ordini Clienti {% endblock %}
+{% block title %}{{ block.super }} | Schede Lavorazione {% endblock %}
 
 {% block sidenav %}
 {% include "core/partials/_sidenav_vendite.html" %}
@@ -14,13 +14,13 @@
 <nav aria-label="breadcrumb" class="mt-3">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>      
-        <li class="breadcrumb-item active" aria-current="page">Ordini Clienti</li>
+        <li class="breadcrumb-item active" aria-current="page">Schede Lavorazione</li>
     </ol>
 </nav>
 
     <div class="container">
         
-        <h3>Ordini Clienti</h3>
+        <h3>Schede Lavorazione</h3>
         <!-- Statistiche -->
         <div class="row">
         <div class="col-md-8"></div>
@@ -50,20 +50,39 @@
                   <table class="table table-hover table-striped table-bordered">
                     <thead class="thead-dark">
                       <tr>     
-                        <th>Cliente</th>
+                        <th>Numero Scheda</th>
+                        <th>Articolo</th>
+                        <th>Colore</th>
                         <th>Numero Ordine</th>
+                        <th>Data Scheda</th>
+                        <th>Scheda Chiusa</th>
                         
                       </tr>
                     </thead>
                     
                     <tbody>
                     <tr>
-                      <td style="width: 20%">                
-                        {% render_field filter.form.descrizione class="form-control" %}
+                      <td style="width: 10%">                
+                        {% render_field filter.form.numero_scheda class="form-control" %}
                       </td>
                       
                       <td style="width: 20%">
-                        {% render_field filter.form.fk_fornitore class="form-control" %}
+                        {% render_field filter.form.articolo_descrizione class="form-control" %}
+                      </td>
+                      <td style="width: 20%">
+                        {% render_field filter.form.colore_descrizione class="form-control" %}
+                      </td>
+                      <td style="width: 10%">
+                        {% render_field filter.form.numero_ordine class="form-control" %}
+                      </td>
+                      <td style="width: 15%">
+                        {% render_field filter.form.data_scheda_da class="form-control" %}
+                      </td>
+                      <td style="width: 15%">
+                        {% render_field filter.form.data_scheda_a class="form-control" %}
+                      </td>
+                      <td style="width: 10%">
+                        {% render_field filter.form.scheda_chiusa class="form-control" %}
                       </td>
                       
                     </tr>
@@ -78,7 +97,7 @@
                 
         
                 <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i>&nbsp;&nbsp; Cerca</button>
-                <a class="btn btn-success" href="{% url 'vendite:home_ordini_cliente' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
+                <a class="btn btn-success" href="{% url 'vendite:home_schede_lavorazione' %}"><i class="bi bi-arrow-counterclockwise"></i>&nbsp;&nbsp; Pulisci campi</a>
                 
               </form>
               
@@ -91,7 +110,7 @@
 
         <hr>
         <div class="d-flex flex-row-reverse bd-highlight">
-        <a href="{% url 'vendite:aggiungi_ordine_cliente' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Ordine</a>
+        <a href="{% url 'vendite:aggiungi_scheda_lavorazione' %}" class="btn btn-success p-2 bd-highlight"><i class="bi bi-person-plus"></i> Aggiungi Scheda Lavorazione</a>
         </div>  
         <br>
 
@@ -101,9 +120,10 @@
             <table class="table table-hover table-striped table-bordered">
               <thead class="thead-dark">
               <tr>        
-                <th>Ordine</th>
+                <th>Scheda</th>
+                <th>Data Scheda</th>
                 <th>Articolo e Colore</th>
-                <th>UM</th>
+                <th>Ordine N.</th>
                 <th>Quantità</th>
                 <th>Azione</th>
 
@@ -113,14 +133,14 @@
             </thead>
               
               <tbody>
-                {% for ordine in ordini_cliente_paginator %}
+                {% for scheda in schede_lavorazione_paginator %}
                     
-                    <td class="col-md"><a href="{% url 'vendite:modifica_ordine_cliente' pk=ordine.pk %}">{{ ordine.numero_ordine }}</a></td>
-                    <td class="col-md text-end">{{ ordine.fk_articolo }} {{ ordine.fk_colore }}</td>
-                    
-                    <td class="col-md text-end">{{ ordine.um }}</td>  
-                    <td class="col-md">{{ ordine.quantity  }} </td>
-                    <td class="col-md text-center"><a href="{% url 'vendite:delete_ordine_cliente' pk=ordine.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{ordine.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
+                    <td class="col-md"><a href="{% url 'vendite:modifica_scheda_lavorazione' pk=scheda.pk %}">{{ scheda.pk }}</a></td>
+                    <td class="col-md text-end">{{ scheda.data_scheda }}</td>
+                    <td class="col-md text-end">{{ scheda.fk_articolo }} {{ scheda.fk_colore }}</td>                    
+                    <td class="col-md text-end">{{ scheda.fk_dettaglio_ordine_cliente.numero_ordine }}</td>  
+                    <td class="col-md">{{ scheda.tot_pelli  }} </td>
+                    <td class="col-md text-center"><a href="{% url 'vendite:delete_scheda_lavorazione' pk=scheda.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{scheda.pk}}"><i class="bi bi-trash"></i>Elimina</a></td> 
                   </tr>
                 
                 {% endfor %}
@@ -133,12 +153,12 @@
 
 
     <!-- Pagination -->
-{% if ordini_cliente_paginator.has_other_pages %}
+{% if schede_lavorazione_paginator.has_other_pages %}
 <nav>
   <ul class="pagination justify-content-center">
-    {% if ordini_cliente_paginator.has_previous %}
+    {% if schede_lavorazione_paginator.has_previous %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ ordini_cliente_paginator.previous_page_number }}" aria-label="Previous">
+        <a class="page-link" href="?page={{ schede_lavorazione_paginator.previous_page_number }}" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
@@ -148,8 +168,8 @@
       </li>
     {% endif %}
 
-    {% for page in ordini_cliente_paginator.paginator.page_range %}
-      {% if page == ordini_cliente_paginator.number %}
+    {% for page in schede_lavorazione_paginator.paginator.page_range %}
+      {% if page == schede_lavorazione_paginator.number %}
         <li class="page-item active">
           <span class="page-link">{{ page }}</span>
         </li>
@@ -160,9 +180,9 @@
       {% endif %}
     {% endfor %}
 
-    {% if ordini_cliente_paginator.has_next %}
+    {% if schede_lavorazione_paginator.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ ordini_cliente_paginator.next_page_number }}" aria-label="Next">
+        <a class="page-link" href="?page={{ schede_lavorazione_paginator.next_page_number }}" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
         </a>
       </li>

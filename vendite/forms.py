@@ -1,7 +1,7 @@
 from anagrafiche.models import Cliente
 from django import forms
 
-from .models import DettaglioOrdineCliente, OrdineCliente
+from .models import DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione
 
 
 class OrdineClienteModelForm(forms.ModelForm):
@@ -32,4 +32,20 @@ class DettaglioOrdineClienteModelForm(forms.ModelForm):
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),  
             'fk_ordine': forms.HiddenInput()  
+        }
+
+class SchedaLavorazioneModelForm(forms.ModelForm):
+    class Meta:
+        model = SchedaLavorazione
+        fields = '__all__'
+
+        widgets = {
+            'fk_dettaglio_ordine_cliente': forms.Select(attrs={'class': 'form-select select-dettaglioordinecliente'}),    
+            'fk_articolo': forms.Select(attrs={'class': 'form-select select-articolo'}),
+            'fk_colore': forms.Select(attrs={'class': 'form-select select-colore'}),            
+            'tot_pelli': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'note': forms.Textarea(attrs={'class': 'form-control'}),    
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),  
+            
         }

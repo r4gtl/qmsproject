@@ -23,4 +23,16 @@ urlpatterns = [
     path('delete_dettaglio_ordine_cliente/<int:pk>',
         delete_dettaglio_ordine_cliente,
         name="delete_dettaglio_ordine_cliente"),  
+    
+    path("schede_lavorazione/", home_schede_lavorazione, name="home_schede_lavorazione"),
+    path("aggiungi_scheda_lavorazione/", SchedaLavorazioneCreateView.as_view(), name="aggiungi_scheda_lavorazione"),
+    path("modifica_scheda_lavorazione/<int:pk>/", SchedaLavorazioneUpdateView.as_view(), name="modifica_scheda_lavorazione"),
+    path(
+        "modifica_scheda_lavorazione_with_focus_button/<int:pk>/<str:focus_button>/",
+        OrdineClienteUpdateView.as_view(),
+        name="modifica_scheda_lavorazione_with_focus_button",
+    ),
+    path('delete_scheda_lavorazione/<int:pk>',
+        delete_scheda_lavorazione,
+        name="delete_scheda_lavorazione"),  
 ]

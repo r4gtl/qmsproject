@@ -17,7 +17,7 @@ from qmsproject.context_processors import nome_sito
 
 from .filters import *
 from .forms import *
-from .models import DettaglioOrdineCliente, OrdineCliente
+from .models import DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione
 
 
 def home_ordini_cliente(request):
@@ -195,4 +195,108 @@ def delete_dettaglio_ordine_cliente(request, pk):
     url_match = reverse_lazy(
         "vendite:modifica_ordine_cliente", kwargs={"pk": fk_ordinecliente}
     )
+    return redirect(url_match)
+
+
+# SCHEDE LAVORAZIONE
+
+def home_schede_lavorazione(request):
+    schede_lavorazione = SchedaLavorazione.objects.all()
+    schede_lavorazione_filter = SchedaLavorazioneFilter(
+        request.GET, queryset=schede_lavorazione
+    )
+    
+    page = request.GET.get("page", 1)
+    paginator = Paginator(
+        schede_lavorazione_filter.qs, 50
+    )  
+
+    try:
+        schede_lavorazione_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        schede_lavorazione_paginator = paginator.page(1)
+    except EmptyPage:
+        schede_lavorazione_paginator = paginator.page(paginator.num_pages)
+    
+    context = {
+        "schede_lavorazione_paginator": schede_lavorazione_paginator,
+        "filter": schede_lavorazione_filter,
+        
+    }
+    return render(request, "vendite/home_schede_lavorazione.html", context)
+
+
+class SchedaLavorazioneCreateView(LoginRequiredMixin, CreateView):
+    model = SchedaLavorazione
+    form_class = SchedaLavorazioneModelForm
+    template_name = "vendite/scheda_lavorazione.html"
+    success_message = "Scheda Lavorazione aggiunto correttamente!"
+
+    def get_success_url(self):
+        if "salva_esci" in self.request.POST:
+            return reverse_lazy("vendite:home_schede_lavorazione")
+
+        pk_scheda_lavorazione = self.object.pk
+        return reverse_lazy(
+            "vendite:modifica_scheda_lavorazione", kwargs={"pk": pk_scheda_lavorazione}
+        )
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        for errors in form.errors.items():
+            for error in errors:
+                messages.error(self.request, f"Errore: {error}")
+
+        return super().form_invalid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        return {
+            "created_by": created_by,
+        }
+
+
+class SchedaLavorazioneUpdateView(LoginRequiredMixin, UpdateView):
+    model = SchedaLavorazione
+    form_class = SchedaLavorazioneModelForm
+    template_name = "vendite/scheda_lavorazione.html"
+    success_message = "Scheda Lavorazione modificata correttamente!"
+
+    def get_success_url(self):
+        if "salva_esci" in self.request.POST:
+            return reverse_lazy("vendite:home_schede_lavorazione")
+
+        pk_scheda_lavorazione = self.object.pk
+        return reverse_lazy(
+            "vendite:modifica_scheda_lavorazione", kwargs={"pk": pk_scheda_lavorazione}
+        )
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Si è verificato un errore nel modulo. Per favore, correggi gli errori.",
+        )
+        return super().form_invalid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #pk_scheda_lavorazione = self.kwargs["pk"]        
+        #filters = {"fk_ordine": pk_ordine}
+        #dettaglio_ordini = DettaglioOrdineCliente.objects.filter(**filters)        
+        #context["dettaglio_ordini"] = dettaglio_ordini
+        
+        return context
+
+
+def delete_scheda_lavorazione(request, pk):
+    deleteobject = get_object_or_404(SchedaLavorazione, pk=pk)
+    deleteobject.delete()
+    url_match = reverse_lazy("vendite:home_schede_lavorazione")
     return redirect(url_match)
