@@ -17,7 +17,8 @@ from qmsproject.context_processors import nome_sito
 
 from .filters import *
 from .forms import *
-from .models import DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione
+from .models import (DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione,
+                     XRScelteSchede)
 
 
 def home_ordini_cliente(request):
@@ -287,10 +288,10 @@ class SchedaLavorazioneUpdateView(LoginRequiredMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #pk_scheda_lavorazione = self.kwargs["pk"]        
-        #filters = {"fk_ordine": pk_ordine}
-        #dettaglio_ordini = DettaglioOrdineCliente.objects.filter(**filters)        
-        #context["dettaglio_ordini"] = dettaglio_ordini
+        pk_scheda = self.kwargs["pk"]        
+        filters = {"fk_schedalavorazione": pk_scheda}
+        dettaglio_schede = XRScelteSchede.objects.filter(**filters)        
+        context["dettaglio_schede"] = dettaglio_schede
         
         return context
 
@@ -299,4 +300,80 @@ def delete_scheda_lavorazione(request, pk):
     deleteobject = get_object_or_404(SchedaLavorazione, pk=pk)
     deleteobject.delete()
     url_match = reverse_lazy("vendite:home_schede_lavorazione")
+    return redirect(url_match)
+
+
+# Dettaglio Scheda Lavorazione
+
+class XRScelteSchedeCreateView(LoginRequiredMixin, CreateView):
+    model = XRScelteSchede
+    form_class = XRScelteSchedeModelForm
+    template_name = "vendite/dettaglio_scheda_lavorazione.html"
+    success_message = "Dettaglio aggiunto correttamente!"
+
+    def get_success_url(self):
+        fk_schedalavorazione = self.object.fk_schedalavorazione.pk
+        focus_button = "btn_aggiungi_dettaglio"  # Imposto il pulsante su cui settare il focus
+
+        return reverse_lazy(
+            #"vendite:modifica_dettaglio_ordine_with_focus_button",
+            "vendite:modifica_scheda_lavorazione", 
+            kwargs={"pk": fk_schedalavorazione}
+        )
+        
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_initial(self):
+        created_by = self.request.user
+        fk_schedalavorazione = self.kwargs["fk_schedalavorazione"]
+        return {"created_by": created_by, "fk_schedalavorazione": fk_schedalavorazione}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_schedalavorazione = self.kwargs["fk_schedalavorazione"]
+        context["fk_schedalavorazione"] = SchedaLavorazione.objects.get(
+            pk=fk_schedalavorazione
+        )
+
+        return context
+
+
+class XRScelteSchedeUpdateView(LoginRequiredMixin, UpdateView):
+    model = XRScelteSchede
+    form_class = XRScelteSchedeModelForm
+    template_name = "vendite/dettaglio_scheda_lavorazione.html"
+    success_message = "Dettaglio modificato correttamente!"
+
+    def get_success_url(self):
+        fk_schedalavorazione = self.object.fk_ordine.pk
+        #pk_dettaglio=self.object.pk
+        return reverse_lazy(
+            "vendite:modifica_scheda_lavorazione", kwargs={"pk": fk_schedalavorazione}
+        )
+
+    def form_valid(self, form):
+        messages.info(self.request, self.success_message)  # Compare sul success_url
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        fk_schedalavorazione = self.kwargs["fk_schedalavorazione"]
+        
+        context["fk_schedalavorazione"] = SchedaLavorazione.objects.get(
+            pk=fk_schedalavorazione
+        )
+
+        return context
+
+
+def delete_dettaglio_scheda(request, pk):
+    deleteobject = get_object_or_404(XRScelteSchede, pk=pk)
+    fk_schedalavorazione = deleteobject.fk_schedalavorazione.pk
+    deleteobject.delete()
+    url_match = reverse_lazy(
+        "vendite:modifica_scheda_lavorazione", kwargs={"pk": fk_schedalavorazione}
+    )
     return redirect(url_match)

@@ -48,9 +48,9 @@ class SchedaLavorazione(models.Model):
     fk_dettaglio_ordine_cliente = models.ForeignKey(DettaglioOrdineCliente, related_name= 'scheda_lavorazione', on_delete=models.CASCADE)
     fk_articolo = models.ForeignKey(Articolo, related_name = 'scheda_lavorazione', on_delete=models.DO_NOTHING, verbose_name = 'Articolo')
     fk_colore = models.ForeignKey(Colore, related_name = 'scheda_lavorazione', on_delete=models.DO_NOTHING, verbose_name = 'Colore')
-    tot_pelli = models.PositiveIntegerField()
-    tot_pelli_finale = models.PositiveIntegerField()
-    metri_quadrati_finali = models.DecimalField(
+    tot_pelli = models.PositiveIntegerField(null=True, blank=True)
+    tot_pelli_finale = models.PositiveIntegerField(null=True, blank=True)
+    metri_quadrati_finali = models.DecimalField(null=True, blank=True,
     max_digits=10,
     decimal_places=2,
     verbose_name = "Superficie (m²)",
@@ -67,7 +67,7 @@ class SchedaLavorazione(models.Model):
         verbose_name_plural = "Schede Lavorazione"
 
     def __str__(self):
-        return str("Scheda n. " + " " + self.pk) + " del " + str(self.data_scheda)
+        return str("Scheda n. " + " " + str(self.pk)) + " del " + str(self.data_scheda)
     
 
 

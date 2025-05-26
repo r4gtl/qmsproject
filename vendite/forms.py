@@ -1,7 +1,8 @@
 from anagrafiche.models import Cliente
 from django import forms
 
-from .models import DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione
+from .models import (DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione,
+                     XRScelteSchede)
 
 
 class OrdineClienteModelForm(forms.ModelForm):
@@ -48,4 +49,19 @@ class SchedaLavorazioneModelForm(forms.ModelForm):
             'created_by': forms.HiddenInput(),
             'created_at': forms.HiddenInput(),  
             
+        }
+
+
+class XRScelteSchedeModelForm(forms.ModelForm):
+    class Meta:
+        model = XRScelteSchede
+        fields = '__all__'
+
+        widgets = {
+            'fk_sceltalotto': forms.Select(attrs={'class': 'form-select select-sceltalotto'}),            
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),            
+            'note': forms.Textarea(attrs={'class': 'form-control'}),    
+            'created_by': forms.HiddenInput(),
+            'created_at': forms.HiddenInput(),  
+            'fk_schedalavorazione': forms.HiddenInput()  
         }

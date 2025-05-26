@@ -35,4 +35,10 @@ urlpatterns = [
     path('delete_scheda_lavorazione/<int:pk>',
         delete_scheda_lavorazione,
         name="delete_scheda_lavorazione"),  
+
+    path("<int:fk_schedalavorazione>/aggiungi_dettaglio_scheda/", XRScelteSchedeCreateView.as_view(), name="aggiungi_dettaglio_scheda"),
+    path("<int:fk_schedalavorazione>/modifica_dettaglio_scheda/<int:pk>", XRScelteSchedeUpdateView.as_view(), name="modifica_dettaglio_scheda"),
+    path('delete_dettaglio_scheda/<int:pk>',
+        delete_dettaglio_scheda,
+        name="delete_dettaglio_scheda"),  
 ]
