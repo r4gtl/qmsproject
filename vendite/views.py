@@ -3,6 +3,8 @@ import pdb
 from datetime import (  # Aggiunta in data 08/02/2024 per il totale solventi acquistati nell'anno
     date, datetime)
 
+from acquistopelli.models import Lotto
+from acquistopelli.utils import get_lotti_disponibili
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.staticfiles import finders
@@ -258,6 +260,18 @@ class SchedaLavorazioneCreateView(LoginRequiredMixin, CreateView):
         return {
             "created_by": created_by,
         }
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        lotti, solo_disponibili = get_lotti_disponibili(self.request)
+        context["lotti_scelte_map"] = {
+                lotto: lotto.get_scelte_con_rimanenza() for lotto in lotti
+            }
+        context["lotti_disponibili"] = lotti
+        context["mostra_solo_disponibili"] = solo_disponibili
+
+        return context
 
 
 class SchedaLavorazioneUpdateView(LoginRequiredMixin, UpdateView):
@@ -291,6 +305,14 @@ class SchedaLavorazioneUpdateView(LoginRequiredMixin, UpdateView):
         pk_scheda = self.kwargs["pk"]        
         filters = {"fk_schedalavorazione": pk_scheda}
         dettaglio_schede = XRScelteSchede.objects.filter(**filters)        
+
+        lotti, solo_disponibili = get_lotti_disponibili(self.request)
+        context["lotti_scelte_map"] = {
+                lotto: lotto.get_scelte_con_rimanenza() for lotto in lotti
+            }
+        context["lotti_disponibili"] = lotti
+        context["mostra_solo_disponibili"] = solo_disponibili
+
         context["dettaglio_schede"] = dettaglio_schede
         
         return context

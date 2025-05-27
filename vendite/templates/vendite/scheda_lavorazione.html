@@ -37,93 +37,198 @@
       <br>
       {% include "core/partials/_messages.html" %}
       
-    
-    
-    
-    <div class="form-group mt-3">
-        <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="hidden" id="previous_page" name="previous_page"
-            value="/previous/page/url">
-            <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
-            <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
-            <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'vendite:home_schede_lavorazione' %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
-            
-            
-
-            
-                    <div class="row mb-4">
-                      
-                      <div class="col-md-12 border rounded shadow-sm">
-                        <div class="row mt-3">
-                            <div class="col-md-2">
-                              {% if form.instance.pk %}
-                                <div class="col-md-2">
-                                  <label class="form-label">ID</label>
-                                  <input type="text" class="form-control" value="{{ form.instance.pk }}" disabled>
-                                </div>
-                              {% endif %}
-                            </div>
-                            <div class = "col-md-3">
-                              {{ form.data_scheda|as_crispy_field }}
-                            </div>
-                            <div class = "col-md-3">
-                              {{ form.fk_dettaglio_ordine_cliente|as_crispy_field }}
-                            </div>
-                            
-                            
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                              {{ form.fk_articolo|as_crispy_field }}
-                            </div>
-                            <div class = "col-md-4">
-                              {{ form.fk_colore|as_crispy_field }}
-                            </div>
-                            <div class = "col-md-3">
-                              {{ form.tot_pelli|as_crispy_field }}
-                            </div>
-                            
-                            
-                        </div>
-
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                              {{ form.scheda_chiusa|as_crispy_field }}
-                            </div>
-                            <div class = "col-md-4">
-                              {{ form.data_chiusura|as_crispy_field }}
-                            </div>
-                            
-                            
-                        </div>
-
-                        
-                        <div class="row">
-                          <div class="col-6">
-                            {{ form.note|as_crispy_field }}
-                        </div>
-                            <div class="col-md-3">
-                              {{ form.created_by|as_crispy_field }}
-                            </div>
-                        </div>
-                        
-                        <hr>
-                        
-
-                        
-
-                    </div>
-                      </div>
-
-        <!-- fine form -->
-        </form>
-
-
-        
-
+<!-- Modal -->
+      <div class="modal fade" id="sceltaModal" tabindex="-1" aria-labelledby="sceltaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sceltaModalLabel">Dettagli Scelta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Descrizione:</strong> <span id="modalDescrizione"></span></p>
+        <p><strong>Carico:</strong> <span id="modalCarico"></span></p>
+        <p><strong>Utilizzati:</strong> <span id="modalUtilizzati"></span></p>
+        <p><strong>Disponibili:</strong> <span id="modalDisponibili"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+        <button type="button" class="btn btn-primary">Seleziona</button>
+      </div>
     </div>
+  </div>
+</div>
+<!-- Fine Modal -->
 
+    
+    
+    <div class="row">
+      <div class="col-7"> <!-- Colonna del form -->
+        <div class="form-group mt-3">
+            <form class="mt-3" method="POST" novalidate enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" id="previous_page" name="previous_page"
+                value="/previous/page/url">
+                <input type="submit" name="salva_esci" class="btn btn-success mb-2 me-1" value="Salva ed Esci">
+                <input type="submit" name="salva_continua" class="btn btn-success mb-2 me-1" value="Salva e continua">
+                <button type="button" class="btn btn-danger mb-2 me-1" onclick="cancelAndRedirectTo('{% url 'vendite:home_schede_lavorazione' %}')"><i class="bi bi-arrow-counterclockwise"></i> Annulla</button>
+                
+                
+
+                
+                        <div class="row mb-4">
+                          
+                          <div class="col-md-12 border rounded shadow-sm">
+                            <div class="row mt-3">
+                                <div class="col-md-2">
+                                  {% if form.instance.pk %}
+                                    <div class="col-md-2">
+                                      <label class="form-label">ID</label>
+                                      <input type="text" class="form-control" value="{{ form.instance.pk }}" disabled>
+                                    </div>
+                                  {% endif %}
+                                </div>
+                                <div class = "col-md-3">
+                                  {{ form.data_scheda|as_crispy_field }}
+                                </div>
+                                <div class = "col-md-3">
+                                  {{ form.fk_dettaglio_ordine_cliente|as_crispy_field }}
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                  {{ form.fk_articolo|as_crispy_field }}
+                                </div>
+                                <div class = "col-md-4">
+                                  {{ form.fk_colore|as_crispy_field }}
+                                </div>
+                                <div class = "col-md-3">
+                                  {{ form.tot_pelli|as_crispy_field }}
+                                </div>
+                                
+                                
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-md-4">
+                                  {{ form.scheda_chiusa|as_crispy_field }}
+                                </div>
+                                <div class = "col-md-4">
+                                  {{ form.data_chiusura|as_crispy_field }}
+                                </div>
+                                
+                                
+                            </div>
+
+                            
+                            <div class="row">
+                              <div class="col-6">
+                                {{ form.note|as_crispy_field }}
+                            </div>
+                                <div class="col-md-3">
+                                  {{ form.created_by|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+
+                            
+
+                        </div>
+                          </div>
+
+            <!-- fine form -->
+            </form>
+
+
+            
+
+        </div>
+      </div> <!-- Fine della colonna con il form -->
+      <div class="col-5"> <!-- Colonna con magazzino scelte -->
+          <div class="row">
+            <form method="get" class="mb-3">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="disponibili" value="1"
+                      {% if mostra_solo_disponibili %}checked{% endif %}>
+                Mostra solo lotti con pelli disponibili
+              </label>
+              <button type="submit" class="btn btn-sm btn-primary ms-2">Applica filtro</button>
+            </form>
+          </div>
+
+          <div class="accordion" id="accordionLotti">
+  {% for lotto, scelte in lotti_scelte_map.items %}
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="heading-{{ lotto.id }}">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse-{{ lotto.id }}" aria-expanded="false"
+                aria-controls="collapse-{{ lotto.id }}">
+          Lotto {{ lotto.identificativo }} – {{ lotto.data_acquisto|date:"d/m/Y" }} – Fornitore: {{ lotto.fk_fornitore.ragione_sociale }}
+        </button>
+      </h2>
+      <div id="collapse-{{ lotto.id }}" class="accordion-collapse collapse"
+           aria-labelledby="heading-{{ lotto.id }}" data-bs-parent="#accordionLotti">
+        <div class="accordion-body">
+
+          {% if scelte %}
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered align-middle">
+                <thead class="table-light">
+                  <tr>
+                    <th>Scelta</th>
+                    <th>Carico</th>
+                    <th>Utilizzati</th>
+                    <th>Disponibili</th>
+                    <th>Azioni</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for scelta in scelte %}
+                    <tr role="button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#sceltaModal"
+                        data-scelta-id="{{ scelta.id }}"
+                        data-scelta-descrizione="{{ scelta.fk_scelta.descrizione }}"
+                        data-scelta-carico="{{ scelta.pezzi }}"
+                        data-scelta-utilizzati="{{ scelta.used_quantity }}"
+                        data-scelta-disponibili="{{ scelta.remaining }}">
+                      <td><strong>{{ scelta.fk_scelta.descrizione }}</strong></td>
+                      <td>{{ scelta.pezzi }}</td>
+                      <td>{{ scelta.used_quantity }}</td>
+                      <td>{{ scelta.remaining }}</td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#sceltaModal"
+                                data-scelta-id="{{ scelta.id }}"
+                                data-scelta-descrizione="{{ scelta.fk_scelta.descrizione }}"
+                                data-scelta-carico="{{ scelta.pezzi }}"
+                                data-scelta-utilizzati="{{ scelta.used_quantity }}"
+                                data-scelta-disponibili="{{ scelta.remaining }}">
+                          Dettagli
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <p class="text-muted">Nessuna scelta disponibile per questo lotto.</p>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+      </div> <!-- Fine della colonna con magazzino scelte -->
+    </div>
     
     <div class="row">
       <!-- Tabella dettaglio -->
@@ -170,11 +275,29 @@
     </div><!--Fine prima riga tabelle-->
 <br>
 
-
+  
 
 </div> <!--Fine container-->
 {% endblock content %}
 
 {% block extra_scripts %}
-    
+    <script>
+  const sceltaModal = document.getElementById('sceltaModal');
+  sceltaModal.addEventListener('show.bs.modal', function (event) {
+    const trigger = event.relatedTarget;
+
+    // Ottieni i dati
+    const descrizione = trigger.getAttribute('data-scelta-descrizione');
+    const carico = trigger.getAttribute('data-scelta-carico');
+    const utilizzati = trigger.getAttribute('data-scelta-utilizzati');
+    const disponibili = trigger.getAttribute('data-scelta-disponibili');
+
+    // Inserisci i dati nel modal
+    document.getElementById('modalDescrizione').textContent = descrizione;
+    document.getElementById('modalCarico').textContent = carico;
+    document.getElementById('modalUtilizzati').textContent = utilizzati;
+    document.getElementById('modalDisponibili').textContent = disponibili;
+  });
+</script>
+
 {% endblock %}

@@ -1,6 +1,8 @@
 from datetime import datetime
+
 from django.db.models import Count, Sum
 from django_countries.fields import CountryField
+
 from .models import Lotto
 
 # def filtro_lotti(data_inizio, data_fine):
@@ -49,3 +51,23 @@ def filtro_lotti(data_inizio, data_fine):
         lotto['origine'] = dict(CountryField().get_choices())[lotto['origine']]
 
     return lotti_filtrati
+
+
+
+# Con questa funzione, in base a un parametro (disponibili) otteniamo 
+# i lotti che hanno pelli disponibili oppure tutti i lotti 
+
+def get_lotti_disponibili(request):
+    """
+    Restituisce i lotti filtrati in base ai parametri della richiesta.
+    Attualmente supporta:
+    - ?disponibili=1 → mostra solo i lotti con pelli disponibili
+    """
+    disponibili = request.GET.get("disponibili") == "1"
+
+    if disponibili:
+        queryset = Lotto.objects.con_pelli_disponibili()
+    else:
+        queryset = Lotto.objects.all()
+
+    return queryset, disponibili

@@ -15,10 +15,8 @@ from .utils import filtro_lotti
 
 
 def dashboard_acquisto_pelli(request):     
-    lotti = Lotto.objects.all()
-    
-    lotti_filter = LottoFilter(request.GET, queryset=lotti)
-    
+    lotti = Lotto.objects.all()    
+    lotti_filter = LottoFilter(request.GET, queryset=lotti)    
     page = request.GET.get('page', 1)
     paginator = Paginator(lotti_filter.qs, 50)  # Utilizza lotti_filter.qs per la paginazione
     

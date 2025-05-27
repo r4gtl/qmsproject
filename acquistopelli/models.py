@@ -1,8 +1,14 @@
 from anagrafiche.models import Fornitore, FornitoreMacello
 from django.contrib.auth.models import User
 from django.db import models
+# prova per le rimanenze delle scelte
+from django.db.models import (ExpressionWrapper, F, IntegerField, OuterRef,
+                              Subquery, Sum)
+from django.db.models.functions import Coalesce
 from django_countries.fields import \
     CountryField  # Field from django countries app
+
+from .managers import LottoManager
 
 '''Questi modelli devono essere inseriti in automatico'''
 class TipoAnimale(models.Model):
@@ -48,6 +54,8 @@ class Scelta(models.Model):
     
 
 
+    
+
 class Lotto(models.Model):    
     data_acquisto = models.DateField(null=False, blank=False)
     identificativo = models.CharField(max_length=10, null=False, blank=False)
@@ -67,6 +75,25 @@ class Lotto(models.Model):
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(User, related_name='lotto', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = LottoManager()
+    
+    def get_scelte_con_rimanenza(self):
+        from vendite.models import XRScelteSchede
+        used_quantity_subquery = XRScelteSchede.objects.filter(
+            fk_sceltalotto=OuterRef('pk')
+        ).values('fk_sceltalotto').annotate(
+            used=Sum('quantity')
+        ).values('used')[:1]
+
+        return self.sceltalotto_set.annotate(
+            used_quantity=Coalesce(Subquery(used_quantity_subquery), 0),
+            remaining=ExpressionWrapper(
+                F('pezzi') - Coalesce(Subquery(used_quantity_subquery), 0),
+                output_field=IntegerField()
+            )
+        ).filter(remaining__gt=0).select_related('fk_scelta')
+    
 
     class Meta:
         ordering = ["-data_acquisto"]
