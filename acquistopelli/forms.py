@@ -128,3 +128,4 @@ class SceltaLottoModelForm(forms.ModelForm):
             'pezzi': 'Pezzi',
             'note': 'Annotazioni'
         }
+

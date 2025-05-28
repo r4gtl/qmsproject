@@ -38,26 +38,52 @@
       {% include "core/partials/_messages.html" %}
       
 <!-- Modal -->
-      <div class="modal fade" id="sceltaModal" tabindex="-1" aria-labelledby="sceltaModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal fade" id="xrSceltaModal" tabindex="-1" aria-labelledby="xrSceltaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="sceltaModalLabel">Dettagli Scelta</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Descrizione:</strong> <span id="modalDescrizione"></span></p>
-        <p><strong>Carico:</strong> <span id="modalCarico"></span></p>
-        <p><strong>Utilizzati:</strong> <span id="modalUtilizzati"></span></p>
-        <p><strong>Disponibili:</strong> <span id="modalDisponibili"></span></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-        <button type="button" class="btn btn-primary">Seleziona</button>
-      </div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="xrSceltaModalLabel">Associa Scelta alla Scheda</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+          <input type="hidden" name="fk_sceltalotto">
+          <input type="hidden" name="fk_schedalavorazione" value="{{ form.instance.pk }}">
+            <label class="form-label">Scelta</label>
+            <input type="text" class="form-control" value="{{ form.instance.fk_sceltalotto.fk_scelta }}" disabled>
+            <input type="text" id="xrSceltaDescrizione" class="form-control" disabled>
+          </div>
+
+          {{ form.fk_sceltalotto.fk_scelta.descrizione }}
+          {{ form.fk_schedalavorazione }}
+          
+        
+          <div class="mb-2">
+            <label for="xrQuantity" class="form-label">Quantità</label>
+            <input type="number"
+                  class="form-control"
+                  id="xrQuantity"
+                  name="quantity"
+                  min="1"
+                  max=""
+                  required>
+            <div class="form-text">Massimo disponibile: <span id="maxQuantityInfo"></span></div>
+          </div>
+
+          <div class="mb-2">
+            {{ form.note.label_tag }} {{ form.note }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
+
 <!-- Fine Modal -->
 
     
@@ -211,6 +237,16 @@
                                 data-scelta-disponibili="{{ scelta.remaining }}">
                           Dettagli
                         </button>
+                        <button class="btn btn-sm btn-success"
+                              data-bs-toggle="modal"
+                              data-bs-target="#xrSceltaModal"
+                              data-scelta-id="{{ scelta.id }}"
+                              data-scelta-descrizione="{{ scelta.fk_scelta.descrizione }}"
+                              data-disponibili="{{ scelta.remaining }}">
+                          Associa
+                        </button>
+                        <a href="{% url 'vendite:modifica_xrscelta' pk=scelta.id %}" class="btn btn-sm btn-outline-secondary">Modifica</a>
+
                       </td>
                     </tr>
                   {% endfor %}
@@ -282,22 +318,41 @@
 
 {% block extra_scripts %}
     <script>
-  const sceltaModal = document.getElementById('sceltaModal');
-  sceltaModal.addEventListener('show.bs.modal', function (event) {
+        document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('xrSceltaModal');
+  modal.addEventListener('show.bs.modal', function (event) {
     const trigger = event.relatedTarget;
-
-    // Ottieni i dati
+    const sceltaId = trigger.getAttribute('data-scelta-id');
     const descrizione = trigger.getAttribute('data-scelta-descrizione');
-    const carico = trigger.getAttribute('data-scelta-carico');
-    const utilizzati = trigger.getAttribute('data-scelta-utilizzati');
-    const disponibili = trigger.getAttribute('data-scelta-disponibili');
+    const form = modal.querySelector('form');
 
-    // Inserisci i dati nel modal
-    document.getElementById('modalDescrizione').textContent = descrizione;
-    document.getElementById('modalCarico').textContent = carico;
-    document.getElementById('modalUtilizzati').textContent = utilizzati;
-    document.getElementById('modalDisponibili').textContent = disponibili;
+    // Imposta azione (se necessario)
+    form.action = '/vendite/xrscelte/nuova/';
+
+    // Imposta valori nei campi hidden
+    form.querySelector('input[name="fk_sceltalotto"]').value = sceltaId;
+    form.querySelector('input[name="fk_schedalavorazione"]').value = "{{ form.instance.pk }}";
+
+    // Mostra descrizione
+    const descrField = form.querySelector('#xrSceltaDescrizione');
+    if (descrField) descrField.value = descrizione;
+
+    console.log("Modal aperto per scelta:", sceltaId, descrizione);
   });
+});
+
+const maxDisponibili = trigger.getAttribute('data-disponibili');
+const quantityInput = form.querySelector('#xrQuantity');
+
+if (quantityInput) {
+  quantityInput.max = maxDisponibili;
+  quantityInput.value = ""; // Reset precedente
+}
+
+const maxInfo = form.querySelector('#maxQuantityInfo');
+if (maxInfo) {
+  maxInfo.textContent = maxDisponibili;
+}
 </script>
 
 {% endblock %}

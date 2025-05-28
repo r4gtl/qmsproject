@@ -327,7 +327,7 @@ def delete_scheda_lavorazione(request, pk):
 
 # Dettaglio Scheda Lavorazione
 
-class XRScelteSchedeCreateView(LoginRequiredMixin, CreateView):
+class XRScelteSchedeCreateView_old(LoginRequiredMixin, CreateView):
     model = XRScelteSchede
     form_class = XRScelteSchedeModelForm
     template_name = "vendite/dettaglio_scheda_lavorazione.html"
@@ -363,7 +363,7 @@ class XRScelteSchedeCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class XRScelteSchedeUpdateView(LoginRequiredMixin, UpdateView):
+class XRScelteSchedeUpdateView_old(LoginRequiredMixin, UpdateView):
     model = XRScelteSchede
     form_class = XRScelteSchedeModelForm
     template_name = "vendite/dettaglio_scheda_lavorazione.html"
@@ -399,3 +399,24 @@ def delete_dettaglio_scheda(request, pk):
         "vendite:modifica_scheda_lavorazione", kwargs={"pk": fk_schedalavorazione}
     )
     return redirect(url_match)
+
+class XRScelteSchedeCreateView(CreateView):
+    model = XRScelteSchede
+    form_class = XRScelteSchedeModelForm
+    template_name = "vendite/xrscelte_form.html"
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("vendite:modifica_scheda_lavorazione", kwargs={"pk": self.object.fk_schedalavorazione.pk})
+
+
+class XRScelteSchedeUpdateView(UpdateView):
+    model = XRScelteSchede
+    form_class = XRScelteSchedeModelForm
+    template_name = "vendite/xrscelte_form.html"
+
+    def get_success_url(self):
+        return reverse_lazy("vendite:modifica_scheda_lavorazione", kwargs={"pk": self.object.fk_schedalavorazione.pk})

@@ -41,4 +41,7 @@ urlpatterns = [
     path('delete_dettaglio_scheda/<int:pk>',
         delete_dettaglio_scheda,
         name="delete_dettaglio_scheda"),  
+
+    path('xrscelte/nuova/', XRScelteSchedeCreateView.as_view(), name="nuova_xrscelta"),
+    path('xrscelte/<int:pk>/modifica/', XRScelteSchedeUpdateView.as_view(), name="modifica_xrscelta"),
 ]

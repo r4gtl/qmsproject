@@ -1,5 +1,6 @@
 from anagrafiche.models import Cliente
 from django import forms
+from django.db.models import Sum
 
 from .models import (DettaglioOrdineCliente, OrdineCliente, SchedaLavorazione,
                      XRScelteSchede)
@@ -55,13 +56,20 @@ class SchedaLavorazioneModelForm(forms.ModelForm):
 class XRScelteSchedeModelForm(forms.ModelForm):
     class Meta:
         model = XRScelteSchede
-        fields = '__all__'
-
+        fields = ['fk_sceltalotto', 'fk_schedalavorazione', 'quantity', 'note']
         widgets = {
-            'fk_sceltalotto': forms.Select(attrs={'class': 'form-select select-sceltalotto'}),            
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),            
-            'note': forms.Textarea(attrs={'class': 'form-control'}),    
-            'created_by': forms.HiddenInput(),
-            'created_at': forms.HiddenInput(),  
-            'fk_schedalavorazione': forms.HiddenInput()  
+            'fk_sceltalotto': forms.HiddenInput(),
+            'fk_schedalavorazione': forms.HiddenInput(),
+            'note': forms.Textarea(attrs={'rows': 2}),
         }
+
+    def clean_quantity(self):
+        qty = self.cleaned_data['quantity']
+        scelta = self.cleaned_data['fk_sceltalotto']
+
+        used = scelta.xrscelteschede.aggregate(tot=Sum('quantity'))['tot'] or 0
+        available = scelta.pezzi - used
+
+        if qty > available:
+            raise forms.ValidationError(f"La quantità inserita supera quella disponibile ({available}).")
+        return qty
