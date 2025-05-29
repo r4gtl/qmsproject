@@ -1,0 +1,66 @@
+<div class="modal fade" id="xrSceltaModal" tabindex="-1" aria-labelledby="xrSceltaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="xrSceltaModalLabel">Associa Scelta alla Scheda n. {{ schedalavorazione.pk }} del {{ schedalavorazione.data_scheda }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+                <input type="hidden" name="fk_sceltalotto">
+                <input type="hidden" name="fk_schedalavorazione" value="{{ form.instance.pk }}">
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">Lotto</label>            
+                    <input type="text" id="xrSceltaLotto" class="form-control" disabled>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Scelta</label>            
+                    <input type="text" id="xrSceltaDescrizione" class="form-control" disabled>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Iniziali</label>            
+                    <input type="text" id="initialQuantityInfo" class="form-control text-end" disabled>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Usate</label>            
+                    <input type="text" id="usedQuantityInfo" class="form-control text-end" disabled>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Disponibili</label>            
+                    <input type="text" id="maxQuantityInfo" class="form-control text-end"  disabled>
+                </div>
+            </div>
+          </div>
+
+          {{ form.fk_sceltalotto.fk_scelta.descrizione }}
+          {{ form.fk_schedalavorazione }}
+          
+        <div class="row justify-content-center">
+            <div class="col-md-3">
+                <div class="mt-3 mb-2 d-flex align-items-center">
+                    <label for="xrQuantity" class="form-label me-2 mb-0" style="width: 120px;">Quantità</label>
+                    <input type="number"
+                            class="form-control form-control-lg text-end"
+                            id="xrQuantity"
+                            name="quantity"
+                            min="1"
+                            max=""
+                            required
+                            style="font-size: 18px;">
+                </div>
+            </div>
+        </div>
+          <div class="mb-2">
+            {{ form.note.label_tag }} {{ form.note }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salva</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

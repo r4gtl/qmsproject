@@ -10,6 +10,7 @@
 
 {% block content %}
 {% include 'core/modals/delConfirm.html' %}
+{% include './modals/aggiungi_dettaglio_scheda.html' %}
 
 <nav aria-label="breadcrumb" class="mt-3"> 
     <ol class="breadcrumb">
@@ -37,54 +38,6 @@
       <br>
       {% include "core/partials/_messages.html" %}
       
-<!-- Modal -->
-      <div class="modal fade" id="xrSceltaModal" tabindex="-1" aria-labelledby="xrSceltaModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <form method="post">
-        {% csrf_token %}
-        <div class="modal-header">
-          <h5 class="modal-title" id="xrSceltaModalLabel">Associa Scelta alla Scheda</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-2">
-          <input type="hidden" name="fk_sceltalotto">
-          <input type="hidden" name="fk_schedalavorazione" value="{{ form.instance.pk }}">
-            <label class="form-label">Scelta</label>
-            <input type="text" class="form-control" value="{{ form.instance.fk_sceltalotto.fk_scelta }}" disabled>
-            <input type="text" id="xrSceltaDescrizione" class="form-control" disabled>
-          </div>
-
-          {{ form.fk_sceltalotto.fk_scelta.descrizione }}
-          {{ form.fk_schedalavorazione }}
-          
-        
-          <div class="mb-2">
-            <label for="xrQuantity" class="form-label">Quantità</label>
-            <input type="number"
-                  class="form-control"
-                  id="xrQuantity"
-                  name="quantity"
-                  min="1"
-                  max=""
-                  required>
-            <div class="form-text">Massimo disponibile: <span id="maxQuantityInfo"></span></div>
-          </div>
-
-          <div class="mb-2">
-            {{ form.note.label_tag }} {{ form.note }}
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Salva</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- Fine Modal -->
 
     
     
@@ -242,7 +195,10 @@
                               data-bs-target="#xrSceltaModal"
                               data-scelta-id="{{ scelta.id }}"
                               data-scelta-descrizione="{{ scelta.fk_scelta.descrizione }}"
-                              data-disponibili="{{ scelta.remaining }}">
+                              data-scelta-carico="{{ scelta.pezzi }}"
+                              data-scelta-utilizzati="{{ scelta.used_quantity }}"
+                              data-disponibili="{{ scelta.remaining }}"
+                              data-scelta-lotto="{{ scelta.fk_lotto }}">
                           Associa
                         </button>
                         <a href="{% url 'vendite:modifica_xrscelta' pk=scelta.id %}" class="btn btn-sm btn-outline-secondary">Modifica</a>
@@ -297,8 +253,8 @@
             {% for dettaglio in dettaglio_schede %}
             <tr>        
               
-              <td><a href="{% url 'vendite:modifica_dettaglio_scheda' fk_schedalavorazione=dettaglio.fk_scheda.pk pk=dettaglio.pk %}">{{ dettaglio.fk_sceltalotto.fk_scelta }}</a></td>
-              <td><a href="{% url 'vendite:modifica_dettaglio_scheda' fk_schedalavorazione=dettaglio.fk_scheda.pk pk=dettaglio.pk %}">{{ dettaglio.fk_sceltalotto.fk_lotto }}</a></td>              
+              <td><a href="#">{{ dettaglio.fk_sceltalotto.fk_scelta }}</a></td>
+              <td><a href="#">{{ dettaglio.fk_sceltalotto.fk_lotto }}</a></td>              
               <td class="text-end">{{ dettaglio.quantity }}</td>              
               <td class="text-center"><a href="{% url 'vendite:delete_dettaglio_scheda' pk=dettaglio.pk %}" class="btn btn-sm btn-outline-danger confirm-delete" title="Delete" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" id="deleteButton{{dettaglio.pk}}"><i class="bi bi-trash"></i>Elimina</a></td>
             </tr>  
@@ -324,6 +280,9 @@
     const trigger = event.relatedTarget;
     const sceltaId = trigger.getAttribute('data-scelta-id');
     const descrizione = trigger.getAttribute('data-scelta-descrizione');
+    const lotto = trigger.getAttribute('data-scelta-lotto');
+    const iniziali = trigger.getAttribute('data-scelta-carico');
+    const usate = trigger.getAttribute('data-scelta-utilizzati');
     const form = modal.querySelector('form');
 
     // Imposta azione (se necessario)
@@ -333,6 +292,25 @@
     form.querySelector('input[name="fk_sceltalotto"]').value = sceltaId;
     form.querySelector('input[name="fk_schedalavorazione"]').value = "{{ form.instance.pk }}";
 
+
+    const maxDisponibili = trigger.getAttribute('data-disponibili');
+    const quantityInput = form.querySelector('#xrQuantity');
+    console.log("disponibili: " + maxDisponibili)
+    if (quantityInput) {
+      quantityInput.max = maxDisponibili;
+      quantityInput.value = ""; // Reset precedente
+    }
+
+    const maxInfo = form.querySelector('#maxQuantityInfo');
+    if (maxInfo) {
+      maxInfo.value = maxDisponibili;
+    }
+    form.querySelector('#xrSceltaLotto').value=lotto;
+    form.querySelector('#initialQuantityInfo').value=iniziali;
+    form.querySelector('#usedQuantityInfo').value=usate;
+
+
+
     // Mostra descrizione
     const descrField = form.querySelector('#xrSceltaDescrizione');
     if (descrField) descrField.value = descrizione;
@@ -341,18 +319,7 @@
   });
 });
 
-const maxDisponibili = trigger.getAttribute('data-disponibili');
-const quantityInput = form.querySelector('#xrQuantity');
 
-if (quantityInput) {
-  quantityInput.max = maxDisponibili;
-  quantityInput.value = ""; // Reset precedente
-}
-
-const maxInfo = form.querySelector('#maxQuantityInfo');
-if (maxInfo) {
-  maxInfo.textContent = maxDisponibili;
-}
 </script>
 
 {% endblock %}
