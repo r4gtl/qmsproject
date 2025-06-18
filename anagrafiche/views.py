@@ -16,40 +16,15 @@ from django_filters.views import FilterView
 from nonconformity.models import RapportoNC
 
 from .filters import ClienteFilter, FornitoreFilter, TransferValueFilter
-from .forms import (
-    FormCliente,
-    FormFacility,
-    FormFacilityContact,
-    FormFornitore,
-    FormFornitoreLavorazioniEsterne,
-    FormFornitorePelli,
-    FormFornitoreProdottiChimici,
-    FormFornitoreServizi,
-    FormLwgFornitore,
-    FormTransferValue,
-    FormXrDocumentiGestore,
-    FormXrTransferValueLwgFornitore,
-    ListinoClienteModelForm,
-    ListinoTerzistaModelForm,
-    PrezzoListinoModelForm,
-)
-from .models import (
-    Cliente,
-    Facility,
-    FacilityContact,
-    Fornitore,
-    FornitoreLavorazioniEsterne,
-    FornitorePelli,
-    FornitoreProdottiChimici,
-    FornitoreRifiuti,
-    FornitoreServizi,
-    LwgFornitore,
-    TransferValue,
-    XrDocumentiGestore,
-    XrDocumentiSmaltitore,
-    XrDocumentiTrasportatore,
-    XrTransferValueLwgFornitore,
-)
+from .forms import (  # FormFornitoreLavorazioniEsterne,; FormFornitorePelli,; FormFornitoreProdottiChimici,; FormFornitoreServizi,
+    FormCliente, FormFacility, FormFacilityContact, FormFornitore,
+    FormLwgFornitore, FormTransferValue, FormXrDocumentiGestore,
+    FormXrTransferValueLwgFornitore, ListinoClienteModelForm,
+    ListinoTerzistaModelForm, PrezzoListinoModelForm)
+from .models import (  # FornitoreLavorazioniEsterne,; FornitorePelli,; FornitoreProdottiChimici,; FornitoreRifiuti,; FornitoreServizi,
+    Cliente, Facility, FacilityContact, Fornitore, LwgFornitore, TransferValue,
+    XrDocumentiGestore, XrDocumentiSmaltitore, XrDocumentiTrasportatore,
+    XrTransferValueLwgFornitore)
 
 # Create your views here.
 
@@ -79,7 +54,7 @@ def home_fornitori(request):
     return render(request, "anagrafiche/home_fornitori.html", context)
 
 
-class UpdateSupplier(LoginRequiredMixin, UpdateView):
+'''class UpdateSupplier(LoginRequiredMixin, UpdateView):
     model = Fornitore
     template_name = "anagrafiche/fornitore.html"
     form_class = FormFornitore
@@ -191,10 +166,87 @@ def aggiungi_fornitore_with_category(request, category):
         "category": category,
         "CHOICES_CATEGORY": Fornitore.CHOICES_CATEGORY,
     }
+    return render(request, "anagrafiche/aggiungi_fornitore_modal.html", context)'''
+
+class UpdateSupplier(LoginRequiredMixin, UpdateView):
+    model = Fornitore
+    form_class = FormFornitore
+    template_name = "anagrafiche/fornitore.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        context["CHOICES_CATEGORY"] = Fornitore.CHOICES_CATEGORY
+
+        # Aggiunte utili (documenti, listini ecc.)
+        context["lwg_certs"] = LwgFornitore.objects.filter(fk_fornitore_id=self.object.pk)
+        context["nc_associate"] = RapportoNC.objects.filter(fk_fornitore=self.object.pk)
+        context["listini_terzisti"] = ListinoTerzista.objects.filter(fk_fornitore=self.object.pk)
+        context["gestori_rifiuti"] = XrDocumentiGestore.objects.filter(fornitore_rifiuti=self.object.pk)
+        context["smaltitori_rifiuti"] = XrDocumentiSmaltitore.objects.filter(fornitore_rifiuti=self.object.pk)
+        context["trasportatori_rifiuti"] = XrDocumentiTrasportatore.objects.filter(fornitore_rifiuti=self.object.pk)
+
+        return context
+
+    def form_valid(self, form):
+        messages.info(self.request, "Il fornitore è stato modificato!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        if "salva_esci" in self.request.POST:
+            return reverse_lazy("anagrafiche:home_fornitori")
+        return reverse_lazy("anagrafiche:vedi_fornitore", kwargs={"pk": self.object.pk})
+
+
+def aggiungi_fornitore_with_category(request, category):
+    context = {
+        "category": category,
+        "CHOICES_CATEGORY": Fornitore.CHOICES_CATEGORY,
+    }
     return render(request, "anagrafiche/aggiungi_fornitore_modal.html", context)
 
 
 class CreateSupplier(LoginRequiredMixin, CreateView):
+    model = Fornitore
+    form_class = FormFornitore
+    success_message = "Fornitore aggiunto correttamente!"
+    error_message = "Error saving the Doc, check fields below."
+    template_name = "anagrafiche/fornitore.html"
+
+    def get_initial(self):
+        initial = super().get_initial()
+        categoria = self.request.GET.get("categoria")
+        if categoria in dict(Fornitore.CHOICES_CATEGORY):
+            initial["categoria"] = categoria
+        initial["created_by"] = self.request.user
+        initial["created_at"] = datetime.datetime.now()
+        return initial
+
+    def get_success_url(self):
+        if "salva_esci" in self.request.POST:
+            return reverse_lazy("anagrafiche:home_fornitori")
+        return reverse_lazy("anagrafiche:vedi_fornitore", kwargs={"pk": self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["CHOICES_CATEGORY"] = Fornitore.CHOICES_CATEGORY
+        return context
+
+    def form_valid(self, form):
+        forn = form.save(commit=False)
+        forn.created_by = self.request.user
+        forn.created_at = datetime.datetime.now()
+        forn.save()
+        self.object = forn
+        messages.info(self.request, self.success_message)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, self.error_message)
+        return super().form_invalid(form)
+
+
+'''class CreateSupplier(LoginRequiredMixin, CreateView):
 
     model = Fornitore
     form_class = FormFornitore
@@ -284,7 +336,7 @@ class CreateSupplier(LoginRequiredMixin, CreateView):
 
     def form_invalid(self, form):
         messages.error(self.request, "Errore! Il fornitore non è stato aggiunto!")
-        return super().form_invalid(form)
+        return super().form_invalid(form)'''
 
 
 """

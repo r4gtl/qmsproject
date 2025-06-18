@@ -96,7 +96,8 @@ class FacilityContact(models.Model):
     email = models.EmailField(blank=True, null=True)
 
 
-class Fornitore(models.Model):
+
+'''class Fornitore(models.Model):
     #
     # Categoria
     NESSUNA = "nessuna"
@@ -215,102 +216,100 @@ class Fornitore(models.Model):
         try:
             self.associa_categoria()  # Associa la categoria
         except ValidationError as e:
-            raise e
+            raise e'''
+        
 
+class Fornitore(models.Model):
+    # Categorie disponibili
+    NESSUNA = "nessuna"
+    PELLI = "pelli"
+    MACELLO = "macello"
+    PRODOTTI_CHIMICI = "prodotti chimici"
+    LAVORAZIONI_ESTERNE = "lavorazioni esterne"
+    SERVIZI = "servizi"
+    MANUTENZIONI = "manutenzioni"
+    RIFIUTI = "rifiuti"
 
-class LwgFornitore(models.Model):
-    lwg_urn = models.CharField(max_length=50)
-    lwg_score = models.CharField(max_length=50, blank=True, null=True)
-    lwg_range = models.CharField(max_length=100, blank=True, null=True)
-    lwg_date = models.DateField(blank=True, null=True)
-    lwg_expiry = models.DateField(blank=True, null=True)
-    documento = models.FileField(upload_to="lwg_certificates/", null=True, blank=True)
-    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+    CHOICES_CATEGORY = (
+        (NESSUNA, "Manca categoria"),
+        (PELLI, "Pelli"),
+        (MACELLO, "Macello"),
+        (PRODOTTI_CHIMICI, "Prodotti Chimici"),
+        (LAVORAZIONI_ESTERNE, "Lavorazioni Esterne"),
+        (SERVIZI, "Servizi"),
+        (MANUTENZIONI, "Manutenzioni"),
+        (RIFIUTI, "Rifiuti"),
+    )
 
+    # Campi comuni
+    ragionesociale = models.CharField(max_length=50)
+    indirizzo = models.CharField(max_length=100, blank=True, null=True)
+    cap = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, blank=True, null=True)
+    provincia = models.CharField(max_length=50, blank=True, null=True)
+    country = CountryField(blank_label="(seleziona Paese)")
+    sito_web = models.CharField(max_length=200, blank=True, null=True)
+    e_mail = models.EmailField(blank=True, null=True)
+    categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
+    created_by = models.ForeignKey(User, related_name="fornitori", null=True, blank=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
-"""I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE"""
-
-
-class FornitorePelli(Fornitore):
-    # Campi aggiuntivi specifici per FornitorePelli
+    # ======================
+    # Campi per categoria PELLI
+    # ======================
     MACELLO = "macello"
     COMMERCIANTE = "commerciante"
     ALTRO = "altro"
-
     CHOICES_SUPPLIER_TYPE = (
         (MACELLO, "Macello"),
         (COMMERCIANTE, "Commerciante"),
         (ALTRO, "Altro"),
     )
 
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_pelli",
-    )
     is_lwg = models.BooleanField(default=False)
     urn = models.CharField(max_length=50, blank=True, null=True)
-    tipo_fornitore = models.CharField(
-        max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True
-    )
+    tipo_fornitore = models.CharField(max_length=50, choices=CHOICES_SUPPLIER_TYPE, null=True, blank=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
 
-
-class FornitoreProdottiChimici(Fornitore):
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_prodottichimici",
-    )
+    # ======================
+    # Campi per categoria PRODOTTI CHIMICI
+    # ======================
     id_zdhc = models.CharField(max_length=50, blank=True, null=True)
 
-
-class FornitoreLavorazioniEsterne(Fornitore):
-    # tipo audit sostenuto
-    NESSUNO = "not_audited"
+    # ======================
+    # Campi per categoria LAVORAZIONI ESTERNE
+    # ======================
+    NOT_AUDITED = "not_audited"
     MANUFACTURER = "leather_manufacturer_audit_protocol"
     SUBCONTRACTOR = "subcontractor_audit_protocol"
     MINI = "mini_audit_protocol"
 
     CHOICES_AUDIT = (
-        (NESSUNO, "Nessun Audit"),
+        (NOT_AUDITED, "Nessun Audit"),
         (MANUFACTURER, "Leather Manufacturer Audit Protocol"),
         (SUBCONTRACTOR, "Subcontractor Audit Protocol"),
         (MINI, "Mini-Audit Protocol"),
     )
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_lavorazioniesterne",
-    )
-    is_lwg = models.BooleanField(default=False)
-    audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, default=NESSUNO)
+
+    audit = models.CharField(max_length=50, choices=CHOICES_AUDIT, blank=True, null=True)
+
+    # ======================
+    # Campi per categoria MANUTENZIONI
+    # ======================
+    manutenzione_note = models.CharField(max_length=50, blank=True, null=True)
+
+    # ======================
+    # Campi per categoria MACELLO
+    # ======================
+    #is_group = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["ragionesociale"]
 
     def __str__(self):
-        return str(self.pk)
+        return self.ragionesociale
 
-
-class FornitoreServizi(Fornitore):
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_servizi",
-    )
-    prova = models.CharField(max_length=50, blank=True, null=True)
-
-
-class FornitoreRifiuti(Fornitore):
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_rifiuti",
-    )
 
 
 def gestore_documenti_upload_to(instance, filename):
@@ -337,7 +336,7 @@ def gestore_documenti_upload_to(instance, filename):
 
 class XrDocumentiGestore(models.Model):
     fornitore_rifiuti = models.ForeignKey(
-        FornitoreRifiuti, on_delete=models.CASCADE, related_name="documenti_gestore"
+        Fornitore, on_delete=models.CASCADE, related_name="documenti_gestore"
     )
     numero = models.CharField(max_length=50, blank=True, null=True)
     data_documento = models.DateField(blank=True, null=True)
@@ -375,7 +374,7 @@ def smaltitore_documenti_upload_to(instance, filename):
 
 class XrDocumentiSmaltitore(models.Model):
     fornitore_rifiuti = models.ForeignKey(
-        FornitoreRifiuti, on_delete=models.CASCADE, related_name="documenti_smaltitore"
+        Fornitore, on_delete=models.CASCADE, related_name="documenti_smaltitore"
     )
     numero = models.CharField(max_length=50, blank=True, null=True)
     data_documento = models.DateField(blank=True, null=True)
@@ -397,7 +396,7 @@ def trasportatore_documenti_upload_to(instance, filename):
 
 class XrDocumentiTrasportatore(models.Model):
     fornitore_rifiuti = models.ForeignKey(
-        FornitoreRifiuti,
+        Fornitore,
         on_delete=models.CASCADE,
         related_name="documenti_trasportatore",
     )
@@ -410,22 +409,22 @@ class XrDocumentiTrasportatore(models.Model):
         verbose_name_plural = "Documenti Trasportatore"
 
 
-class FornitoreManutenzioni(models.Model):
-    fornitore_ptr = models.OneToOneField(
-        Fornitore,
-        on_delete=models.CASCADE,
-        parent_link=True,
-        related_name="fornitore_ptr_manutenzioni",
-    )
-    prova = models.CharField(max_length=50, blank=True, null=True)
 
 
-"""FINE MODELLI CATEGORIE"""
 
 
-class FornitoreMacello(Fornitore):
-    fornitore_ptr = models.OneToOneField(Fornitore, on_delete=models.CASCADE, parent_link=True)
-    is_group = models.BooleanField(default=False)
+class LwgFornitore(models.Model):
+    lwg_urn = models.CharField(max_length=50)
+    lwg_score = models.CharField(max_length=50, blank=True, null=True)
+    lwg_range = models.CharField(max_length=100, blank=True, null=True)
+    lwg_date = models.DateField(blank=True, null=True)
+    lwg_expiry = models.DateField(blank=True, null=True)
+    documento = models.FileField(upload_to="lwg_certificates/", null=True, blank=True)
+    fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+
+
+"""I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE"""
+
 
 
 class TransferValue(models.Model):
@@ -490,3 +489,4 @@ class Cliente(models.Model):
 
     def get_absolute_url(self):
         return reverse("anagrafiche:modifica_cliente", kwargs={"pk": self.pk})
+

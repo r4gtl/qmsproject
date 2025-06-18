@@ -4,16 +4,12 @@ from django import forms
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
 
-from .models import (Cliente, Facility, FacilityContact, Fornitore,
-                     FornitoreLavorazioniEsterne, FornitoreMacello,
-                     FornitoreManutenzioni, FornitorePelli,
-                     FornitoreProdottiChimici, FornitoreRifiuti,
-                     FornitoreServizi, LwgFornitore, TransferValue,
-                     XrDocumentiGestore, XrDocumentiSmaltitore,
-                     XrDocumentiTrasportatore, XrTransferValueLwgFornitore)
+from .models import (  # FornitoreLavorazioniEsterne, FornitoreMacello,; FornitoreManutenzioni, FornitorePelli,; FornitoreProdottiChimici, FornitoreRifiuti,; FornitoreServizi,
+    Cliente, Facility, FacilityContact, Fornitore, LwgFornitore, TransferValue,
+    XrDocumentiGestore, XrDocumentiSmaltitore, XrDocumentiTrasportatore,
+    XrTransferValueLwgFornitore)
 
-
-class FormFornitore(forms.ModelForm):
+'''class FormFornitore(forms.ModelForm):
     categoria = forms.ChoiceField(
         choices=Fornitore.CHOICES_CATEGORY,
         widget=forms.TextInput(attrs={"readonly": "readonly"}),
@@ -48,8 +44,47 @@ class FormFornitore(forms.ModelForm):
             "city": "Città",
             "e_mail": "E-Mail",
             "sito_web": "Sito Web",
+        }'''
+class FormFornitore(forms.ModelForm):
+    class Meta:
+        model = Fornitore
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Determina la categoria: da istanza o da dati POST/GET
+        categoria = (
+            getattr(self.instance, "categoria", None)
+            or self.data.get("categoria")
+            or self.initial.get("categoria")
+        )
+
+        # Mappa delle categorie e campi specifici da mostrare
+        categoria_campi = {
+            Fornitore.PELLI: ["is_lwg", "urn", "tipo_fornitore", "latitude", "longitude"],
+            Fornitore.PRODOTTI_CHIMICI: ["id_zdhc"],
+            Fornitore.LAVORAZIONI_ESTERNE: ["is_lwg", "audit"],
+            Fornitore.MANUTENZIONI: ["manutenzione_note"],
+            Fornitore.MACELLO: ["is_group"],
         }
 
+        # Tutti i campi che non sono comuni
+        campi_comuni = [
+            "ragionesociale", "indirizzo", "cap", "city", "provincia", "country",
+            "sito_web", "e_mail", "categoria", "created_by", "created_at"
+        ]
+
+        # Campi ammessi: quelli comuni + quelli per la categoria selezionata
+        campi_ammessi = set(campi_comuni)
+        if categoria in categoria_campi:
+            campi_ammessi.update(categoria_campi[categoria])
+
+        # Rimuove i campi non pertinenti
+        for field in list(self.fields):
+            if field not in campi_ammessi:
+                self.fields.pop(field)
+                
 
 class FormXrDocumentiGestore(forms.ModelForm):
     class Meta:
@@ -108,7 +143,7 @@ class FormLwgFornitore(forms.ModelForm):
 """FORMS PER LA GESTIONE DEI MODELLI ASSOCIATI ALLE CATEGORIE"""
 
 
-class FormFornitorePelli(forms.ModelForm):
+'''class FormFornitorePelli(forms.ModelForm):
     is_lwg = forms.BooleanField(widget=forms.CheckboxInput(), label="LWG")
 
     urn = forms.CharField(label="URN")
@@ -148,7 +183,7 @@ class FormFornitoreRifiuti(forms.ModelForm):
 class FormFornitoreManutenzioni(forms.ModelForm):
     class Meta:
         model = FornitoreManutenzioni
-        fields = "__all__"
+        fields = "__all__"'''
 
 
 '''class FormMacello(forms.ModelForm):
@@ -186,7 +221,7 @@ class FormFornitoreManutenzioni(forms.ModelForm):
         }'''
 
 
-class FormMacello(forms.ModelForm):
+'''class FormMacello(forms.ModelForm):
 
     class Meta:
         model = FornitoreMacello
@@ -216,7 +251,7 @@ class FormMacello(forms.ModelForm):
             "e_mail": "E-Mail",
             "sito_web": "Sito Web",
             "is_group": "Raccoglitore",
-        }
+        }'''
 
 """FINE FORMS PER LA GESTIONE DEI MODELLI DELLE CATEGORIE ASSOCIATE"""
 
