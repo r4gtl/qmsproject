@@ -1,0 +1,51 @@
+# Root
+.env
+*.pyc
+__pycache__/
+*.sqlite3
+*.log
+.DS_Store
+
+# Git
+.git/
+.gitignore
+
+# Python
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+*.egg
+
+# Node.js / React (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env.local
+frontend/.DS_Store
+
+# Python virtualenvs (in caso usati)
+venv/
+.env/
+.env.bak/
+env/
+ENV/
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker/
+
+# IDE / editor config
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# OS / Misc
+Thumbs.db
+ehthumbs.db
+desktop.ini

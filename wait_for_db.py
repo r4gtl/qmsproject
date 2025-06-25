@@ -5,8 +5,8 @@ import time
 import psycopg2
 from psycopg2 import OperationalError
 
-db_host = os.getenv("DB_HOST")
-db_port = os.getenv("DB_PORT")
+db_host = os.getenv("POSTGRES_DB_HOST")
+db_port = os.getenv("POSTGRES_DB_PORT")
 db_name = os.getenv("POSTGRES_DB_NAME")
 db_user = os.getenv("POSTGRES_DB_USER")
 db_pass = os.getenv("POSTGRES_DB_PASSWORD")

@@ -45,6 +45,10 @@ urlpatterns = [
     path('vendite/', include('vendite.urls')),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
+
+
+    #API
+    path('api/accounts/', include('accounts.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
