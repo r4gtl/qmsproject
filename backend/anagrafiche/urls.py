@@ -1,9 +1,15 @@
-from django.urls import path
-
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .api import ClienteViewSet, FornitoreViewSet
 from .charts import get_country_count, get_country_count_client
 from .views import *
 
 app_name = "anagrafiche"
+
+
+router = DefaultRouter()
+router.register("clienti", ClienteViewSet)
+router.register("fornitori", FornitoreViewSet)
 
 
 urlpatterns = [
@@ -162,4 +168,6 @@ urlpatterns = [
         get_country_count_client,
         name="get_country_count_client",
     ),
+    # API
+    path("", include(router.urls)),
 ]
