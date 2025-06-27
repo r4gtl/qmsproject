@@ -3,7 +3,7 @@ from .models import Cliente, Fornitore
 from .serializers import ClienteSerializer, FornitoreSerializer
 
 
-class ClienteViewSet(viewsets.ModelViewset):
+class ClienteViewSet(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
     serializer_class = ClienteSerializer
 
