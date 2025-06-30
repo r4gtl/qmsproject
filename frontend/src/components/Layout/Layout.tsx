@@ -1,5 +1,4 @@
 import { Container, Row, Col } from 'react-bootstrap';
-import Navbar from '../NavBar';
 import Sidebar from '../Sidebar';
 import { ReactNode } from 'react';
 
@@ -9,18 +8,10 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   return (
-    <>
-      <Navbar />
-      <Container fluid>
-        <Row>
-          <Col md={2}>
-            <Sidebar />
-          </Col>
-          <Col md={10} className="p-4">
-            {children}
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Container className="my-4 d-flex justify-content-center">
+      <div className="w-100" style={{ maxWidth: '1200px' }}>
+        {children}
+      </div>
+    </Container>
   );
 }

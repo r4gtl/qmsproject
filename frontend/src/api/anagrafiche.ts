@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from './axios';
 
 export const getClienti = () => axios.get('/anagrafiche/clienti/');
 export const getFornitori = () => axios.get('/anagrafiche/fornitori/');

@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const fetchCurrentUser = async (accessToken: string) => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/accounts/me/`,
+        `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

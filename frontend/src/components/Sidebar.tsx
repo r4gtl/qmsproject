@@ -8,7 +8,7 @@ interface SidebarProps {
 
 const Sidebar = ({ show, onHide }: SidebarProps) => {
   return (
-    <Offcanvas show={show} onHide={onHide} backdrop="static">
+    <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
       <Offcanvas.Header closeButton>
         <Offcanvas.Title>Menu</Offcanvas.Title>
       </Offcanvas.Header>

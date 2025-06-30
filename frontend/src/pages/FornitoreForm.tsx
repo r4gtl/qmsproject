@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Card } from 'react-bootstrap';
 import axios from '@/api/axios';
 import { toast } from 'react-toastify';
+
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
 
 interface FornitoreFormProps {
   mode: 'create' | 'edit';
@@ -22,6 +25,8 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
     city: '',
     provincia: '',
   });
+
+  const countryOptions = useMemo(() => countryList().getData(), []);
 
   useEffect(() => {
     if (mode === 'edit' && id) {
@@ -85,11 +90,15 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
 
         <Form.Group className="mb-3">
           <Form.Label>Paese</Form.Label>
-          <Form.Control
-            type="text"
-            name="country"
-            value={formData.country}
-            onChange={handleChange}
+          <Select
+            options={countryOptions}
+            value={countryOptions.find((opt) => opt.value === formData.country)}
+            onChange={(val) =>
+              setFormData((prev) => ({
+                ...prev,
+                country: val?.value || '',
+              }))
+            }
           />
         </Form.Group>
 
@@ -99,6 +108,7 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
             type="text"
             name="categoria"
             value={formData.categoria}
+            onChange={handleChange}
             readOnly={mode === 'create'} // imposta da URL
           />
         </Form.Group>
@@ -106,6 +116,14 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
         {/* altri campi comuni o dinamici qui */}
 
         <div className="d-flex justify-content-end mt-4">
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/fornitori')}
+            className="me-2"
+          >
+            Annulla
+          </Button>
+
           <Button type="submit" variant="primary">
             Salva
           </Button>
