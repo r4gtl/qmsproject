@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import api from '@/api/axios';
 import { useNavigate } from 'react-router-dom';
 
 interface User {
@@ -23,16 +24,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
 
-  const fetchCurrentUser = async (accessToken: string) => {
+  const fetchCurrentUser = async () => {
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/accounts/me/`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await api.get('/accounts/me/');
       setUser(response.data);
     } catch (error) {
       setUser(null);
@@ -52,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
 
-      await fetchCurrentUser(access);
+      await fetchCurrentUser();
       return true;
     } catch {
       return false;
@@ -68,7 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      fetchCurrentUser(token);
+      fetchCurrentUser();
     }
   }, []);
   return (
