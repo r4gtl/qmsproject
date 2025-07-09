@@ -71,3 +71,13 @@ class FornitoreFilterFE(django_filters.FilterSet):
     class Meta:
         model = Fornitore
         fields = ["ragionesociale", "country", "categoria"]
+
+
+class ClienteFilterFE(django_filters.FilterSet):
+    ragionesociale = django_filters.CharFilter(lookup_expr="icontains")
+    provincia = django_filters.CharFilter(lookup_expr="icontains")
+    country = django_filters.CharFilter(lookup_expr="icontains")
+
+    class Meta:
+        model = Fornitore
+        fields = ["ragionesociale", "provincia", "country"]

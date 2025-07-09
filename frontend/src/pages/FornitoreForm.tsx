@@ -24,6 +24,22 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
     cap: '',
     city: '',
     provincia: '',
+
+    // Campi per PELLI
+    is_lwg: false,
+    urn: '',
+    tipo_fornitore: '',
+    latitude: '',
+    longitude: '',
+
+    // Campi per PRODOTTI CHIMICI
+    id_zdhc: '',
+
+    // Campi per LAVORAZIONI ESTERNE
+    audit: '',
+
+    // Campi per MANUTENZIONI
+    manutenzione_note: '',
   });
 
   const countryOptions = useMemo(() => countryList().getData(), []);
@@ -112,6 +128,137 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
             readOnly={mode === 'create'} // imposta da URL
           />
         </Form.Group>
+
+        {/* Campi dinamici */}
+
+        {formData.categoria === 'pelli' && (
+          <>
+            <Form.Group className="mb-3" controlId="is_lwg">
+              <Form.Check
+                type="checkbox"
+                label="LWG"
+                checked={formData.is_lwg}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_lwg: e.target.checked })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="urn">
+              <Form.Label>URN</Form.Label>
+              <Form.Control
+                type="text"
+                value={formData.urn || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, urn: e.target.value })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="tipo_fornitore">
+              <Form.Label>Tipo Fornitore</Form.Label>
+              <Form.Select
+                value={formData.tipo_fornitore || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, tipo_fornitore: e.target.value })
+                }
+              >
+                <option value="">-- Seleziona --</option>
+                <option value="macello">Macello</option>
+                <option value="commerciante">Commerciante</option>
+                <option value="altro">Altro</option>
+              </Form.Select>
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="latitude">
+              <Form.Label>Latitudine</Form.Label>
+              <Form.Control
+                type="number"
+                step="any"
+                value={formData.latitude || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    latitude: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="longitude">
+              <Form.Label>Longitudine</Form.Label>
+              <Form.Control
+                type="number"
+                step="any"
+                value={formData.longitude || ''}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    longitude: parseFloat(e.target.value),
+                  })
+                }
+              />
+            </Form.Group>
+            {formData.latitude && formData.longitude && (
+              <Button
+                variant="outline-primary"
+                size="sm"
+                target="_blank"
+                href={`https://www.google.com/maps?q=${formData.latitude},${formData.longitude}`}
+              >
+                Apri in Google Maps
+              </Button>
+            )}
+          </>
+        )}
+
+        {formData.categoria === 'prodotti chimici' && (
+          <Form.Group className="mb-3" controlId="id_zdhc">
+            <Form.Label>ID ZDHC</Form.Label>
+            <Form.Control
+              type="text"
+              value={formData.id_zdhc || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, id_zdhc: e.target.value })
+              }
+            />
+          </Form.Group>
+        )}
+
+        {formData.categoria === 'lavorazioni esterne' && (
+          <Form.Group className="mb-3" controlId="audit">
+            <Form.Label>Audit</Form.Label>
+            <Form.Select
+              value={formData.audit || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, audit: e.target.value })
+              }
+            >
+              <option value="">-- Seleziona --</option>
+              <option value="not_audited">Nessun Audit</option>
+              <option value="leather_manufacturer_audit_protocol">
+                Leather Manufacturer Audit Protocol
+              </option>
+              <option value="subcontractor_audit_protocol">
+                Subcontractor Audit Protocol
+              </option>
+              <option value="mini_audit_protocol">Mini-Audit Protocol</option>
+            </Form.Select>
+          </Form.Group>
+        )}
+
+        {formData.categoria === 'manutenzioni' && (
+          <Form.Group className="mb-3" controlId="manutenzione_note">
+            <Form.Label>Note Manutenzione</Form.Label>
+            <Form.Control
+              type="text"
+              value={formData.manutenzione_note || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, manutenzione_note: e.target.value })
+              }
+            />
+          </Form.Group>
+        )}
 
         {/* altri campi comuni o dinamici qui */}
 

@@ -6,6 +6,8 @@ import AppNavBar from './components/NavBar';
 import Layout from './components/Layout/Layout';
 import FornitoriList from './pages/FornitoriList';
 import FornitoreForm from './pages/FornitoreForm';
+import ClientiList from './pages/ClientiList';
+import ClienteForm from './pages/ClienteForm';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -55,6 +57,39 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <FornitoreForm mode="edit" />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/clienti"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ClientiList />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/clienti/nuovo"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ClienteForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/clienti/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ClienteForm />
               </Layout>
             </PrivateRoute>
           }

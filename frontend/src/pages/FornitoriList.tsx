@@ -12,15 +12,9 @@ import axios from '@/api/axios';
 import CategoriaModal from '../components/CategoriaModal';
 import Layout from '../components/Layout/Layout';
 import { toast } from 'react-toastify';
+import type { Fornitore } from '@/types/anagrafiche';
 
-const PAGE_SIZE = 10;
-
-interface Fornitore {
-  id: number;
-  ragionesociale: string;
-  country: string;
-  categoria: string;
-}
+const PAGE_SIZE = 50;
 
 export default function FornitoriList() {
   const [fornitori, setFornitori] = useState<Fornitore[]>([]);
@@ -68,7 +62,7 @@ export default function FornitoriList() {
 
   const handleCategoriaSelect = (categoria: string) => {
     setShowModal(false);
-    navigate(`/fornitori/nuovo?categoria=${categoria}`);
+    navigate(`/fornitori/nuovo/${categoria}`);
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -155,7 +149,7 @@ export default function FornitoriList() {
               fornitori.map((f) => (
                 <tr key={f.id}>
                   <td
-                    onClick={() => navigate(`/fornitori/${f.id}`)}
+                    onClick={() => navigate(`/fornitori/${f.id}/modifica`)}
                     style={{ cursor: 'pointer' }}
                   >
                     {f.ragionesociale}
