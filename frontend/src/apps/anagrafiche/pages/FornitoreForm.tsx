@@ -64,10 +64,16 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanData = { ...formData };
+
+    // Pulisci i campi opzionali numerici
+    if (cleanData.latitude === '') cleanData.latitude = null;
+    if (cleanData.longitude === '') cleanData.longitude = null;
+
     const apiCall =
       mode === 'edit'
-        ? axios.put(`/anagrafiche/fornitori/${id}/`, formData)
-        : axios.post(`/anagrafiche/fornitori/`, formData);
+        ? axios.put(`/anagrafiche/fornitori/${id}/`, cleanData)
+        : axios.post(`/anagrafiche/fornitori/`, cleanData);
 
     apiCall
       .then(() => {

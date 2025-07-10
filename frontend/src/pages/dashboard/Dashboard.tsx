@@ -5,6 +5,7 @@ const Dashboard = () => {
   return (
     <Container className="mt-5">
       <Row className="justify-content-md-center">
+        {/* card anagrafiche */}
         <Col md={6} lg={4}>
           <Card className="shadow-sm mb-4">
             <Card.Body>
@@ -16,6 +17,22 @@ const Dashboard = () => {
                 </Button>
                 <Button as={Link} to="/fornitori" variant="primary">
                   Fornitori
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        {/* card articoli */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Articoli</Card.Title>
+              <Card.Text>
+                Esplora, crea, modifica ed elimina gli articoli.
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/articoli" variant="primary">
+                  Articoli
                 </Button>
               </div>
             </Card.Body>

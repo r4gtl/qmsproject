@@ -1,6 +1,6 @@
 import { Navbar, Container, Nav, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import Sidebar from './Sidebar';
 import { FaBars } from 'react-icons/fa';
 import { useState } from 'react';

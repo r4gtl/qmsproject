@@ -13,7 +13,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // ✅ alias @ per src/
+      '@': path.resolve(__dirname, 'src'),
+      '@anagrafiche': path.resolve(__dirname, 'src/apps/anagrafiche'), // ✅ alias @ per src/
     },
   },
   plugins: [

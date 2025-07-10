@@ -1,8 +1,14 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, useMemo } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import type { Cliente } from '@/types/anagrafiche';
+import type { Cliente } from '@/apps/anagrafiche/types/anagrafiche';
+import instance from '@/api/axios';
+
+import { toast } from 'react-toastify';
+
+import Select from 'react-select';
+import countryList from 'react-select-country-list';
 
 const ClienteForm = () => {
   const [cliente, setCliente] = useState<Cliente>({
@@ -11,25 +17,28 @@ const ClienteForm = () => {
     telefono: '',
     email: '',
     partita_iva: '',
+    country: '',
   });
 
   const navigate = useNavigate();
   const { id } = useParams();
-
+  const countryOptions = useMemo(() => countryList().getData(), []);
   const isEdit = !!id;
 
   useEffect(() => {
     if (isEdit) {
-      axios.get(`/api/clienti/${id}/`).then((res) => setCliente(res.data));
+      instance
+        .get(`/anagrafiche/clienti/${id}/`)
+        .then((res) => setCliente(res.data));
     }
   }, [id]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isEdit) {
-      await axios.put(`/api/clienti/${id}/`, cliente);
+      await instance.put(`/anagrafiche/clienti/${id}/`, cliente);
     } else {
-      await axios.post(`/api/clienti/`, cliente);
+      await instance.post(`/anagrafiche/clienti/`, cliente);
     }
     navigate('/clienti');
   };
@@ -87,6 +96,27 @@ const ClienteForm = () => {
             }
           />
         </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label>Paese</Form.Label>
+          <Select
+            options={countryOptions}
+            value={countryOptions.find((opt) => opt.value === cliente.country)}
+            onChange={(val) =>
+              setCliente((prev) => ({
+                ...prev,
+                country: val?.value || '',
+              }))
+            }
+          />
+        </Form.Group>
+        <Button
+          variant="secondary"
+          onClick={() => navigate('/clienti')}
+          className="me-2"
+        >
+          Annulla
+        </Button>
 
         <Button variant="primary" type="submit">
           {isEdit ? 'Salva modifiche' : 'Crea cliente'}

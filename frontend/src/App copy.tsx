@@ -1,28 +1,31 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import LoginForm from './components/auth/LoginForm';
-import Dashboard from '@/pages/dashboard/Dashboard';
+import Dashboard from './pages/dashboard/Dashboard';
 import PrivateRoute from './components/auth/PrivateRoute';
+//import AppNavBar from './components/NavBar';
 import Layout from './components/layout/Layout';
-import FornitoriList from '@anagrafiche/pages/FornitoriList';
-import FornitoreForm from '@anagrafiche/pages/FornitoreForm';
-import ClientiList from '@anagrafiche/pages/ClientiList';
-import ClienteForm from '@anagrafiche/pages/ClienteForm';
+import FornitoriList from './apps/anagrafiche/pages/FornitoriList';
+import FornitoreForm from './apps/anagrafiche/pages/FornitoreForm';
+import ClientiList from './apps/anagrafiche/pages/ClientiList';
+import ClienteForm from './apps/anagrafiche/pages/ClienteForm';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
 function App() {
+  const location = useLocation();
+  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const hideNavbar = location.pathname === '/login';
+
   return (
     <>
+      {!hideNavbar && isLoggedIn && <AppNavBar />}
       <Routes>
         <Route path="/login" element={<LoginForm />} />
-
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Layout>
-                <Dashboard />
-              </Layout>
+              <Dashboard />
             </PrivateRoute>
           }
         />
@@ -37,7 +40,6 @@ function App() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/fornitori/nuovo/:categoria"
           element={
@@ -95,7 +97,6 @@ function App() {
 
         <Route path="/" element={<Navigate to="/dashboard" />} />
       </Routes>
-
       <ToastContainer position="top-right" autoClose={3000} />
     </>
   );

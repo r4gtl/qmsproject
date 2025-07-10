@@ -49,3 +49,6 @@ class LavorazioneEsternaFilter(django_filters.FilterSet):
         model = LavorazioneEsterna
         fields = ['descrizione'
                 ] 
+        
+        
+        

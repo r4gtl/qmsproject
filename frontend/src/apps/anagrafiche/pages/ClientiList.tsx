@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
-import { Table, Button, Form, InputGroup, Pagination } from 'react-bootstrap';
+import {
+  Table,
+  Button,
+  Form,
+  InputGroup,
+  Pagination,
+  Spinner,
+} from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import type { Cliente } from '@/types/anagrafiche';
+import type { Cliente } from '@/apps/anagrafiche/types/anagrafiche';
+import instance from '@/api/axios';
+import { toast } from 'react-toastify';
 
 /* resta da generare ClienteForm */
 
@@ -12,10 +21,12 @@ const ClientiList = () => {
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const fetchClienti = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(`/api/clienti/`, {
+      const response = await instance.get(`/anagrafiche/clienti/`, {
         params: {
           search,
           ordering: 'ragionesociale',
@@ -26,6 +37,8 @@ const ClientiList = () => {
       setCount(Math.ceil(response.data.count / 50));
     } catch (error) {
       console.error('Errore nel recupero dei clienti', error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -33,9 +46,16 @@ const ClientiList = () => {
   }, [search, page]);
 
   const handleDelete = async (id: number) => {
-    if (window.confirm('Sei sicuro di voler eliminare questo cliente?')) {
-      await axios.delete(`api/clienti/${id}/`);
+    const conferma = window.confirm(
+      'Sei sicuro di voler eliminare questo cliente?'
+    );
+    if (!conferma) return;
+    try {
+      await instance.delete(`/anagrafiche/clienti/${id}/`);
+      toast.success('Cliente eliminato con successo');
       fetchClienti();
+    } catch (error) {
+      toast.error("Errore durante l'eliminazione");
     }
   };
 
@@ -43,9 +63,7 @@ const ClientiList = () => {
     <div className="container mt-4">
       <div className="d-flex justify-content-between mb-3">
         <h2>Clienti</h2>
-        <Button onClick={() => navigate('/clienti/nuovo')}>
-          Nuovo Cliente
-        </Button>
+        <Button onClick={() => navigate('/clienti/nuovo')}>Aggiungi</Button>
       </div>
 
       <InputGroup className="mb-3">
@@ -70,27 +88,41 @@ const ClientiList = () => {
           </tr>
         </thead>
         <tbody>
-          {clienti.map((cliente) => (
-            <tr
-              key={cliente.id}
-              onClick={() => navigate(`/clienti/${cliente.id}`)}
-              style={{ cursor: 'pointer' }}
-            >
-              <td>{cliente.ragionesociale}</td>
-              <td>{cliente.indirizzo}</td>
-              <td>{cliente.telefono}</td>
-              <td>{cliente.email}</td>
-              <td onClick={(e) => e.stopPropagation()}>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => handleDelete(cliente.id)}
-                >
-                  Elimina
-                </Button>
+          {loading ? (
+            <tr>
+              <td colSpan={4} className="text-center">
+                <Spinner animation="border" size="sm" /> Caricamento...
               </td>
             </tr>
-          ))}
+          ) : clienti.length > 0 ? (
+            clienti.map((cliente) => (
+              <tr
+                key={cliente.id}
+                onClick={() => navigate(`/clienti/${cliente.id}`)}
+                style={{ cursor: 'pointer' }}
+              >
+                <td>{cliente.ragionesociale}</td>
+                <td>{cliente.indirizzo}</td>
+                <td>{cliente.telefono}</td>
+                <td>{cliente.email}</td>
+                <td onClick={(e) => e.stopPropagation()}>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => handleDelete(cliente.id)}
+                  >
+                    Elimina
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={4} className="text-center">
+                Nessun cliente trovato.
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
 
