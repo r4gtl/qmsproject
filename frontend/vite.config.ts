@@ -15,6 +15,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@anagrafiche': path.resolve(__dirname, 'src/apps/anagrafiche'), // ✅ alias @ per src/
+      '@articoli': path.resolve(__dirname, 'src/apps/articoli'), // ✅ alias @ per src/
     },
   },
   plugins: [

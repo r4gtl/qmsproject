@@ -1,14 +1,9 @@
 from django.urls import path, include
 from .utils import *
 from .views import *
-from rest_framework.routers import DefaultRouter
-from .api import ArticoloViewSet
+
 
 app_name = "articoli"
-
-
-router = DefaultRouter()
-router.register("articoli", ArticoloViewSet)
 
 
 urlpatterns = [
@@ -151,6 +146,4 @@ urlpatterns = [
     ),
     # Stampe
     path("stampa_procedura/<int:pk>/", stampa_procedura, name="stampa_procedura"),
-    # API
-    path("", include(router.urls)),
 ]

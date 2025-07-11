@@ -8,10 +8,10 @@ interface GetFornitoriParams {
   country?: string;
 }
 
-export const getClienti = () => axios.get('/anagrafiche/clienti/');
+export const getClienti = () => axios.get('/api/anagrafiche/clienti/');
 export const deleteFornitore = (id: number) =>
-  axios.delete(`/anagrafiche/fornitori/${id}/`);
+  axios.delete(`/api/anagrafiche/fornitori/${id}/`);
 
 export function getFornitori(params: GetFornitoriParams = {}) {
-  return axios.get('/anagrafiche/fornitori/', { params });
+  return axios.get('/api/anagrafiche/fornitori/', { params });
 }
