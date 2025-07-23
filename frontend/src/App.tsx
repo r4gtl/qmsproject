@@ -8,6 +8,7 @@ import FornitoreForm from '@anagrafiche/pages/FornitoreForm';
 import ClientiList from '@anagrafiche/pages/ClientiList';
 import ClienteForm from '@anagrafiche/pages/ClienteForm';
 import ArticoliList from '@articoli/pages/ArticoliList';
+import ArticoloForm from '@articoli/pages/ArticoloForm';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -100,6 +101,27 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <ArticoliList />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/articoli/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ArticoloForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ArticoloForm />
               </Layout>
             </PrivateRoute>
           }

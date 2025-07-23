@@ -103,5 +103,5 @@ urlpatterns = [
         "report_traceability_in/", report_traceability_in, name="report_traceability_in"
     ),
     # API
-    path("api/", include(router.urls)),
+    # path("api/", include(router.urls)),
 ]

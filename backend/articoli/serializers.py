@@ -3,6 +3,13 @@ from .models import Articolo
 
 
 class ArticoloSerializer(serializers.ModelSerializer):
+    fk_tipoanimale_descrizione = serializers.CharField(
+        source="fk_tipoanimale.descrizione", read_only=True
+    )
+    fk_tipogrezzo_descrizione = serializers.CharField(
+        source="fk_tipogrezzo.descrizione", read_only=True
+    )
+
     class Meta:
         model = Articolo
         fields = "__all__"

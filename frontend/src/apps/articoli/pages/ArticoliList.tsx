@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Table, Button, Form, Row, Col, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { getArticoli, deleteArticolo } from '@articoli/api/articoli';
+import { getTipoAnimali, getTipoGrezzi } from '@/api/lookup';
 import type { Articolo } from '@articoli/types/articoli';
-import type { TipoAnimale, TipoGrezzo } from '@/types/lookup';
+import type { TipoAnimale, TipoGrezzo } from '@articoli/types/lookup';
 import ConfirmModal from '@/components/common/ConfirmModal';
 import PaginationControls from '@/components/common/PaginationControls';
+import { toast } from 'react-toastify';
 
 const ArticoliList = () => {
   const navigate = useNavigate();
@@ -41,12 +43,18 @@ const ArticoliList = () => {
   };
 
   const loadLookups = async () => {
-    const [animali, grezzi] = await Promise.all([
-      getTipoAnimali(),
-      getTipoGrezzi(),
-    ]);
-    setTipoAnimali(animali.data);
-    setTipoGrezzi(grezzi.data);
+    try {
+      const [animali, grezzi] = await Promise.all([
+        getTipoAnimali(),
+        getTipoGrezzi(),
+      ]);
+      setTipoAnimali(animali.data.results);
+      setTipoGrezzi(grezzi.data.results);
+      console.log('animali', animali.data);
+    } catch (err) {
+      console.error('Errore caricamento lookup:', err);
+      toast.error('Errore nel caricamento delle tabelle di lookup');
+    }
   };
   useEffect(() => {
     fetchArticoli();

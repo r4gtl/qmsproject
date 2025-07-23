@@ -4,7 +4,7 @@ from .models import TipoAnimale, TipoGrezzo
 
 class TipoAnimaleSerializer(serializers.ModelSerializer):
     class Meta:
-        models = TipoAnimale
+        model = TipoAnimale
         fields = ["id", "descrizione"]
 
 
