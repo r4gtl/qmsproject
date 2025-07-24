@@ -32,7 +32,7 @@ urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     # API
     path("api/accounts/", include("accounts.urls")),
-    path("api/anagrafiche/", include("anagrafiche.urls")),
+    path("api/anagrafiche/", include("anagrafiche.api_urls")),
     path("api/articoli/", include("articoli.api_urls")),
     path("api/acquistopelli/", include("acquistopelli.api_urls")),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),

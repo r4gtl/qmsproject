@@ -1,5 +1,5 @@
 import { Offcanvas, Nav } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   show: boolean;
@@ -7,6 +7,9 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ show, onHide }: SidebarProps) => {
+  const location = useLocation();
+  const isInArticoli = location.pathname.startsWith('/articoli');
+
   return (
     <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
       <Offcanvas.Header closeButton>
@@ -23,6 +26,19 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
           <Nav.Link as={Link} to="/documenti" onClick={onHide}>
             Documenti
           </Nav.Link>
+          {/* Sezione visibile solo per articoli */}
+          {isInArticoli && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Tabelle Articoli
+              </div>
+              <Nav.Link as={Link} to="/articoli/tabelle" onClick={onHide}>
+                Tabelle Generiche
+              </Nav.Link>
+            </>
+          )}
+
           {/* Altri link */}
         </Nav>
       </Offcanvas.Body>

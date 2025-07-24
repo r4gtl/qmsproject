@@ -9,6 +9,7 @@ import ClientiList from '@anagrafiche/pages/ClientiList';
 import ClienteForm from '@anagrafiche/pages/ClienteForm';
 import ArticoliList from '@articoli/pages/ArticoliList';
 import ArticoloForm from '@articoli/pages/ArticoloForm';
+import TabelleGenerichePage from '@articoli/pages/TabelleGenerichePage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -122,6 +123,17 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <ArticoloForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/tabelle"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TabelleGenerichePage />
               </Layout>
             </PrivateRoute>
           }

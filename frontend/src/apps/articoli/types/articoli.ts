@@ -10,3 +10,10 @@ export interface Articolo {
   note?: string;
   created_at: string;
 }
+
+export interface ElencoTest {
+  id: number;
+  descrizione: string;
+  norma_riferimento: string;
+  note: string;
+}

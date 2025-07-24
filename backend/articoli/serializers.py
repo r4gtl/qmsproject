@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Articolo
+from .models import Articolo, ElencoTest
 
 
 class ArticoloSerializer(serializers.ModelSerializer):
@@ -14,3 +14,10 @@ class ArticoloSerializer(serializers.ModelSerializer):
         model = Articolo
         fields = "__all__"
         read_only_fields = ["created_by"]
+
+
+class ElencoTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ElencoTest
+        fields = "__all__"
+        read_only_fields = ["created_by", "created_at"]
