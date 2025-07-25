@@ -2,30 +2,44 @@ import { useEffect, useState } from 'react';
 import { Table, Button, Form, InputGroup } from 'react-bootstrap';
 import axios from '@/api/axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { getTests, deleteTest } from '@articoli/api/articoli';
+import ElencoTestForm from './ElencoTestForm';
 import type { ElencoTest } from '@articoli/types/articoli';
+import ConfirmModal from '@/components/common/ConfirmModal';
 
 export default function ElencoTestCard() {
+  const navigate = useNavigate();
   const [test, setTest] = useState<ElencoTest[]>([]);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
+  const [selectedTest, setSelectedTest] = useState<ElencoTest | null>(null);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const fetchData = () => {
-    axios.get('/articoli/elenco-test/').then((res) => {
-      console.log(res.data);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await getTests();
       setTest(res.data.results);
-    });
+    } catch (error) {
+      toast.error('Errore durante il caricamento');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(fetchData, []);
+  useEffect(() => {
+    const load = async () => {
+      await fetchData();
+    };
+    load();
+  }, []);
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Confermi eliminazione?')) return;
-    try {
-      await axios.delete(`/articoli/elenco-test/${id}/`);
-      toast.success('Eliminato con successo');
-      fetchData();
-    } catch {
-      toast.error("Errore durante l'eliminazione");
-    }
+    await deleteTest(id);
+    fetchData();
+    setDeleteId(null);
   };
 
   const filtered = test.filter((t) =>
@@ -41,6 +55,14 @@ export default function ElencoTestCard() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </InputGroup>
+      <div className="text-end mt-2">
+        <Button
+          size="sm"
+          onClick={() => navigate('/articoli/tabelle/elenco-test/new')}
+        >
+          ➕ Aggiungi Test
+        </Button>
+      </div>
       <Table size="sm" striped hover responsive>
         <thead>
           <tr>
@@ -51,21 +73,23 @@ export default function ElencoTestCard() {
         </thead>
         <tbody>
           {filtered.map((t) => (
-            <tr key={t.id}>
+            <tr
+              key={t.id}
+              //onClick={() => navigate(`${t.id}`)}
+              onClick={() => toast.info('Modifica in sviluppo')}
+              style={{ cursor: 'pointer' }}
+            >
               <td>{t.descrizione}</td>
               <td>{t.norma_riferimento}</td>
               <td className="text-end">
                 <Button
                   size="sm"
-                  variant="outline-secondary"
-                  onClick={() => toast.info('Modifica in sviluppo')}
-                >
-                  ✏️
-                </Button>{' '}
-                <Button
-                  size="sm"
                   variant="outline-danger"
-                  onClick={() => handleDelete(t.id)}
+                  //onClick={() => handleDelete(t.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteId(t.id);
+                  }}
                 >
                   🗑
                 </Button>
@@ -74,14 +98,12 @@ export default function ElencoTestCard() {
           ))}
         </tbody>
       </Table>
-      <div className="text-end mt-2">
-        <Button
-          size="sm"
-          onClick={() => toast.info('Form inserimento in sviluppo')}
-        >
-          ➕ Aggiungi Test
-        </Button>
-      </div>
+      <ConfirmModal
+        show={!!deleteId}
+        onHide={() => setDeleteId(null)}
+        onConfirm={() => deleteId && handleDelete(deleteId)}
+        message="Sei sicuro di voler eliminare questo test?"
+      />
     </>
   );
 }
