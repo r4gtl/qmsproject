@@ -41,3 +41,23 @@ export const updateTest = (id: number, data: FormData) =>
 
 export const deleteTest = (id: number) =>
   instance.delete(`/articoli/elenco-test/${id}/`);
+
+// Fasi Lavoro
+
+export const getFasi = () => instance.get('/articoli/fasi-lavoro/');
+
+export const getFase = (id: number) =>
+  instance.get(`/articoli/fasi-lavoro/${id}/`);
+
+export const createFase = (data: FormData) =>
+  instance.post('/articoli/fasi-lavoro/', data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const updateFase = (id: number, data: FormData) =>
+  instance.put(`/articoli/fasi-lavoro/${id}/`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const deleteFase = (id: number) =>
+  instance.delete(`/articoli/fasi-lavoro/${id}/`);

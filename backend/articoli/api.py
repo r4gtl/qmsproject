@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
-from .models import Articolo, ElencoTest
-from .serializers import ArticoloSerializer, ElencoTestSerializer
+from .models import Articolo, ElencoTest, FaseLavoro
+from .serializers import ArticoloSerializer, ElencoTestSerializer, FaseLavoroSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ArticoloFilter
 from rest_framework.permissions import IsAuthenticated
@@ -29,6 +29,18 @@ class ArticoloViewSet(viewsets.ModelViewSet):
 class ElencoTestViewSet(viewsets.ModelViewSet):
     queryset = ElencoTest.objects.all().order_by("descrizione")
     serializer_class = ElencoTestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+
+class FaseLavoroViewSet(viewsets.ModelViewSet):
+    queryset = FaseLavoro.objects.all().order_by("descrizione")
+    serializer_class = FaseLavoroSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):

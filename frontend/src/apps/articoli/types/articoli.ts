@@ -17,3 +17,11 @@ export interface ElencoTest {
   norma_riferimento: string;
   note: string;
 }
+
+export interface FasiLavoro {
+  id: number;
+  descrizione: string;
+  interno_esterno: string;
+  um: string;
+  note: string;
+}

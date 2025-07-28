@@ -3,24 +3,24 @@ import { Table, Button, Form, InputGroup } from 'react-bootstrap';
 import axios from '@/api/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { getTests, deleteTest } from '@articoli/api/articoli';
-import ElencoTestForm from './ElencoTestForm';
-import type { ElencoTest } from '@articoli/types/articoli';
+import { getFasi, deleteFase } from '@articoli/api/articoli';
+import FaseLavoroForm from './FaseLavoroForm';
+import type { FasiLavoro } from '@articoli/types/articoli';
 import ConfirmModal from '@/components/common/ConfirmModal';
 
 export default function ElencoTestCard() {
   const navigate = useNavigate();
-  const [test, setTest] = useState<ElencoTest[]>([]);
+  const [fase, setFase] = useState<FasiLavoro[]>([]);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
-  const [selectedTest, setSelectedTest] = useState<ElencoTest | null>(null);
+  const [selectedFase, setSelectedFase] = useState<FasiLavoro | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await getTests();
-      setTest(res.data.results);
+      const res = await getFasi();
+      setFase(res.data.results);
     } catch (error) {
       toast.error('Errore durante il caricamento');
       console.error(error);
@@ -37,13 +37,13 @@ export default function ElencoTestCard() {
   }, []);
 
   const handleDelete = async (id: number) => {
-    await deleteTest(id);
+    await deleteFase(id);
     fetchData();
     setDeleteId(null);
   };
 
-  const filtered = test.filter((t) =>
-    t.descrizione.toLowerCase().includes(search.toLowerCase())
+  const filtered = fase.filter((f) =>
+    f.descrizione.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -58,29 +58,31 @@ export default function ElencoTestCard() {
       <div className="text-end mt-2">
         <Button
           size="sm"
-          onClick={() => navigate('/articoli/tabelle/elenco-test/new')}
+          onClick={() => navigate('/articoli/tabelle/fasi-lavoro/new')}
         >
-          ➕ Aggiungi Test
+          ➕ Aggiungi Fase
         </Button>
       </div>
       <Table size="sm" striped hover responsive>
         <thead>
           <tr>
             <th>Descrizione</th>
-            <th>Norma</th>
+            <th>I/E</th>
+            <th>UM</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {filtered.map((t) => (
+          {filtered.map((f) => (
             <tr
-              key={t.id}
-              onClick={() => navigate(`/articoli/tabelle/elenco-test/${t.id}/`)}
+              key={f.id}
+              onClick={() => navigate(`/articoli/tabelle/fasi-lavoro/${f.id}/`)}
               //onClick={() => toast.info('Modifica in sviluppo')}
               style={{ cursor: 'pointer' }}
             >
-              <td>{t.descrizione}</td>
-              <td>{t.norma_riferimento}</td>
+              <td>{f.descrizione}</td>
+              <td>{f.interno_esterno}</td>
+              <td>{f.um}</td>
               <td className="text-end">
                 <Button
                   size="sm"
@@ -88,7 +90,7 @@ export default function ElencoTestCard() {
                   //onClick={() => handleDelete(t.id)}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setDeleteId(t.id);
+                    setDeleteId(f.id);
                   }}
                 >
                   🗑
@@ -102,7 +104,7 @@ export default function ElencoTestCard() {
         show={!!deleteId}
         onHide={() => setDeleteId(null)}
         onConfirm={() => deleteId && handleDelete(deleteId)}
-        message="Sei sicuro di voler eliminare questo test?"
+        message="Sei sicuro di voler eliminare questa fase?"
       />
     </>
   );

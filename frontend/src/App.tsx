@@ -11,6 +11,7 @@ import ArticoliList from '@articoli/pages/ArticoliList';
 import ArticoloForm from '@articoli/pages/ArticoloForm';
 import TabelleGenerichePage from '@articoli/pages/TabelleGenerichePage';
 import ElencoTestForm from '@articoli/components/TabelleGeneriche/ElencoTestForm';
+import FaseLavoroForm from '@articoli/components/TabelleGeneriche/FaseLavoroForm';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -135,6 +136,39 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <ElencoTestForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/tabelle/elenco-test/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ElencoTestForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/tabelle/fasi-lavoro/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <FaseLavoroForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/tabelle/fasi-lavoro/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <FaseLavoroForm />
               </Layout>
             </PrivateRoute>
           }
