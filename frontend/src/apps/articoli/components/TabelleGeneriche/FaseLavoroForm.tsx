@@ -3,6 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Form, Button, Card, Spinner, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { getFase, createFase, updateFase } from '@articoli/api/articoli';
+import DettagliFaseTable from '../FaseLavoro/DettagliFaseTable';
+import {
+  getDettagliFase,
+  createDettaglioFase,
+  updateDettaglioFase,
+  deleteDettaglioFase,
+} from '@articoli/api/articoli';
 
 const FaseLavoroForm = () => {
   const navigate = useNavigate();
@@ -13,6 +20,9 @@ const FaseLavoroForm = () => {
   const [descrizione, setDescrizione] = useState('');
   const [int_est, setInt_est] = useState('');
   const [um, setUM] = useState('');
+
+  const [dettagli, setDettagli] = useState<DettaglioFaseLavoro[]>([]);
+  const [deletedDettagli, setDeletedDettagli] = useState<number[]>([]);
 
   useEffect(() => {
     if (!isEditMode) return;
@@ -27,8 +37,28 @@ const FaseLavoroForm = () => {
         toast.error('Errore nel caricamento Fase');
       }
     };
+    const loadDettagli = async () => {
+      try {
+        const res = await getDettagliFase(Number(id));
+        setDettagli(res.data);
+      } catch {
+        toast.error('Errore nel caricamento attributi fase');
+      }
+    };
+
     loadFase();
+    loadDettagli();
   }, [id, isEditMode]);
+
+  const handleDettagliChange = (updated: DettaglioFaseLavoro[]) => {
+    // Detect what was rimosso
+    const removedIds = dettagli
+      .filter((d) => d.id && !updated.find((u) => u.id === d.id))
+      .map((d) => d.id!) as number[];
+
+    setDettagli(updated);
+    setDeletedDettagli((prev) => [...prev, ...removedIds]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,13 +69,36 @@ const FaseLavoroForm = () => {
     formData.append('um', um);
 
     try {
+      let faseID = Number(id);
+
       if (isEditMode) {
-        await updateFase(Number(id), formData);
+        await updateFase(faseID, formData);
         toast.success('Fase aggiornata');
       } else {
-        await createFase(formData);
+        const res = await createFase(formData);
+        faseID = res.data.id;
         toast.success('Fase creata');
       }
+      for (const dett of dettagli) {
+        if (dett.id) {
+          await updateDettaglioFase(dett.id, {
+            attributo: dett.attributo,
+            note: dett.note,
+          });
+        } else {
+          await createDettaglioFase({
+            fk_fase_lavoro: faseID,
+            attributo: dett.attributo,
+            note: dett.note,
+          });
+        }
+      }
+
+      // 3. Cancella attributi rimossi
+      for (const id of deletedDettagli) {
+        await deleteDettaglioFase(id);
+      }
+
       navigate('/articoli/tabelle');
     } catch {
       toast.error('Errore nel salvataggio fase');
@@ -114,6 +167,12 @@ const FaseLavoroForm = () => {
             </Button>
           </div>
         </Form>
+
+        <DettagliFaseTable
+          faseId={isEditMode ? Number(id) : null}
+          dettagli={dettagli}
+          onChange={handleDettagliChange}
+        />
       </Card.Body>
     </Card>
   );

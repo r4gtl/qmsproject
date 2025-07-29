@@ -61,3 +61,17 @@ export const updateFase = (id: number, data: FormData) =>
 
 export const deleteFase = (id: number) =>
   instance.delete(`/articoli/fasi-lavoro/${id}/`);
+
+// Dettaglio Fasi di Lavoro
+
+export const getDettagliFase = (faseId: number) =>
+  instance.get(`/articoli/fasi-lavoro-dettaglio/?fk_fase_lavoro=${faseId}`);
+
+export const createDettaglioFase = (data: any) =>
+  instance.post(`/articoli/fasi-lavoro-dettaglio/`, data);
+
+export const updateDettaglioFase = (id: number, data: any) =>
+  instance.put(`/articoli/fasi-lavoro-dettaglio/${id}/`, data);
+
+export const deleteDettaglioFase = (id: number) =>
+  instance.delete(`/articoli/fasi-lavoro-dettaglio/${id}/`);

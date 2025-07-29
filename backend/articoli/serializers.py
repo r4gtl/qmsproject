@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Articolo, ElencoTest, FaseLavoro
+from .models import Articolo, ElencoTest, FaseLavoro, DettaglioFaseLavoro
 
 
 class ArticoloSerializer(serializers.ModelSerializer):
@@ -28,3 +28,10 @@ class FaseLavoroSerializer(serializers.ModelSerializer):
         model = FaseLavoro
         fields = "__all__"
         read_only_fields = ["created_by", "created_at"]
+
+
+class DettaglioFaseLavoroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DettaglioFaseLavoro
+        fields = "__all__"
+        read_only_fields = ["id", "created_by", "created_at"]

@@ -25,3 +25,15 @@ export interface FasiLavoro {
   um: string;
   note: string;
 }
+
+export interface DettagliFaseTableProps {
+  faseId: number | null;
+  dettagli: DettaglioFaseLavoro[];
+  onChange: (updated: DettaglioFaseLavoro[]) => void;
+}
+
+export interface DettaglioFaseLavoro {
+  id?: number;
+  attributo: string;
+  note?: string;
+}
