@@ -30,7 +30,22 @@
             <p class="mt-1">Tot. Solventi acquistati anno corrente: Kg. {{ totale_solvente|format_number_dec_thousand }}</p>
           {% endif %}
           <hr>
-          <a href="https://preparatipericolosi.iss.it/cav.aspx" target="_blank" class="btn btn-sm btn-info"><i class="bi bi-headset"></i>Centri Anti Veleni</a>
+          <div class="row mb-2">
+            <div class="col-4">
+              <a class="btn btn-info" href="https://preparatipericolosi.iss.it/cav.aspx" target="_blank" class="btn btn-sm btn-info"><i class="bi bi-headset"></i> Centri Anti Veleni</a>
+
+            </div>
+            <div class="col-4">
+              <a class="btn btn-info" href="https://echa.europa.eu/it/candidate-list-table" target="_blank" class="btn btn-sm btn-info"><i class="bi bi-clipboard"></i> Lista Sostanze SVHC</a>
+          </div>
+          <div class="col-4">
+              <a class="btn btn-info" href="https://echa.europa.eu/it/substances-restricted-under-reach" target="_blank" class="btn btn-sm btn-info"><i class="bi bi-clipboard"></i> Lista Allegato XVII</a>
+          </div>
+          
+
+          <hr class="mt-2">
+          
+
           
         </div>
         </div> <!-- Fine Statistiche -->
