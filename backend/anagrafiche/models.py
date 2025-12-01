@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, models
 from django.urls import reverse
-from django_countries.fields import \
-    CountryField  # Field from django countries app
+from django_countries.fields import CountryField
+from core.models import CompanyOwnedModel  # Import the mixin
 
 
 class Facility(models.Model):
@@ -217,9 +217,9 @@ class FacilityContact(models.Model):
             self.associa_categoria()  # Associa la categoria
         except ValidationError as e:
             raise e'''
-        
 
-class Fornitore(models.Model):
+
+class Fornitore(CompanyOwnedModel):
     # Categorie disponibili
     NESSUNA = "nessuna"
     PELLI = "pelli"
@@ -247,7 +247,7 @@ class Fornitore(models.Model):
     cap = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     provincia = models.CharField(max_length=50, blank=True, null=True)
-    country = CountryField(blank_label="(seleziona Paese)")
+    country = CountryField(blank_label="(seleziona Paese)", default='IT')
     sito_web = models.CharField(max_length=200, blank=True, null=True)
     e_mail = models.EmailField(blank=True, null=True)
     categoria = models.CharField(max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA)
@@ -469,15 +469,18 @@ class XrTransferValueLwgFornitore(models.Model):
         ]
 
 
-class Cliente(models.Model):
+class Cliente(CompanyOwnedModel):
     ragionesociale = models.CharField(max_length=50, blank=False, null=False)
     indirizzo = models.CharField(max_length=100, blank=True, null=True)
+    telefono = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    partita_iva = models.CharField(max_length=50, blank=True, null=True)
     cap = models.CharField(max_length=50, blank=True, null=True)
     city = models.CharField(max_length=50, blank=True, null=True)
     provincia = models.CharField(max_length=50, blank=True, null=True)
-    country = CountryField(blank_label="(seleziona Paese)")
+    country = CountryField(blank_label="(seleziona Paese)", default='IT')
     created_by = models.ForeignKey(
-        User, related_name="clienti", on_delete=models.CASCADE
+        User, related_name="clienti", on_delete=models.CASCADE, null=True, blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

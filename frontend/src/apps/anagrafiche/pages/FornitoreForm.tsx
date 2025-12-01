@@ -17,7 +17,7 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
 
   const [formData, setFormData] = useState({
     ragionesociale: '',
-    country: '',
+    country: 'IT',
     categoria: categoria || '',
     e_mail: '',
     indirizzo: '',
@@ -64,6 +64,13 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validazione campo country
+    if (!formData.country) {
+      toast.error('Il campo Paese è obbligatorio');
+      return;
+    }
+
     const cleanData = { ...formData };
 
     // Pulisci i campi opzionali numerici
@@ -80,8 +87,9 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
         toast.success('Fornitore salvato con successo');
         navigate('/fornitori');
       })
-      .catch(() => {
-        toast.error('Errore durante il salvataggio');
+      .catch((error: any) => {
+        console.error('Errore dettagliato:', error.response?.data);
+        toast.error('Errore durante il salvataggio: ' + JSON.stringify(error.response?.data));
       });
   };
 
@@ -111,7 +119,9 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Paese</Form.Label>
+          <Form.Label>
+            Paese <span className="text-danger">*</span>
+          </Form.Label>
           <Select
             options={countryOptions}
             value={countryOptions.find((opt) => opt.value === formData.country)}
@@ -121,7 +131,14 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
                 country: val?.value || '',
               }))
             }
+            placeholder="Seleziona un paese..."
+            isClearable={false}
           />
+          {!formData.country && (
+            <Form.Text className="text-danger">
+              Il campo Paese è obbligatorio
+            </Form.Text>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3">
