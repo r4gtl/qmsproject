@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import Select from 'react-select';
 import countryList from 'react-select-country-list';
+import LwgCertificateTable from '@/apps/anagrafiche/components/LwgCertificateTable';
 
 interface FornitoreFormProps {
   mode: 'create' | 'edit';
@@ -89,7 +90,10 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
       })
       .catch((error: any) => {
         console.error('Errore dettagliato:', error.response?.data);
-        toast.error('Errore durante il salvataggio: ' + JSON.stringify(error.response?.data));
+        toast.error(
+          'Errore durante il salvataggio: ' +
+            JSON.stringify(error.response?.data)
+        );
       });
   };
 
@@ -202,7 +206,7 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    latitude: parseFloat(e.target.value),
+                    latitude: e.target.value,
                   })
                 }
               />
@@ -217,7 +221,7 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    longitude: parseFloat(e.target.value),
+                    longitude: e.target.value,
                   })
                 }
               />
@@ -249,25 +253,37 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
         )}
 
         {formData.categoria === 'lavorazioni esterne' && (
-          <Form.Group className="mb-3" controlId="audit">
-            <Form.Label>Audit</Form.Label>
-            <Form.Select
-              value={formData.audit || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, audit: e.target.value })
-              }
-            >
-              <option value="">-- Seleziona --</option>
-              <option value="not_audited">Nessun Audit</option>
-              <option value="leather_manufacturer_audit_protocol">
-                Leather Manufacturer Audit Protocol
-              </option>
-              <option value="subcontractor_audit_protocol">
-                Subcontractor Audit Protocol
-              </option>
-              <option value="mini_audit_protocol">Mini-Audit Protocol</option>
-            </Form.Select>
-          </Form.Group>
+          <>
+            <Form.Group className="mb-3" controlId="audit">
+              <Form.Label>Audit</Form.Label>
+              <Form.Select
+                value={formData.audit || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, audit: e.target.value })
+                }
+              >
+                <option value="">-- Seleziona --</option>
+                <option value="not_audited">Nessun Audit</option>
+                <option value="leather_manufacturer_audit_protocol">
+                  Leather Manufacturer Audit Protocol
+                </option>
+                <option value="subcontractor_audit_protocol">
+                  Subcontractor Audit Protocol
+                </option>
+                <option value="mini_audit_protocol">Mini-Audit Protocol</option>
+              </Form.Select>
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="is_lwg">
+              <Form.Check
+                type="checkbox"
+                label="LWG"
+                checked={formData.is_lwg}
+                onChange={(e) =>
+                  setFormData({ ...formData, is_lwg: e.target.checked })
+                }
+              />
+            </Form.Group>
+          </>
         )}
 
         {formData.categoria === 'manutenzioni' && (
@@ -299,6 +315,11 @@ export default function FornitoreForm({ mode }: FornitoreFormProps) {
           </Button>
         </div>
       </Form>
+
+      {/* Tabella certificati LWG - Solo in modalità edit e se il fornitore è già stato creato */}
+      {mode === 'edit' && id && (
+        <LwgCertificateTable fornitoreId={parseInt(id)} />
+      )}
     </Card>
   );
 }

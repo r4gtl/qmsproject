@@ -19,3 +19,18 @@ export interface Fornitore {
   country: string;
   categoria: string;
 }
+
+export interface LwgFornitore {
+  id: number;
+  lwg_urn: string;
+  lwg_score: string;
+  lwg_range: string | null;
+  lwg_date: string | null;
+  lwg_expiry: string | null;
+  fk_fornitore: number;
+}
+
+export interface LwgCertificateTableProps {
+  // ID del fornitore a cui appartengono i certificati LWG
+  fornitoreId: number;
+}

@@ -10,7 +10,7 @@ from django_countries.fields import CountryField
 from core.models import CompanyOwnedModel  # Import the mixin
 
 
-class Facility(models.Model):
+class Facility(CompanyOwnedModel):
     #
     # Categorie produzione
     CAT0 = "Nessuna categoria"
@@ -56,6 +56,7 @@ class Facility(models.Model):
     longitude = models.FloatField(blank=True, null=True)
     site_area = models.FloatField(blank=True, null=True)
     facility_description = models.TextField(blank=True, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='facility_created')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -65,7 +66,7 @@ class Facility(models.Model):
         return reverse("anagrafiche:edit_facility_details", kwargs={"pk": self.pk})
 
 
-class FacilityContact(models.Model):
+class FacilityContact(CompanyOwnedModel):
     #
     # Tipo Contatti
     CONT_1 = "6a - Principal Contact Name and position"
@@ -94,129 +95,8 @@ class FacilityContact(models.Model):
     name = models.CharField(max_length=100)
     position = models.CharField(max_length=100)
     email = models.EmailField(blank=True, null=True)
-
-
-
-'''class Fornitore(models.Model):
-    #
-    # Categoria
-    NESSUNA = "nessuna"
-    PELLI = "pelli"
-    MACELLO = "macello"
-    PRODOTTI_CHIMICI = "prodotti chimici"
-    LAVORAZIONI_ESTERNE = "lavorazioni esterne"
-    SERVIZI = "servizi"
-    MANUTENZIONI = "manutenzioni"
-    RIFIUTI = "rifiuti"
-
-    CHOICES_CATEGORY = (
-        (NESSUNA, "Manca categoria"),
-        (PELLI, "Pelli"),
-        (MACELLO, "Macello"),
-        (PRODOTTI_CHIMICI, "Prodotti Chimici"),
-        (LAVORAZIONI_ESTERNE, "Lavorazioni Esterne"),
-        (SERVIZI, "Servizi"),
-        (MANUTENZIONI, "Manutenzioni"),
-        (RIFIUTI, "Rifiuti"),
-    )
-    ragionesociale = models.CharField(max_length=50, blank=False, null=False)
-    indirizzo = models.CharField(max_length=100, blank=True, null=True)
-    cap = models.CharField(max_length=50, blank=True, null=True)
-    city = models.CharField(max_length=50, blank=True, null=True)
-    provincia = models.CharField(max_length=50, blank=True, null=True)
-    country = CountryField(blank_label="(seleziona Paese)")
-    sito_web = models.CharField(max_length=200, blank=True, null=True)
-    e_mail = models.EmailField(blank=True, null=True)
-    categoria = models.CharField(
-        max_length=50, choices=CHOICES_CATEGORY, default=NESSUNA
-    )
-    created_by = models.ForeignKey(
-        User, related_name="fornitori", null=True, blank=True, on_delete=models.SET_NULL
-    )
-    created_at = models.DateTimeField(auto_now_add=True, null=True)
-
-    class Meta:
-        ordering = ["ragionesociale"]
-
-    def __str__(self):
-        return self.ragionesociale
-
-    def get_absolute_url(self):
-        return reverse("anagrafiche:vedi_fornitore", kwargs={"pk": self.pk})
-
-    def associa_categoria(self):
-        """
-        Metodo per associare il fornitore alla sottoclasse di categoria corrispondente.
-        """
-        # Stampa il valore corrente della categoria per debug
-        # print(f"Categoria fornita: {self.categoria}")
-
-        # Gestione del caso 'NESSUNA'
-        if self.categoria.upper() == "NESSUNA":
-            # print("Categoria 'NESSUNA' selezionata, nessun modello da associare.")
-            return  # Nessuna associazione necessaria
-
-        # Normalizza il nome del modello
-        categoria_model_name = f'Fornitore{self.categoria.title().replace(" ", "")}'
-
-        # print(f"Nome del modello categoria: {categoria_model_name}")
-
-        try:
-            # Tenta di recuperare il modello per la categoria
-            categoria_model = apps.get_model(
-                app_label="anagrafiche", model_name=categoria_model_name
-            )
-        except LookupError:
-            raise ValidationError(
-                f"Modello per la categoria '{self.categoria}' non trovato."
-            )
-
-        # Mappatura degli attributi per il ptr
-        categoria_attr_map = {
-            "FornitorePelli": "fornitore_ptr_pelli",
-            "FornitoreProdottiChimici": "fornitore_ptr_prodottichimici",
-            "FornitoreManutenzioni": "fornitore_ptr_manutenzioni",
-            "FornitoreLavorazioniEsterne": "fornitore_ptr_lavorazioniesterne",
-            "FornitoreServizi": "fornitore_ptr_servizi",
-            "FornitoreRifiuti": "fornitore_ptr_rifiuti",
-            "FornitoreMacello": "fornitore_ptr_macello",
-        }
-
-        categoria_attr = categoria_attr_map.get(categoria_model_name)
-        if not categoria_attr:
-            raise ValidationError(
-                f"Attributo per la categoria '{self.categoria}' non trovato."
-            )
-
-        try:
-            # Verifica se esiste già un'istanza della sottoclasse
-            categoria_instance = categoria_model.objects.filter(
-                fornitore_ptr=self
-            ).first()
-            if categoria_instance:
-                """print(
-                    f"Istanza della categoria '{self.categoria}' già esistente: {categoria_instance}"
-                )"""
-                setattr(self, categoria_attr, categoria_instance)
-            else:
-                # Crea una nuova istanza se non esiste
-                categoria_instance = categoria_model.objects.create(fornitore_ptr=self)
-                setattr(self, categoria_attr, categoria_instance)
-                self.save()  # Salva l'istanza del modello generico con la relazione
-        except IntegrityError as e:
-            raise ValidationError(
-                f"Errore durante l'associazione della categoria: {str(e)}"
-            )
-
-    def save(self, *args, **kwargs):
-        """
-        Sovrascrive il metodo save per gestire automaticamente l'associazione della categoria.
-        """
-        super().save(*args, **kwargs)  # Salva l'istanza principale
-        try:
-            self.associa_categoria()  # Associa la categoria
-        except ValidationError as e:
-            raise e'''
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='facility_contact_created')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 
 class Fornitore(CompanyOwnedModel):
@@ -334,7 +214,7 @@ def gestore_documenti_upload_to(instance, filename):
     )
 
 
-class XrDocumentiGestore(models.Model):
+class XrDocumentiGestore(CompanyOwnedModel):
     fornitore_rifiuti = models.ForeignKey(
         Fornitore, on_delete=models.CASCADE, related_name="documenti_gestore"
     )
@@ -372,7 +252,7 @@ def smaltitore_documenti_upload_to(instance, filename):
     )
 
 
-class XrDocumentiSmaltitore(models.Model):
+class XrDocumentiSmaltitore(CompanyOwnedModel):
     fornitore_rifiuti = models.ForeignKey(
         Fornitore, on_delete=models.CASCADE, related_name="documenti_smaltitore"
     )
@@ -380,6 +260,8 @@ class XrDocumentiSmaltitore(models.Model):
     data_documento = models.DateField(blank=True, null=True)
     data_scadenza = models.DateField(blank=True, null=True)
     documento = models.FileField(upload_to=smaltitore_documenti_upload_to)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documenti_smaltitore_created')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Documenti Smaltitore"
@@ -394,7 +276,7 @@ def trasportatore_documenti_upload_to(instance, filename):
     return os.path.join("rifiuti", "_documenti", ragione_sociale_normalizzata, filename)
 
 
-class XrDocumentiTrasportatore(models.Model):
+class XrDocumentiTrasportatore(CompanyOwnedModel):
     fornitore_rifiuti = models.ForeignKey(
         Fornitore,
         on_delete=models.CASCADE,
@@ -404,6 +286,8 @@ class XrDocumentiTrasportatore(models.Model):
     data_documento = models.DateField(blank=True, null=True)
     data_scadenza = models.DateField(blank=True, null=True)
     documento = models.FileField(upload_to=trasportatore_documenti_upload_to)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='documenti_trasportatore_created')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Documenti Trasportatore"
@@ -413,7 +297,7 @@ class XrDocumentiTrasportatore(models.Model):
 
 
 
-class LwgFornitore(models.Model):
+class LwgFornitore(CompanyOwnedModel):
     lwg_urn = models.CharField(max_length=50)
     lwg_score = models.CharField(max_length=50, blank=True, null=True)
     lwg_range = models.CharField(max_length=100, blank=True, null=True)
@@ -421,6 +305,8 @@ class LwgFornitore(models.Model):
     lwg_expiry = models.DateField(blank=True, null=True)
     documento = models.FileField(upload_to="lwg_certificates/", null=True, blank=True)
     fk_fornitore = models.ForeignKey(Fornitore, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='lwg_fornitore_created')
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 
 """I PROSSIMI MODELLI SONO PER GESTIRE LE CATEGORIE SFRUTTANDO L'EREDITARIETA' DEL MODELLO FORNITORE"""
@@ -443,7 +329,7 @@ def validate_positive_quantity(value):
         raise ValidationError("Quantity cannot be negative.")
 
 
-class XrTransferValueLwgFornitore(models.Model):
+class XrTransferValueLwgFornitore(CompanyOwnedModel):
 
     fk_lwgcertificato = models.ForeignKey(LwgFornitore, on_delete=models.CASCADE)
     fk_transfervalue = models.ForeignKey(TransferValue, on_delete=models.CASCADE)
