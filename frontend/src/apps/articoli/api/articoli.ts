@@ -75,3 +75,24 @@ export const updateDettaglioFase = (id: number, data: any) =>
 
 export const deleteDettaglioFase = (id: number) =>
   instance.delete(`/articoli/fasi-lavoro-dettaglio/${id}/`);
+
+// Lavorazioni Esterne
+
+export const getLavorazioniEsterne = () =>
+  instance.get('/articoli/lavorazioni-esterne/');
+
+export const getLavorazioneEsterna = (id: number) =>
+  instance.get(`/articoli/lavorazioni-esterne/${id}/`);
+
+export const createLavorazioneEsterna = (data: FormData) =>
+  instance.post('/articoli/lavorazioni-esterne/', data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const updateLavorazioneEsterna = (id: number, data: FormData) =>
+  instance.put(`/articoli/lavorazioni-esterne/${id}/`, data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+export const deleteLavorazioneEsterna = (id: number) =>
+  instance.delete(`/articoli/lavorazioni-esterne/${id}/`);

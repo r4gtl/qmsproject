@@ -2,6 +2,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { FaFlask, FaCogs, FaTools } from 'react-icons/fa';
 import ElencoTestCard from '../components/TabelleGeneriche/ElencoTestCard';
 import ElencoFasiCard from '../components/TabelleGeneriche/ElencoFasiCard';
+import ElencoCodiciLavorazioneCard from '../components/TabelleGeneriche/ElencoCodiciLavorazioneCard';
 
 export default function TabelleGenerichePage() {
   return (
@@ -36,8 +37,8 @@ export default function TabelleGenerichePage() {
               <FaTools className="me-2" />
               Codici Lavorazioni
             </Card.Header>
-            <Card.Body className="text-muted text-center pt-5">
-              <p>In sviluppo…</p>
+            <Card.Body style={{ overflowY: 'auto', maxHeight: '420px' }}>
+              <ElencoCodiciLavorazioneCard />
             </Card.Body>
           </Card>
         </Col>

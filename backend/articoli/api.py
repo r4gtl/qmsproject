@@ -1,10 +1,11 @@
 from rest_framework import viewsets, filters
-from .models import Articolo, ElencoTest, FaseLavoro, DettaglioFaseLavoro
+from .models import Articolo, ElencoTest, FaseLavoro, DettaglioFaseLavoro, LavorazioneEsterna
 from .serializers import (
     ArticoloSerializer,
     ElencoTestSerializer,
     FaseLavoroSerializer,
     DettaglioFaseLavoroSerializer,
+    LavorazioneEsternaSerializer,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import ArticoloFilter
@@ -62,3 +63,15 @@ class DettaglioFaseLavoroViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
+
+
+class LavorazioneEsternaViewSet(viewsets.ModelViewSet):
+    queryset = LavorazioneEsterna.objects.all().order_by("descrizione")
+    serializer_class = LavorazioneEsternaSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        serializer.save()

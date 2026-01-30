@@ -10,7 +10,9 @@ const DettagliFaseTable = ({
   dettagli,
   onChange,
 }: DettagliFaseTableProps) => {
-  const [localDettagli, setLocalDettagli] = useState([...dettagli]);
+  const [localDettagli, setLocalDettagli] = useState<DettaglioFaseLavoro[]>([
+    ...(dettagli || []),
+  ]);
 
   const handleChange = (
     index: number,

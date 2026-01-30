@@ -50,7 +50,7 @@ export default function ElencoTestCard() {
     <>
       <InputGroup className="mb-2">
         <Form.Control
-          placeholder="Cerca test..."
+          placeholder="Cerca fase..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />

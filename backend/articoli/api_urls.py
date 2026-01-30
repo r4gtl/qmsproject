@@ -4,6 +4,7 @@ from .api import (
     ElencoTestViewSet,
     FaseLavoroViewSet,
     DettaglioFaseLavoroViewSet,
+    LavorazioneEsternaViewSet,
 )
 
 router = DefaultRouter()
@@ -13,6 +14,7 @@ router.register(r"fasi-lavoro", FaseLavoroViewSet)
 router.register(
     r"fasi-lavoro-dettaglio", DettaglioFaseLavoroViewSet, basename="faselavoro-dettagli"
 )
+router.register(r"lavorazioni-esterne", LavorazioneEsternaViewSet)
 
 
 urlpatterns = router.urls

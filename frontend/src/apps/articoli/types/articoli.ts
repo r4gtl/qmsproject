@@ -37,3 +37,11 @@ export interface DettaglioFaseLavoro {
   attributo: string;
   note?: string;
 }
+
+export interface LavorazioneEsterna {
+  id: number;
+  descrizione: string;
+  codice: string;
+  note?: string;
+  created_at?: string;
+}
