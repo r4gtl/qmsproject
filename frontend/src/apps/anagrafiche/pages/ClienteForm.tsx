@@ -17,7 +17,7 @@ const ClienteForm = () => {
     telefono: '',
     email: '',
     partita_iva: '',
-    country: '',
+    country: 'IT',
   });
 
   const navigate = useNavigate();
@@ -35,12 +35,25 @@ const ClienteForm = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (isEdit) {
-      await instance.put(`/anagrafiche/clienti/${id}/`, cliente);
-    } else {
-      await instance.post(`/anagrafiche/clienti/`, cliente);
+
+    // Validazione campo country
+    if (!cliente.country) {
+      toast.error('Il campo Paese è obbligatorio');
+      return;
     }
-    navigate('/clienti');
+
+    try {
+      if (isEdit) {
+        await instance.put(`/anagrafiche/clienti/${id}/`, cliente);
+      } else {
+        await instance.post(`/anagrafiche/clienti/`, cliente);
+      }
+      toast.success('Cliente salvato con successo');
+      navigate('/clienti');
+    } catch (error: any) {
+      console.error('Errore dettagliato:', error.response?.data);
+      toast.error('Errore durante il salvataggio: ' + JSON.stringify(error.response?.data));
+    }
   };
 
   return (
@@ -98,7 +111,9 @@ const ClienteForm = () => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Paese</Form.Label>
+          <Form.Label>
+            Paese <span className="text-danger">*</span>
+          </Form.Label>
           <Select
             options={countryOptions}
             value={countryOptions.find((opt) => opt.value === cliente.country)}
@@ -108,7 +123,14 @@ const ClienteForm = () => {
                 country: val?.value || '',
               }))
             }
+            placeholder="Seleziona un paese..."
+            isClearable={false}
           />
+          {!cliente.country && (
+            <Form.Text className="text-danger">
+              Il campo Paese è obbligatorio
+            </Form.Text>
+          )}
         </Form.Group>
         <Button
           variant="secondary"
