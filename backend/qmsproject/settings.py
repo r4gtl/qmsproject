@@ -91,11 +91,34 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
+# =============================================================================
+# CORS Configuration (django-cors-headers)
+# =============================================================================
+# Permette al frontend React di comunicare con il backend Django
+
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # frontend React
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
+
+# Header aggiuntivi permessi (Authorization è già incluso di default,
+# ma lo esplicitiamo per chiarezza con JWT)
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+# Per aggiungere domini in produzione, usa:
+# CORS_ALLOWED_ORIGINS += ["https://tuodominio.com"]
 
 ROOT_URLCONF = "qmsproject.urls"
 
@@ -294,9 +317,6 @@ DEBUG_TOOLBAR_PANELS = [
     "debug_toolbar.panels.redirects.RedirectsPanel",
     "debug_toolbar.panels.profiling.ProfilingPanel",
 ]
-
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 
 INTERNAL_IPS = [

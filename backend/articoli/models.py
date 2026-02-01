@@ -4,7 +4,7 @@ from acquistopelli.models import TipoAnimale, TipoGrezzo
 from anagrafiche.models import Fornitore, Cliente
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Max
+# Max rimosso: numerazione gestita da services/procedure.py
 from django.utils import timezone
 
 
@@ -159,146 +159,72 @@ class LavorazioneEsterna(models.Model):
 
 
 class Procedura(models.Model):
-    fk_articolo = models.ForeignKey(Articolo, on_delete=models.CASCADE)
+    """
+    Procedura di lavorazione per un Articolo.
+
+    Numerazione gestita da services/procedure.py:
+    - nr_procedura: generato da sequence DB, unico per "serie" articolo
+    - nr_revisione: incrementale per articolo (1, 2, 3...)
+    """
+    fk_articolo = models.ForeignKey(
+        Articolo,
+        on_delete=models.CASCADE,
+        related_name="procedure"
+    )
     nr_procedura = models.IntegerField(blank=True, null=True)
     data_procedura = models.DateField(default=timezone.now)
     nr_revisione = models.IntegerField(blank=True, null=True)
     data_revisione = models.DateField(default=timezone.now)
     note = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(
-        User, related_name="procedure", null=True, blank=True, on_delete=models.SET_NULL
+        User,
+        related_name="procedure_create",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        # Se il numero ricetta è vuoto
-        if self.nr_procedura is None:
-            max_nr_procedura = Procedura.objects.aggregate(Max("nr_procedura"))[
-                "nr_procedura__max"
-            ]
-            if self.pk:
-                # Stai modificando una ricetta esistente
-                previous_instance = Procedura.objects.get(pk=self.pk)
-                print("Previous instance: " + str(previous_instance))
-                if self.fk_articolo != previous_instance.fk_articolo:
-                    # L'articolo è stato cambiato, controlla se esiste già una ricetta per il nuovo articolo
-                    # existing_ricetta = RicettaRifinizione.objects.filter(
-                    #    fk_articolo=self.fk_articolo
-                    # ).exclude(pk=self.pk).order_by('-numero_revisione').first()
-
-                    existing_procedura = (
-                        Procedura.objects.filter(fk_articolo=self.fk_articolo)
-                        .order_by("-nr_revisione")
-                        .first()
-                    )
-                    print("Articolo: " + str(self.fk_articolo))
-                    print("Ricetta: " + str(existing_procedura))
-
-                    if existing_procedura:
-                        print(
-                            f"Modifica: la procedura esiste. Existing ricetta numero ricetta: {existing_procedura.nr_procedura} | Existing ricetta data ricetta: {existing_procedura.data_ricetta} existing_procedura.numero_revisione: {existing_procedura.nr_revisione}"
-                        )
-                        # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
-                        self.nr_procedura = existing_procedura.nr_procedura
-                        self.data_procedura = existing_procedura.data_procedura
-                        self.nr_revisione = existing_procedura.nr_revisione + 1
-                    else:
-                        print(
-                            "Modifica: la procedura NON esiste. Existing procedura numero riproceduracetta: "
-                            + str(existing_procedura.nr_procedura)
-                            + "existing_procedura.numero_revisione: "
-                            + str(existing_procedura.nr_revisione)
-                        )
-                        # Non esiste ancora una ricetta per il nuovo articolo, quindi incrementa solo il numero_revisione
-                        self.nr_procedura = (
-                            max_nr_procedura + 1 if max_nr_procedura else 1
-                        )
-                        self.nr_revisione = previous_instance.nr_revisione + 1
-            else:
-                # Stai creando una nuova ricetta
-
-                # Stai creando una nuova ricetta
-                existing_procedura = (
-                    Procedura.objects.filter(fk_articolo=self.fk_articolo)
-                    .order_by("-nr_revisione")
-                    .first()
-                )
-                print("Articolo: " + str(self.fk_articolo))
-                print("Ricetta: " + str(existing_procedura))
-                # existing_ricetta = RicettaRifinizione.objects.order_by('-numero_revisione').first()
-
-                if existing_procedura:
-                    print(
-                        "Creazione: la procedura esiste. Existing procedura numero procedura: "
-                        + str(existing_procedura.nr_procedura)
-                        + "existing_procedura.nr_revisione: "
-                        + str(existing_procedura.nr_revisione)
-                    )
-                    # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
-                    self.nr_procedura = existing_procedura.nr_procedura
-                    self.data_procedura = existing_procedura.data_procedura
-                    self.nr_revisione = existing_procedura.nr_revisione + 1
-                else:
-                    # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi
-                    self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1
-                    # self.numero_ricetta = 1
-                    self.nr_revisione = 1
-                    # print("Creazione: la ricetta NON esiste. Existing ricetta numero ricetta: " + str(self.numero_ricetta) + "existing_ricetta.numero_revisione: " + str(self.numero_revisione))
-        else:
-            # Se il numero ricetta non è vuoto
-            max_nr_procedura = Procedura.objects.aggregate(Max("nr_procedura"))[
-                "nr_procedura__max"
-            ]
-            if self.pk:
-                # Stai modificando una ricetta esistente
-                previous_instance = Procedura.objects.get(pk=self.pk)
-                print("Previous instance: " + str(previous_instance))
-                if self.fk_articolo != previous_instance.fk_articolo:
-                    existing_procedura = (
-                        Procedura.objects.filter(fk_articolo=self.fk_articolo)
-                        .order_by("-nr_revisione")
-                        .first()
-                    )
-
-                    if existing_procedura:
-                        # Esiste già una ricetta per il nuovo articolo, quindi usa il suo numero di ricetta
-                        self.nr_procedura = existing_procedura.nr_procedura
-                        self.nr_revisione = existing_procedura.nr_revisione + 1
-                    else:
-
-                        # Non esiste ancora una ricetta per il nuovo articolo, quindi incrementa solo il numero_revisione
-                        self.nr_procedura = (
-                            max_nr_procedura + 1 if max_nr_procedura else 1
-                        )
-                        self.nr_revisione = previous_instance.nr_revisione + 1
-            else:
-                # Stai creando una nuova ricetta
-                existing_procedura = (
-                    Procedura.objects.filter(fk_articolo=self.fk_articolo)
-                    .order_by("-nr_revisione")
-                    .first()
-                )
-
-                if existing_procedura:
-                    # Esiste già una ricetta, quindi usa il suo numero di ricetta e incrementa solo il numero_revisione
-                    self.nr_procedura = existing_procedura.nr_procedura
-                    self.nr_revisione = existing_procedura.nr_revisione + 1
-                else:
-                    # Non esiste ancora una ricetta, quindi inizia con il numero 1 per entrambi
-                    self.nr_procedura = max_nr_procedura + 1 if max_nr_procedura else 1
-                    self.nr_revisione = 1
-
-        super().save(*args, **kwargs)
+    class Meta:
+        ordering = ["-nr_procedura", "-nr_revisione"]
+        verbose_name_plural = "procedure"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["fk_articolo", "nr_procedura", "nr_revisione"],
+                name="ux_procedura_articolo_nr_rev"
+            )
+        ]
 
     def __str__(self):
-        return f"{self.fk_articolo} Procedura Nr. {self.nr_procedura} del {self.data_procedura} Revisione nr. {self.nr_revisione} del {self.data_revisione}"
+        return f"{self.fk_articolo} - Proc. {self.nr_procedura} Rev. {self.nr_revisione}"
 
 
 class DettaglioProcedura(models.Model):
-    fk_procedura = models.ForeignKey(Procedura, on_delete=models.CASCADE)
-    fk_faselavoro = models.ForeignKey(FaseLavoro, on_delete=models.CASCADE)
+    """
+    Riga di dettaglio di una Procedura.
+
+    - is_interna=True: lavorazione interna, caratteristiche usano fk_dettaglio_fase_lavoro
+    - is_interna=False: lavorazione esterna (terzista), caratteristiche usano fk_fornitore + fk_lavorazione_esterna
+
+    Nota: fk_fornitore qui è DEPRECATO/LEGACY. La verità su fornitore sta in CaratteristicaProcedura.
+    """
+    fk_procedura = models.ForeignKey(
+        Procedura,
+        on_delete=models.CASCADE,
+        related_name="dettagli"
+    )
+    fk_faselavoro = models.ForeignKey(
+        FaseLavoro,
+        on_delete=models.CASCADE,
+        related_name="dettagli_procedura"
+    )
+    # DEPRECATO: mantenuto per legacy, la verità è su CaratteristicaProcedura
     fk_fornitore = models.ForeignKey(
-        Fornitore, on_delete=models.CASCADE, null=True, blank=True
+        Fornitore,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="dettagli_procedura_legacy"
     )
     is_interna = models.BooleanField(default=True)
     numero_riga = models.IntegerField()
@@ -315,36 +241,60 @@ class DettaglioProcedura(models.Model):
     class Meta:
         ordering = ["numero_riga"]
         verbose_name_plural = "dettaglio procedure"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["fk_procedura", "numero_riga"],
+                name="ux_dettaglio_procedura_riga"
+            )
+        ]
+
+    def __str__(self):
+        tipo = "INT" if self.is_interna else "EST"
+        return f"Riga {self.numero_riga} [{tipo}] - {self.fk_faselavoro}"
 
 
 class CaratteristicaProcedura(models.Model):
+    """
+    Caratteristica di una riga di dettaglio procedura.
+
+    REGOLE DI VALIDAZIONE (enforced nel serializer):
+    - Se DettaglioProcedura.is_interna == True:
+        * fk_dettaglio_fase_lavoro OBBLIGATORIO
+        * fk_fornitore e fk_lavorazione_esterna DEVONO essere NULL
+
+    - Se DettaglioProcedura.is_interna == False:
+        * fk_fornitore e fk_lavorazione_esterna OBBLIGATORI
+        * fk_dettaglio_fase_lavoro DEVE essere NULL
+    """
     fk_dettaglio_procedura = models.ForeignKey(
         DettaglioProcedura,
-        related_name="caratteristicaprocedura",
+        related_name="caratteristiche",
         on_delete=models.CASCADE,
     )
+    # Per lavorazione ESTERNA (terzista)
     fk_fornitore = models.ForeignKey(
         Fornitore,
         on_delete=models.CASCADE,
-        related_name="caratteristicaprocedura",
+        related_name="caratteristiche_procedura",
         null=True,
         blank=True,
     )
+    fk_lavorazione_esterna = models.ForeignKey(
+        LavorazioneEsterna,
+        on_delete=models.CASCADE,
+        related_name="caratteristiche_procedura",
+        null=True,
+        blank=True,
+    )
+    # Per lavorazione INTERNA
     fk_dettaglio_fase_lavoro = models.ForeignKey(
         DettaglioFaseLavoro,
         on_delete=models.CASCADE,
-        related_name="caratteristicaprocedura",
+        related_name="caratteristiche_procedura",
         null=True,
         blank=True,
     )
     valore = models.CharField(max_length=100, null=True, blank=True)
-    fk_lavorazione_esterna = models.ForeignKey(
-        LavorazioneEsterna,
-        on_delete=models.CASCADE,
-        related_name="caratteristicaprocedura",
-        null=True,
-        blank=True,
-    )
     note = models.TextField(null=True, blank=True)
     numero_riga = models.IntegerField()
     created_by = models.ForeignKey(
@@ -355,6 +305,19 @@ class CaratteristicaProcedura(models.Model):
         on_delete=models.SET_NULL,
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["numero_riga"]
+        verbose_name_plural = "caratteristiche procedura"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["fk_dettaglio_procedura", "numero_riga"],
+                name="ux_caratteristica_procedura_riga"
+            )
+        ]
+
+    def __str__(self):
+        return f"Caratteristica {self.numero_riga} - {self.valore or 'N/A'}"
 
 
 class ElencoTest(models.Model):

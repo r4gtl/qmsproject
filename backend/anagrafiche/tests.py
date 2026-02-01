@@ -1,3 +1,4 @@
+import unittest
 from django.test import TestCase
 from django.db.models import Max
 from django import forms
@@ -8,35 +9,36 @@ from .models import (
     FacilityContact,
     Fornitore,
     LwgFornitore,
-    FornitorePelli,
-    FornitoreProdottiChimici,
-    FornitoreLavorazioniEsterne,
-    FornitoreServizi,
-    FornitoreRifiuti,
+    # Deleted models (migration 0047):
+    # FornitorePelli,
+    # FornitoreProdottiChimici,
+    # FornitoreLavorazioniEsterne,
+    # FornitoreServizi,
+    # FornitoreRifiuti,
+    # FornitoreManutenzioni,
+    # Macello,
     gestore_documenti_upload_to,
     smaltitore_documenti_upload_to,
     trasportatore_documenti_upload_to,
     XrDocumentiGestore,
     XrDocumentiSmaltitore,
     XrDocumentiTrasportatore,
-    FornitoreManutenzioni,
-    Macello,
     TransferValue,
     XrTransferValueLwgFornitore,
     Cliente,
-    LwgFornitore,
 )
 from .forms import (
     FormFornitore,
     FormXrDocumentiGestore,
     FormLwgFornitore,
-    FormFornitorePelli,
-    FormFornitoreLavorazioniEsterne,
-    FormFornitoreProdottiChimici,
-    FormFornitoreServizi,
-    FormFornitoreRifiuti,
-    FormFornitoreManutenzioni,
-    FormMacello,
+    # Deleted forms (models removed in migration 0047):
+    # FormFornitorePelli,
+    # FormFornitoreLavorazioniEsterne,
+    # FormFornitoreProdottiChimici,
+    # FormFornitoreServizi,
+    # FormFornitoreRifiuti,
+    # FormFornitoreManutenzioni,
+    # FormMacello,
 )
 from django.contrib.auth.models import User
 from datetime import date
@@ -143,82 +145,36 @@ class FornitoreModelTest(TestCase):
         Questo metodo viene chiamato automaticamente dopo ogni test per ripulire risorse.
         """
         Fornitore.objects.all().delete()
-        FornitoreRifiuti.objects.all().delete()
+        # FornitoreRifiuti deleted in migration 0047
 
+    # Tests below skipped: models deleted in migration 0047
+    @unittest.skip("Model FornitorePelli deleted in migration 0047")
     def test_creazione_fornitore_categoria_pelli(self):
         """
         Testa la creazione di un fornitore con categoria 'PELLI' e verifica
         che l'istanza FornitorePelli sia stata creata.
         """
-        # Verifica che l'istanza principale sia stata salvata
-        self.assertEqual(Fornitore.objects.count(), 1)
-        self.assertEqual(FornitorePelli.objects.count(), 1)
+        pass
 
-        # Verifica la relazione tra Fornitore e FornitorePelli
-        fornitore_pelli = FornitorePelli.objects.first()
-        self.assertEqual(fornitore_pelli.fornitore_ptr, self.fornitore)
-        self.assertEqual(self.fornitore.categoria, Fornitore.PELLI)
-
+    @unittest.skip("Model FornitoreProdottiChimici deleted in migration 0047")
     def test_creazione_fornitore_categoria_prodotti_chimici(self):
         """Testa la creazione di un fornitore con categoria 'PRODOTTI CHIMICI'."""
-        self.fornitore_data["categoria"] = Fornitore.PRODOTTI_CHIMICI
+        pass
 
-        # Crea il fornitore
-        fornitore = Fornitore.objects.create(**self.fornitore_data)
-
-        # Recupera l'istanza associata di FornitoreProdottiChimici
-        fornitore_prodotti_chimici = FornitoreProdottiChimici.objects.get(
-            fornitore_ptr=fornitore
-        )
-
-        # Verifica che l'istanza di FornitoreProdottiChimici sia stata creata correttamente
-        self.assertEqual(fornitore_prodotti_chimici.fornitore_ptr, fornitore)
-        self.assertEqual(
-            fornitore_prodotti_chimici.fornitore_ptr.categoria,
-            Fornitore.PRODOTTI_CHIMICI,
-        )
-
+    @unittest.skip("Model FornitoreLavorazioniEsterne deleted in migration 0047")
     def test_creazione_fornitore_categoria_lavorazioni_esterne(self):
         """Testa la creazione di un fornitore con categoria 'LAVORAZIONI ESTERNE'."""
-        self.fornitore_data["categoria"] = Fornitore.LAVORAZIONI_ESTERNE
-        fornitore = Fornitore.objects.create(**self.fornitore_data)
+        pass
 
-        # Verifica che l'istanza di FornitoreLavorazioniEsterne sia stata creata automaticamente
-        fornitore_lavorazioni_esterne = FornitoreLavorazioniEsterne.objects.first()
-
-        # Verifica che il fornitore_ptr sia corretto
-        self.assertEqual(fornitore_lavorazioni_esterne.fornitore_ptr, fornitore)
-
-        # Verifica che il campo 'categoria' del fornitore sia impostato correttamente
-        self.assertEqual(
-            fornitore_lavorazioni_esterne.fornitore_ptr.categoria,
-            Fornitore.LAVORAZIONI_ESTERNE,
-        )
-
+    @unittest.skip("Model FornitoreServizi deleted in migration 0047")
     def test_creazione_fornitore_categoria_servizi(self):
         """Testa la creazione di un fornitore con categoria 'SERVIZI'."""
-        self.fornitore_data["categoria"] = Fornitore.SERVIZI
-        fornitore = Fornitore.objects.create(**self.fornitore_data)
+        pass
 
-        # Verifica che l'istanza di FornitoreServizi sia stata creata automaticamente
-        fornitore_servizi = FornitoreServizi.objects.first()
-
-        # Verifica che il fornitore_ptr sia corretto
-        self.assertEqual(fornitore_servizi.fornitore_ptr, fornitore)
-        self.assertEqual(fornitore_servizi.fornitore_ptr.categoria, Fornitore.SERVIZI)
-
+    @unittest.skip("Model FornitoreManutenzioni deleted in migration 0047")
     def test_fornitore_manutenzioni(self):
-        # Usa l'istanza già esistente di Fornitore
-        manutenzione = FornitoreManutenzioni.objects.create(
-            fornitore_ptr=self.fornitore,  # Associa il fornitore esistente
-            prova="Test Prova",
-        )
-
-        # Verifica che l'istanza sia correttamente associata al fornitore
-        self.assertEqual(
-            manutenzione.fornitore_ptr.ragionesociale, self.fornitore.ragionesociale
-        )
-        self.assertEqual(manutenzione.prova, "Test Prova")
+        """Tests manutenzioni fornitore."""
+        pass
 
     '''def test_creazione_fornitore_categoria_prodotti_chimici(self):
         """Testa la creazione di un fornitore con categoria 'PRODOTTI CHIMICI'."""
@@ -280,102 +236,16 @@ class FornitoreModelTest(TestCase):
         self.assertEqual(result, expected_path)"""
 
 
+@unittest.skip("Model FornitoreRifiuti deleted in migration 0047")
 class DocumentiModelTests(TestCase):
-    def setUp(self):
-        # Creazione di un utente e di un fornitore
-        self.user = User.objects.create_user(username="testuser", password="password")
-        self.fornitore = Fornitore.objects.create(
-            ragionesociale="Test Fornitore",
-            categoria=Fornitore.RIFIUTI,
-        )
-        # 1. Recupera l'ultimo valore di fornitore_ptr (PK) in FornitoreRifiuti
-        ultimo_fornitore_ptr = FornitoreRifiuti.objects.aggregate(Max("fornitore_ptr"))
-
-        # 2. Incrementa il valore di fornitore_ptr per ottenere il prossimo
-        next_fornitore_ptr = (
-            ultimo_fornitore_ptr["fornitore_ptr__max"] + 1
-            if ultimo_fornitore_ptr["fornitore_ptr__max"] is not None
-            else 1
-        )
-
-        # 3. Crea una singola istanza di FornitoreRifiuti con il fornitore_ptr incrementato
-        self.fornitore_rifiuti = FornitoreRifiuti.objects.create(
-            fornitore_ptr_id=next_fornitore_ptr,  # Usa il valore incrementato
-            ragionesociale=self.fornitore.ragionesociale,
-        )
-
-    def tearDown(self):
-        """
-        Questo metodo pulisce i dati creati nei test.
-        """
-        User.objects.all().delete()
-        Fornitore.objects.all().delete()
-        FornitoreRifiuti.objects.all().delete()
-        XrDocumentiGestore.objects.all().delete()
-        XrDocumentiSmaltitore.objects.all().delete()
-        XrDocumentiTrasportatore.objects.all().delete()
-
-    def test_gestore_documenti_upload_to(self):
-        # Usa l'istanza già esistente di FornitoreRifiuti
-        documento = XrDocumentiGestore.objects.create(
-            fornitore_rifiuti=self.fornitore_rifiuti,  # Usa l'istanza creata in setUp
-            numero="1234",
-            data_documento="2024-01-01",
-            data_scadenza="2025-01-01",
-            documento=None,  # Nessun file per il test
-            created_by=self.user,
-        )
-
-        # Verifica che il percorso di upload sia corretto
-        expected_path = "rifiuti/gestore_documenti/test_fornitore/1234.pdf"
-        result = gestore_documenti_upload_to(documento, "1234.pdf")
-        self.assertEqual(result, expected_path)
-
-    def test_smaltitore_documenti_upload_to(self):
-        # Usa l'istanza già esistente di FornitoreRifiuti
-        documento = XrDocumentiSmaltitore.objects.create(
-            fornitore_rifiuti=self.fornitore_rifiuti,
-            numero="5678",
-            data_documento="2024-01-01",
-            data_scadenza="2025-01-01",
-            documento=None,  # Nessun file per il test
-        )
-
-        # Verifica che il percorso di upload sia corretto
-        expected_path = "rifiuti/smaltitore_documenti/test_fornitore/5678.pdf"
-        result = smaltitore_documenti_upload_to(documento, "5678.pdf")
-        self.assertEqual(result, expected_path)
-
-    def test_trasportatore_documenti_upload_to(self):
-        # Usa l'istanza già esistente di FornitoreRifiuti
-        documento = XrDocumentiTrasportatore.objects.create(
-            fornitore_rifiuti=self.fornitore_rifiuti,
-            numero="91011",
-            data_documento="2024-01-01",
-            data_scadenza="2025-01-01",
-            documento=None,  # Nessun file per il test
-        )
-
-        # Verifica che il percorso di upload sia corretto
-        expected_path = "rifiuti/_documenti/test_fornitore/91011.pdf"
-        result = trasportatore_documenti_upload_to(documento, "91011.pdf")
-        self.assertEqual(result, expected_path)
+    """Tests skipped: FornitoreRifiuti model deleted in migration 0047."""
+    pass
 
 
+@unittest.skip("Model Macello deleted in migration 0047")
 class MacelloModelTest(TestCase):
-    def setUp(self):
-        # Creazione di un utente per il test
-        self.user = User.objects.create_user(username="testuser", password="password")
-        # Creazione di un'istanza di Macello
-        self.macello = Macello.objects.create(
-            ragionesociale="Test Macello", is_group=True, created_by=self.user
-        )
-
-    def test_macello_creation(self):
-        # Verifica che l'istanza sia creata correttamente
-        self.assertEqual(self.macello.ragionesociale, "Test Macello")
-        self.assertTrue(self.macello.is_group)
-        self.assertEqual(self.macello.created_by.username, "testuser")
+    """Tests skipped: Macello model deleted in migration 0047."""
+    pass
 
 
 class TransferValueModelTest(TestCase):
@@ -530,52 +400,10 @@ class FormFornitoreTests(TestCase):
         self.assertEqual(categoria_field.widget.attrs["readonly"], "readonly")
 
 
+@unittest.skip("Model FornitoreRifiuti deleted in migration 0047")
 class FormXrDocumentiGestoreTests(TestCase):
-    def setUp(self):
-        # Crea l'utente
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-
-        # Crea un oggetto Fornitore (modello padre)
-        self.fornitore = Fornitore.objects.create(
-            ragionesociale="Fornitore Test",
-            categoria="pelli",  # Usa una categoria valida
-            # Aggiungi altri campi necessari per creare un oggetto Fornitore
-        )
-
-        # Crea un oggetto FornitoreRifiuti (supponendo che sia un modello esistente)
-        self.fornitore_rifiuti = FornitoreRifiuti.objects.create(
-            # Assicurati di includere i campi necessari per creare un oggetto FornitoreRifiuti
-            fornitore_ptr=self.fornitore,
-        )
-
-        # Dati del form, ora includi fornitore_rifiuti
-        self.xr_documenti_data = {
-            "numero": "12345",
-            "data_documento": "2024-01-01",
-            "data_scadenza": "2025-01-01",
-            "note": "Test note",
-            "created_by": self.user,
-            "fornitore_rifiuti": self.fornitore_rifiuti,  # Aggiungi il campo obbligatorio
-        }
-
-    def test_form_xr_documenti_gestore_valid(self):
-        form = FormXrDocumentiGestore(data=self.xr_documenti_data)
-        self.assertTrue(form.is_valid())
-
-    def test_form_xr_documenti_gestore_invalid(self):
-        form_data = self.xr_documenti_data.copy()
-        form_data["data_documento"] = "invalid-date"  # Invalid date
-        form = FormXrDocumentiGestore(data=form_data)
-        self.assertFalse(form.is_valid())
-        self.assertIn("data_documento", form.errors)
-
-    def test_form_xr_documenti_gestore_placeholder(self):
-        form = FormXrDocumentiGestore(data=self.xr_documenti_data)
-        numero_field = form.fields["numero"]
-        self.assertEqual(
-            numero_field.widget.attrs["placeholder"],
-            "Inserisci il numero dell'autorizzazione...",
-        )
+    """Tests skipped: FornitoreRifiuti model deleted in migration 0047."""
+    pass
 
 
 class FormLwgFornitoreTests(TestCase):
@@ -630,87 +458,31 @@ class FornitoreFormsTestCase(TestCase):
             "categoria": Fornitore.PELLI,
         }
 
+    # Form tests skipped: models/forms deleted in migration 0047
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_pelli(self):
-        data = self.base_fornitore_data.copy()
-        data.update(
-            {
-                "is_lwg": True,
-                "urn": "URN12345",
-                "tipo_fornitore": FornitorePelli.MACELLO,
-                "latitude": 45.12345,
-                "longitude": 12.54321,
-            }
-        )
-        form = FormFornitorePelli(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertEqual(instance.ragionesociale, "Fornitore Test")
-        self.assertTrue(instance.is_lwg)
+        pass
 
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_lavorazioni_esterne(self):
-        data = self.base_fornitore_data.copy()
-        data.update(
-            {
-                "audit": FornitoreLavorazioniEsterne.MANUFACTURER,
-                "is_lwg": True,
-            }
-        )
-        form = FormFornitoreLavorazioniEsterne(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertEqual(instance.audit, FornitoreLavorazioniEsterne.MANUFACTURER)
+        pass
 
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_prodotti_chimici(self):
-        data = self.base_fornitore_data.copy()
-        data.update(
-            {
-                "id_zdhc": "ZDHC12345",
-            }
-        )
-        form = FormFornitoreProdottiChimici(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertEqual(instance.id_zdhc, "ZDHC12345")
+        pass
 
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_servizi(self):
-        data = self.base_fornitore_data.copy()
-        data.update({"prova": "Test Servizi"})
-        form = FormFornitoreServizi(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertEqual(instance.prova, "Test Servizi")
+        pass
 
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_rifiuti(self):
-        data = self.base_fornitore_data.copy()
-        form = FormFornitoreRifiuti(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertEqual(instance.ragionesociale, "Fornitore Test")
+        pass
 
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_fornitore_manutenzioni(self):
-        # Crea un oggetto 'Fornitore'
-        fornitore = Fornitore.objects.create(**self.base_fornitore_data)
+        pass
 
-        # Aggiorna i dati del form con il campo 'prova'
-        data = {"prova": "Test Manutenzioni"}  # Non passare fornitore_ptr direttamente
-
-        # Crea l'istanza del form con il fornitore esistente
-        form = FormFornitoreManutenzioni(
-            data, instance=FornitoreManutenzioni(fornitore_ptr=fornitore)
-        )
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-
-        # Salva il form e verifica il risultato
-        instance = form.save()
-        self.assertEqual(instance.prova, "Test Manutenzioni")
-        self.assertEqual(
-            instance.fornitore_ptr, fornitore
-        )  # Verifica la relazione correttamente
-
+    @unittest.skip("Form/Model deleted in migration 0047")
     def test_form_macello(self):
-        data = self.base_fornitore_data.copy()
-        data.update({"is_group": True})
-        form = FormMacello(data)
-        self.assertTrue(form.is_valid(), f"Errors: {form.errors}")
-        instance = form.save()
-        self.assertTrue(instance.is_group)
+        pass

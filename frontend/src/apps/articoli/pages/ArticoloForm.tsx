@@ -10,6 +10,7 @@ import {
 import { getTipoAnimali, getTipoGrezzi } from '@/api/lookup';
 import type { TipoAnimale, TipoGrezzo } from '@articoli/types/lookup';
 import Select from 'react-select';
+import { ProcedureCard } from '../components/Procedure';
 
 const ArticoloForm = () => {
   const navigate = useNavigate();
@@ -167,6 +168,13 @@ const ArticoloForm = () => {
           </div>
         </Form>
       </Card.Body>
+
+      {/* Sezione Procedure - solo in modalità edit */}
+      {isEditMode && id && (
+        <Card.Footer className="bg-transparent border-0 p-0">
+          <ProcedureCard articoloId={Number(id)} />
+        </Card.Footer>
+      )}
     </Card>
   );
 };

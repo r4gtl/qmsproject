@@ -9,6 +9,8 @@ import ClientiList from '@anagrafiche/pages/ClientiList';
 import ClienteForm from '@anagrafiche/pages/ClienteForm';
 import ArticoliList from '@articoli/pages/ArticoliList';
 import ArticoloForm from '@articoli/pages/ArticoloForm';
+import ProceduraPage from '@articoli/pages/ProceduraPage';
+import NewProceduraPage from '@articoli/pages/NewProceduraPage';
 import TabelleGenerichePage from '@articoli/pages/TabelleGenerichePage';
 import ElencoTestForm from '@articoli/components/TabelleGeneriche/ElencoTestForm';
 import FaseLavoroForm from '@articoli/components/TabelleGeneriche/FaseLavoroForm';
@@ -115,6 +117,28 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <ArticoloForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/:articoloId/procedure/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <NewProceduraPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/articoli/:articoloId/procedure/:proceduraId"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ProceduraPage />
               </Layout>
             </PrivateRoute>
           }
