@@ -15,6 +15,10 @@ import TabelleGenerichePage from '@articoli/pages/TabelleGenerichePage';
 import ElencoTestForm from '@articoli/components/TabelleGeneriche/ElencoTestForm';
 import FaseLavoroForm from '@articoli/components/TabelleGeneriche/FaseLavoroForm';
 import CodiceLavorazioneForm from '@articoli/components/TabelleGeneriche/CodiceLavorazioneForm';
+// Human Resources
+import EmployeesPage from './apps/human-resources/pages/EmployeesPage';
+import EmployeeForm from './apps/human-resources/pages/EmployeeForm';
+import TabelleGenericheHRPage from './apps/human-resources/pages/TabelleGenericheHRPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -227,6 +231,48 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <TabelleGenerichePage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Human Resources */}
+        <Route
+          path="/human-resources/dipendenti"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <EmployeesPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/dipendenti/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <EmployeeForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/dipendenti/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <EmployeeForm />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/tabelle"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TabelleGenericheHRPage />
               </Layout>
             </PrivateRoute>
           }

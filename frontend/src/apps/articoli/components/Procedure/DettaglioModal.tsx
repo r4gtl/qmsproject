@@ -1,6 +1,12 @@
 /**
  * DettaglioModal - Modal per creare/modificare una riga di procedura
  *
+ * Form fields:
+ * - fk_faselavoro (select, obbligatorio)
+ * - is_interna (radio)
+ * - fk_fornitore (select, obbligatorio se is_interna=false)
+ * - note (textarea)
+ *
  * Include la sezione Caratteristiche quando in modalità edit.
  */
 import { useState, useEffect } from 'react';
@@ -20,12 +26,19 @@ import {
   getDettaglio,
 } from '../../api/procedure';
 import { getFasi } from '../../api/articoli';
+import instance from '@/api/axios';
 import type {
   DettaglioProcedura,
   DettaglioProceduraCreate,
 } from '../../types/procedure';
 import type { FasiLavoro } from '../../types/articoli';
 import CaratteristicheSection from './CaratteristicheSection';
+
+// Tipo per fornitore (API: /anagrafiche/fornitori/)
+interface Fornitore {
+  id: number;
+  ragionesociale: string;
+}
 
 interface DettaglioModalProps {
   show: boolean;
@@ -47,29 +60,38 @@ export default function DettaglioModal({
   // Form state
   const [fkFaselavoro, setFkFaselavoro] = useState<number | ''>('');
   const [isInterna, setIsInterna] = useState(true);
+  const [fkFornitore, setFkFornitore] = useState<number | ''>('');
   const [note, setNote] = useState('');
 
-  // Data state
+  // Data state (lookup)
   const [fasiLavoro, setFasiLavoro] = useState<FasiLavoro[]>([]);
+  const [fornitori, setFornitori] = useState<Fornitore[]>([]);
   const [dettaglio, setDettaglio] = useState<DettaglioProcedura | null>(null);
 
   // UI state
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadingLookups, setLoadingLookups] = useState(false);
 
-  // Carica fasi lavoro
+  // Carica fasi lavoro e fornitori
   useEffect(() => {
-    const loadFasi = async () => {
+    const loadLookups = async () => {
+      if (!show) return;
       try {
-        const res = await getFasi();
-        setFasiLavoro(res.data.results || res.data);
+        setLoadingLookups(true);
+        const [fasiRes, fornitoriRes] = await Promise.all([
+          getFasi(),
+          instance.get('/anagrafiche/fornitori/', { params: { page_size: 1000 } }),
+        ]);
+        setFasiLavoro(fasiRes.data.results || fasiRes.data);
+        setFornitori(fornitoriRes.data.results || fornitoriRes.data);
       } catch {
-        toast.error('Errore caricamento fasi lavoro');
+        toast.error('Errore caricamento dati lookup');
+      } finally {
+        setLoadingLookups(false);
       }
     };
-    if (show) {
-      loadFasi();
-    }
+    loadLookups();
   }, [show]);
 
   // Carica dettaglio se in edit mode
@@ -83,6 +105,7 @@ export default function DettaglioModal({
         setDettaglio(d);
         setFkFaselavoro(d.fk_faselavoro);
         setIsInterna(d.is_interna);
+        setFkFornitore(d.fk_fornitore || '');
         setNote(d.note || '');
       } catch {
         toast.error('Errore caricamento dettaglio');
@@ -98,36 +121,52 @@ export default function DettaglioModal({
       setDettaglio(null);
       setFkFaselavoro('');
       setIsInterna(true);
+      setFkFornitore('');
       setNote('');
     }
   }, [show, dettaglioId, isEditMode]);
 
-  // Salva
+  // Validazione form
+  const validateForm = (): boolean => {
+    if (!fkFaselavoro) {
+      toast.warning('Seleziona una fase di lavoro');
+      return false;
+    }
+    // Se lavorazione esterna, fornitore obbligatorio
+    if (!isInterna && !fkFornitore) {
+      toast.warning('Per lavorazione esterna, seleziona un fornitore');
+      return false;
+    }
+    return true;
+  };
+
+  // Salva (create o update)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!fkFaselavoro) {
-      toast.warning('Seleziona una fase di lavoro');
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       setSaving(true);
 
       if (isEditMode && dettaglioId) {
+        // UPDATE
         const res = await updateDettaglio(dettaglioId, {
           fk_faselavoro: fkFaselavoro as number,
           is_interna: isInterna,
-          note,
+          fk_fornitore: isInterna ? null : (fkFornitore as number),
+          note: note || undefined,
         });
         toast.success('Riga aggiornata');
         onSave(res.data);
       } else {
+        // CREATE
         const data: DettaglioProceduraCreate = {
           fk_procedura: proceduraId,
           fk_faselavoro: fkFaselavoro as number,
           is_interna: isInterna,
-          note,
+          fk_fornitore: isInterna ? undefined : (fkFornitore as number),
+          note: note || undefined,
         };
         const res = await createDettaglio(data);
         toast.success('Riga creata');
@@ -135,8 +174,9 @@ export default function DettaglioModal({
       }
 
       onHide();
-    } catch {
-      toast.error('Errore salvataggio');
+    } catch (err: any) {
+      const msg = err.response?.data?.detail || 'Errore salvataggio';
+      toast.error(msg);
     } finally {
       setSaving(false);
     }
@@ -149,7 +189,7 @@ export default function DettaglioModal({
       const res = await getDettaglio(dettaglioId);
       setDettaglio(res.data);
     } catch {
-      // ignore
+      // silent fail
     }
   };
 
@@ -162,17 +202,21 @@ export default function DettaglioModal({
       </Modal.Header>
 
       <Modal.Body>
-        {loading ? (
+        {loading || loadingLookups ? (
           <div className="text-center py-4">
             <Spinner animation="border" />
+            <p className="mt-2 text-muted">Caricamento...</p>
           </div>
         ) : (
           <>
             <Form onSubmit={handleSubmit}>
               <Row>
+                {/* Fase Lavoro - obbligatorio */}
                 <Col md={6}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Fase Lavoro *</Form.Label>
+                    <Form.Label>
+                      Fase Lavoro <span className="text-danger">*</span>
+                    </Form.Label>
                     <Form.Select
                       value={fkFaselavoro}
                       onChange={(e) =>
@@ -182,7 +226,7 @@ export default function DettaglioModal({
                       }
                       required
                     >
-                      <option value="">-- Seleziona --</option>
+                      <option value="">-- Seleziona fase --</option>
                       {fasiLavoro.map((f) => (
                         <option key={f.id} value={f.id}>
                           {f.descrizione}
@@ -191,21 +235,28 @@ export default function DettaglioModal({
                     </Form.Select>
                   </Form.Group>
                 </Col>
+
+                {/* Tipo Lavorazione */}
                 <Col md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label>Tipo Lavorazione</Form.Label>
-                    <div>
+                    <div className="mt-2">
                       <Form.Check
                         inline
                         type="radio"
+                        id="tipoInterna"
                         label="Interna"
                         name="tipoLavorazione"
                         checked={isInterna}
-                        onChange={() => setIsInterna(true)}
+                        onChange={() => {
+                          setIsInterna(true);
+                          setFkFornitore(''); // Reset fornitore
+                        }}
                       />
                       <Form.Check
                         inline
                         type="radio"
+                        id="tipoEsterna"
                         label="Esterna (Terzista)"
                         name="tipoLavorazione"
                         checked={!isInterna}
@@ -216,6 +267,39 @@ export default function DettaglioModal({
                 </Col>
               </Row>
 
+              {/* Fornitore - visibile e obbligatorio solo se esterna */}
+              {!isInterna && (
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>
+                        Fornitore <span className="text-danger">*</span>
+                      </Form.Label>
+                      <Form.Select
+                        value={fkFornitore}
+                        onChange={(e) =>
+                          setFkFornitore(
+                            e.target.value ? Number(e.target.value) : ''
+                          )
+                        }
+                        required={!isInterna}
+                      >
+                        <option value="">-- Seleziona fornitore --</option>
+                        {fornitori.map((f) => (
+                          <option key={f.id} value={f.id}>
+                            {f.ragionesociale}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      <Form.Text className="text-muted">
+                        Obbligatorio per lavorazione esterna
+                      </Form.Text>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              )}
+
+              {/* Note */}
               <Form.Group className="mb-3">
                 <Form.Label>Note</Form.Label>
                 <Form.Control
@@ -223,9 +307,11 @@ export default function DettaglioModal({
                   rows={2}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
+                  placeholder="Note opzionali sulla riga..."
                 />
               </Form.Group>
 
+              {/* Pulsanti */}
               <div className="text-end">
                 <Button
                   variant="secondary"
@@ -251,17 +337,16 @@ export default function DettaglioModal({
             {isEditMode && dettaglio && (
               <>
                 <hr className="my-4" />
-                <Alert variant="info" className="mb-3">
+                <Alert variant={isInterna ? 'info' : 'warning'} className="mb-3">
                   {isInterna ? (
                     <>
                       <strong>Lavorazione Interna:</strong> Le caratteristiche
-                      useranno i <em>Dettagli Fase Lavoro</em>.
+                      useranno gli <em>Attributi della Fase Lavoro</em>.
                     </>
                   ) : (
                     <>
                       <strong>Lavorazione Esterna:</strong> Le caratteristiche
-                      useranno <em>Fornitore</em> e{' '}
-                      <em>Lavorazione Esterna</em>.
+                      useranno <em>Fornitore</em> e <em>Lavorazione Esterna</em>.
                     </>
                   )}
                 </Alert>

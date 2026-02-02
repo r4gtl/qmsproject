@@ -9,6 +9,7 @@ interface SidebarProps {
 const Sidebar = ({ show, onHide }: SidebarProps) => {
   const location = useLocation();
   const isInArticoli = location.pathname.startsWith('/articoli');
+  const isInHumanResources = location.pathname.startsWith('/human-resources');
 
   return (
     <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
@@ -34,6 +35,22 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
                 Tabelle Articoli
               </div>
               <Nav.Link as={Link} to="/articoli/tabelle" onClick={onHide}>
+                Tabelle Generiche
+              </Nav.Link>
+            </>
+          )}
+
+          {/* Sezione visibile solo per human resources */}
+          {isInHumanResources && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Human Resources
+              </div>
+              <Nav.Link as={Link} to="/human-resources/dipendenti" onClick={onHide}>
+                Dipendenti
+              </Nav.Link>
+              <Nav.Link as={Link} to="/human-resources/tabelle" onClick={onHide}>
                 Tabelle Generiche
               </Nav.Link>
             </>

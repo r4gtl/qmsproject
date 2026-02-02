@@ -24,7 +24,7 @@ export default function NewProceduraPage() {
       }
 
       try {
-        const res = await createProcedura(Number(articoloId));
+        const res = await createProcedura({ fk_articolo: Number(articoloId) });
         const newProcedura = res.data;
         toast.success(`Procedura Nr. ${newProcedura.nr_procedura} Rev. ${newProcedura.nr_revisione} creata`);
         // Redirect alla pagina di edit

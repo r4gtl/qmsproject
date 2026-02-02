@@ -38,6 +38,22 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        {/* card human resources */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Human Resources</Card.Title>
+              <Card.Text>
+                Gestisci dipendenti, mansioni e valutazioni.
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/human-resources/dipendenti" variant="primary">
+                  Dipendenti
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         {/* In futuro: altre cards per altre app */}
       </Row>
     </Container>

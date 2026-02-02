@@ -2,6 +2,7 @@ import datetime
 
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
@@ -104,7 +105,15 @@ class HumanResource(models.Model):
     def __str__(self):
         return self.cognomedipendente + " " + self.nomedipendente
 
-    
+    def clean(self):
+        """Validate that datadimissioni >= dataassunzione if both are set."""
+        super().clean()
+        if self.dataassunzione and self.datadimissioni:
+            if self.datadimissioni < self.dataassunzione:
+                raise ValidationError({
+                    "datadimissioni": "La data di dimissioni non può essere precedente alla data di assunzione."
+                })
+
     def get_absolute_url(self):
         return reverse("human_resources:update_human_resource", kwargs={"pk": self.pk})
 
@@ -279,7 +288,7 @@ class ValutazioneOperatore(models.Model):
     MEDIO = 'medio'
     MIGLIORE = 'migliore'
     MASSIMO = 'massimo'
-    
+
     CHOICES_CATEGORY = (
         (NESSUNA, 'Nessuna Valutazione'),
         (MINIMO, 'Minimo. L\'operatore richiede approfondita formazione.'),
@@ -287,17 +296,23 @@ class ValutazioneOperatore(models.Model):
         (MIGLIORE, 'Migliore. L\'operatore è sufficientemente competente.'),
         (MASSIMO, 'Massimo. L\'operatore può fornire formazione ad altri operatori.')
     )
-    
+
     fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
-    fk_centro_di_lavoro = models.ForeignKey(CentrodiLavoro, on_delete=models.CASCADE)      
+    fk_centro_di_lavoro = models.ForeignKey(CentrodiLavoro, on_delete=models.PROTECT)
     valutazione =  models.CharField(max_length=100, choices=CHOICES_CATEGORY)
-    note = models.TextField(null=True, blank=True) 
+    note = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["fk_hr"]
         verbose_name_plural = "Valutazioni Operatori"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["fk_hr", "fk_centro_di_lavoro"],
+                name="ux_valutazione_hr_centro"
+            )
+        ]
 
 
 ##############################################################################
