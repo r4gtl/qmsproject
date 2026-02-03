@@ -81,7 +81,7 @@ function SortableRow({
     disabled: isDragDisabled,
   });
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
@@ -92,20 +92,27 @@ function SortableRow({
    * HARDENING: stopPropagation sull'handle
    * Evita che click/pointerdown sull'handle propaghino alla riga
    * e aprano accidentalmente la modale di edit.
+   *
+   * FIX CRITICO: Dobbiamo chiamare PRIMA il listener di dnd-kit, POI stopPropagation.
+   * Se sovrascriviamo onPointerDown senza chiamare listeners.onPointerDown,
+   * il drag non parte mai (il listener originale viene sostituito, non esteso).
    */
-  const handlePointerDown = (e: React.PointerEvent) => {
+  const handlePointerDown = (e: React.PointerEvent<HTMLTableCellElement>) => {
+    // PRIMA: chiama il listener di dnd-kit per iniziare il drag
+    listeners?.onPointerDown?.(e as unknown as React.PointerEvent<Element>);
+    // POI: stopPropagation per evitare che il click arrivi alla riga
     e.stopPropagation();
   };
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
     <tr ref={setNodeRef} style={style} className="align-middle">
-      {/* Handle drag - stopPropagation per evitare click su riga */}
+      {/* Handle drag - chiamiamo manualmente listeners.onPointerDown */}
       <td
         {...attributes}
-        {...listeners}
         onPointerDown={handlePointerDown}
         onClick={handleClick}
         style={{
@@ -113,6 +120,7 @@ function SortableRow({
           cursor: isDragDisabled ? 'not-allowed' : 'grab',
           textAlign: 'center',
           userSelect: 'none',
+          touchAction: 'none', // Importante per touch devices
         }}
         title={isDragDisabled ? 'Riordino in corso...' : 'Trascina per riordinare'}
       >

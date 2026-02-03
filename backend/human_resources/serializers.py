@@ -17,6 +17,7 @@ from .models import (
     ValutazioneOperatore,
     Safety_Role,
     HR_Safety,
+    RegistroOreLavoro,
 )
 
 
@@ -430,6 +431,117 @@ class HRSafetySerializer(serializers.ModelSerializer):
                     })
 
         return data
+
+    def create(self, validated_data):
+        """Autopopolamento created_by dall'utente loggato."""
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# REGISTRO ORE LAVORO
+# =============================================================================
+
+class RegistroOreLavoroListSerializer(serializers.ModelSerializer):
+    """
+    Serializer per lista Registro Ore Lavoro.
+    Campi minimi per la tabella lista.
+    """
+    month_verbose = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RegistroOreLavoro
+        fields = [
+            "id",
+            "entry_year",
+            "entry_month",
+            "month_verbose",
+            "ore_lavorabili",
+            "ore_lavorate",
+        ]
+
+    def get_month_verbose(self, obj):
+        return obj.month_verbose()
+
+
+class RegistroOreLavoroDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer per dettaglio Registro Ore Lavoro.
+    Include tutti i campi.
+    """
+    month_verbose = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RegistroOreLavoro
+        fields = [
+            "id",
+            "entry_year",
+            "entry_month",
+            "month_verbose",
+            "ore_lavorabili",
+            "ore_lavorate",
+            "straordinari",
+            "ferie_permessi",
+            "permessi_speciali",
+            "maternità",
+            "infortunio",
+            "formazione",
+            "formazione_neoassunti",
+            "malattia",
+            "n_infortuni",
+            "n_infortuni_itinere",
+            "n_malattie_professionali",
+            "ore_malattie_professionali",
+            "permessi_non_retribuiti",
+            "assenze_ingiustificate",
+            "note",
+        ]
+        read_only_fields = ["id"]
+
+    def get_month_verbose(self, obj):
+        return obj.month_verbose()
+
+
+class RegistroOreLavoroWriteSerializer(serializers.ModelSerializer):
+    """
+    Serializer per create/update Registro Ore Lavoro.
+    """
+
+    class Meta:
+        model = RegistroOreLavoro
+        fields = [
+            "entry_year",
+            "entry_month",
+            "ore_lavorabili",
+            "ore_lavorate",
+            "straordinari",
+            "ferie_permessi",
+            "permessi_speciali",
+            "maternità",
+            "infortunio",
+            "formazione",
+            "formazione_neoassunti",
+            "malattia",
+            "n_infortuni",
+            "n_infortuni_itinere",
+            "n_malattie_professionali",
+            "ore_malattie_professionali",
+            "permessi_non_retribuiti",
+            "assenze_ingiustificate",
+            "note",
+        ]
+
+    def validate_entry_year(self, value):
+        if not value:
+            raise serializers.ValidationError("L'anno è obbligatorio.")
+        return value
+
+    def validate_entry_month(self, value):
+        if not value or value < 1 or value > 12:
+            raise serializers.ValidationError("Il mese deve essere compreso tra 1 e 12.")
+        return value
 
     def create(self, validated_data):
         """Autopopolamento created_by dall'utente loggato."""

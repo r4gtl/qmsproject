@@ -50,6 +50,9 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
               <Nav.Link as={Link} to="/human-resources/dipendenti" onClick={onHide}>
                 Dipendenti
               </Nav.Link>
+              <Nav.Link as={Link} to="/human-resources/registro-ore-lavoro" onClick={onHide}>
+                Registro Ore Lavoro
+              </Nav.Link>
               <Nav.Link as={Link} to="/human-resources/tabelle" onClick={onHide}>
                 Tabelle Generiche
               </Nav.Link>

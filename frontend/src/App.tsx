@@ -19,6 +19,8 @@ import CodiceLavorazioneForm from '@articoli/components/TabelleGeneriche/CodiceL
 import EmployeesPage from './apps/human-resources/pages/EmployeesPage';
 import EmployeeForm from './apps/human-resources/pages/EmployeeForm';
 import TabelleGenericheHRPage from './apps/human-resources/pages/TabelleGenericheHRPage';
+import RegistroOreLavoroListPage from './apps/human-resources/pages/RegistroOreLavoroListPage';
+import RegistroOreLavoroFormPage from './apps/human-resources/pages/RegistroOreLavoroFormPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -277,6 +279,36 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <TabelleGenericheHRPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/registro-ore-lavoro"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <RegistroOreLavoroListPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/registro-ore-lavoro/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <RegistroOreLavoroFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/registro-ore-lavoro/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <RegistroOreLavoroFormPage />
               </Layout>
             </PrivateRoute>
           }

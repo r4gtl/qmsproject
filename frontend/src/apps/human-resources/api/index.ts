@@ -15,6 +15,9 @@ import type {
   ValutazioneOperatore,
   ValutazioneCreate,
   PaginatedResponse,
+  RegistroOreLavoroList,
+  RegistroOreLavoroDetail,
+  RegistroOreLavoroCreate,
 } from '../types';
 
 const BASE_URL = '/human-resources';
@@ -176,3 +179,38 @@ export const updateValutazione = (id: number, data: Partial<ValutazioneCreate>) 
 
 export const deleteValutazione = (id: number) =>
   instance.delete(`${BASE_URL}/valutazioni/${id}/`);
+
+// =============================================================================
+// REGISTRO ORE LAVORO
+// =============================================================================
+
+/**
+ * Lista registro ore lavoro con paginazione e filtri.
+ * @param params - { entry_year?: number, entry_month?: number, page?: number, page_size?: number, ordering?: string }
+ */
+export const getRegistriOreLavoro = (params?: Record<string, unknown>) =>
+  instance.get<PaginatedResponse<RegistroOreLavoroList>>(`${BASE_URL}/registro-ore-lavoro/`, { params });
+
+/**
+ * Dettaglio registro ore lavoro.
+ */
+export const getRegistroOreLavoro = (id: number) =>
+  instance.get<RegistroOreLavoroDetail>(`${BASE_URL}/registro-ore-lavoro/${id}/`);
+
+/**
+ * Crea nuovo registro ore lavoro.
+ */
+export const createRegistroOreLavoro = (data: RegistroOreLavoroCreate) =>
+  instance.post<RegistroOreLavoroDetail>(`${BASE_URL}/registro-ore-lavoro/`, data);
+
+/**
+ * Aggiorna registro ore lavoro.
+ */
+export const updateRegistroOreLavoro = (id: number, data: Partial<RegistroOreLavoroCreate>) =>
+  instance.patch<RegistroOreLavoroDetail>(`${BASE_URL}/registro-ore-lavoro/${id}/`, data);
+
+/**
+ * Elimina registro ore lavoro.
+ */
+export const deleteRegistroOreLavoro = (id: number) =>
+  instance.delete(`${BASE_URL}/registro-ore-lavoro/${id}/`);

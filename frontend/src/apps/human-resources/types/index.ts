@@ -189,3 +189,77 @@ export const VALUTAZIONE_CHOICES = [
   { value: 'migliore', label: 'Migliore - Sufficientemente competente' },
   { value: 'massimo', label: 'Massimo - Può formare altri operatori' },
 ];
+
+// =============================================================================
+// REGISTRO ORE LAVORO
+// =============================================================================
+
+export interface RegistroOreLavoroList {
+  id: number;
+  entry_year: number;
+  entry_month: number;
+  month_verbose: string;
+  ore_lavorabili: number | null;
+  ore_lavorate: number | null;
+}
+
+export interface RegistroOreLavoroDetail {
+  id: number;
+  entry_year: number;
+  entry_month: number;
+  month_verbose: string;
+  ore_lavorabili: number | null;
+  ore_lavorate: number | null;
+  straordinari: number | null;
+  ferie_permessi: number | null;
+  permessi_speciali: number | null;
+  maternità: number | null;
+  infortunio: number | null;
+  formazione: number | null;
+  formazione_neoassunti: number | null;
+  malattia: number | null;
+  n_infortuni: number | null;
+  n_infortuni_itinere: number | null;
+  n_malattie_professionali: number | null;
+  ore_malattie_professionali: number | null;
+  permessi_non_retribuiti: number | null;
+  assenze_ingiustificate: number | null;
+  note: string | null;
+}
+
+export interface RegistroOreLavoroCreate {
+  entry_year: number;
+  entry_month: number;
+  ore_lavorabili?: number | null;
+  ore_lavorate?: number | null;
+  straordinari?: number | null;
+  ferie_permessi?: number | null;
+  permessi_speciali?: number | null;
+  maternità?: number | null;
+  infortunio?: number | null;
+  formazione?: number | null;
+  formazione_neoassunti?: number | null;
+  malattia?: number | null;
+  n_infortuni?: number | null;
+  n_infortuni_itinere?: number | null;
+  n_malattie_professionali?: number | null;
+  ore_malattie_professionali?: number | null;
+  permessi_non_retribuiti?: number | null;
+  assenze_ingiustificate?: number | null;
+  note?: string | null;
+}
+
+export const MONTH_CHOICES = [
+  { value: 1, label: 'Gennaio' },
+  { value: 2, label: 'Febbraio' },
+  { value: 3, label: 'Marzo' },
+  { value: 4, label: 'Aprile' },
+  { value: 5, label: 'Maggio' },
+  { value: 6, label: 'Giugno' },
+  { value: 7, label: 'Luglio' },
+  { value: 8, label: 'Agosto' },
+  { value: 9, label: 'Settembre' },
+  { value: 10, label: 'Ottobre' },
+  { value: 11, label: 'Novembre' },
+  { value: 12, label: 'Dicembre' },
+];

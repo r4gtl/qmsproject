@@ -9,6 +9,7 @@ Endpoints registrati:
 - /reparti/              Ward CRUD
 - /mansioni/             Role CRUD
 - /valutazioni/          ValutazioneOperatore CRUD
+- /registro-ore-lavoro/  RegistroOreLavoro CRUD
 """
 from rest_framework.routers import DefaultRouter
 from .api import (
@@ -19,6 +20,7 @@ from .api import (
     ValutazioneOperatoreViewSet,
     SafetyRoleViewSet,
     HRSafetyViewSet,
+    RegistroOreLavoroViewSet,
 )
 
 router = DefaultRouter()
@@ -37,5 +39,8 @@ router.register(r"hr-safety", HRSafetyViewSet, basename="hrsafety")
 
 # Valutazioni
 router.register(r"valutazioni", ValutazioneOperatoreViewSet, basename="valutazione")
+
+# Registro Ore Lavoro
+router.register(r"registro-ore-lavoro", RegistroOreLavoroViewSet, basename="registroorelavoro")
 
 urlpatterns = router.urls

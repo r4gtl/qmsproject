@@ -24,6 +24,7 @@ from .models import (
     ValutazioneOperatore,
     Safety_Role,
     HR_Safety,
+    RegistroOreLavoro,
 )
 from .serializers import (
     HumanResourceListSerializer,
@@ -35,6 +36,9 @@ from .serializers import (
     ValutazioneOperatoreSerializer,
     SafetyRoleSerializer,
     HRSafetySerializer,
+    RegistroOreLavoroListSerializer,
+    RegistroOreLavoroDetailSerializer,
+    RegistroOreLavoroWriteSerializer,
 )
 
 
@@ -323,3 +327,56 @@ class HRSafetyViewSet(viewsets.ModelViewSet):
                 {"detail": str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+# =============================================================================
+# REGISTRO ORE LAVORO
+# =============================================================================
+
+class RegistroOreLavoroViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per Registro Ore Lavoro.
+
+    Endpoints:
+    - GET /registro-ore-lavoro/              Lista paginata (ordinata -entry_year, -entry_month)
+    - GET /registro-ore-lavoro/?entry_year=  Filtra per anno
+    - GET /registro-ore-lavoro/{id}/         Dettaglio
+    - POST /registro-ore-lavoro/             Crea registro
+    - PATCH /registro-ore-lavoro/{id}/       Modifica registro
+    - DELETE /registro-ore-lavoro/{id}/      Elimina registro
+    """
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ["entry_year", "entry_month"]
+    ordering_fields = ["entry_year", "entry_month"]
+    ordering = ["-entry_year", "-entry_month"]
+
+    def get_queryset(self):
+        return RegistroOreLavoro.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return RegistroOreLavoroListSerializer
+        elif self.action in ["create", "update", "partial_update"]:
+            return RegistroOreLavoroWriteSerializer
+        return RegistroOreLavoroDetailSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo create."""
+        write_serializer = self.get_serializer(data=request.data)
+        write_serializer.is_valid(raise_exception=True)
+        instance = write_serializer.save()
+        detail_serializer = RegistroOreLavoroDetailSerializer(instance)
+        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo update."""
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        write_serializer = self.get_serializer(
+            instance, data=request.data, partial=partial
+        )
+        write_serializer.is_valid(raise_exception=True)
+        instance = write_serializer.save()
+        detail_serializer = RegistroOreLavoroDetailSerializer(instance)
+        return Response(detail_serializer.data)
