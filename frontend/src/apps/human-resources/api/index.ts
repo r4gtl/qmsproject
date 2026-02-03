@@ -9,6 +9,9 @@ import type {
   CentrodiLavoro,
   Ward,
   Role,
+  SafetyRole,
+  HrSafety,
+  HrSafetyCreate,
   ValutazioneOperatore,
   ValutazioneCreate,
   PaginatedResponse,
@@ -107,6 +110,50 @@ export const updateMansione = (id: number, data: { description?: string; fk_repa
 
 export const deleteMansione = (id: number) =>
   instance.delete(`${BASE_URL}/mansioni/${id}/`);
+
+// =============================================================================
+// INCARICHI SICUREZZA (SAFETY ROLE)
+// =============================================================================
+
+export const getSafetyRoles = (params?: Record<string, unknown>) =>
+  instance.get<PaginatedResponse<SafetyRole>>(`${BASE_URL}/incarichi-sicurezza/`, { params });
+
+export const getSafetyRole = (id: number) =>
+  instance.get<SafetyRole>(`${BASE_URL}/incarichi-sicurezza/${id}/`);
+
+export const createSafetyRole = (data: { descrizione: string; note?: string | null }) =>
+  instance.post<SafetyRole>(`${BASE_URL}/incarichi-sicurezza/`, data);
+
+export const updateSafetyRole = (id: number, data: { descrizione?: string; note?: string | null }) =>
+  instance.patch<SafetyRole>(`${BASE_URL}/incarichi-sicurezza/${id}/`, data);
+
+export const deleteSafetyRole = (id: number) =>
+  instance.delete(`${BASE_URL}/incarichi-sicurezza/${id}/`);
+
+// =============================================================================
+// HR SAFETY (INCARICHI SICUREZZA PER DIPENDENTE)
+// =============================================================================
+
+/**
+ * Lista incarichi sicurezza per dipendente.
+ * @param params - { fk_hr?: number, page_size?: number }
+ */
+export const getHrSafetyByHr = (hrId: number, params?: Record<string, unknown>) =>
+  instance.get<PaginatedResponse<HrSafety>>(`${BASE_URL}/hr-safety/`, {
+    params: { fk_hr: hrId, ...params },
+  });
+
+export const getHrSafety = (id: number) =>
+  instance.get<HrSafety>(`${BASE_URL}/hr-safety/${id}/`);
+
+export const createHrSafety = (data: HrSafetyCreate) =>
+  instance.post<HrSafety>(`${BASE_URL}/hr-safety/`, data);
+
+export const updateHrSafety = (id: number, data: Partial<HrSafetyCreate>) =>
+  instance.patch<HrSafety>(`${BASE_URL}/hr-safety/${id}/`, data);
+
+export const deleteHrSafety = (id: number) =>
+  instance.delete(`${BASE_URL}/hr-safety/${id}/`);
 
 // =============================================================================
 // VALUTAZIONI

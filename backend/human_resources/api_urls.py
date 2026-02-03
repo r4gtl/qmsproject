@@ -17,6 +17,8 @@ from .api import (
     WardViewSet,
     RoleViewSet,
     ValutazioneOperatoreViewSet,
+    SafetyRoleViewSet,
+    HRSafetyViewSet,
 )
 
 router = DefaultRouter()
@@ -28,6 +30,10 @@ router.register(r"dipendenti", HumanResourceViewSet, basename="dipendente")
 router.register(r"centri-di-lavoro", CentrodiLavoroViewSet, basename="centrodilavoro")
 router.register(r"reparti", WardViewSet, basename="reparto")
 router.register(r"mansioni", RoleViewSet, basename="mansione")
+router.register(r"incarichi-sicurezza", SafetyRoleViewSet, basename="incarichisicurezza")
+
+# Incarichi sicurezza per dipendente
+router.register(r"hr-safety", HRSafetyViewSet, basename="hrsafety")
 
 # Valutazioni
 router.register(r"valutazioni", ValutazioneOperatoreViewSet, basename="valutazione")

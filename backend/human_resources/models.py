@@ -301,6 +301,7 @@ class ValutazioneOperatore(models.Model):
     fk_centro_di_lavoro = models.ForeignKey(CentrodiLavoro, on_delete=models.PROTECT)
     valutazione =  models.CharField(max_length=100, choices=CHOICES_CATEGORY)
     note = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='valutazione_operatore', null=True, blank=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -341,7 +342,10 @@ class HR_Safety(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ["fk_hr"]
+        ordering = ["fk_hr", "-data_inizio_incarico"]
+        indexes = [
+            models.Index(fields=["fk_hr", "fk_safety_role"], name="idx_hr_safety_lookup"),
+        ]
 
     def __str__(self):
         return f"Operatore: {self.fk_hr} - Incarico: {self.fk_safety_role}"

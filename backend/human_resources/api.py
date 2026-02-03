@@ -22,6 +22,8 @@ from .models import (
     Ward,
     Role,
     ValutazioneOperatore,
+    Safety_Role,
+    HR_Safety,
 )
 from .serializers import (
     HumanResourceListSerializer,
@@ -31,6 +33,8 @@ from .serializers import (
     WardSerializer,
     RoleSerializer,
     ValutazioneOperatoreSerializer,
+    SafetyRoleSerializer,
+    HRSafetySerializer,
 )
 
 
@@ -240,4 +244,82 @@ class ValutazioneOperatoreViewSet(viewsets.ModelViewSet):
             return Response(
                 {"detail": "Esiste già una valutazione per questo dipendente e centro di lavoro."},
                 status=status.HTTP_409_CONFLICT
+            )
+
+
+# =============================================================================
+# SAFETY ROLE (INCARICHI SICUREZZA)
+# =============================================================================
+
+class SafetyRoleViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per Safety_Role (Incarichi Sicurezza).
+    CRUD semplice, ordinato per descrizione.
+    """
+    queryset = Safety_Role.objects.all().order_by("descrizione")
+    serializer_class = SafetyRoleSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["descrizione"]
+    ordering_fields = ["descrizione"]
+
+    def destroy(self, request, *args, **kwargs):
+        """Handle ProtectedError/IntegrityError when deleting."""
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except (ProtectedError, IntegrityError):
+            return Response(
+                {"detail": "Impossibile eliminare: elemento in uso."},
+                status=status.HTTP_409_CONFLICT
+            )
+
+
+# =============================================================================
+# HR SAFETY (INCARICHI SICUREZZA PER DIPENDENTE)
+# =============================================================================
+
+class HRSafetyViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per HR_Safety (Incarichi Sicurezza per dipendente).
+
+    Endpoints:
+    - GET /hr-safety/                     Lista tutti gli incarichi
+    - GET /hr-safety/?fk_hr=123           Lista incarichi di un dipendente
+    - GET /hr-safety/{id}/                Dettaglio incarico
+    - POST /hr-safety/                    Crea incarico
+    - PATCH /hr-safety/{id}/              Modifica incarico
+    - DELETE /hr-safety/{id}/             Elimina incarico
+    """
+    serializer_class = HRSafetySerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ["fk_hr", "fk_safety_role"]
+    ordering_fields = ["data_inizio_incarico", "data_fine_incarico"]
+    ordering = ["fk_hr", "-data_inizio_incarico"]  # Default: per dipendente, più recenti prima
+
+    def get_queryset(self):
+        return HR_Safety.objects.select_related(
+            "fk_hr", "fk_safety_role"
+        ).order_by("fk_hr", "-data_inizio_incarico")
+
+    def create(self, request, *args, **kwargs):
+        """Handle ValidationError for overlap."""
+        try:
+            return super().create(request, *args, **kwargs)
+        except Exception as e:
+            # ValidationError già gestito dal serializer
+            # Qui catturiamo solo per sicurezza
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def update(self, request, *args, **kwargs):
+        """Handle ValidationError for overlap."""
+        try:
+            return super().update(request, *args, **kwargs)
+        except Exception as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_400_BAD_REQUEST
             )

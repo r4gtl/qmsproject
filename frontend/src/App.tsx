@@ -238,6 +238,10 @@ function App() {
 
         {/* Human Resources */}
         <Route
+          path="/human-resources"
+          element={<Navigate to="/human-resources/dipendenti" replace />}
+        />
+        <Route
           path="/human-resources/dipendenti"
           element={
             <PrivateRoute>

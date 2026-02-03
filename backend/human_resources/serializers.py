@@ -15,6 +15,8 @@ from .models import (
     Ward,
     Role,
     ValutazioneOperatore,
+    Safety_Role,
+    HR_Safety,
 )
 
 
@@ -237,10 +239,11 @@ class ValutazioneOperatoreSerializer(serializers.ModelSerializer):
             "valutazione",
             "valutazione_display",
             "note",
+            "created_by",
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        read_only_fields = ["id", "created_by", "created_at", "updated_at"]
 
     def validate_fk_hr(self, value):
         if not value:
@@ -281,3 +284,156 @@ class ValutazioneOperatoreSerializer(serializers.ModelSerializer):
                     ]
                 })
         return data
+
+    def create(self, validated_data):
+        """Autopopolamento created_by dall'utente loggato."""
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# SAFETY ROLE (INCARICHI SICUREZZA)
+# =============================================================================
+
+class SafetyRoleSerializer(serializers.ModelSerializer):
+    """Serializer per Safety_Role (Incarichi Sicurezza)."""
+
+    class Meta:
+        model = Safety_Role
+        fields = ["id", "descrizione", "note", "created_at"]
+        read_only_fields = ["id", "created_at", "created_by"]
+
+    def create(self, validated_data):
+        """Autopopolamento created_by dall'utente loggato."""
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# HR SAFETY (INCARICHI SICUREZZA PER DIPENDENTE)
+# =============================================================================
+
+class HRSafetySerializer(serializers.ModelSerializer):
+    """
+    Serializer per HR_Safety (Incarichi Sicurezza per dipendente).
+    Include validazione overlap date per stesso fk_hr + fk_safety_role.
+
+    SEMANTICA INTERVALLI:
+    Gli intervalli sono trattati come [data_inizio, data_fine) (semi-aperti):
+    - data_inizio: inclusa
+    - data_fine: esclusa (se NULL = +infinito)
+    Questo permette incarichi consecutivi dove fine(A) = inizio(B).
+    Esempio: [2024-01-01, 2024-01-10) seguito da [2024-01-10, 2024-02-01) è valido.
+
+    INTERVALLI VUOTI:
+    Non sono permessi incarichi con data_fine == data_inizio (0 giorni).
+    Se data_fine è valorizzata, deve essere STRICT > data_inizio.
+    """
+    fk_safety_role_display = serializers.CharField(
+        source="fk_safety_role.descrizione",
+        read_only=True,
+    )
+    fk_hr_display = serializers.CharField(
+        source="fk_hr.__str__",
+        read_only=True,
+    )
+
+    class Meta:
+        model = HR_Safety
+        fields = [
+            "id",
+            "fk_hr",
+            "fk_hr_display",
+            "fk_safety_role",
+            "fk_safety_role_display",
+            "data_inizio_incarico",
+            "data_fine_incarico",
+            "note",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at", "created_by"]
+
+    def validate(self, data):
+        """
+        Validazioni:
+        1) Se data_fine_incarico presente: >= data_inizio_incarico
+        2) Nessun overlap con incarichi esistenti per stesso hr+role
+
+        PATCH Robustness:
+        In caso di update parziale, combina data con instance esistente
+        per validazione completa.
+
+        Overlap Rule:
+        start_new < end_old AND start_old < end_new
+        Questo permette incarichi consecutivi con fine=inizio (NO overlap).
+        """
+        # PATCH robustness: recupera valori da instance se non in data
+        if self.instance:
+            data_inizio = data.get("data_inizio_incarico", self.instance.data_inizio_incarico)
+            data_fine = data.get("data_fine_incarico", self.instance.data_fine_incarico)
+            fk_hr = data.get("fk_hr", self.instance.fk_hr_id)
+            fk_safety_role = data.get("fk_safety_role", self.instance.fk_safety_role_id)
+        else:
+            data_inizio = data.get("data_inizio_incarico")
+            data_fine = data.get("data_fine_incarico")
+            fk_hr = data.get("fk_hr")
+            fk_safety_role = data.get("fk_safety_role")
+
+        # Validazione 1: data_fine > data_inizio (STRICT, blocca intervalli vuoti)
+        if data_fine is not None and data_inizio is not None:
+            if data_fine <= data_inizio:
+                raise serializers.ValidationError({
+                    "data_fine_incarico": "La data fine deve essere maggiore (>) della data inizio. Intervalli vuoti (fine = inizio) non sono permessi."
+                })
+
+        # Validazione 2: overlap
+        # Serve almeno fk_hr, fk_safety_role, data_inizio per validare
+        if fk_hr and fk_safety_role and data_inizio:
+            from datetime import date as date_type
+
+            # Recupera incarichi esistenti per stesso hr + role
+            qs = HR_Safety.objects.filter(
+                fk_hr=fk_hr,
+                fk_safety_role=fk_safety_role,
+            )
+
+            # Escludi istanza corrente in caso di update
+            if self.instance:
+                qs = qs.exclude(pk=self.instance.pk)
+
+            # Controlla overlap con ciascun incarico esistente
+            for existing in qs:
+                # Intervallo esistente: [start_old, end_old)
+                start_old = existing.data_inizio_incarico
+                end_old = existing.data_fine_incarico
+
+                # Intervallo nuovo: [start_new, end_new)
+                start_new = data_inizio
+                end_new = data_fine
+
+                # Tratta None come date.max per evitare confronti diretti con None
+                # None rappresenta +infinito (incarico aperto)
+                end_old_cmp = end_old if end_old is not None else date_type.max
+                end_new_cmp = end_new if end_new is not None else date_type.max
+
+                # Overlap rule: start_new < end_old AND start_old < end_new
+                # Semantica [start, end): end escluso, quindi fine(A)=inizio(B) è OK
+                if start_new < end_old_cmp and start_old < end_new_cmp:
+                    raise serializers.ValidationError({
+                        "non_field_errors": [
+                            "Esiste già un incarico sovrapposto per questo dipendente e ruolo."
+                        ]
+                    })
+
+        return data
+
+    def create(self, validated_data):
+        """Autopopolamento created_by dall'utente loggato."""
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)

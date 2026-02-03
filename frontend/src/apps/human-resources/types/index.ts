@@ -38,6 +38,41 @@ export interface Role {
 }
 
 // =============================================================================
+// SAFETY ROLE (INCARICHI SICUREZZA)
+// =============================================================================
+
+export interface SafetyRole {
+  id: number;
+  descrizione: string;
+  note: string | null;
+  created_at: string;
+}
+
+// =============================================================================
+// HR SAFETY (INCARICHI SICUREZZA PER DIPENDENTE)
+// =============================================================================
+
+export interface HrSafety {
+  id: number;
+  fk_hr: number;
+  fk_hr_display: string;
+  fk_safety_role: number;
+  fk_safety_role_display: string;
+  data_inizio_incarico: string;
+  data_fine_incarico: string | null;
+  note: string | null;
+  created_at: string;
+}
+
+export interface HrSafetyCreate {
+  fk_hr: number;
+  fk_safety_role: number;
+  data_inizio_incarico: string;
+  data_fine_incarico?: string | null;
+  note?: string | null;
+}
+
+// =============================================================================
 // HUMAN RESOURCE (DIPENDENTE)
 // =============================================================================
 

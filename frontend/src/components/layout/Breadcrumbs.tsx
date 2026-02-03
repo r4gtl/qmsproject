@@ -11,6 +11,9 @@ const breadcrumbNameMap: Record<string, string> = {
   '/clienti': 'Clienti',
   '/clienti/nuovo': 'Nuovo Cliente',
   '/clienti/:id': 'Modifica Cliente',
+  '/human-resources': 'Human Resources',
+  '/human-resources/dipendenti': 'Dipendenti',
+  '/human-resources/tabelle': 'Tabelle Generiche',
 };
 
 const Breadcrumbs = () => {

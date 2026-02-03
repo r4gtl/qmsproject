@@ -14,6 +14,7 @@ import {
   Row,
   Col,
   Badge,
+  ButtonGroup,
 } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import {
@@ -240,26 +241,23 @@ export default function ValutazioniTab({
                 </td>
                 <td>{val.note || '-'}</td>
                 <td>
-                  <Button
-                    variant="outline-primary"
-                    size="sm"
-                    className="me-1"
-                    onClick={() => handleEdit(val)}
-                  >
-                    Modifica
-                  </Button>
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => handleDelete(val)}
-                    disabled={deleting === val.id}
-                  >
-                    {deleting === val.id ? (
-                      <Spinner animation="border" size="sm" />
-                    ) : (
-                      'Elimina'
-                    )}
-                  </Button>
+                  <ButtonGroup size="sm">
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => handleEdit(val)}
+                      title="Modifica"
+                    >
+                      ✎
+                    </Button>
+                    <Button
+                      variant="outline-danger"
+                      onClick={() => handleDelete(val)}
+                      disabled={deleting === val.id}
+                      title="Elimina"
+                    >
+                      {deleting === val.id ? '...' : '✕'}
+                    </Button>
+                  </ButtonGroup>
                 </td>
               </tr>
             ))}

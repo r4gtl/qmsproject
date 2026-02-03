@@ -3,6 +3,7 @@
  *
  * Tab 1: Dati dipendente (create/edit)
  * Tab 2: Valutazioni (solo in edit mode)
+ * Tab 3: Incarichi Sicurezza (solo in edit mode)
  */
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -37,6 +38,7 @@ import {
   ORARIO_CHOICES,
 } from '../types';
 import ValutazioniTab from '../components/ValutazioniTab';
+import IncarichiSicurezzaTab from '../components/IncarichiSicurezzaTab';
 
 export default function EmployeeForm() {
   const navigate = useNavigate();
@@ -214,16 +216,27 @@ export default function EmployeeForm() {
     }
   };
 
-  // Callback per refresh valutazioni (dopo modifica)
-  const handleValutazioniChange = async () => {
+  // Refresh dipendente dopo modifica
+  const refreshEmployee = async () => {
     if (!isEditMode) return;
-    // Ricarica dipendente per aggiornare conteggi se necessario
     try {
       const res = await getDipendente(Number(id));
       setDipendente(res.data);
-    } catch {
-      // silent fail
+    } catch (err: any) {
+      console.error('Errore refresh dipendente:', err);
+      const msg = err.response?.data?.detail || 'Errore ricaricamento dati dipendente';
+      toast.warning(msg);
     }
+  };
+
+  // Callback tab Valutazioni
+  const handleValutazioniChange = async () => {
+    await refreshEmployee();
+  };
+
+  // Callback tab Incarichi Sicurezza
+  const handleIncarichiSicurezzaChange = async () => {
+    await refreshEmployee();
   };
 
   if (loading) {
@@ -511,6 +524,20 @@ export default function EmployeeForm() {
               <ValutazioniTab
                 dipendenteId={Number(id)}
                 onValutazioniChange={handleValutazioniChange}
+              />
+            )}
+          </Tab>
+
+          {/* TAB 3: Incarichi Sicurezza */}
+          <Tab eventKey="incarichi-sicurezza" title="Incarichi Sicurezza">
+            {!isEditMode ? (
+              <Alert variant="info">
+                Salva prima il dipendente per poter gestire gli incarichi sicurezza.
+              </Alert>
+            ) : (
+              <IncarichiSicurezzaTab
+                dipendenteId={Number(id)}
+                onIncarichiChange={handleIncarichiSicurezzaChange}
               />
             )}
           </Tab>
