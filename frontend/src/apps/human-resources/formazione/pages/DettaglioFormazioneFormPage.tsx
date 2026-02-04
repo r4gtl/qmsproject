@@ -140,9 +140,12 @@ export default function DettaglioFormazioneFormPage() {
       // Decide if we need FormData (for file upload) or JSON
       if (certificatoFile) {
         // Use FormData for multipart upload
-        // IMPORTANTE: Includi sempre i campi required dal serializer
         const fd = new FormData();
-        fd.append('fk_registro_formazione', registroId!);
+        // Per CREATE: includi fk_registro_formazione (obbligatorio)
+        // Per UPDATE (PATCH): non serve, il record esiste già
+        if (!isEdit) {
+          fd.append('fk_registro_formazione', registroId!);
+        }
         fd.append('fk_hr', formData.fk_hr);
         fd.append('presenza', formData.presenza);
         fd.append('efficace', formData.efficace ? 'true' : 'false');
@@ -162,8 +165,9 @@ export default function DettaglioFormazioneFormPage() {
         }
       } else {
         // Use JSON
-        const payload = {
-          fk_registro_formazione: parseInt(registroId!, 10),
+        // Per CREATE: includi fk_registro_formazione (obbligatorio)
+        // Per UPDATE (PATCH): non serve, il record esiste già
+        const basePayload = {
           fk_hr: parseInt(formData.fk_hr, 10),
           presenza: formData.presenza,
           ore: parseOreOrNull(formData.ore),
@@ -173,10 +177,14 @@ export default function DettaglioFormazioneFormPage() {
         };
 
         if (isEdit) {
-          await updateDettaglioFormazione(Number(id), payload);
+          await updateDettaglioFormazione(Number(id), basePayload);
           toast.success('Dettaglio aggiornato');
         } else {
-          await createDettaglioFormazione(payload);
+          const createPayload = {
+            ...basePayload,
+            fk_registro_formazione: parseInt(registroId!, 10),
+          };
+          await createDettaglioFormazione(createPayload);
           toast.success('Operatore aggiunto');
         }
       }

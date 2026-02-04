@@ -83,30 +83,25 @@ export const getDettaglioFormazione = (id: number) =>
 
 /**
  * Crea nuovo dettaglio formazione (JSON o FormData per upload).
+ *
+ * NOTA: NON settare Content-Type manualmente per FormData!
+ * Il browser genera automaticamente il boundary corretto.
+ * L'interceptor axios aggiunge Authorization header.
  */
-export const createDettaglioFormazione = (data: DettaglioRegistroFormazioneCreate | FormData) => {
-  const isFormData = data instanceof FormData;
-  return instance.post<DettaglioRegistroFormazione>(
-    `${BASE_URL}/dettagli-formazione/`,
-    data,
-    isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined
-  );
-};
+export const createDettaglioFormazione = (data: DettaglioRegistroFormazioneCreate | FormData) =>
+  instance.post<DettaglioRegistroFormazione>(`${BASE_URL}/dettagli-formazione/`, data);
 
 /**
  * Aggiorna dettaglio formazione (JSON o FormData per upload).
+ *
+ * NOTA: NON settare Content-Type manualmente per FormData!
+ * Il browser genera automaticamente il boundary corretto.
+ * L'interceptor axios aggiunge Authorization header.
  */
 export const updateDettaglioFormazione = (
   id: number,
   data: Partial<DettaglioRegistroFormazioneCreate> | FormData
-) => {
-  const isFormData = data instanceof FormData;
-  return instance.patch<DettaglioRegistroFormazione>(
-    `${BASE_URL}/dettagli-formazione/${id}/`,
-    data,
-    isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined
-  );
-};
+) => instance.patch<DettaglioRegistroFormazione>(`${BASE_URL}/dettagli-formazione/${id}/`, data);
 
 /**
  * Elimina dettaglio formazione.

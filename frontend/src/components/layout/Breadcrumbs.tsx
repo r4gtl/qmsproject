@@ -39,12 +39,19 @@ interface ProceduraData {
   data_revisione: string;
 }
 
+interface RegistroFormazioneData {
+  id: number;
+  data_formazione: string;
+  corso_descrizione: string;
+}
+
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
   const [fornitoreData, setFornitoreData] = useState<{ id: string; ragionesociale: string } | null>(null);
   const [articoloData, setArticoloData] = useState<ArticoloData | null>(null);
   const [proceduraData, setProceduraData] = useState<ProceduraData | null>(null);
+  const [registroFormazioneData, setRegistroFormazioneData] = useState<RegistroFormazioneData | null>(null);
 
   // Controlla se siamo nella pagina di modifica fornitore
   const fornitoreMatch = matchPath({ path: '/fornitori/:id/modifica', end: true }, location.pathname);
@@ -57,6 +64,18 @@ const Breadcrumbs = () => {
 
   // Controlla se siamo nella pagina articolo (edit)
   const articoloMatch = matchPath({ path: '/articoli/:id', end: true }, location.pathname);
+
+  // Controlla se siamo in pagine formazione registri (registro o dettaglio)
+  const registroFormazioneMatch = matchPath(
+    { path: '/human-resources/formazione/registri/:registroId', end: true },
+    location.pathname
+  );
+  const dettaglioFormazioneMatch = matchPath(
+    { path: '/human-resources/formazione/registri/:registroId/dettagli/:dettaglioId', end: true },
+    location.pathname
+  );
+  // ID registro per caricare i dati
+  const registroId = registroFormazioneMatch?.params.registroId || dettaglioFormazioneMatch?.params.registroId;
 
   useEffect(() => {
     if (fornitoreMatch?.params.id) {
@@ -97,6 +116,18 @@ const Breadcrumbs = () => {
     }
   }, [proceduraMatch?.params.proceduraId]);
 
+  // Carica dati registro formazione per breadcrumb
+  useEffect(() => {
+    if (registroId) {
+      axios
+        .get(`/human-resources/registri-formazione/${registroId}/`)
+        .then((res) => setRegistroFormazioneData(res.data))
+        .catch((err) => console.error('Errore caricamento registro formazione per breadcrumb:', err));
+    } else {
+      setRegistroFormazioneData(null);
+    }
+  }, [registroId]);
+
   if (location.pathname === '/login') return null;
 
   const buildBreadcrumb = () => {
@@ -130,6 +161,60 @@ const Breadcrumbs = () => {
           {proceduraLabel}
         </Breadcrumb.Item>
       );
+
+      return crumbs;
+    }
+
+    // Se siamo in pagine formazione registri, costruisci breadcrumb custom
+    // (salta "registri" che non ha una route propria)
+    if (registroFormazioneMatch || dettaglioFormazioneMatch) {
+      // Human Resources
+      crumbs.push(
+        <Breadcrumb.Item key="/human-resources" linkAs={Link} linkProps={{ to: '/human-resources' }}>
+          Human Resources
+        </Breadcrumb.Item>
+      );
+
+      // Formazione (lista registri)
+      crumbs.push(
+        <Breadcrumb.Item key="/human-resources/formazione" linkAs={Link} linkProps={{ to: '/human-resources/formazione' }}>
+          Formazione
+        </Breadcrumb.Item>
+      );
+
+      // Registro (con info corso e data)
+      const registroLabel = registroFormazioneData
+        ? `${registroFormazioneData.corso_descrizione} - ${formatDate(registroFormazioneData.data_formazione)}`
+        : `Registro ${registroId}`;
+
+      if (dettaglioFormazioneMatch) {
+        // Se siamo nel dettaglio, il registro è cliccabile
+        crumbs.push(
+          <Breadcrumb.Item
+            key={`/human-resources/formazione/registri/${registroId}`}
+            linkAs={Link}
+            linkProps={{ to: `/human-resources/formazione/registri/${registroId}` }}
+          >
+            {registroLabel}
+          </Breadcrumb.Item>
+        );
+
+        // Dettaglio (attivo)
+        const isNew = dettaglioFormazioneMatch.params.dettaglioId === 'new';
+        crumbs.push(
+          <Breadcrumb.Item key={location.pathname} active>
+            {isNew ? 'Nuovo Operatore' : 'Modifica Operatore'}
+          </Breadcrumb.Item>
+        );
+      } else {
+        // Siamo nel registro, è l'ultimo elemento (attivo)
+        const isNew = registroFormazioneMatch?.params.registroId === 'new';
+        crumbs.push(
+          <Breadcrumb.Item key={location.pathname} active>
+            {isNew ? 'Nuovo Registro' : registroLabel}
+          </Breadcrumb.Item>
+        );
+      }
 
       return crumbs;
     }

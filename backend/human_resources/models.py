@@ -1,4 +1,6 @@
 import datetime
+import os
+import uuid
 from dateutil.relativedelta import relativedelta
 
 from anagrafiche.models import Fornitore
@@ -183,14 +185,31 @@ class RegistroFormazione(models.Model):
 def corso_directory_path(instance, filename):
     """
     Upload certificati in cartella organizzata per corso.
-    Usa corso_id per evitare problemi con spazi/caratteri speciali nel nome.
-    Path: certificati_formazione/corso_{id}/{filename}
+
+    HARDENING:
+    - os.path.basename: rimuove path traversal (../../../etc/passwd)
+    - UUID: evita collisioni e caratteri problematici nel filename
+    - Slug limitato a 30 char per evitare path troppo lunghi
+
+    Path finale: certificati_formazione/corso_{id}_{slug}/{uuid}.{ext}
     """
     from django.utils.text import slugify
+
+    # SICUREZZA: rimuovi qualsiasi path dal filename (previene path traversal)
+    safe_filename = os.path.basename(filename)
+
+    # Estrai e normalizza estensione
+    _, ext = os.path.splitext(safe_filename)
+    ext = ext.lower()
+
+    # Genera nome univoco con UUID (evita collisioni e caratteri strani)
+    new_filename = f"{uuid.uuid4().hex}{ext}"
+
     corso = instance.fk_registro_formazione.fk_corso
-    # Usa ID per robustezza, con slug della descrizione per leggibilità
-    corso_slug = slugify(corso.descrizione) if corso.descrizione else "corso"
-    return f"certificati_formazione/corso_{corso.id}_{corso_slug}/{filename}"
+    # Slug limitato a 30 char per evitare path troppo lunghi
+    corso_slug = slugify(corso.descrizione)[:30] if corso.descrizione else "corso"
+
+    return f"certificati_formazione/corso_{corso.id}_{corso_slug}/{new_filename}"
 
 
 class DettaglioRegistroFormazioneManager(models.Manager):

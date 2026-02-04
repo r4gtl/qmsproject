@@ -8,6 +8,7 @@
  * - { detail: string } (errori generici)
  * - { field: ["error1", "error2"] } (errori di validazione per campo)
  * - string (risposta raw)
+ * - HTML (Django debug page) -> fallback al messaggio di default
  *
  * @param err - Errore axios con response.data
  * @param defaultMsg - Messaggio di fallback se nessun errore trovato
@@ -17,7 +18,15 @@ export const extractErrorMessage = (err: any, defaultMsg: string): string => {
   const data = err.response?.data;
 
   // Risposta stringa diretta
-  if (typeof data === 'string') return data;
+  if (typeof data === 'string') {
+    // Rileva HTML (Django debug page o errori server)
+    // Ritorna il messaggio di default invece di mostrare HTML
+    if (data.includes('<!DOCTYPE') || data.includes('<html') || data.includes('<tr>')) {
+      console.error('Server returned HTML error page:', data.substring(0, 500));
+      return defaultMsg;
+    }
+    return data;
+  }
 
   // Errore con campo detail (es. { detail: "Not found" })
   if (data?.detail) return data.detail;
