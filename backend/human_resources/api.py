@@ -13,8 +13,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.db.models.deletion import ProtectedError
+
+from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 from .models import (
     HumanResource,
@@ -25,6 +28,10 @@ from .models import (
     Safety_Role,
     HR_Safety,
     RegistroOreLavoro,
+    AreaFormazione,
+    CorsoFormazione,
+    RegistroFormazione,
+    DettaglioRegistroFormazione,
 )
 from .serializers import (
     HumanResourceListSerializer,
@@ -39,6 +46,14 @@ from .serializers import (
     RegistroOreLavoroListSerializer,
     RegistroOreLavoroDetailSerializer,
     RegistroOreLavoroWriteSerializer,
+    AreaFormazioneSerializer,
+    CorsoFormazioneSerializer,
+    RegistroFormazioneListSerializer,
+    RegistroFormazioneDetailSerializer,
+    RegistroFormazioneWriteSerializer,
+    DettaglioRegistroFormazioneSerializer,
+    DettaglioRegistroFormazioneWriteSerializer,
+    DettaglioFormazioneCurrentSerializer,
 )
 
 
@@ -380,3 +395,261 @@ class RegistroOreLavoroViewSet(viewsets.ModelViewSet):
         instance = write_serializer.save()
         detail_serializer = RegistroOreLavoroDetailSerializer(instance)
         return Response(detail_serializer.data)
+
+
+# =============================================================================
+# AREA FORMAZIONE
+# =============================================================================
+
+class AreaFormazioneViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per AreaFormazione (Sicurezza, Qualità, Amministrazione, ecc.).
+    CRUD semplice, ordinato per descrizione.
+    """
+    queryset = AreaFormazione.objects.all().order_by("descrizione")
+    serializer_class = AreaFormazioneSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ["descrizione"]
+    ordering_fields = ["descrizione"]
+
+    def perform_create(self, serializer):
+        """Setta created_by sull'utente loggato."""
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        """Setta created_by solo se non già presente."""
+        instance = serializer.instance
+        if instance and not instance.created_by:
+            serializer.save(created_by=self.request.user)
+        else:
+            serializer.save()
+
+
+# =============================================================================
+# CORSO FORMAZIONE
+# =============================================================================
+
+class CorsoFormazioneViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per CorsoFormazione.
+
+    Endpoints:
+    - GET /corsi-formazione/                  Lista tutti i corsi
+    - GET /corsi-formazione/?fk_areaformazione=1  Filtra per area
+    - GET /corsi-formazione/{id}/             Dettaglio corso
+    - POST /corsi-formazione/                 Crea corso
+    - PATCH /corsi-formazione/{id}/           Modifica corso
+    - DELETE /corsi-formazione/{id}/          Elimina corso
+    """
+    serializer_class = CorsoFormazioneSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ["fk_areaformazione"]
+    search_fields = ["descrizione"]
+    ordering_fields = ["descrizione", "validita_mesi"]
+    ordering = ["descrizione"]
+
+    def get_queryset(self):
+        return CorsoFormazione.objects.select_related(
+            "fk_areaformazione"
+        ).order_by("descrizione")
+
+    def perform_create(self, serializer):
+        """Setta created_by sull'utente loggato."""
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        """Setta created_by solo se non già presente."""
+        instance = serializer.instance
+        if instance and not instance.created_by:
+            serializer.save(created_by=self.request.user)
+        else:
+            serializer.save()
+
+    def destroy(self, request, *args, **kwargs):
+        """Handle ProtectedError quando si elimina un corso in uso."""
+        try:
+            return super().destroy(request, *args, **kwargs)
+        except (ProtectedError, IntegrityError):
+            return Response(
+                {"detail": "Impossibile eliminare: corso in uso."},
+                status=status.HTTP_409_CONFLICT
+            )
+
+
+# =============================================================================
+# REGISTRO FORMAZIONE
+# =============================================================================
+
+class RegistroFormazioneViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per RegistroFormazione.
+
+    Endpoints:
+    - GET /registri-formazione/               Lista (dashboard) ordinata -data
+    - GET /registri-formazione/?fk_corso=1    Filtra per corso
+    - GET /registri-formazione/{id}/          Dettaglio con tabella operatori
+    - POST /registri-formazione/              Crea registro (con dettagli opzionali)
+    - PATCH /registri-formazione/{id}/        Modifica registro
+    - DELETE /registri-formazione/{id}/       Elimina registro
+    """
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_fields = ["fk_corso", "fk_fornitore"]
+    ordering_fields = ["data_formazione", "ore"]
+    ordering = ["-data_formazione"]
+    search_fields = ["fk_corso__descrizione", "note"]
+
+    def get_queryset(self):
+        return RegistroFormazione.objects.select_related(
+            "fk_corso",
+            "fk_corso__fk_areaformazione",
+            "fk_fornitore"
+        ).prefetch_related(
+            "dettagli", "dettagli__fk_hr"
+        ).annotate(
+            num_partecipanti=Count("dettagli")
+        )
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return RegistroFormazioneListSerializer
+        elif self.action in ["create", "update", "partial_update"]:
+            return RegistroFormazioneWriteSerializer
+        return RegistroFormazioneDetailSerializer
+
+    def perform_create(self, serializer):
+        """Setta created_by sull'utente loggato."""
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        """Setta created_by solo se non già presente."""
+        instance = serializer.instance
+        if instance and not instance.created_by:
+            serializer.save(created_by=self.request.user)
+        else:
+            serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo create."""
+        write_serializer = self.get_serializer(data=request.data)
+        write_serializer.is_valid(raise_exception=True)
+        self.perform_create(write_serializer)
+        detail_serializer = RegistroFormazioneDetailSerializer(
+            write_serializer.instance, context={'request': request}
+        )
+        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo update."""
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        write_serializer = self.get_serializer(
+            instance, data=request.data, partial=partial
+        )
+        write_serializer.is_valid(raise_exception=True)
+        self.perform_update(write_serializer)
+        detail_serializer = RegistroFormazioneDetailSerializer(
+            write_serializer.instance, context={'request': request}
+        )
+        return Response(detail_serializer.data)
+
+
+# =============================================================================
+# DETTAGLIO REGISTRO FORMAZIONE
+# =============================================================================
+
+class DettaglioRegistroFormazioneViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet per DettaglioRegistroFormazione.
+
+    Endpoints:
+    - GET /dettagli-formazione/                     Lista tutti
+    - GET /dettagli-formazione/?fk_registro_formazione=1  Filtra per registro
+    - GET /dettagli-formazione/?fk_hr=1             Filtra per dipendente
+    - GET /dettagli-formazione/{id}/                Dettaglio
+    - POST /dettagli-formazione/                    Crea (supporta multipart)
+    - PATCH /dettagli-formazione/{id}/              Modifica
+    - DELETE /dettagli-formazione/{id}/             Elimina
+    - GET /dettagli-formazione/current/             Record corrente per hr+corso
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [JSONParser, MultiPartParser, FormParser]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ["fk_registro_formazione", "fk_hr", "presenza", "efficace"]
+    ordering_fields = ["fk_registro_formazione__data_formazione", "scadenza_calcolata"]
+    ordering = ["-fk_registro_formazione__data_formazione"]
+
+    def get_queryset(self):
+        return DettaglioRegistroFormazione.objects.select_related(
+            "fk_hr",
+            "fk_registro_formazione",
+            "fk_registro_formazione__fk_corso"
+        )
+
+    def get_serializer_class(self):
+        if self.action in ["create", "update", "partial_update"]:
+            return DettaglioRegistroFormazioneWriteSerializer
+        if self.action == "current":
+            return DettaglioFormazioneCurrentSerializer
+        return DettaglioRegistroFormazioneSerializer
+
+    def perform_create(self, serializer):
+        """Setta created_by sull'utente loggato."""
+        serializer.save(created_by=self.request.user)
+
+    def perform_update(self, serializer):
+        """Setta created_by solo se non già presente."""
+        instance = serializer.instance
+        if instance and not instance.created_by:
+            serializer.save(created_by=self.request.user)
+        else:
+            serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo create."""
+        write_serializer = self.get_serializer(data=request.data)
+        write_serializer.is_valid(raise_exception=True)
+        self.perform_create(write_serializer)
+        detail_serializer = DettaglioRegistroFormazioneSerializer(
+            write_serializer.instance, context={'request': request}
+        )
+        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
+
+    def update(self, request, *args, **kwargs):
+        """Override per ritornare il detail serializer dopo update."""
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        write_serializer = self.get_serializer(
+            instance, data=request.data, partial=partial
+        )
+        write_serializer.is_valid(raise_exception=True)
+        self.perform_update(write_serializer)
+        detail_serializer = DettaglioRegistroFormazioneSerializer(
+            write_serializer.instance, context={'request': request}
+        )
+        return Response(detail_serializer.data)
+
+    @action(detail=False, methods=["get"])
+    def current(self, request):
+        """
+        Endpoint per ottenere il record corrente per ogni coppia (hr, corso).
+
+        Query params opzionali:
+        - fk_hr: filtra per dipendente specifico
+
+        Ritorna 1 record per coppia (hr, corso): quello con scadenza_effettiva
+        più lontana nel futuro.
+        """
+        queryset = DettaglioRegistroFormazione.objects.get_current_per_hr_corso()
+
+        # Filtro opzionale per dipendente
+        fk_hr = request.query_params.get("fk_hr")
+        if fk_hr:
+            queryset = queryset.filter(fk_hr=fk_hr)
+
+        serializer = DettaglioFormazioneCurrentSerializer(
+            queryset, many=True, context={'request': request}
+        )
+        return Response(serializer.data)

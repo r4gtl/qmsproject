@@ -18,6 +18,10 @@ from .models import (
     Safety_Role,
     HR_Safety,
     RegistroOreLavoro,
+    AreaFormazione,
+    CorsoFormazione,
+    RegistroFormazione,
+    DettaglioRegistroFormazione,
 )
 
 
@@ -216,10 +220,10 @@ class ValutazioneOperatoreSerializer(serializers.ModelSerializer):
     Serializer per ValutazioneOperatore.
     Include display names per FK.
     """
-    fk_hr_display = serializers.CharField(
-        source="fk_hr.__str__",
-        read_only=True,
-    )
+    fk_hr_display = serializers.SerializerMethodField()
+
+    def get_fk_hr_display(self, obj):
+        return str(obj.fk_hr) if obj.fk_hr else None
     fk_centro_di_lavoro_display = serializers.CharField(
         source="fk_centro_di_lavoro.description",
         read_only=True,
@@ -338,10 +342,10 @@ class HRSafetySerializer(serializers.ModelSerializer):
         source="fk_safety_role.descrizione",
         read_only=True,
     )
-    fk_hr_display = serializers.CharField(
-        source="fk_hr.__str__",
-        read_only=True,
-    )
+    fk_hr_display = serializers.SerializerMethodField()
+
+    def get_fk_hr_display(self, obj):
+        return str(obj.fk_hr) if obj.fk_hr else None
 
     class Meta:
         model = HR_Safety
@@ -540,7 +544,9 @@ class RegistroOreLavoroWriteSerializer(serializers.ModelSerializer):
 
     def validate_entry_month(self, value):
         if not value or value < 1 or value > 12:
-            raise serializers.ValidationError("Il mese deve essere compreso tra 1 e 12.")
+            raise serializers.ValidationError(
+                "Il mese deve essere compreso tra 1 e 12."
+            )
         return value
 
     def create(self, validated_data):
@@ -549,3 +555,314 @@ class RegistroOreLavoroWriteSerializer(serializers.ModelSerializer):
         if request and hasattr(request, 'user'):
             validated_data['created_by'] = request.user
         return super().create(validated_data)
+
+
+# =============================================================================
+# AREA FORMAZIONE
+# =============================================================================
+
+class AreaFormazioneSerializer(serializers.ModelSerializer):
+    """Serializer per AreaFormazione (Sicurezza, Qualità, ecc.)."""
+
+    class Meta:
+        model = AreaFormazione
+        fields = ["id", "descrizione", "created_by"]
+        read_only_fields = ["id", "created_by"]
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# CORSO FORMAZIONE
+# =============================================================================
+
+class CorsoFormazioneSerializer(serializers.ModelSerializer):
+    """Serializer per CorsoFormazione."""
+    fk_areaformazione_display = serializers.CharField(
+        source="fk_areaformazione.descrizione",
+        read_only=True,
+    )
+
+    class Meta:
+        model = CorsoFormazione
+        fields = [
+            "id",
+            "descrizione",
+            "fk_areaformazione",
+            "fk_areaformazione_display",
+            "validita_mesi",
+            "created_by",
+        ]
+        read_only_fields = ["id", "created_by"]
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# DETTAGLIO REGISTRO FORMAZIONE
+# =============================================================================
+
+class DettaglioRegistroFormazioneSerializer(serializers.ModelSerializer):
+    """
+    Serializer per DettaglioRegistroFormazione.
+    Include scadenza_effettiva calcolata e URL certificato.
+    """
+    fk_hr_display = serializers.SerializerMethodField()
+    scadenza_effettiva = serializers.DateField(read_only=True)
+    certificato_url = serializers.SerializerMethodField()
+
+    def get_fk_hr_display(self, obj):
+        return str(obj.fk_hr) if obj.fk_hr else None
+
+    class Meta:
+        model = DettaglioRegistroFormazione
+        fields = [
+            "id",
+            "fk_registro_formazione",
+            "fk_hr",
+            "fk_hr_display",
+            "ore",
+            "note",
+            "certificato",
+            "certificato_url",
+            "presenza",
+            "efficace",
+            "scadenza_calcolata",
+            "scadenza_override",
+            "scadenza_effettiva",
+            "created_by",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "id",
+            "scadenza_calcolata",
+            "scadenza_effettiva",
+            "created_by",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_certificato_url(self, obj):
+        """Ritorna URL completa del certificato se presente."""
+        if obj.certificato:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.certificato.url)
+            return obj.certificato.url
+        return None
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+class DettaglioRegistroFormazioneWriteSerializer(serializers.ModelSerializer):
+    """Serializer per create/update DettaglioRegistroFormazione."""
+
+    class Meta:
+        model = DettaglioRegistroFormazione
+        fields = [
+            "fk_registro_formazione",
+            "fk_hr",
+            "ore",
+            "note",
+            "certificato",
+            "presenza",
+            "efficace",
+            "scadenza_override",
+        ]
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+        return super().create(validated_data)
+
+
+# =============================================================================
+# REGISTRO FORMAZIONE
+# =============================================================================
+
+class RegistroFormazioneListSerializer(serializers.ModelSerializer):
+    """
+    Serializer per lista dashboard RegistroFormazione.
+    Campi minimi per performance.
+    num_partecipanti viene popolato via annotate(Count) nel ViewSet.
+    """
+    corso_descrizione = serializers.CharField(
+        source="fk_corso.descrizione",
+        read_only=True,
+    )
+    fornitore_descrizione = serializers.CharField(
+        source="fk_fornitore.ragionesociale",
+        read_only=True,
+        allow_null=True,
+    )
+    # Campo annotato dal ViewSet - evita N+1
+    num_partecipanti = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = RegistroFormazione
+        fields = [
+            "id",
+            "data_formazione",
+            "fk_corso",
+            "corso_descrizione",
+            "fk_fornitore",
+            "fornitore_descrizione",
+            "ore",
+            "num_partecipanti",
+        ]
+
+
+class RegistroFormazioneDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer per dettaglio RegistroFormazione.
+    Include la tabella operatori (DettaglioRegistroFormazione).
+    """
+    corso_descrizione = serializers.CharField(
+        source="fk_corso.descrizione",
+        read_only=True,
+    )
+    area_formazione = serializers.CharField(
+        source="fk_corso.fk_areaformazione.descrizione",
+        read_only=True,
+    )
+    validita_mesi = serializers.IntegerField(
+        source="fk_corso.validita_mesi",
+        read_only=True,
+    )
+    fornitore_descrizione = serializers.CharField(
+        source="fk_fornitore.ragionesociale",
+        read_only=True,
+        allow_null=True,
+    )
+    dettagli = DettaglioRegistroFormazioneSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = RegistroFormazione
+        fields = [
+            "id",
+            "data_formazione",
+            "fk_corso",
+            "corso_descrizione",
+            "area_formazione",
+            "validita_mesi",
+            "fk_fornitore",
+            "fornitore_descrizione",
+            "ore",
+            "note",
+            "created_by",
+            "dettagli",
+        ]
+        read_only_fields = ["id", "created_by"]
+
+
+class RegistroFormazioneWriteSerializer(serializers.ModelSerializer):
+    """
+    Serializer per create/update RegistroFormazione.
+    Supporta creazione con dettagli annidati opzionali.
+    """
+    dettagli = DettaglioRegistroFormazioneWriteSerializer(
+        many=True, required=False
+    )
+
+    class Meta:
+        model = RegistroFormazione
+        fields = [
+            "data_formazione",
+            "fk_corso",
+            "fk_fornitore",
+            "ore",
+            "note",
+            "dettagli",
+        ]
+
+    def create(self, validated_data):
+        dettagli_data = validated_data.pop('dettagli', [])
+        request = self.context.get('request')
+
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+
+        registro = RegistroFormazione.objects.create(**validated_data)
+
+        # Crea dettagli annidati
+        for dettaglio_data in dettagli_data:
+            if request and hasattr(request, 'user'):
+                dettaglio_data['created_by'] = request.user
+            DettaglioRegistroFormazione.objects.create(
+                fk_registro_formazione=registro,
+                **dettaglio_data
+            )
+
+        return registro
+
+    def update(self, instance, validated_data):
+        # Non aggiorniamo dettagli in update, vanno gestiti separatamente
+        validated_data.pop('dettagli', None)
+        return super().update(instance, validated_data)
+
+
+# =============================================================================
+# DETTAGLIO FORMAZIONE - RECORD CORRENTE (per query speciale)
+# =============================================================================
+
+class DettaglioFormazioneCurrentSerializer(serializers.ModelSerializer):
+    """
+    Serializer per la query "record corrente" per coppia (hr, corso).
+    Include info complete su hr, corso e scadenza.
+    """
+    fk_hr_display = serializers.SerializerMethodField()
+    corso_descrizione = serializers.CharField(
+        source="fk_registro_formazione.fk_corso.descrizione",
+        read_only=True,
+    )
+    corso_id = serializers.IntegerField(
+        source="fk_registro_formazione.fk_corso.id",
+        read_only=True,
+    )
+    data_formazione = serializers.DateField(
+        source="fk_registro_formazione.data_formazione",
+        read_only=True,
+    )
+    scadenza_effettiva = serializers.DateField(read_only=True)
+    certificato_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DettaglioRegistroFormazione
+        fields = [
+            "id",
+            "fk_hr",
+            "fk_hr_display",
+            "corso_id",
+            "corso_descrizione",
+            "data_formazione",
+            "scadenza_calcolata",
+            "scadenza_override",
+            "scadenza_effettiva",
+            "efficace",
+            "certificato_url",
+        ]
+
+    def get_fk_hr_display(self, obj):
+        return str(obj.fk_hr) if obj.fk_hr else None
+
+    def get_certificato_url(self, obj):
+        if obj.certificato:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.certificato.url)
+            return obj.certificato.url
+        return None

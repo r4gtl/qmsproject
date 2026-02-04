@@ -21,6 +21,10 @@ import EmployeeForm from './apps/human-resources/pages/EmployeeForm';
 import TabelleGenericheHRPage from './apps/human-resources/pages/TabelleGenericheHRPage';
 import RegistroOreLavoroListPage from './apps/human-resources/pages/RegistroOreLavoroListPage';
 import RegistroOreLavoroFormPage from './apps/human-resources/pages/RegistroOreLavoroFormPage';
+// Formazione
+import FormazioneDashboardPage from './apps/human-resources/formazione/pages/FormazioneDashboardPage';
+import RegistroFormazioneFormPage from './apps/human-resources/formazione/pages/RegistroFormazioneFormPage';
+import DettaglioFormazioneFormPage from './apps/human-resources/formazione/pages/DettaglioFormazioneFormPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -309,6 +313,58 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <RegistroOreLavoroFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Formazione */}
+        <Route
+          path="/human-resources/formazione"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <FormazioneDashboardPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/formazione/registri/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <RegistroFormazioneFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/formazione/registri/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <RegistroFormazioneFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/formazione/registri/:registroId/dettagli/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <DettaglioFormazioneFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/formazione/registri/:registroId/dettagli/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <DettaglioFormazioneFormPage />
               </Layout>
             </PrivateRoute>
           }

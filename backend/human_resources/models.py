@@ -1,4 +1,5 @@
 import datetime
+from dateutil.relativedelta import relativedelta
 
 from anagrafiche.models import Fornitore
 from django.contrib.auth.models import User
@@ -143,12 +144,23 @@ class AreaFormazione(models.Model):
 class CorsoFormazione(models.Model):
     descrizione = models.CharField(max_length=100)
     fk_areaformazione = models.ForeignKey(AreaFormazione, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, related_name='corso_formazione', null=True, blank=True, on_delete=models.SET_NULL)
+    # Validità del corso in mesi (default 12). Usato per calcolare scadenza_calcolata.
+    validita_mesi = models.PositiveIntegerField(
+        default=12,
+        help_text="Validità del corso in mesi (es. 12, 24, 36)"
+    )
+    created_by = models.ForeignKey(
+        User,
+        related_name='corso_formazione',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     class Meta:
         ordering = ["descrizione"]
         verbose_name_plural = "Corsi Formazione"
-    
+
     def __str__(self):
         return self.descrizione
     
@@ -167,33 +179,167 @@ class RegistroFormazione(models.Model):
 
 
 
-# funzione che crea la directory in base al corso    
+# Funzione che crea la directory in base al corso
 def corso_directory_path(instance, filename):
+    """
+    Upload certificati in cartella organizzata per corso.
+    Usa corso_id per evitare problemi con spazi/caratteri speciali nel nome.
+    Path: certificati_formazione/corso_{id}/{filename}
+    """
+    from django.utils.text import slugify
     corso = instance.fk_registro_formazione.fk_corso
-    return "{0}/{1}".format(corso, filename)
+    # Usa ID per robustezza, con slug della descrizione per leggibilità
+    corso_slug = slugify(corso.descrizione) if corso.descrizione else "corso"
+    return f"certificati_formazione/corso_{corso.id}_{corso_slug}/{filename}"
 
 
+class DettaglioRegistroFormazioneManager(models.Manager):
+    """
+    Manager custom per DettaglioRegistroFormazione.
+    Fornisce query per ottenere il record corrente per coppia (hr, corso).
+    """
 
-        
+    def get_current_per_hr_corso(self):
+        """
+        Ritorna il record corrente per ogni coppia (fk_hr, corso).
+
+        Il "record corrente" è quello con scadenza_effettiva più lontana nel futuro.
+        Se scadenza_override è valorizzata, usa quella; altrimenti scadenza_calcolata.
+
+        Implementato con PostgreSQL DISTINCT ON per robustezza e performance.
+        NOTA: DISTINCT ON è specifico PostgreSQL. Per altri DB usare subquery.
+        """
+        from django.db.models.functions import Coalesce
+
+        # DISTINCT ON (PostgreSQL): seleziona il primo record per ogni gruppo
+        # ordinato per scadenza_effettiva decrescente (più lontana nel futuro)
+        return (
+            self.get_queryset()
+            .annotate(
+                scadenza_effettiva_calc=Coalesce('scadenza_override', 'scadenza_calcolata')
+            )
+            .order_by(
+                'fk_hr_id',
+                'fk_registro_formazione__fk_corso_id',
+                '-scadenza_effettiva_calc'
+            )
+            .distinct('fk_hr_id', 'fk_registro_formazione__fk_corso_id')
+            .select_related(
+                'fk_hr',
+                'fk_registro_formazione',
+                'fk_registro_formazione__fk_corso'
+            )
+        )
+
+
 class DettaglioRegistroFormazione(models.Model):
-    
-    # presenza
+    """
+    Dettaglio partecipazione di un dipendente a un registro formazione.
+
+    Gestione scadenze:
+    - scadenza_calcolata: calcolata automaticamente da data_formazione + validita_mesi
+    - scadenza_override: valore manuale che sovrascrive il calcolo automatico
+    - scadenza_effettiva: property che ritorna override se presente, altrimenti calcolata
+
+    DEPRECATO: prossima_scadenza - mantenuto per compatibilità, migrato in scadenza_override
+    """
+
     PRESENTE = 'presente'
     ASSENTE = 'assente'
-    
-    
+
     CHOICES_PRESENCE = (
         (PRESENTE, 'Presente'),
-        (ASSENTE, 'Assente'),        
+        (ASSENTE, 'Assente'),
     )
-    fk_registro_formazione = models.ForeignKey(RegistroFormazione, on_delete=models.CASCADE)
-    fk_hr = models.ForeignKey(HumanResource, on_delete=models.CASCADE)
-    ore = models.DecimalField(max_digits=5, decimal_places=2, default=0, null=True, blank=True)
-    note = models.TextField(null=True, blank=True)  
-    certificato = models.FileField(upload_to=corso_directory_path, null=True, blank=True)  
-    presenza =  models.CharField(max_length=10, choices=CHOICES_PRESENCE)
+
+    fk_registro_formazione = models.ForeignKey(
+        RegistroFormazione,
+        on_delete=models.CASCADE,
+        related_name='dettagli'
+    )
+    fk_hr = models.ForeignKey(
+        HumanResource,
+        on_delete=models.CASCADE,
+        related_name='dettagli_formazione'
+    )
+    ore = models.DecimalField(
+        max_digits=5, decimal_places=2, default=0, null=True, blank=True
+    )
+    note = models.TextField(null=True, blank=True)
+    certificato = models.FileField(
+        upload_to=corso_directory_path, null=True, blank=True
+    )
+    presenza = models.CharField(max_length=10, choices=CHOICES_PRESENCE)
     efficace = models.BooleanField(default=True)
+
+    # DEPRECATO: mantenuto per compatibilità DB, non usare in nuovo codice
     prossima_scadenza = models.DateField(null=True, blank=True)
+
+    # Nuovi campi scadenza
+    scadenza_calcolata = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Calcolata automaticamente: data_formazione + validita_mesi del corso"
+    )
+    scadenza_override = models.DateField(
+        null=True,
+        blank=True,
+        help_text="Scadenza manuale che sovrascrive il calcolo automatico"
+    )
+
+    created_by = models.ForeignKey(
+        User,
+        related_name='dettaglio_registro_formazione',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
+    objects = DettaglioRegistroFormazioneManager()
+
+    class Meta:
+        ordering = ['-fk_registro_formazione__data_formazione']
+        verbose_name_plural = "Dettagli Registro Formazione"
+        indexes = [
+            models.Index(
+                fields=['fk_hr', 'fk_registro_formazione'],
+                name='idx_dettaglio_hr_registro'
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.fk_hr} - {self.fk_registro_formazione.fk_corso}"
+
+    @property
+    def scadenza_effettiva(self):
+        """
+        Ritorna la scadenza effettiva: override se presente, altrimenti calcolata.
+        """
+        return self.scadenza_override or self.scadenza_calcolata
+
+    def calcola_scadenza(self):
+        """
+        Calcola la scadenza basandosi su data_formazione + validita_mesi del corso.
+        Ritorna la data calcolata (non salva).
+        """
+        if not self.fk_registro_formazione_id:
+            return None
+
+        registro = self.fk_registro_formazione
+        if not registro.data_formazione or not registro.fk_corso:
+            return None
+
+        validita_mesi = registro.fk_corso.validita_mesi or 12
+        return registro.data_formazione + relativedelta(months=validita_mesi)
+
+    def save(self, *args, **kwargs):
+        """Override save per calcolare automaticamente scadenza_calcolata."""
+        # Calcola scadenza_calcolata se non già impostata o se i dati sono cambiati
+        if self.fk_registro_formazione_id:
+            self.scadenza_calcolata = self.calcola_scadenza()
+        super().save(*args, **kwargs)
     
 
 class RegistroOreLavoro(models.Model):
