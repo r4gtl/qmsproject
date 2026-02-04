@@ -53,6 +53,9 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
               <Nav.Link as={Link} to="/human-resources/formazione" onClick={onHide}>
                 Formazione
               </Nav.Link>
+              <Nav.Link as={Link} to="/human-resources/formazione/tabelle" onClick={onHide}>
+                Tabelle Formazione
+              </Nav.Link>
               <Nav.Link as={Link} to="/human-resources/registro-ore-lavoro" onClick={onHide}>
                 Registro Ore Lavoro
               </Nav.Link>

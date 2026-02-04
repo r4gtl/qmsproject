@@ -25,6 +25,7 @@ import RegistroOreLavoroFormPage from './apps/human-resources/pages/RegistroOreL
 import FormazioneDashboardPage from './apps/human-resources/formazione/pages/FormazioneDashboardPage';
 import RegistroFormazioneFormPage from './apps/human-resources/formazione/pages/RegistroFormazioneFormPage';
 import DettaglioFormazioneFormPage from './apps/human-resources/formazione/pages/DettaglioFormazioneFormPage';
+import TabelleFormazionePage from './apps/human-resources/formazione/pages/TabelleFormazionePage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -365,6 +366,16 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <DettaglioFormazioneFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/human-resources/formazione/tabelle"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TabelleFormazionePage />
               </Layout>
             </PrivateRoute>
           }

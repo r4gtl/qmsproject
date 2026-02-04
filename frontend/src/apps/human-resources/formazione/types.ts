@@ -6,6 +6,31 @@
  */
 
 // =============================================================================
+// GENERIC
+// =============================================================================
+
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
+
+// =============================================================================
+// AREE FORMAZIONE
+// =============================================================================
+
+export interface AreaFormazione {
+  id: number;
+  descrizione: string;
+  created_by: number | null;
+}
+
+export interface AreaFormazioneCreate {
+  descrizione: string;
+}
+
+// =============================================================================
 // CORSI FORMAZIONE
 // =============================================================================
 
@@ -16,6 +41,12 @@ export interface CorsoFormazione {
   fk_areaformazione_display?: string; // Campo display, non sempre incluso nel serializer
   validita_mesi: number;
   created_by: number | null;
+}
+
+export interface CorsoFormazioneCreate {
+  descrizione: string;
+  fk_areaformazione: number;
+  validita_mesi: number;
 }
 
 // =============================================================================

@@ -16,6 +16,8 @@ const breadcrumbNameMap: Record<string, string> = {
   '/human-resources/dipendenti': 'Dipendenti',
   '/human-resources/tabelle': 'Tabelle Generiche',
   '/human-resources/registro-ore-lavoro': 'Registro Ore Lavoro',
+  '/human-resources/formazione': 'Formazione',
+  '/human-resources/formazione/tabelle': 'Tabelle Formazione',
 };
 
 // Helper per formattare data in formato italiano
