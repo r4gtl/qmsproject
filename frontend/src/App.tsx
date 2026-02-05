@@ -26,6 +26,10 @@ import FormazioneDashboardPage from './apps/human-resources/formazione/pages/For
 import RegistroFormazioneFormPage from './apps/human-resources/formazione/pages/RegistroFormazioneFormPage';
 import DettaglioFormazioneFormPage from './apps/human-resources/formazione/pages/DettaglioFormazioneFormPage';
 import TabelleFormazionePage from './apps/human-resources/formazione/pages/TabelleFormazionePage';
+// Acquisto Pelli
+import LottiPage from './apps/acquistopelli/pages/LottiPage';
+import LottoFormPage from './apps/acquistopelli/pages/LottoFormPage';
+import TabelleGenerichePelliPage from './apps/acquistopelli/pages/TabelleGenerichePage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -376,6 +380,48 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <TabelleFormazionePage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Acquisto Pelli */}
+        <Route
+          path="/acquistopelli"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <LottiPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/acquistopelli/lotti/new"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <LottoFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/acquistopelli/lotti/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <LottoFormPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/acquistopelli/tabelle-generiche"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <TabelleGenerichePelliPage />
               </Layout>
             </PrivateRoute>
           }

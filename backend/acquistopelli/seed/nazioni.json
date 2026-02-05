@@ -1,0 +1,1938 @@
+[
+  {
+    "sigla": "AF",
+    "sigla_estesa": "AFG",
+    "descrizione": "Afghanistan",
+    "codice_m49": 4,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "AL",
+    "sigla_estesa": "ALB",
+    "descrizione": "Albania",
+    "codice_m49": 8,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "DZ",
+    "sigla_estesa": "DZA",
+    "descrizione": "Algeria",
+    "codice_m49": 12,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "AD",
+    "sigla_estesa": "AND",
+    "descrizione": "Andorra",
+    "codice_m49": 20,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "AO",
+    "sigla_estesa": "AGO",
+    "descrizione": "Angola",
+    "codice_m49": 24,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "AI",
+    "sigla_estesa": "AIA",
+    "descrizione": "Anguilla",
+    "codice_m49": 660,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "AQ",
+    "sigla_estesa": "ATA",
+    "descrizione": "Antartide",
+    "codice_m49": 10,
+    "regione_codice_m49": null,
+    "subregione_codice_m49": null
+  },
+  {
+    "sigla": "AG",
+    "sigla_estesa": "ATG",
+    "descrizione": "Antigua e Barbuda",
+    "codice_m49": 28,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "AN",
+    "sigla_estesa": "ANT",
+    "descrizione": "Antille Olandesi",
+    "codice_m49": null,
+    "regione_codice_m49": null,
+    "subregione_codice_m49": null
+  },
+  {
+    "sigla": "SA",
+    "sigla_estesa": "SAU",
+    "descrizione": "Arabia Saudita",
+    "codice_m49": 682,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "AR",
+    "sigla_estesa": "ARG",
+    "descrizione": "Argentina",
+    "codice_m49": 32,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "AM",
+    "sigla_estesa": "ARM",
+    "descrizione": "Armenia",
+    "codice_m49": 51,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "AW",
+    "sigla_estesa": "ABW",
+    "descrizione": "Aruba",
+    "codice_m49": 533,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "AU",
+    "sigla_estesa": "AUS",
+    "descrizione": "Australia",
+    "codice_m49": 36,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "AT",
+    "sigla_estesa": "AUT",
+    "descrizione": "Austria",
+    "codice_m49": 40,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "AZ",
+    "sigla_estesa": "AZE",
+    "descrizione": "Azerbaijan",
+    "codice_m49": 31,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "BS",
+    "sigla_estesa": "BHS",
+    "descrizione": "Bahamas",
+    "codice_m49": 44,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "BH",
+    "sigla_estesa": "BHR",
+    "descrizione": "Bahrain",
+    "codice_m49": 48,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "BD",
+    "sigla_estesa": "BGD",
+    "descrizione": "Bangladesh",
+    "codice_m49": 50,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "BB",
+    "sigla_estesa": "BRB",
+    "descrizione": "Barbados",
+    "codice_m49": 52,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "BE",
+    "sigla_estesa": "BEL",
+    "descrizione": "Belgio",
+    "codice_m49": 56,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "BZ",
+    "sigla_estesa": "BLZ",
+    "descrizione": "Belize",
+    "codice_m49": 84,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "BJ",
+    "sigla_estesa": "BEN",
+    "descrizione": "Benin",
+    "codice_m49": 204,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "BM",
+    "sigla_estesa": "BMU",
+    "descrizione": "Bermuda",
+    "codice_m49": 60,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 21
+  },
+  {
+    "sigla": "BT",
+    "sigla_estesa": "BTN",
+    "descrizione": "Bhutan",
+    "codice_m49": 64,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "BY",
+    "sigla_estesa": "BLR",
+    "descrizione": "Bielorussia",
+    "codice_m49": 112,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "BO",
+    "sigla_estesa": "BOL",
+    "descrizione": "Bolivia",
+    "codice_m49": 68,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "BA",
+    "sigla_estesa": "BIH",
+    "descrizione": "Bosnia Erzegovina",
+    "codice_m49": 70,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "BW",
+    "sigla_estesa": "BWA",
+    "descrizione": "Botswana",
+    "codice_m49": 72,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "BR",
+    "sigla_estesa": "BRA",
+    "descrizione": "Brasile",
+    "codice_m49": 76,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "BN",
+    "sigla_estesa": "BRN",
+    "descrizione": "Brunei Darussalam",
+    "codice_m49": 96,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "BG",
+    "sigla_estesa": "BGR",
+    "descrizione": "Bulgaria",
+    "codice_m49": 100,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "BF",
+    "sigla_estesa": "BFA",
+    "descrizione": "Burkina Faso",
+    "codice_m49": 854,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "BI",
+    "sigla_estesa": "BDI",
+    "descrizione": "Burundi",
+    "codice_m49": 108,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "KH",
+    "sigla_estesa": "KHM",
+    "descrizione": "Cambogia",
+    "codice_m49": 116,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "CM",
+    "sigla_estesa": "CMR",
+    "descrizione": "Camerun",
+    "codice_m49": 120,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "CA",
+    "sigla_estesa": "CAN",
+    "descrizione": "Canada",
+    "codice_m49": 124,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 21
+  },
+  {
+    "sigla": "CV",
+    "sigla_estesa": "CPV",
+    "descrizione": "Capo Verde",
+    "codice_m49": 132,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "TD",
+    "sigla_estesa": "TCD",
+    "descrizione": "Ciad",
+    "codice_m49": 148,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "CL",
+    "sigla_estesa": "CHL",
+    "descrizione": "Cile",
+    "codice_m49": 152,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "CN",
+    "sigla_estesa": "CHN",
+    "descrizione": "Cina",
+    "codice_m49": 156,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "CY",
+    "sigla_estesa": "CYP",
+    "descrizione": "Cipro",
+    "codice_m49": 196,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "VA",
+    "sigla_estesa": "VAT",
+    "descrizione": "Citta del Vaticano",
+    "codice_m49": 336,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "CO",
+    "sigla_estesa": "COL",
+    "descrizione": "Colombia",
+    "codice_m49": 170,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "KM",
+    "sigla_estesa": "COM",
+    "descrizione": "Comore",
+    "codice_m49": 174,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "KP",
+    "sigla_estesa": "PRK",
+    "descrizione": "Corea del Nord",
+    "codice_m49": 408,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "KR",
+    "sigla_estesa": "KOR",
+    "descrizione": "Corea del Sud",
+    "codice_m49": 410,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "CR",
+    "sigla_estesa": "CRI",
+    "descrizione": "Costa Rica",
+    "codice_m49": 188,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "CI",
+    "sigla_estesa": "CIV",
+    "descrizione": "Costa d'Avorio",
+    "codice_m49": 384,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "HR",
+    "sigla_estesa": "HRV",
+    "descrizione": "Croazia",
+    "codice_m49": 191,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "CU",
+    "sigla_estesa": "CUB",
+    "descrizione": "Cuba",
+    "codice_m49": 192,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "DK",
+    "sigla_estesa": "DNK",
+    "descrizione": "Danimarca",
+    "codice_m49": 208,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "DM",
+    "sigla_estesa": "DMA",
+    "descrizione": "Dominica",
+    "codice_m49": 212,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "EC",
+    "sigla_estesa": "ECU",
+    "descrizione": "Ecuador",
+    "codice_m49": 218,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "EG",
+    "sigla_estesa": "EGY",
+    "descrizione": "Egitto",
+    "codice_m49": 818,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "IE",
+    "sigla_estesa": "IRL",
+    "descrizione": "Eire",
+    "codice_m49": 372,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "SV",
+    "sigla_estesa": "SLV",
+    "descrizione": "El Salvador",
+    "codice_m49": 222,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "AE",
+    "sigla_estesa": "ARE",
+    "descrizione": "Emirati Arabi Uniti",
+    "codice_m49": 784,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "ER",
+    "sigla_estesa": "ERI",
+    "descrizione": "Eritrea",
+    "codice_m49": 232,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "EE",
+    "sigla_estesa": "EST",
+    "descrizione": "Estonia",
+    "codice_m49": 233,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "ET",
+    "sigla_estesa": "ETH",
+    "descrizione": "Etiopia",
+    "codice_m49": 231,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "RU",
+    "sigla_estesa": "RUS",
+    "descrizione": "Federazione Russa",
+    "codice_m49": 643,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "FJ",
+    "sigla_estesa": "FJI",
+    "descrizione": "Fiji",
+    "codice_m49": 242,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 54
+  },
+  {
+    "sigla": "PH",
+    "sigla_estesa": "PHL",
+    "descrizione": "Filippine",
+    "codice_m49": 608,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "FI",
+    "sigla_estesa": "FIN",
+    "descrizione": "Finlandia",
+    "codice_m49": 246,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "FR",
+    "sigla_estesa": "FRA",
+    "descrizione": "Francia",
+    "codice_m49": 250,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "GA",
+    "sigla_estesa": "GAB",
+    "descrizione": "Gabon",
+    "codice_m49": 266,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GM",
+    "sigla_estesa": "GMB",
+    "descrizione": "Gambia",
+    "codice_m49": 270,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GE",
+    "sigla_estesa": "GEO",
+    "descrizione": "Georgia",
+    "codice_m49": 268,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "DE",
+    "sigla_estesa": "DEU",
+    "descrizione": "Germania",
+    "codice_m49": 276,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "GH",
+    "sigla_estesa": "GHA",
+    "descrizione": "Ghana",
+    "codice_m49": 288,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "JM",
+    "sigla_estesa": "JAM",
+    "descrizione": "Giamaica",
+    "codice_m49": 388,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "JP",
+    "sigla_estesa": "JPN",
+    "descrizione": "Giappone",
+    "codice_m49": 392,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "GI",
+    "sigla_estesa": "GIB",
+    "descrizione": "Gibilterra",
+    "codice_m49": 292,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "DJ",
+    "sigla_estesa": "DJI",
+    "descrizione": "Gibuti",
+    "codice_m49": 262,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "JO",
+    "sigla_estesa": "JOR",
+    "descrizione": "Giordania",
+    "codice_m49": 400,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "GR",
+    "sigla_estesa": "GRC",
+    "descrizione": "Grecia",
+    "codice_m49": 300,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "GD",
+    "sigla_estesa": "GRD",
+    "descrizione": "Grenada",
+    "codice_m49": 308,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "GL",
+    "sigla_estesa": "GRL",
+    "descrizione": "Groenlandia",
+    "codice_m49": 304,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 21
+  },
+  {
+    "sigla": "GP",
+    "sigla_estesa": "GLP",
+    "descrizione": "Guadalupa",
+    "codice_m49": 312,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "GU",
+    "sigla_estesa": "GUM",
+    "descrizione": "Guam",
+    "codice_m49": 316,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "GT",
+    "sigla_estesa": "GTM",
+    "descrizione": "Guatemala",
+    "codice_m49": 320,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "GG",
+    "sigla_estesa": "GGY",
+    "descrizione": "Guernsey",
+    "codice_m49": 831,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "GN",
+    "sigla_estesa": "GIN",
+    "descrizione": "Guinea",
+    "codice_m49": 324,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GQ",
+    "sigla_estesa": "GNQ",
+    "descrizione": "Guinea Equatoriale",
+    "codice_m49": 226,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GW",
+    "sigla_estesa": "GNB",
+    "descrizione": "Guinea-Bissau",
+    "codice_m49": 624,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GY",
+    "sigla_estesa": "GUY",
+    "descrizione": "Guyana",
+    "codice_m49": 328,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "GF",
+    "sigla_estesa": "GUF",
+    "descrizione": "Guyana Francese",
+    "codice_m49": 254,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "HT",
+    "sigla_estesa": "HTI",
+    "descrizione": "Haiti",
+    "codice_m49": 332,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "HN",
+    "sigla_estesa": "HND",
+    "descrizione": "Honduras",
+    "codice_m49": 340,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "HK",
+    "sigla_estesa": "HKG",
+    "descrizione": "Hong Kong",
+    "codice_m49": 344,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "IN",
+    "sigla_estesa": "IND",
+    "descrizione": "India",
+    "codice_m49": 356,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "ID",
+    "sigla_estesa": "IDN",
+    "descrizione": "Indonesia",
+    "codice_m49": 360,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "IR",
+    "sigla_estesa": "IRN",
+    "descrizione": "Iran",
+    "codice_m49": 364,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "IQ",
+    "sigla_estesa": "IRQ",
+    "descrizione": "Iraq",
+    "codice_m49": 368,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "IS",
+    "sigla_estesa": "ISL",
+    "descrizione": "Islanda",
+    "codice_m49": 352,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "HM",
+    "sigla_estesa": "HMD",
+    "descrizione": "Isola Heard e Isole McDonald",
+    "codice_m49": 334,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "NF",
+    "sigla_estesa": "NFK",
+    "descrizione": "Isola Norfolk",
+    "codice_m49": 574,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "BV",
+    "sigla_estesa": "BVT",
+    "descrizione": "Isola di Bouvet",
+    "codice_m49": 74,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "CX",
+    "sigla_estesa": "CXR",
+    "descrizione": "Isola di Natale",
+    "codice_m49": 162,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "KY",
+    "sigla_estesa": "CYM",
+    "descrizione": "Isole Cayman",
+    "codice_m49": 136,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "CC",
+    "sigla_estesa": "CCK",
+    "descrizione": "Isole Cocos",
+    "codice_m49": 166,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "CK",
+    "sigla_estesa": "COK",
+    "descrizione": "Isole Cook",
+    "codice_m49": 184,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "FK",
+    "sigla_estesa": "FLK",
+    "descrizione": "Isole Falkland",
+    "codice_m49": 238,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "FO",
+    "sigla_estesa": "FRO",
+    "descrizione": "Isole Faroe",
+    "codice_m49": 234,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "MP",
+    "sigla_estesa": "MNP",
+    "descrizione": "Isole Marianne Settentrionali",
+    "codice_m49": 580,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "MH",
+    "sigla_estesa": "MHL",
+    "descrizione": "Isole Marshall",
+    "codice_m49": 584,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "UM",
+    "sigla_estesa": "UMI",
+    "descrizione": "Isole Minori degli Stati Uniti d'America",
+    "codice_m49": 581,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "SB",
+    "sigla_estesa": "SLB",
+    "descrizione": "Isole Solomon",
+    "codice_m49": 90,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 54
+  },
+  {
+    "sigla": "TC",
+    "sigla_estesa": "TCA",
+    "descrizione": "Isole Turks e Caicos",
+    "codice_m49": 796,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "VI",
+    "sigla_estesa": "VIR",
+    "descrizione": "Isole Vergini Americane",
+    "codice_m49": 850,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "VG",
+    "sigla_estesa": "VGB",
+    "descrizione": "Isole Vergini Britanniche",
+    "codice_m49": 92,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "IL",
+    "sigla_estesa": "ISR",
+    "descrizione": "Israele",
+    "codice_m49": 376,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "IT",
+    "sigla_estesa": "ITA",
+    "descrizione": "Italia",
+    "codice_m49": 380,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "KZ",
+    "sigla_estesa": "KAZ",
+    "descrizione": "Kazakhistan",
+    "codice_m49": 398,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 143
+  },
+  {
+    "sigla": "KE",
+    "sigla_estesa": "KEN",
+    "descrizione": "Kenya",
+    "codice_m49": 404,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "KG",
+    "sigla_estesa": "KGZ",
+    "descrizione": "Kirghizistan",
+    "codice_m49": 417,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 143
+  },
+  {
+    "sigla": "KI",
+    "sigla_estesa": "KIR",
+    "descrizione": "Kiribati",
+    "codice_m49": 296,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "XK",
+    "sigla_estesa": "XXK",
+    "descrizione": "Kosovo",
+    "codice_m49": null,
+    "regione_codice_m49": null,
+    "subregione_codice_m49": null
+  },
+  {
+    "sigla": "KW",
+    "sigla_estesa": "KWT",
+    "descrizione": "Kuwait",
+    "codice_m49": 414,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "LA",
+    "sigla_estesa": "LAO",
+    "descrizione": "Laos",
+    "codice_m49": 418,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "LS",
+    "sigla_estesa": "LSO",
+    "descrizione": "Lesotho",
+    "codice_m49": 426,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "LV",
+    "sigla_estesa": "LVA",
+    "descrizione": "Lettonia",
+    "codice_m49": 428,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "LB",
+    "sigla_estesa": "LBN",
+    "descrizione": "Libano",
+    "codice_m49": 422,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "LR",
+    "sigla_estesa": "LBR",
+    "descrizione": "Liberia",
+    "codice_m49": 430,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "LY",
+    "sigla_estesa": "LBY",
+    "descrizione": "Libia",
+    "codice_m49": 434,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "LI",
+    "sigla_estesa": "LIE",
+    "descrizione": "Liechtenstein",
+    "codice_m49": 438,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "LT",
+    "sigla_estesa": "LTU",
+    "descrizione": "Lituania",
+    "codice_m49": 440,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "LU",
+    "sigla_estesa": "LUX",
+    "descrizione": "Lussemburgo",
+    "codice_m49": 442,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "MO",
+    "sigla_estesa": "MAC",
+    "descrizione": "Macao",
+    "codice_m49": 446,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "MK",
+    "sigla_estesa": "MKD",
+    "descrizione": "Macedonia",
+    "codice_m49": 807,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "MG",
+    "sigla_estesa": "MDG",
+    "descrizione": "Madagascar",
+    "codice_m49": 450,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MW",
+    "sigla_estesa": "MWI",
+    "descrizione": "Malawi",
+    "codice_m49": 454,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MV",
+    "sigla_estesa": "MDV",
+    "descrizione": "Maldive",
+    "codice_m49": 462,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "MY",
+    "sigla_estesa": "MYS",
+    "descrizione": "Malesia",
+    "codice_m49": 458,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "ML",
+    "sigla_estesa": "MLI",
+    "descrizione": "Mali",
+    "codice_m49": 466,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MT",
+    "sigla_estesa": "MLT",
+    "descrizione": "Malta",
+    "codice_m49": 470,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "MA",
+    "sigla_estesa": "MAR",
+    "descrizione": "Marocco",
+    "codice_m49": 504,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "MQ",
+    "sigla_estesa": "MTQ",
+    "descrizione": "Martinica",
+    "codice_m49": 474,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "MR",
+    "sigla_estesa": "MRT",
+    "descrizione": "Mauritania",
+    "codice_m49": 478,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MU",
+    "sigla_estesa": "MUS",
+    "descrizione": "Maurizius",
+    "codice_m49": 480,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "YT",
+    "sigla_estesa": "MYT",
+    "descrizione": "Mayotte",
+    "codice_m49": 175,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MX",
+    "sigla_estesa": "MEX",
+    "descrizione": "Messico",
+    "codice_m49": 484,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "MD",
+    "sigla_estesa": "MDA",
+    "descrizione": "Moldavia",
+    "codice_m49": 498,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "MC",
+    "sigla_estesa": "MCO",
+    "descrizione": "Monaco",
+    "codice_m49": 492,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "MN",
+    "sigla_estesa": "MNG",
+    "descrizione": "Mongolia",
+    "codice_m49": 496,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 30
+  },
+  {
+    "sigla": "ME",
+    "sigla_estesa": "MNE",
+    "descrizione": "Montenegro",
+    "codice_m49": 499,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "MS",
+    "sigla_estesa": "MSR",
+    "descrizione": "Montserrat",
+    "codice_m49": 500,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "MZ",
+    "sigla_estesa": "MOZ",
+    "descrizione": "Mozambico",
+    "codice_m49": 508,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "MM",
+    "sigla_estesa": "MMR",
+    "descrizione": "Myanmar",
+    "codice_m49": 104,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": null,
+    "sigla_estesa": "NAM",
+    "descrizione": "Namibia",
+    "codice_m49": 516,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "NR",
+    "sigla_estesa": "NRU",
+    "descrizione": "Nauru",
+    "codice_m49": 520,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "NP",
+    "sigla_estesa": "NPL",
+    "descrizione": "Nepal",
+    "codice_m49": 524,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "NI",
+    "sigla_estesa": "NIC",
+    "descrizione": "Nicaragua",
+    "codice_m49": 558,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "NE",
+    "sigla_estesa": "NER",
+    "descrizione": "Niger",
+    "codice_m49": 562,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "NG",
+    "sigla_estesa": "NGA",
+    "descrizione": "Nigeria",
+    "codice_m49": 566,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "NU",
+    "sigla_estesa": "NIU",
+    "descrizione": "Niue",
+    "codice_m49": 570,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "NO",
+    "sigla_estesa": "NOR",
+    "descrizione": "Norvegia",
+    "codice_m49": 578,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "NC",
+    "sigla_estesa": "NCL",
+    "descrizione": "Nuova Caledonia",
+    "codice_m49": 540,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 54
+  },
+  {
+    "sigla": "NZ",
+    "sigla_estesa": "NZL",
+    "descrizione": "Nuova Zelanda",
+    "codice_m49": 554,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 53
+  },
+  {
+    "sigla": "OM",
+    "sigla_estesa": "OMN",
+    "descrizione": "Oman",
+    "codice_m49": 512,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "NL",
+    "sigla_estesa": "NLD",
+    "descrizione": "Paesi Bassi",
+    "codice_m49": 528,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "PK",
+    "sigla_estesa": "PAK",
+    "descrizione": "Pakistan",
+    "codice_m49": 586,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "PW",
+    "sigla_estesa": "PLW",
+    "descrizione": "Palau",
+    "codice_m49": 585,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "PA",
+    "sigla_estesa": "PAN",
+    "descrizione": "Panama",
+    "codice_m49": 591,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "PG",
+    "sigla_estesa": "PNG",
+    "descrizione": "Papua Nuova Guinea",
+    "codice_m49": 598,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 54
+  },
+  {
+    "sigla": "PY",
+    "sigla_estesa": "PRY",
+    "descrizione": "Paraguay",
+    "codice_m49": 600,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "PE",
+    "sigla_estesa": "PER",
+    "descrizione": "Peru",
+    "codice_m49": 604,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "PN",
+    "sigla_estesa": "PCN",
+    "descrizione": "Pitcairn",
+    "codice_m49": 612,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "PF",
+    "sigla_estesa": "PYF",
+    "descrizione": "Polinesia Francese",
+    "codice_m49": 258,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "PL",
+    "sigla_estesa": "POL",
+    "descrizione": "Polonia",
+    "codice_m49": 616,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "PR",
+    "sigla_estesa": "PRI",
+    "descrizione": "Porto Rico",
+    "codice_m49": 630,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "PT",
+    "sigla_estesa": "PRT",
+    "descrizione": "Portogallo",
+    "codice_m49": 620,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "QA",
+    "sigla_estesa": "QAT",
+    "descrizione": "Qatar",
+    "codice_m49": 634,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "GB",
+    "sigla_estesa": "GBR",
+    "descrizione": "Regno Unito",
+    "codice_m49": 826,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "CZ",
+    "sigla_estesa": "CZE",
+    "descrizione": "Repubblica Ceca",
+    "codice_m49": 203,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "CF",
+    "sigla_estesa": "CAF",
+    "descrizione": "Repubblica Centroafricana",
+    "codice_m49": 140,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "CD",
+    "sigla_estesa": "COD",
+    "descrizione": "Repubblica Democratica del Congo",
+    "codice_m49": 180,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "DO",
+    "sigla_estesa": "DOM",
+    "descrizione": "Repubblica Dominicana",
+    "codice_m49": 214,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "CG",
+    "sigla_estesa": "COG",
+    "descrizione": "Repubblica del Congo",
+    "codice_m49": 178,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "RE",
+    "sigla_estesa": "REU",
+    "descrizione": "Reunion",
+    "codice_m49": 638,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "RO",
+    "sigla_estesa": "ROU",
+    "descrizione": "Romania",
+    "codice_m49": 642,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "RW",
+    "sigla_estesa": "RWA",
+    "descrizione": "Ruanda",
+    "codice_m49": 646,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "EH",
+    "sigla_estesa": "ESH",
+    "descrizione": "Sahara Occidentale",
+    "codice_m49": 732,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "KN",
+    "sigla_estesa": "KNA",
+    "descrizione": "Saint Kitts e Nevis",
+    "codice_m49": 659,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "PM",
+    "sigla_estesa": "SPM",
+    "descrizione": "Saint Pierre e Miquelon",
+    "codice_m49": 666,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 21
+  },
+  {
+    "sigla": "VC",
+    "sigla_estesa": "VCT",
+    "descrizione": "Saint Vincent e Grenadine",
+    "codice_m49": 670,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "WS",
+    "sigla_estesa": "WSM",
+    "descrizione": "Samoa",
+    "codice_m49": 882,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "AS",
+    "sigla_estesa": "ASM",
+    "descrizione": "Samoa Americane",
+    "codice_m49": 16,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "SM",
+    "sigla_estesa": "SMR",
+    "descrizione": "San Marino",
+    "codice_m49": 674,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "SH",
+    "sigla_estesa": "SHN",
+    "descrizione": "Sant'Elena",
+    "codice_m49": 654,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "LC",
+    "sigla_estesa": "LCA",
+    "descrizione": "Santa Lucia",
+    "codice_m49": 662,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "ST",
+    "sigla_estesa": "STP",
+    "descrizione": "Sao Tome e Principe",
+    "codice_m49": 678,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "SN",
+    "sigla_estesa": "SEN",
+    "descrizione": "Senegal",
+    "codice_m49": 686,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "RS",
+    "sigla_estesa": "SRB",
+    "descrizione": "Serbia",
+    "codice_m49": 688,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "SC",
+    "sigla_estesa": "SYC",
+    "descrizione": "Seychelles",
+    "codice_m49": 690,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "SL",
+    "sigla_estesa": "SLE",
+    "descrizione": "Sierra Leone",
+    "codice_m49": 694,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "SG",
+    "sigla_estesa": "SGP",
+    "descrizione": "Singapore",
+    "codice_m49": 702,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "SY",
+    "sigla_estesa": "SYR",
+    "descrizione": "Siria",
+    "codice_m49": 760,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "SK",
+    "sigla_estesa": "SVK",
+    "descrizione": "Slovacchia",
+    "codice_m49": 703,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "SI",
+    "sigla_estesa": "SVN",
+    "descrizione": "Slovenia",
+    "codice_m49": 705,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "SO",
+    "sigla_estesa": "SOM",
+    "descrizione": "Somalia",
+    "codice_m49": 706,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "ES",
+    "sigla_estesa": "ESP",
+    "descrizione": "Spagna",
+    "codice_m49": 724,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 39
+  },
+  {
+    "sigla": "LK",
+    "sigla_estesa": "LKA",
+    "descrizione": "Sri Lanka",
+    "codice_m49": 144,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 34
+  },
+  {
+    "sigla": "FM",
+    "sigla_estesa": "FSM",
+    "descrizione": "Stati Federati della Micronesia",
+    "codice_m49": 583,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 57
+  },
+  {
+    "sigla": "US",
+    "sigla_estesa": "USA",
+    "descrizione": "Stati Uniti d'America",
+    "codice_m49": 840,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 21
+  },
+  {
+    "sigla": "ZA",
+    "sigla_estesa": "ZAF",
+    "descrizione": "Sud Africa",
+    "codice_m49": 710,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "GS",
+    "sigla_estesa": "SGS",
+    "descrizione": "Sud Georgia e Isole Sandwich",
+    "codice_m49": 239,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "SD",
+    "sigla_estesa": "SDN",
+    "descrizione": "Sudan",
+    "codice_m49": 729,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "SR",
+    "sigla_estesa": "SUR",
+    "descrizione": "Suriname",
+    "codice_m49": 740,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "SJ",
+    "sigla_estesa": "SJM",
+    "descrizione": "Svalbard e Jan Mayen",
+    "codice_m49": 744,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "SE",
+    "sigla_estesa": "SWE",
+    "descrizione": "Svezia",
+    "codice_m49": 752,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 154
+  },
+  {
+    "sigla": "CH",
+    "sigla_estesa": "CHE",
+    "descrizione": "Svizzera",
+    "codice_m49": 756,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 155
+  },
+  {
+    "sigla": "SZ",
+    "sigla_estesa": "SWZ",
+    "descrizione": "Swaziland",
+    "codice_m49": 748,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "TJ",
+    "sigla_estesa": "TJK",
+    "descrizione": "Tagikistan",
+    "codice_m49": 762,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 143
+  },
+  {
+    "sigla": "TH",
+    "sigla_estesa": "THA",
+    "descrizione": "Tailandia",
+    "codice_m49": 764,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "TW",
+    "sigla_estesa": "TWN",
+    "descrizione": "Taiwan",
+    "codice_m49": null,
+    "regione_codice_m49": null,
+    "subregione_codice_m49": null
+  },
+  {
+    "sigla": "TZ",
+    "sigla_estesa": "TZA",
+    "descrizione": "Tanzania",
+    "codice_m49": 834,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "IO",
+    "sigla_estesa": "IOT",
+    "descrizione": "Territori Britannici dell'Oceano Indiano",
+    "codice_m49": 86,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "TF",
+    "sigla_estesa": "ATF",
+    "descrizione": "Territori Francesi del Sud",
+    "codice_m49": 260,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "PS",
+    "sigla_estesa": "PSE",
+    "descrizione": "Territori Palestinesi Occupati",
+    "codice_m49": 275,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "TL",
+    "sigla_estesa": "TLS",
+    "descrizione": "Timor Est",
+    "codice_m49": 626,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "TG",
+    "sigla_estesa": "TGO",
+    "descrizione": "Togo",
+    "codice_m49": 768,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "TK",
+    "sigla_estesa": "TKL",
+    "descrizione": "Tokelau",
+    "codice_m49": 772,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "TO",
+    "sigla_estesa": "TON",
+    "descrizione": "Tonga",
+    "codice_m49": 776,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "TT",
+    "sigla_estesa": "TTO",
+    "descrizione": "Trinidad e Tobago",
+    "codice_m49": 780,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "TN",
+    "sigla_estesa": "TUN",
+    "descrizione": "Tunisia",
+    "codice_m49": 788,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 15
+  },
+  {
+    "sigla": "TR",
+    "sigla_estesa": "TUR",
+    "descrizione": "Turchia",
+    "codice_m49": 792,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "TM",
+    "sigla_estesa": "TKM",
+    "descrizione": "Turkmenistan",
+    "codice_m49": 795,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 143
+  },
+  {
+    "sigla": "TV",
+    "sigla_estesa": "TUV",
+    "descrizione": "Tuvalu",
+    "codice_m49": 798,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "UA",
+    "sigla_estesa": "UKR",
+    "descrizione": "Ucraina",
+    "codice_m49": 804,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "UG",
+    "sigla_estesa": "UGA",
+    "descrizione": "Uganda",
+    "codice_m49": 800,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "HU",
+    "sigla_estesa": "HUN",
+    "descrizione": "Ungheria",
+    "codice_m49": 348,
+    "regione_codice_m49": 150,
+    "subregione_codice_m49": 151
+  },
+  {
+    "sigla": "UY",
+    "sigla_estesa": "URY",
+    "descrizione": "Uruguay",
+    "codice_m49": 858,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "UZ",
+    "sigla_estesa": "UZB",
+    "descrizione": "Uzbekistan",
+    "codice_m49": 860,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 143
+  },
+  {
+    "sigla": "VU",
+    "sigla_estesa": "VUT",
+    "descrizione": "Vanuatu",
+    "codice_m49": 548,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 54
+  },
+  {
+    "sigla": "VE",
+    "sigla_estesa": "VEN",
+    "descrizione": "Venezuela",
+    "codice_m49": 862,
+    "regione_codice_m49": 19,
+    "subregione_codice_m49": 419
+  },
+  {
+    "sigla": "VN",
+    "sigla_estesa": "VNM",
+    "descrizione": "Vietnam",
+    "codice_m49": 704,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 35
+  },
+  {
+    "sigla": "WF",
+    "sigla_estesa": "WLF",
+    "descrizione": "Wallis e Futuna",
+    "codice_m49": 876,
+    "regione_codice_m49": 9,
+    "subregione_codice_m49": 61
+  },
+  {
+    "sigla": "YE",
+    "sigla_estesa": "YEM",
+    "descrizione": "Yemen",
+    "codice_m49": 887,
+    "regione_codice_m49": 142,
+    "subregione_codice_m49": 145
+  },
+  {
+    "sigla": "ZM",
+    "sigla_estesa": "ZMB",
+    "descrizione": "Zambia",
+    "codice_m49": 894,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  },
+  {
+    "sigla": "ZW",
+    "sigla_estesa": "ZWE",
+    "descrizione": "Zimbabwe",
+    "codice_m49": 716,
+    "regione_codice_m49": 2,
+    "subregione_codice_m49": 202
+  }
+]

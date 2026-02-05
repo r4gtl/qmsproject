@@ -54,6 +54,22 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        {/* card acquisti pelli */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Acquisti Pelli</Card.Title>
+              <Card.Text>
+                Gestisci lotti, origini e tabelle acquisti pelli.
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/acquistopelli" variant="primary">
+                  Apri
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         {/* In futuro: altre cards per altre app */}
       </Row>
     </Container>

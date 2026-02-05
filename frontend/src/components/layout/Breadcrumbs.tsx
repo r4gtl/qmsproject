@@ -18,6 +18,10 @@ const breadcrumbNameMap: Record<string, string> = {
   '/human-resources/registro-ore-lavoro': 'Registro Ore Lavoro',
   '/human-resources/formazione': 'Formazione',
   '/human-resources/formazione/tabelle': 'Tabelle Formazione',
+  '/acquistopelli': 'Acquisti Pelli',
+  '/acquistopelli/lotti/new': 'Nuovo Acquisto',
+  '/acquistopelli/lotti/:id': 'Modifica Acquisto',
+  '/acquistopelli/tabelle-generiche': 'Tabelle Generiche',
 };
 
 // Helper per formattare data in formato italiano

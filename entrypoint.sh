@@ -31,6 +31,10 @@ mkdir -p /app/logs
 echo "🔄 Eseguo le migrate iniziali..."
 python manage.py migrate
 
+# 🌍 Seed tabelle geografiche (idempotente, skip se già popolate)
+echo "🌍 Seed tabelle geografiche..."
+python manage.py seed_geo
+
 # 🚀 Avvio il server
 if [ "$DEBUG" = "1" ]; then
   echo "🚧 DEBUG=1: sviluppo. Avvio runserver"

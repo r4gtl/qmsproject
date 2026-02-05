@@ -1,0 +1,87 @@
+[
+  {
+    "codice_m49": 53,
+    "nome_subregione": "Australia and New Zealand",
+    "regione_codice_m49": 9
+  },
+  {
+    "codice_m49": 143,
+    "nome_subregione": "Central Asia",
+    "regione_codice_m49": 142
+  },
+  {
+    "codice_m49": 30,
+    "nome_subregione": "Eastern Asia",
+    "regione_codice_m49": 142
+  },
+  {
+    "codice_m49": 151,
+    "nome_subregione": "Eastern Europe",
+    "regione_codice_m49": 150
+  },
+  {
+    "codice_m49": 419,
+    "nome_subregione": "Latin America and the Caribbean",
+    "regione_codice_m49": 19
+  },
+  {
+    "codice_m49": 54,
+    "nome_subregione": "Melanesia",
+    "regione_codice_m49": 9
+  },
+  {
+    "codice_m49": 57,
+    "nome_subregione": "Micronesia",
+    "regione_codice_m49": 9
+  },
+  {
+    "codice_m49": 15,
+    "nome_subregione": "Northern Africa",
+    "regione_codice_m49": 2
+  },
+  {
+    "codice_m49": 21,
+    "nome_subregione": "Northern America",
+    "regione_codice_m49": 19
+  },
+  {
+    "codice_m49": 154,
+    "nome_subregione": "Northern Europe",
+    "regione_codice_m49": 150
+  },
+  {
+    "codice_m49": 61,
+    "nome_subregione": "Polynesia",
+    "regione_codice_m49": 9
+  },
+  {
+    "codice_m49": 35,
+    "nome_subregione": "South-eastern Asia",
+    "regione_codice_m49": 142
+  },
+  {
+    "codice_m49": 34,
+    "nome_subregione": "Southern Asia",
+    "regione_codice_m49": 142
+  },
+  {
+    "codice_m49": 39,
+    "nome_subregione": "Southern Europe",
+    "regione_codice_m49": 150
+  },
+  {
+    "codice_m49": 202,
+    "nome_subregione": "Sub-Saharan Africa",
+    "regione_codice_m49": 2
+  },
+  {
+    "codice_m49": 145,
+    "nome_subregione": "Western Asia",
+    "regione_codice_m49": 142
+  },
+  {
+    "codice_m49": 155,
+    "nome_subregione": "Western Europe",
+    "regione_codice_m49": 150
+  }
+]

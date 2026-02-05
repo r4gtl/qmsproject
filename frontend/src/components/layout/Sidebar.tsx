@@ -10,6 +10,7 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
   const location = useLocation();
   const isInArticoli = location.pathname.startsWith('/articoli');
   const isInHumanResources = location.pathname.startsWith('/human-resources');
+  const isInAcquistoPelli = location.pathname.startsWith('/acquistopelli');
 
   return (
     <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
@@ -60,6 +61,22 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
                 Registro Ore Lavoro
               </Nav.Link>
               <Nav.Link as={Link} to="/human-resources/tabelle" onClick={onHide}>
+                Tabelle Generiche
+              </Nav.Link>
+            </>
+          )}
+
+          {/* Sezione visibile solo per acquisto pelli */}
+          {isInAcquistoPelli && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Acquisti Pelli
+              </div>
+              <Nav.Link as={Link} to="/acquistopelli" onClick={onHide}>
+                Acquisti
+              </Nav.Link>
+              <Nav.Link as={Link} to="/acquistopelli/tabelle-generiche" onClick={onHide}>
                 Tabelle Generiche
               </Nav.Link>
             </>

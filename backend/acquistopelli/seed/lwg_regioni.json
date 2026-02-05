@@ -1,0 +1,22 @@
+[
+  {
+    "codice_m49": 2,
+    "nome_regione": "Africa"
+  },
+  {
+    "codice_m49": 19,
+    "nome_regione": "Americas"
+  },
+  {
+    "codice_m49": 142,
+    "nome_regione": "Asia"
+  },
+  {
+    "codice_m49": 150,
+    "nome_regione": "Europe"
+  },
+  {
+    "codice_m49": 9,
+    "nome_regione": "Oceania"
+  }
+]
