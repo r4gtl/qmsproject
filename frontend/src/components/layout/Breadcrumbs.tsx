@@ -22,6 +22,7 @@ const breadcrumbNameMap: Record<string, string> = {
   '/acquistopelli/lotti/new': 'Nuovo Acquisto',
   '/acquistopelli/lotti/:id': 'Modifica Acquisto',
   '/acquistopelli/tabelle-generiche': 'Tabelle Generiche',
+  '/monitoraggi': 'Monitoraggi',
 };
 
 // Helper per formattare data in formato italiano

@@ -30,6 +30,8 @@ import TabelleFormazionePage from './apps/human-resources/formazione/pages/Tabel
 import LottiPage from './apps/acquistopelli/pages/LottiPage';
 import LottoFormPage from './apps/acquistopelli/pages/LottoFormPage';
 import TabelleGenerichePelliPage from './apps/acquistopelli/pages/TabelleGenerichePage';
+// Monitoraggi
+import MonitoraggiPage from './apps/monitoraggi/pages/MonitoraggiPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -422,6 +424,18 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <TabelleGenerichePelliPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Monitoraggi */}
+        <Route
+          path="/monitoraggi"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <MonitoraggiPage />
               </Layout>
             </PrivateRoute>
           }

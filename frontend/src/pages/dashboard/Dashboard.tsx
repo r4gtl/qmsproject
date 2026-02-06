@@ -70,6 +70,22 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        {/* card monitoraggi */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Monitoraggi</Card.Title>
+              <Card.Text>
+                Acqua, Gas, Energia, Produzione
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/monitoraggi" variant="primary">
+                  Apri
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         {/* In futuro: altre cards per altre app */}
       </Row>
     </Container>

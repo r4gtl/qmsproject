@@ -11,6 +11,7 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
   const isInArticoli = location.pathname.startsWith('/articoli');
   const isInHumanResources = location.pathname.startsWith('/human-resources');
   const isInAcquistoPelli = location.pathname.startsWith('/acquistopelli');
+  const isInMonitoraggi = location.pathname.startsWith('/monitoraggi');
 
   return (
     <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
@@ -78,6 +79,26 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
               </Nav.Link>
               <Nav.Link as={Link} to="/acquistopelli/tabelle-generiche" onClick={onHide}>
                 Tabelle Generiche
+              </Nav.Link>
+            </>
+          )}
+
+          {/* Sezione visibile solo per monitoraggi */}
+          {isInMonitoraggi && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Monitoraggi
+              </div>
+              <Nav.Link as={Link} to="/monitoraggi" onClick={onHide}>
+                Monitoraggi
+              </Nav.Link>
+              <Nav.Link
+                as="span"
+                className="text-muted"
+                style={{ cursor: 'not-allowed', opacity: 0.6 }}
+              >
+                Stampa Registri
               </Nav.Link>
             </>
           )}
