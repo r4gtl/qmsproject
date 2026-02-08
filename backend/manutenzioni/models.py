@@ -3,10 +3,11 @@ from django.urls import reverse
 import datetime
 from django.utils import timezone
 from django.contrib.auth.models import User
+from core.models import CompanyOwnedModel
 from anagrafiche.models import Fornitore
 from human_resources.models import Ward, HumanResource
 
-class Attrezzatura(models.Model):
+class Attrezzatura(CompanyOwnedModel):
     codice_attrezzatura = models.CharField(max_length=10)
     descrizione = models.CharField(max_length=50)
     modello = models.CharField(max_length=100, null=True, blank=True)
@@ -32,7 +33,7 @@ class Attrezzatura(models.Model):
     def __str__ (self):
         return self.codice_attrezzatura + " " + self.descrizione
     
-class ManutenzioneStraordinaria(models.Model):
+class ManutenzioneStraordinaria(CompanyOwnedModel):
     fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)
     data_manutenzione = models.DateField(null=False, blank=False)
     descrizione = models.CharField(max_length=100)
@@ -48,7 +49,7 @@ class ManutenzioneStraordinaria(models.Model):
     class Meta:
         ordering = ["-data_manutenzione"]
         
-class Taratura(models.Model):
+class Taratura(CompanyOwnedModel):
     fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)
     data_taratura = models.DateField(null=False, blank=False)
     fk_fornitore = models.ForeignKey(Fornitore, null=True, blank=True, on_delete=models.SET_NULL)
@@ -63,7 +64,7 @@ class Taratura(models.Model):
         ordering = ["-data_taratura"]
         
         
-class ManutenzioneOrdinaria(models.Model):
+class ManutenzioneOrdinaria(CompanyOwnedModel):
     fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)
     data_manutenzione = models.DateField(null=False, blank=False)
     descrizione = models.CharField(max_length=100)    
@@ -78,7 +79,7 @@ class ManutenzioneOrdinaria(models.Model):
         ordering = ["-data_manutenzione"]
 
 
-class ControlloPeriodico(models.Model):
+class ControlloPeriodico(CompanyOwnedModel):
     fk_attrezzatura = models.ForeignKey(Attrezzatura, on_delete=models.CASCADE)
     data_controllo = models.DateField(null=False, blank=False)
     descrizione = models.CharField(max_length=100)    

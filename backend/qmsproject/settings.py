@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "articoli",
     "manualeprocedure",
     "monitoraggi",
-    "manutenzioni",
+    "manutenzioni.apps.ManutenzioniConfig",  # Explicit for signals registration
     "lwg",
     "autorizzazioni",
     "gestionerifiuti",
@@ -251,6 +251,9 @@ MEDIA_URL = "/media/"
 # Imposta il percorso predefinito per STATIC_ROOT e MEDIA_ROOT
 STATIC_ROOT = env("STATIC_ROOT")
 MEDIA_ROOT = env("MEDIA_ROOT")
+
+# Upload size limit (10MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10MB in bytes
 
 # Verifica se DEBUG è True e sovrascrivi i percorsi se necessario
 if not DEBUG:

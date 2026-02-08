@@ -86,6 +86,38 @@ const Dashboard = () => {
             </Card.Body>
           </Card>
         </Col>
+        {/* card manutenzioni */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Manutenzioni</Card.Title>
+              <Card.Text>
+                Gestisci attrezzature, tarature e controlli periodici
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/manutenzioni" variant="primary">
+                  Attrezzature
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+        {/* card manuale procedure */}
+        <Col md={6} lg={4}>
+          <Card className="shadow-sm mb-4">
+            <Card.Body>
+              <Card.Title>Manuale Procedure</Card.Title>
+              <Card.Text>
+                Gestisci procedure, revisioni e moduli aziendali
+              </Card.Text>
+              <div className="d-flex flex-column gap-2">
+                <Button as={Link} to="/manualeprocedure" variant="primary">
+                  Procedure
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
         {/* In futuro: altre cards per altre app */}
       </Row>
     </Container>

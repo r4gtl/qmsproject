@@ -23,6 +23,10 @@ const breadcrumbNameMap: Record<string, string> = {
   '/acquistopelli/lotti/:id': 'Modifica Acquisto',
   '/acquistopelli/tabelle-generiche': 'Tabelle Generiche',
   '/monitoraggi': 'Monitoraggi',
+  '/manutenzioni': 'Manutenzioni',
+  '/manualeprocedure': 'Manuale Procedure',
+  '/manualeprocedure/procedure/:id': 'Dettaglio Procedura',
+  '/manualeprocedure/moduli/:id': 'Dettaglio Modulo',
 };
 
 // Helper per formattare data in formato italiano

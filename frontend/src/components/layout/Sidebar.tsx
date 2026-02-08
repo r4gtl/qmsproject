@@ -12,6 +12,8 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
   const isInHumanResources = location.pathname.startsWith('/human-resources');
   const isInAcquistoPelli = location.pathname.startsWith('/acquistopelli');
   const isInMonitoraggi = location.pathname.startsWith('/monitoraggi');
+  const isInManutenzioni = location.pathname.startsWith('/manutenzioni');
+  const isInManualeProcedure = location.pathname.startsWith('/manualeprocedure');
 
   return (
     <Offcanvas show={show} onHide={onHide} backdrop="static" placement="start">
@@ -99,6 +101,32 @@ const Sidebar = ({ show, onHide }: SidebarProps) => {
                 style={{ cursor: 'not-allowed', opacity: 0.6 }}
               >
                 Stampa Registri
+              </Nav.Link>
+            </>
+          )}
+
+          {/* Sezione visibile solo per manutenzioni */}
+          {isInManutenzioni && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Manutenzioni
+              </div>
+              <Nav.Link as={Link} to="/manutenzioni" onClick={onHide}>
+                Attrezzature
+              </Nav.Link>
+            </>
+          )}
+
+          {/* Sezione visibile solo per manuale procedure */}
+          {isInManualeProcedure && (
+            <>
+              <hr />
+              <div className="fw-bold text-muted px-2 mb-1">
+                Manuale Procedure
+              </div>
+              <Nav.Link as={Link} to="/manualeprocedure" onClick={onHide}>
+                Procedure
               </Nav.Link>
             </>
           )}

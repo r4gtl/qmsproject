@@ -32,6 +32,13 @@ import LottoFormPage from './apps/acquistopelli/pages/LottoFormPage';
 import TabelleGenerichePelliPage from './apps/acquistopelli/pages/TabelleGenerichePage';
 // Monitoraggi
 import MonitoraggiPage from './apps/monitoraggi/pages/MonitoraggiPage';
+// Manutenzioni
+import AttrezzaturePage from './apps/manutenzioni/pages/AttrezzaturePage';
+import AttrezzaturaDetailPage from './apps/manutenzioni/pages/AttrezzaturaDetailPage';
+// Manuale Procedure
+import ProceduresPage from './apps/manualeprocedure/pages/ProceduresPage';
+import ProceduraDetailPage from './apps/manualeprocedure/pages/ProceduraDetailPage';
+import ModuloDetailPage from './apps/manualeprocedure/pages/ModuloDetailPage';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
@@ -436,6 +443,60 @@ function App() {
             <PrivateRoute>
               <Layout>
                 <MonitoraggiPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Manutenzioni */}
+        <Route
+          path="/manutenzioni"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <AttrezzaturePage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manutenzioni/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <AttrezzaturaDetailPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* Manuale Procedure */}
+        <Route
+          path="/manualeprocedure"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ProceduresPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manualeprocedure/procedure/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ProceduraDetailPage />
+              </Layout>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/manualeprocedure/moduli/:id"
+          element={
+            <PrivateRoute>
+              <Layout>
+                <ModuloDetailPage />
               </Layout>
             </PrivateRoute>
           }
