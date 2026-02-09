@@ -28,6 +28,7 @@ class SezioneLWGViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SezioneLWG.objects.all().order_by('lwgsection')
     serializer_class = SezioneLWGSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = None  # No pagination for lookup data
 
 
 class ProceduraViewSet(viewsets.ModelViewSet):

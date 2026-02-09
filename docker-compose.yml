@@ -10,6 +10,7 @@ services:
       - ./backend:/app
       - ./backend/logs:/app/logs
       - static_volume:/app/staticfiles
+      - media_volume:/app/media
     ports:
       - "8000:8000"
     env_file:
@@ -38,6 +39,8 @@ services:
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - static_volume:/staticfiles  # stesso volume condiviso con backend
+      - media_volume:/mediafiles  # volume condiviso per media files
 
 volumes:
   static_volume:
+  media_volume:

@@ -54,6 +54,12 @@ interface RegistroFormazioneData {
   corso_descrizione: string;
 }
 
+interface ManualeProceduraData {
+  id: number;
+  identificativo: string;
+  data_procedura: string;
+}
+
 const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
@@ -61,6 +67,7 @@ const Breadcrumbs = () => {
   const [articoloData, setArticoloData] = useState<ArticoloData | null>(null);
   const [proceduraData, setProceduraData] = useState<ProceduraData | null>(null);
   const [registroFormazioneData, setRegistroFormazioneData] = useState<RegistroFormazioneData | null>(null);
+  const [manualeProceduraData, setManualeProceduraData] = useState<ManualeProceduraData | null>(null);
 
   // Controlla se siamo nella pagina di modifica fornitore
   const fornitoreMatch = matchPath({ path: '/fornitori/:id/modifica', end: true }, location.pathname);
@@ -85,6 +92,12 @@ const Breadcrumbs = () => {
   );
   // ID registro per caricare i dati
   const registroId = registroFormazioneMatch?.params.registroId || dettaglioFormazioneMatch?.params.registroId;
+
+  // Controlla se siamo nella pagina dettaglio procedura (manuale procedure)
+  const manualeProceduraMatch = matchPath(
+    { path: '/manualeprocedure/procedure/:id', end: true },
+    location.pathname
+  );
 
   useEffect(() => {
     if (fornitoreMatch?.params.id) {
@@ -137,6 +150,18 @@ const Breadcrumbs = () => {
     }
   }, [registroId]);
 
+  // Carica dati procedura (manuale procedure) per breadcrumb
+  useEffect(() => {
+    if (manualeProceduraMatch?.params.id) {
+      axios
+        .get(`/manualeprocedure/procedure/${manualeProceduraMatch.params.id}/`)
+        .then((res) => setManualeProceduraData(res.data))
+        .catch((err) => console.error('Errore caricamento procedura per breadcrumb:', err));
+    } else {
+      setManualeProceduraData(null);
+    }
+  }, [manualeProceduraMatch?.params.id]);
+
   if (location.pathname === '/login') return null;
 
   const buildBreadcrumb = () => {
@@ -165,6 +190,29 @@ const Breadcrumbs = () => {
       const proceduraLabel = proceduraData
         ? `Procedura n. ${proceduraData.nr_procedura} del ${formatDate(proceduraData.data_procedura)} Rev. n. ${proceduraData.nr_revisione} del ${formatDate(proceduraData.data_revisione)}`
         : `Procedura ${proceduraMatch.params.proceduraId}`;
+      crumbs.push(
+        <Breadcrumb.Item key={location.pathname} active>
+          {proceduraLabel}
+        </Breadcrumb.Item>
+      );
+
+      return crumbs;
+    }
+
+    // Se siamo nella pagina dettaglio procedura (manuale procedure), costruisci breadcrumb custom
+    // (salta "procedure" che è inutile e mostra identificativo + data)
+    if (manualeProceduraMatch) {
+      // Manuale Procedure
+      crumbs.push(
+        <Breadcrumb.Item key="/manualeprocedure" linkAs={Link} linkProps={{ to: '/manualeprocedure' }}>
+          Manuale Procedure
+        </Breadcrumb.Item>
+      );
+
+      // Procedura (identificativo + data)
+      const proceduraLabel = manualeProceduraData
+        ? `Procedura ${manualeProceduraData.identificativo} del ${formatDate(manualeProceduraData.data_procedura)}`
+        : 'Procedura';
       crumbs.push(
         <Breadcrumb.Item key={location.pathname} active>
           {proceduraLabel}

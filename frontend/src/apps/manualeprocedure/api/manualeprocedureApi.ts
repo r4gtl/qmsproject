@@ -12,7 +12,7 @@ import type {
   RevisioneModulo,
 } from '../types';
 
-const BASE_URL = '/api/manualeprocedure';
+const BASE_URL = '/manualeprocedure';
 
 // =============================================================================
 // SezioneLWG

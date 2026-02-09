@@ -537,6 +537,14 @@ const ProceduraDetailPage = () => {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Documento</Form.Label>
+              {editingRev?.documento && (
+                <div className="mb-2">
+                  <small className="text-muted">Documento attuale: </small>
+                  <a href={editingRev.documento} target="_blank" rel="noopener noreferrer" className="small">
+                    Visualizza documento 📄
+                  </a>
+                </div>
+              )}
               <Form.Control
                 type="file"
                 accept=".pdf"
@@ -545,7 +553,9 @@ const ProceduraDetailPage = () => {
                   setRevDocumento(files ? files[0] : null);
                 }}
               />
-              {editingRev?.documento && <small>Attuale: {editingRev.documento}</small>}
+              <Form.Text className="text-muted">
+                {editingRev ? 'Lascia vuoto per mantenere il documento esistente' : 'Seleziona un file PDF'}
+              </Form.Text>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Note</Form.Label>

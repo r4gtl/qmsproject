@@ -58,7 +58,11 @@ const ProceduresPage = () => {
   // Fetch sezioni lookup
   useEffect(() => {
     getSezioniLWG()
-      .then((res) => setSezioni(res.data))
+      .then((res) => {
+        // Defensive: handle both array and paginated response
+        const sezioniArr = Array.isArray(res.data) ? res.data : (res.data as any)?.results ?? [];
+        setSezioni(sezioniArr);
+      })
       .catch((err) => console.error('Error loading sezioni LWG:', err));
   }, []);
 
